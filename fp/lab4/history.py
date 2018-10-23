@@ -1,0 +1,61 @@
+class Command():
+    def __init__(self, name, *args, **kwargs):
+        self.name = name
+        self.args = args
+        self.kwargs = kwargs
+
+class History():
+    def __init__(self, Type):
+        self.Type = Type
+
+        self.empty_instance()
+        self.empty_stack()
+        self.empty_undone_stack()
+
+    def empty_instance(self):
+        self.instance = self.Type()
+
+    def empty_stack(self):
+        self.command_stack = []
+
+    def empty_undone_stack(self):
+        self.undone_command_stack = []
+
+    def run(self, command):
+        attr = getattr(self.instance, command.name)
+        return attr(*command.args, **command.kwargs)
+
+    def rerun(self):
+        self.empty_instance()
+        for command in self.command_stack:
+            self.run(command)
+
+    def undo(self):
+        try:
+            last_command = self.command_stack.pop()
+        except:
+            raise ValueError('There is nothing to undo.')
+
+        self.undone_command_stack.append(last_command)
+        self.rerun()
+
+    def redo(self):
+        try:
+            last_undone_command = self.undone_command_stack.pop()
+        except IndexError:
+            raise ValueError('There is nothing to redo.')
+
+        self.command_stack.append(last_undone_command)
+        return self.run(last_undone_command)
+
+    def do(self, name, *args, **kwargs):
+        keep = kwargs.pop('keep', True)
+
+        command = Command(name, *args, **kwargs)
+        result = self.run(command)
+
+        if keep:
+            self.command_stack.append(command)
+            self.empty_undone_stack()
+
+        return result

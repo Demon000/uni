@@ -1,0 +1,14 @@
+|   | Utilizator                        | Program                            | Descriere                                                                                                      |
+|---|-----------------------------------|------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| a |                                   |                                    | The program prints available operations and  asks the user to select one.                                      |
+| b | 1                                 |                                    | The user wants to enter a list.                                                                                |
+| d | -1 2 -1 2 2 -3 1 -1 0 -1 -2 -3 -4 |                                    | The user enters a list.                                                                                        |
+| e |                                   |                                    | The program asks the user to select an operation.                                                              |
+| f | 2                                 |                                    | The user wants to find the longest sequences in the given list in which all the integers are distinct.         |
+| g |                                   | 2, -3, 1, -1, 0  0, -1, -2, -3, -4 | The program prints longest sequences in the given list in which all the integers are distinct.                 |
+| h |                                   |                                    | The program asks the user to select an operation.                                                              |
+| i | 3                                 |                                    | The user wants to find the longest sequences in the given list in which all the integers use the same digits.  |
+| j |                                   | 2, 2  1, -1                        | The program prints longest sequences in the given list in which all the integers use the same digits.          |
+| k |                                   |                                    | The program asks the user to select an operation.                                                              |
+| l | 4                                 |                                    | The user wants to exit the program.                                                                            |
+| m |                                   |                                    | The program says goodbye.                                                                                      |
