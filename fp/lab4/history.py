@@ -4,6 +4,10 @@ class Command():
         self.args = args
         self.kwargs = kwargs
 
+    def run(self, instance):
+        attr = getattr(instance, self.name)
+        return attr(*self.args, **self.kwargs)
+
 class History():
     def __init__(self, Type):
         self.Type = Type
@@ -21,14 +25,10 @@ class History():
     def empty_undone_stack(self):
         self.undone_command_stack = []
 
-    def run(self, command):
-        attr = getattr(self.instance, command.name)
-        return attr(*command.args, **command.kwargs)
-
     def rerun(self):
         self.empty_instance()
         for command in self.command_stack:
-            self.run(command)
+            command.run(self.instance)
 
     def undo(self):
         try:
@@ -46,13 +46,13 @@ class History():
             raise ValueError('There is nothing to redo.')
 
         self.command_stack.append(last_undone_command)
-        return self.run(last_undone_command)
+        return last_undone_command.run(self.instance)
 
     def do(self, name, *args, **kwargs):
         keep = kwargs.pop('keep', True)
 
         command = Command(name, *args, **kwargs)
-        result = self.run(command)
+        result = command.run(self.instance)
 
         if keep:
             self.command_stack.append(command)
