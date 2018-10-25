@@ -226,7 +226,7 @@ def ui_redo(expenses):
     except ValueError as ve:
         print(ve)
 
-def ui_exit():
+def ui_exit(expenses):
     print('Goodbye.')
     exit()
 
