@@ -19,13 +19,13 @@ class Expense():
         '''
         Check if the expense matches the passed parameters.
         '''
-        if day is not None and self.day != day:
+        if day is not None and self.get_day() != day:
             return False
 
-        if type_ is not None and self.type != type_:
+        if type_ is not None and self.get_type() != type_:
             return False
 
-        if sum_ is not None and self.sum != sum_:
+        if sum_ is not None and self.get_sum() != sum_:
             return False
 
         if test_fn is not None and not test_fn(self):
