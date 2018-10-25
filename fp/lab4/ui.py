@@ -264,7 +264,7 @@ def ui_run():
         Entry(4, 'Report', report_menu.run),
         Entry('u', 'Undo', ui_undo),
         Entry('r', 'Redo', ui_redo),
-        Entry('e', 'Exit', ui_exit),
+        Entry('x', 'Exit', ui_exit),
     ], expenses)
 
     while True:
