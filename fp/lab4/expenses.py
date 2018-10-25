@@ -30,16 +30,16 @@ class Expense():
         return True
 
     @staticmethod
-    def is_valid_day(value):
-        return is_valid_unsigned(value, 1, 31)
+    def is_valid_day(day):
+        return is_valid_unsigned(day, 1, 31)
 
     @staticmethod
-    def is_valid_sum(value):
-        return is_valid_unsigned(value, 1)
+    def is_valid_sum(sum_):
+        return is_valid_unsigned(sum_, 1)
 
     @staticmethod
-    def is_valid_type(value):
-        if value not in Expense.types.keys():
+    def is_valid_type(type_):
+        if type_ not in Expense.types.keys():
             return False
 
         return True
