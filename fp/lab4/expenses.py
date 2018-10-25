@@ -1,6 +1,7 @@
 from utils import is_valid_unsigned
 
 class Expense():
+    # Valid expense types
     types = {
         1: 'Food',
         2: 'Maintenance',
@@ -15,6 +16,9 @@ class Expense():
         self.sum = sum_
 
     def matches(self, day=None, type_=None, sum_=None, test_fn=None):
+        '''
+        Check if the expense matches the passed parameters.
+        '''
         if day is not None and self.day != day:
             return False
 
@@ -31,14 +35,23 @@ class Expense():
 
     @staticmethod
     def is_valid_day(day):
+        '''
+        Check if the passed value is a valid day.
+        '''
         return is_valid_unsigned(day, 1, 31)
 
     @staticmethod
     def is_valid_sum(sum_):
+        '''
+        Check if the passed value is a valid sum.
+        '''
         return is_valid_unsigned(sum_, 1)
 
     @staticmethod
     def is_valid_type(type_):
+        '''
+        Check if the passed value is a valid type.
+        '''
         if type_ not in Expense.types.keys():
             return False
 
@@ -49,6 +62,9 @@ class ExpensesCollection():
         self.collection = []
 
     def get(self):
+        '''
+        Returns all the expenses.
+        '''
         return self.collection
 
     def find(self, *args, **kwargs):
