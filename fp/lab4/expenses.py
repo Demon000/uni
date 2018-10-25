@@ -33,6 +33,22 @@ class Expense():
 
         return True
 
+    def get_day(self):
+        return self.day
+
+    def get_sum(self):
+        return self.sum
+
+    def get_type(self):
+        return self.type
+
+    def set_sum(self, sum_):
+        self.sum = sum_
+
+    @staticmethod
+    def get_types():
+        return Expense.types
+
     @staticmethod
     def is_valid_day(day):
         '''
@@ -52,7 +68,7 @@ class Expense():
         '''
         Check if the passed value is a valid type.
         '''
-        if type_ not in Expense.types.keys():
+        if type_ not in Expense.get_types().keys():
             return False
 
         return True
@@ -117,7 +133,7 @@ class ExpensesCollection():
             raise ValueError('An expense on this day and with '
                     'this type does not exist.')
 
-        expense.sum = sum_
+        expense.set_sum(sum_)
         return expense
 
     def delete(self, *args, **kwargs):

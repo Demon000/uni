@@ -22,7 +22,7 @@ def ui_input_day(message=None, error=None):
 
 def ui_print_types():
     print('Valid expense types:')
-    for index, type_ in Expense.types.items():
+    for index, type_ in Expense.get_types().items():
         print('{}. {}'.format(index, type_))
 
 def ui_input_type(message=None, error=None):
@@ -64,9 +64,9 @@ def ui_input_sum(message=None, error=None):
         return sum_
 
 def ui_print_expense(expense):
-    day = expense.day
-    type_name = Expense.types[expense.type]
-    sum_ = expense.sum
+    day = expense.get_day()
+    type_name = Expense.get_types()[expense.get_type()]
+    sum_ = expense.get_sum()
     print('Day: {}, Type: {}, Sum: {}'.format(day, type_name, sum_))
 
 def ui_print_expenses(collection):
@@ -120,7 +120,7 @@ def ui_delete_for_interval(expenses):
     end_day = ui_input_day('Enter the ending day: ')
 
     def match(expense):
-        return start_day <= expense.day <= end_day
+        return start_day <= expense.get_day() <= end_day
 
     deleted_expenses = expenses.do('delete', test_fn=match)
 
@@ -140,7 +140,7 @@ def ui_find_larger_than(expenses):
     min_sum = ui_input_sum()
 
     def match(expense):
-        return min_sum < expense.sum
+        return min_sum < expense.get_sum()
 
     matching_expenses = expenses.do('find', test_fn=match, keep=False)
 
@@ -153,7 +153,7 @@ def ui_find_before_day_smaller_than(expenses):
     max_sum = ui_input_sum()
 
     def match(expense):
-        return max_day > expense.day and max_sum > expense.sum
+        return max_day > expense.get_day() and max_sum > expense.get_sum()
 
     matching_expenses = expenses.do('find', test_fn=match, keep=False)
 
@@ -166,19 +166,19 @@ def ui_find_for_type(expenses):
 
     matching_expenses = expenses.do('find', type_=type_, keep=False)
 
-    type_name = Expense.types[type_]
+    type_name = Expense.get_types()[type_]
     print('The expenses of type {} are:'.format(type_name))
     ui_print_expenses(matching_expenses)
     print()
 
 def ui_find_total_sum_for_type(expenses):
     type_ = ui_input_type()
-    type_name = Expense.types[type_]
+    type_name = Expense.get_types()[type_]
 
     matching_expenses = expenses.do('find', type_=type_, keep=False)
     sum_ = 0
     for expense in matching_expenses:
-        sum_ += expense.sum
+        sum_ += expense.get_sum()
 
     print('The total sum for expenses of type {} is {}.'.format(type_name, sum_))
     print()
@@ -187,10 +187,10 @@ def ui_find_day_for_max_sum(expenses):
     max_expense = None
 
     for expense in expenses.do('get'):
-        if max_expense is None or max_expense.sum < expense.sum:
+        if max_expense is None or max_expense.get_sum() < expense.get_sum():
             max_expense = expense
 
-    print('The day with the maximum sum is {}.'.format(max_expense.day))
+    print('The day with the maximum sum is {}.'.format(max_expense.get_day()))
     print()
 
 def ui_find_for_sum(expenses):
@@ -206,7 +206,7 @@ def ui_print_sorted_by_type(expenses):
     collection = expenses.do('find', keep=False)
 
     def sort_by_type(expense):
-        return expense.type
+        return expense.get_type()
 
     collection.sort(key=sort_by_type)
 
