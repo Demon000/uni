@@ -1,6 +1,6 @@
 class Entry():
     def __init__(self, key, title, action):
-        self.key = key
+        self.key = str(key)
         self.title = title
         self.action = action
 
@@ -24,7 +24,7 @@ class Menu():
     def ask(self):
         while True:
             try:
-                key = int(input('Select an entry: '))
+                key = input('Select an entry: ')
                 entry = self.find_entry_with_key(key)
                 if not entry:
                     raise ValueError()

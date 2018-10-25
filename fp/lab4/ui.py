@@ -262,10 +262,9 @@ def ui_run():
         Entry(2, 'Delete', delete_menu.run),
         Entry(3, 'Find', find_menu.run),
         Entry(4, 'Report', report_menu.run),
-        Entry(6, 'Show', ui_print_sorted_by_type),
-        Entry(7, 'Undo', ui_undo),
-        Entry(8, 'Redo', ui_redo),
-        Entry(9, 'Exit', ui_exit),
+        Entry('u', 'Undo', ui_undo),
+        Entry('r', 'Redo', ui_redo),
+        Entry('e', 'Exit', ui_exit),
     ], expenses)
 
     while True:
