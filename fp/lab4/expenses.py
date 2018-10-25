@@ -34,15 +34,27 @@ class Expense():
         return True
 
     def get_day(self):
+        '''
+        Return the day of the current expense.
+        '''
         return self.day
 
     def get_sum(self):
+        '''
+        Return the sum of the current expense.
+        '''
         return self.sum
 
     def get_type(self):
+        '''
+        Return the type of the current expense.
+        '''
         return self.type
 
     def set_sum(self, sum_):
+        '''
+        Sets the sum of the current expense.
+        '''
         self.sum = sum_
 
     @staticmethod
