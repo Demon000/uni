@@ -11,10 +11,17 @@ class Menu():
         self.kwargs = kwargs
 
     def show(self):
+        '''
+        Prints the available key and title entries.
+        '''
         for entry in self.entries:
             print('{}. {}'.format(entry.key, entry.title))
 
     def find_entry_with_key(self, key):
+        '''
+        Finds the entry with key {key}.
+        Returns None if there is no such entry.
+        '''
         for entry in self.entries:
             if key == entry.key:
                 return entry
@@ -22,6 +29,10 @@ class Menu():
         return None
 
     def ask(self):
+        '''
+        Asks the user for an entry until the user inputs
+        a valid one.
+        '''
         while True:
             try:
                 key = input('Select an entry: ')
@@ -36,5 +47,9 @@ class Menu():
             break
 
     def run(self, *args, **kwargs):
+        '''
+        Prints the available entries and asks the user
+        to choose one.
+        '''
         self.show()
         self.ask()

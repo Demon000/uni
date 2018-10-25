@@ -52,6 +52,9 @@ class ExpensesCollection():
         return self.collection
 
     def find(self, *args, **kwargs):
+        '''
+        Finds the expenses that match the passed parameters.
+        '''
         matching_expenses = []
         for expense in self.collection:
             if expense.matches(*args, **kwargs):
@@ -60,6 +63,10 @@ class ExpensesCollection():
         return matching_expenses
 
     def find_one(self, *args, **kwargs):
+        '''
+        Finds the expense that matches the passed parameters.
+        Returns None if there is no such expense.
+        '''
         matching_expenses = self.find(*args, **kwargs)
         if not len(matching_expenses):
             return None
@@ -67,6 +74,12 @@ class ExpensesCollection():
         return matching_expenses[0]
 
     def add_one(self, day, type_, sum_):
+        '''
+        Creates an expense using the passed day, type and sum and
+        adds it to to the expenses list.
+        Raises a ValueError if an expense already exists with the
+        current day and type.
+        '''
         existing_expense = self.find_one(day, type_)
         if existing_expense:
             raise ValueError('An expense on this day and with '
@@ -77,6 +90,12 @@ class ExpensesCollection():
         return expense
 
     def update_one(self, day, type_, sum_):
+        '''
+        Finds an expense that matches the passed day and type and
+        updates the sum.
+        Raises a ValueError if no expense matches the current day
+        and type.
+        '''
         expense = self.find_one(day, type_)
         if not expense:
             raise ValueError('An expense on this day and with '
@@ -86,6 +105,10 @@ class ExpensesCollection():
         return expense
 
     def delete(self, *args, **kwargs):
+        '''
+        Finds the expenses that match the passed parameters and
+        removes them.
+        '''
         new_collection = []
         deleted_expenses = []
         for expense in self.collection:
