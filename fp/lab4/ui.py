@@ -242,7 +242,7 @@ def ui_run():
     ])
 
     delete_menu = Menu([
-        Entry(1, 'Delete all expenses for any given day'
+        Entry(1, 'Delete all expenses for any given day',
                 bind_fn(ui_delete_for_day, expenses)),
         Entry(2, 'Delete all expenses made between two days',
                 bind_fn(ui_delete_for_interval, expenses)),
