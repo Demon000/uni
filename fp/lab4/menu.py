@@ -5,10 +5,8 @@ class Entry():
         self.action = action
 
 class Menu():
-    def __init__(self, entries, *args, **kwargs):
+    def __init__(self, entries):
         self.entries = entries
-        self.args = args
-        self.kwargs = kwargs
 
     def show(self):
         '''
@@ -43,10 +41,10 @@ class Menu():
                 print('Entry is invalid.')
                 continue
 
-            entry.action(*self.args, **self.kwargs)
+            entry.action()
             break
 
-    def run(self, *args, **kwargs):
+    def run(self):
         '''
         Prints the available entries and asks the user
         to choose one.

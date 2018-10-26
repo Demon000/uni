@@ -16,3 +16,9 @@ def is_valid_unsigned(value, min_=None, max_=None):
         return False
 
     return True
+
+def bind_fn(fn, *bind_args, **bind_kwargs):
+    def binded(*new_args, **new_kwargs):
+        fn(*(bind_args + new_args), **(bind_kwargs + new_kwargs))
+
+    return binded
