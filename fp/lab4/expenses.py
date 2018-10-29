@@ -23,7 +23,8 @@ class Expense():
         self.type = type_
         self.sum = sum_
 
-    def matches(self, day=None, type_=None, sum_=None, test_fn=None):
+    def matches(self, day=None, type_=None, sum_=None,
+            min_day=None, max_day=None, min_sum=None, max_sum=None):
         '''
         Check if the expense matches the passed arguments.
 
@@ -31,13 +32,21 @@ class Expense():
             day (int, optional): A day that this expense is matched against.
             type_ (int, optional): A type that is expense is matched against.
             sum_ (int, optional): A sum that is expense is matched against.
-            test_fn (function, optional): A function that is ran against the expense,
-                that should return True if the expense matches.
+            min_day (int, optional): A minimum day that this expense is matched against.
+            max_day (int, optional): A maximum day that this expense is matched against.
+            min_sum (int, optional): A minimum sum that this expense is matched against.
+            max_sum (int, optional): A maximum sum that this expense is matched against.
 
         Returns:
             bool: Whether this expense matches all the arguments or not.
         '''
         if day is not None and self.get_day() != day:
+            return False
+
+        if min_day is not None and self.get_day() < min_day:
+            return False
+
+        if max_day is not None and self.get_day() > max_day:
             return False
 
         if type_ is not None and self.get_type() != type_:
@@ -46,7 +55,10 @@ class Expense():
         if sum_ is not None and self.get_sum() != sum_:
             return False
 
-        if test_fn is not None and not test_fn(self):
+        if min_sum is not None and self.get_sum() < min_sum:
+            return False
+
+        if max_sum is not None and self.get_sum() > max_sum:
             return False
 
         return True

@@ -39,10 +39,7 @@ def run_tests():
     assert added_expense.get_type() == 1
     assert added_expense.get_sum() == 100
 
-    def match(expense):
-        return 1 <= expense.get_day() <= 2
-
-    expenses.do('delete', test_fn=match)
+    expenses.do('delete', min_day=1, max_day=2)
     collection = expenses.do('get')
     assert len(collection) == 1
     left_expense = collection[0]
