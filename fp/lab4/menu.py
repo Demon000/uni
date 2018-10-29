@@ -6,19 +6,31 @@ class Entry():
 
 class Menu():
     def __init__(self, entries):
+        '''
+        Initializes a menu.
+
+        Args:
+            entries (list): Array of entries to be used when asking the user
+                for a valid one.
+        '''
         self.entries = entries
 
     def show(self):
         '''
-        Prints the available key and title entries.
+        Print the available key and title entries.
         '''
         for entry in self.entries:
             print('{}. {}'.format(entry.key, entry.title))
 
     def find_entry_with_key(self, key):
         '''
-        Finds the entry with key {key}.
-        Returns None if there is no such entry.
+        Find a matching entry.
+
+        Args:
+            key (str): Key to find an entry for.
+
+        Returns:
+            The matching entry or None if there is no such entry.
         '''
         for entry in self.entries:
             if key == entry.key:
@@ -28,8 +40,9 @@ class Menu():
 
     def ask(self):
         '''
-        Asks the user for an entry until the user inputs
+        Ask the user for an entry key until the user inputs
         a valid one.
+        Run the action of the found entry.
         '''
         while True:
             try:
@@ -46,7 +59,7 @@ class Menu():
 
     def run(self):
         '''
-        Prints the available entries and asks the user
+        Print the available entries and ask the user
         to choose one.
         '''
         self.show()

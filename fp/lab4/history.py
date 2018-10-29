@@ -1,18 +1,38 @@
 class Command():
     def __init__(self, name, *args, **kwargs):
+        '''
+        Initializes a command.
+
+        Args:
+            name (str): Name of the attribute to be used when calling
+                on an instance.
+        '''
         self.name = name
         self.args = args
         self.kwargs = kwargs
 
     def run(self, instance):
         '''
-        Calls the attribute with name on the passes instance.
+        Call an attribute on the passed instance.
+
+        Args:
+            name (str): Name of the attribute to be called.
+
+        Returns:
+            The value returned by calling the attribute.
         '''
         attr = getattr(instance, self.name)
         return attr(*self.args, **self.kwargs)
 
 class History():
     def __init__(self, Type):
+        '''
+        Initializes a history.
+
+        Args:
+            type (class): Class type to be used when initializing an empty
+                instance.
+        '''
         self.Type = Type
 
         self.empty_instance()
@@ -21,25 +41,25 @@ class History():
 
     def empty_instance(self):
         '''
-        Empties the instance.
+        Empty the instance.
         '''
         self.instance = self.Type()
 
     def empty_stack(self):
         '''
-        Empties the commands stack.
+        Empty the commands stack.
         '''
         self.command_stack = []
 
     def empty_undone_stack(self):
         '''
-        Empties the undone command stack.
+        Empty the undone command stack.
         '''
         self.undone_command_stack = []
 
     def rerun(self):
         '''
-        Empties the instance and reruns the command stack.
+        Empty the instance and reruns the command stack.
         '''
         self.empty_instance()
         for command in self.command_stack:
@@ -47,11 +67,13 @@ class History():
 
     def undo(self):
         '''
-        Removes the last command from the command stack and adds
+        Remove the last command from the command stack and add
         it to the undone command stack.
-        Empties the instance and reruns the remaining commands.
-        Raises a ValueError if there are no commands on the
-        command stack.
+        Empty the instance and rerun the remaining commands.
+
+        Raises:
+            ValueError: If there are no commands on the
+                command stack.
         '''
         try:
             last_command = self.command_stack.pop()
@@ -63,10 +85,15 @@ class History():
 
     def redo(self):
         '''
-        Removes the last command from the undone command stack and adds
-        it to the command stack, then runs the command.
-        Raises a ValueError if there are no commands on the undone
-        command stack.
+        Remove the last command from the undone command stack and add
+        it to the command stack, then run the command.
+
+        Raises:
+            ValueError: If there are no commands on the undone
+                command stack.
+
+        Returns:
+            The value returned by running the last undone command.
         '''
         try:
             last_undone_command = self.undone_command_stack.pop()
@@ -78,9 +105,16 @@ class History():
 
     def do(self, name, *args, **kwargs):
         '''
-        Creates a new command using the passed arguments, runs it,
-        and stores it in the command stack.
-        Empties the undone command stack unless the keep parameter is False.
+        Create a new command using the passed arguments, run it,
+        and store it in the command stack.
+
+        Args:
+            keep (bool, optional): Whether to keep the new command in the
+                command stack or not.
+            Same arguments as Command.__init__()
+
+        Returns:
+            The value returned by running the last undone command.
         '''
         keep = kwargs.pop('keep', True)
 
