@@ -36,8 +36,11 @@ def ui_print_expense(expense):
     sum_ = expense.get_sum()
     print('Day: {}, Type: {}, Sum: {}'.format(day, type_name, sum_))
 
-def ui_print_expenses(collection):
-    if not len(collection):
+def ui_print_expenses(collection, title=None):
+    if len(collection):
+        if title is not None:
+            print(title)
+    else:
         print('There are no such expenses.')
         return
 
@@ -78,8 +81,7 @@ def ui_delete_for_day(expenses):
     day = ui_input_day()
     deleted_expenses = expenses.do('delete', day=day)
 
-    print('Deleted expenses:')
-    ui_print_expenses(deleted_expenses)
+    ui_print_expenses(deleted_expenses, 'Deleted expenses:')
     print()
 
 def ui_delete_for_interval(expenses):
@@ -88,16 +90,14 @@ def ui_delete_for_interval(expenses):
 
     deleted_expenses = expenses.do('delete', min_day=start_day, max_day=end_day)
 
-    print('Deleted expenses:')
-    ui_print_expenses(deleted_expenses)
+    ui_print_expenses(deleted_expenses, 'Deleted expenses:')
     print()
 
 def ui_delete_for_type(expenses):
     type_ = ui_input_type()
     deleted_expenses = expenses.do('delete', type_=type_)
 
-    print('Deleted expenses:')
-    ui_print_expenses(deleted_expenses)
+    ui_print_expenses(deleted_expenses, 'Deleted expenses:')
     print()
 
 def ui_find_larger_than(expenses):
@@ -105,8 +105,8 @@ def ui_find_larger_than(expenses):
 
     matching_expenses = expenses.do('find', min_sum=min_sum, keep=False)
 
-    print('The expenses larger than {} are:'.format(min_sum))
-    ui_print_expenses(matching_expenses)
+    ui_print_expenses(matching_expenses,
+            'The expenses larger than {} are:'.format(min_sum))
     print()
 
 def ui_find_before_day_smaller_than(expenses):
@@ -115,18 +115,18 @@ def ui_find_before_day_smaller_than(expenses):
 
     matching_expenses = expenses.do('find', max_day=max_day, max_sum=max_sum, keep=False)
 
-    print('The expenses made before {} and smaller than {} are:'.format(max_day, max_sum))
-    ui_print_expenses(matching_expenses)
+    ui_print_expenses(matching_expenses,
+            'The expenses before {} and smaller than {} are:'.format(max_day, max_sum))
     print()
 
 def ui_find_for_type(expenses):
     type_ = ui_input_type()
+    type_name = Expense.types[type_]
 
     matching_expenses = expenses.do('find', type_=type_, keep=False)
 
-    type_name = Expense.types[type_]
-    print('The expenses of type {} are:'.format(type_name))
-    ui_print_expenses(matching_expenses)
+    ui_print_expenses(matching_expenses,
+            'The expenses of type {} are:'.format(type_name))
     print()
 
 def ui_find_total_sum_for_type(expenses):
@@ -156,8 +156,7 @@ def ui_find_for_sum(expenses):
 
     matching_expenses = expenses.do('find', sum_=sum_, keep=False)
 
-    print('The expenses of sum {} are:'.format(sum_))
-    ui_print_expenses(matching_expenses)
+    ui_print_expenses(matching_expenses, 'The expenses of sum {} are:'.format(sum_))
     print()
 
 def ui_print_sorted_by_type(expenses):
@@ -168,8 +167,7 @@ def ui_print_sorted_by_type(expenses):
 
     collection.sort(key=sort_by_type)
 
-    print('The sorted expenses are:')    
-    ui_print_expenses(collection)
+    ui_print_expenses(collection, 'The expenses sorted by type are:')
     print()
 
 def ui_undo(expenses):
