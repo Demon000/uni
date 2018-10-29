@@ -15,6 +15,30 @@ class Entry():
         self.title = title
         self.action = action
 
+    def show(self):
+        '''
+        Print this entry.
+        '''
+        print('{}. {}'.format(self.key, self.title))
+
+    def run(self):
+        '''
+        Run this entry's action.
+        '''
+        self.action()
+
+    def matches(self, key):
+        '''
+        Check if this entry matches.
+
+        Args:
+            key (str): The key to match this entry against.
+
+        Returns:
+            bool: Whether this entry matches the passed key.
+        '''
+        return key == self.key
+
 class Menu():
     def __init__(self, entries):
         '''
@@ -31,7 +55,7 @@ class Menu():
         Print the available key and title entries.
         '''
         for entry in self.entries:
-            print('{}. {}'.format(entry.key, entry.title))
+            entry.show()
 
     def find_entry_with_key(self, key):
         '''
@@ -44,7 +68,7 @@ class Menu():
             The matching entry or None if there is no such entry.
         '''
         for entry in self.entries:
-            if key == entry.key:
+            if entry.matches(key):
                 return entry
 
         return None
@@ -65,7 +89,7 @@ class Menu():
                 print('Entry is invalid.')
                 continue
 
-            entry.action()
+            entry.run()
             break
 
     def run(self):
