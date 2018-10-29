@@ -15,13 +15,7 @@ def ui_input_validated(message, error, validate_fn):
 
         return value
 
-def ui_input_day(message=None, error=None):
-    if message is None:
-        message = 'Enter a day: '
-
-    if error is None:
-        error = 'Entered day is invalid.'
-
+def ui_input_day(message='Enter a day: ', error='Entered day is invalid.'):
     return ui_input_validated(message, error, Expense.is_valid_day)
 
 def ui_print_types():
@@ -29,24 +23,11 @@ def ui_print_types():
     for index, type_ in Expense.types.items():
         print('{}. {}'.format(index, type_))
 
-def ui_input_type(message=None, error=None):
-    if message is None:
-        message = 'Select a type: '
-
-    if error is None:
-        error = 'Selected type is invalid.'
-
+def ui_input_type(message='Select a type: ', error='Selected type is invalid.'):
     ui_print_types()
-
     return ui_input_validated(message, error, Expense.is_valid_type)
 
-def ui_input_sum(message=None, error=None):
-    if message is None:
-        message = 'Enter a sum: '
-
-    if error is None:
-        error = 'Entered sum is invalid.'
-
+def ui_input_sum(message='Enter a sum: ', error='Entered sum is invalid.'):
     return ui_input_validated(message, error, Expense.is_valid_sum)
 
 def ui_print_expense(expense):
