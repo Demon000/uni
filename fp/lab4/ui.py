@@ -3,6 +3,18 @@ from history import History
 from menu import Menu, Entry
 from utils import bind_fn
 
+def ui_input_validated(message, error, validate_fn):
+    while True:
+        try:
+            value = int(input(message))
+            if not validate_fn(value):
+                raise ValueError()
+        except ValueError:
+            print(error)
+            continue
+
+        return value
+
 def ui_input_day(message=None, error=None):
     if message is None:
         message = 'Enter a day: '
@@ -10,16 +22,7 @@ def ui_input_day(message=None, error=None):
     if error is None:
         error = 'Entered day is invalid.'
 
-    while True:
-        try:
-            day = int(input(message))
-            if not Expense.is_valid_day(day):
-                raise ValueError()
-        except ValueError:
-            print(error)
-            continue
-
-        return day
+    return ui_input_validated(message, error, Expense.is_valid_day)
 
 def ui_print_types():
     print('Valid expense types:')
@@ -35,16 +38,7 @@ def ui_input_type(message=None, error=None):
 
     ui_print_types()
 
-    while True:
-        try:
-            type_ = int(input(message))
-            if not Expense.is_valid_type(type_):
-                raise ValueError()
-        except ValueError:
-            print(error)
-            continue
-
-        return type_
+    return ui_input_validated(message, error, Expense.is_valid_type)
 
 def ui_input_sum(message=None, error=None):
     if message is None:
@@ -53,16 +47,7 @@ def ui_input_sum(message=None, error=None):
     if error is None:
         error = 'Entered sum is invalid.'
 
-    while True:
-        try:
-            sum_ = int(input(message))
-            if not Expense.is_valid_sum(sum_):
-                raise ValueError()
-        except ValueError:
-            print(error)
-            continue
-
-        return sum_
+    return ui_input_validated(message, error, Expense.is_valid_sum)
 
 def ui_print_expense(expense):
     day = expense.get_day()
