@@ -58,10 +58,6 @@ class Expense():
         self.sum = sum_
 
     @staticmethod
-    def get_types():
-        return Expense.types
-
-    @staticmethod
     def is_valid_day(day):
         '''
         Check if the passed value is a valid day.
@@ -80,7 +76,7 @@ class Expense():
         '''
         Check if the passed value is a valid type.
         '''
-        if type_ not in Expense.get_types().keys():
+        if type_ not in Expense.types.keys():
             return False
 
         return True

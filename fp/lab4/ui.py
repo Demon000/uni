@@ -23,7 +23,7 @@ def ui_input_day(message=None, error=None):
 
 def ui_print_types():
     print('Valid expense types:')
-    for index, type_ in Expense.get_types().items():
+    for index, type_ in Expense.types.items():
         print('{}. {}'.format(index, type_))
 
 def ui_input_type(message=None, error=None):
@@ -66,7 +66,7 @@ def ui_input_sum(message=None, error=None):
 
 def ui_print_expense(expense):
     day = expense.get_day()
-    type_name = Expense.get_types()[expense.get_type()]
+    type_name = Expense.types[expense.get_type()]
     sum_ = expense.get_sum()
     print('Day: {}, Type: {}, Sum: {}'.format(day, type_name, sum_))
 
@@ -167,14 +167,14 @@ def ui_find_for_type(expenses):
 
     matching_expenses = expenses.do('find', type_=type_, keep=False)
 
-    type_name = Expense.get_types()[type_]
+    type_name = Expense.types[type_]
     print('The expenses of type {} are:'.format(type_name))
     ui_print_expenses(matching_expenses)
     print()
 
 def ui_find_total_sum_for_type(expenses):
     type_ = ui_input_type()
-    type_name = Expense.get_types()[type_]
+    type_name = Expense.types[type_]
 
     matching_expenses = expenses.do('find', type_=type_, keep=False)
     sum_ = 0
