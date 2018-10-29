@@ -7,7 +7,7 @@ class Entry():
 class Menu():
     def __init__(self, entries):
         '''
-        Initializes a menu.
+        Initialize a menu.
 
         Args:
             entries (list): Array of entries to be used when asking the user

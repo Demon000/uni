@@ -12,7 +12,7 @@ class Expense():
 
     def __init__(self, day, type_, sum_):
         '''
-        Initializes an expense.
+        Initialize an expense.
 
         Args:
             day (int): A day to be used for this new expense.
@@ -74,7 +74,7 @@ class Expense():
 
     def set_sum(self, sum_):
         '''
-        Sets the sum of the current expense.
+        Set the sum of the current expense.
 
         Args:
             sum_ (int): Sets the current expense's sum to this value.
@@ -117,7 +117,7 @@ class Expense():
 class ExpensesCollection():
     def __init__(self):
         '''
-        Initializes an expenses collection.
+        Initialize an expenses collection.
         '''
         self.collection = []
 

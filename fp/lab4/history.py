@@ -1,7 +1,7 @@
 class Command():
     def __init__(self, name, *args, **kwargs):
         '''
-        Initializes a command.
+        Initialize a command.
 
         Args:
             name (str): Name of the attribute to be used when calling
@@ -27,7 +27,7 @@ class Command():
 class History():
     def __init__(self, Type):
         '''
-        Initializes a history.
+        Initialize a history.
 
         Args:
             type (class): Class type to be used when initializing an empty
