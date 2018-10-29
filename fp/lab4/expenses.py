@@ -89,7 +89,7 @@ class Expense():
         Set the sum of the current expense.
 
         Args:
-            sum_ (int): Sets the current expense's sum to this value.
+            sum_ (int): The new sum value.
         '''
         self.sum = sum_
 
