@@ -187,7 +187,7 @@ def ui_find_total_sum_for_type(expenses):
 def ui_find_day_for_max_sum(expenses):
     max_expense = None
 
-    for expense in expenses.do('get'):
+    for expense in expenses.do('get', keep=False):
         if max_expense is None or max_expense.get_sum() < expense.get_sum():
             max_expense = expense
 
