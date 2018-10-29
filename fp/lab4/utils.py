@@ -1,7 +1,10 @@
 def is_valid_unsigned(value, min_=None, max_=None):
     '''
-    Checks if the passed value is an int and is between
-    {min} and {max} if those are not None.
+    Checks if the passed value is a valid int.
+
+    Args:
+        min_ (int, optional): The minimum which the passed value is allowed to be.
+        min_ (int, optional): The maximum which the passed value is allowed to be.
     '''
     if type(value) is not int:
         return False
@@ -18,6 +21,16 @@ def is_valid_unsigned(value, min_=None, max_=None):
     return True
 
 def bind_fn(fn, *bind_args, **bind_kwargs):
+    '''
+    Binds a function to the passed arguments.
+
+    Args:
+        fn (function): A function to bind the passed arguments to.
+
+    Returns:
+        function: A new function which calls the passed function with the
+            provided arguments.
+    '''
     def binded():
         return fn(*bind_args, **bind_kwargs)
 
