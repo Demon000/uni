@@ -103,7 +103,7 @@ def ui_delete_for_type(expenses):
 def ui_find_larger_than(expenses):
     min_sum = ui_input_sum()
 
-    matching_expenses = expenses.do('find', min_sum=min_sum, keep=False)
+    matching_expenses = expenses.do('find', min_sum=min_sum + 1, keep=False)
 
     ui_print_expenses(matching_expenses,
             'The expenses larger than {} are:'.format(min_sum))
@@ -113,7 +113,7 @@ def ui_find_before_day_smaller_than(expenses):
     max_day = ui_input_day()
     max_sum = ui_input_sum()
 
-    matching_expenses = expenses.do('find', max_day=max_day, max_sum=max_sum, keep=False)
+    matching_expenses = expenses.do('find', max_day=max_day - 1, max_sum=max_sum - 1, keep=False)
 
     ui_print_expenses(matching_expenses,
             'The expenses before {} and smaller than {} are:'.format(max_day, max_sum))
