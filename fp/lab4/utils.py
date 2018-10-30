@@ -19,19 +19,3 @@ def is_valid_unsigned(value, min_=None, max_=None):
         return False
 
     return True
-
-def bind_fn(fn, *bind_args, **bind_kwargs):
-    '''
-    Binds a function to the passed arguments.
-
-    Args:
-        fn (function): A function to bind the passed arguments to.
-
-    Returns:
-        function: A new function which calls the passed function with the
-            provided arguments.
-    '''
-    def binded():
-        return fn(*bind_args, **bind_kwargs)
-
-    return binded

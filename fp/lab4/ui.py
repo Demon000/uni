@@ -1,7 +1,6 @@
 from expenses import ExpensesCollection, Expense
 from history import History
 from menu import Menu, Entry
-from utils import bind_fn
 
 def ui_input_validated(message, error, validate_fn):
     while True:
@@ -191,39 +190,27 @@ def ui_run():
     expenses = History(ExpensesCollection)
 
     add_menu = Menu([
-        Entry(1, 'Add a new expense',
-                bind_fn(ui_add_expense, expenses)),
-        Entry(2, 'Update an existing expense',
-                bind_fn(ui_update_expense, expenses)),
+        Entry(1, 'Add a new expense', ui_add_expense, expenses),
+        Entry(2, 'Update an existing expense', ui_update_expense, expenses),
     ])
 
     delete_menu = Menu([
-        Entry(1, 'Delete all expenses for any given day',
-                bind_fn(ui_delete_for_day, expenses)),
-        Entry(2, 'Delete all expenses made between two days',
-                bind_fn(ui_delete_for_interval, expenses)),
-        Entry(3, 'Delete all expenses of a given expense type',
-                bind_fn(ui_delete_for_type, expenses)),
+        Entry(1, 'Delete all expenses for any given day', ui_delete_for_day, expenses),
+        Entry(2, 'Delete all expenses made between two days', ui_delete_for_interval, expenses),
+        Entry(3, 'Delete all expenses of a given expense type', ui_delete_for_type, expenses),
     ])
 
     find_menu = Menu([
-        Entry(1, 'Find all expenses larger than a given sum',
-                bind_fn(ui_find_larger_than, expenses)),
-        Entry(2, 'Find all expenses done before a given day and smaller than a given sum',
-                bind_fn(ui_find_before_day_smaller_than, expenses)),
-        Entry(3, 'Find all expenses of a given expense type',
-                bind_fn(ui_find_for_type, expenses)),
+        Entry(1, 'Find all expenses larger than a given sum', ui_find_larger_than, expenses),
+        Entry(2, 'Find all expenses before a given day and smaller than a given sum', ui_find_before_day_smaller_than, expenses),
+        Entry(3, 'Find all expenses of a given expense type', ui_find_for_type, expenses),
     ])
 
     report_menu = Menu([
-        Entry(1, 'Find the total sum for a given expense type',
-                bind_fn(ui_find_total_sum_for_type, expenses)),
-        Entry(2, 'Find the day with the maximum sum',
-                bind_fn(ui_find_day_for_max_sum, expenses)),
-        Entry(3, 'Find all the expenses with a given sum',
-                bind_fn(ui_find_for_sum, expenses)),
-        Entry(4, 'Show all the expenses sorted by type',
-                bind_fn(ui_print_sorted_by_type, expenses)),
+        Entry(1, 'Find the total sum for a given expense type', ui_find_total_sum_for_type, expenses),
+        Entry(2, 'Find the day with the maximum sum', ui_find_day_for_max_sum, expenses),
+        Entry(3, 'Find all the expenses with a given sum', ui_find_for_sum, expenses),
+        Entry(4, 'Show all the expenses sorted by type', ui_print_sorted_by_type, expenses),
     ])
 
     main_menu = Menu([
@@ -231,8 +218,8 @@ def ui_run():
         Entry(2, 'Delete', delete_menu.run),
         Entry(3, 'Find', find_menu.run),
         Entry(4, 'Report', report_menu.run),
-        Entry('u', 'Undo', bind_fn(ui_undo, expenses)),
-        Entry('r', 'Redo', bind_fn(ui_redo, expenses)),
+        Entry('u', 'Undo', ui_undo, expenses),
+        Entry('r', 'Redo', ui_redo, expenses),
         Entry('x', 'Exit', ui_exit),
     ])
 

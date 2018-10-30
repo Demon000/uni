@@ -1,5 +1,5 @@
 class Entry():
-    def __init__(self, key, title, action):
+    def __init__(self, key, title, action, *args, **kwargs):
         '''
         Initialize an entry.
 
@@ -14,6 +14,8 @@ class Entry():
         self.key = str(key)
         self.title = title
         self.action = action
+        self.args = args
+        self.kwargs = kwargs
 
     def show(self):
         '''
@@ -25,7 +27,7 @@ class Entry():
         '''
         Run this entry's action.
         '''
-        self.action()
+        self.action(*self.args, **self.kwargs)
 
     def matches(self, key):
         '''
