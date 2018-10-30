@@ -47,5 +47,8 @@ def run_tests():
     assert left_expense.get_type() == 1
     assert left_expense.get_sum() == 100
 
+    serialization = expenses.do('serialize')
+    print(serialization)
+
 run_tests()
 print('Tests passed.')
