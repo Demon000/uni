@@ -37,12 +37,12 @@ def ui_print_expense(expense):
     print('Day: {}, Type: {}, Sum: {}'.format(day, type_name, sum_))
 
 def ui_print_expenses(collection, title=None):
-    if len(collection):
-        if title is not None:
-            print(title)
-    else:
+    if len(collection) == 0:
         print('There are no such expenses.')
         return
+
+    if title is not None:
+        print(title)
 
     for expense in collection:
         ui_print_expense(expense)
