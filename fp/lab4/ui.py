@@ -45,7 +45,7 @@ def ui_print_expenses(collection, title=None):
     for expense in collection:
         ui_print_expense(expense)
 
-def ui_add_expense(expenses):
+def ui_add(expenses):
     day = ui_input_day()
     type_ = ui_input_type()
     sum_ = ui_input_sum()
@@ -60,7 +60,7 @@ def ui_add_expense(expenses):
     ui_print_expense(expense)
     print()
 
-def ui_update_expense(expenses):
+def ui_update(expenses):
     day = ui_input_day()
     type_ = ui_input_type()
     sum_ = ui_input_sum()
@@ -75,14 +75,14 @@ def ui_update_expense(expenses):
     ui_print_expense(expense)
     print()
 
-def ui_delete_for_day(expenses):
+def ui_delete_by_day(expenses):
     day = ui_input_day()
     deleted_expenses = expenses.do('delete', day=day)
 
     ui_print_expenses(deleted_expenses, 'Deleted expenses:')
     print()
 
-def ui_delete_for_interval(expenses):
+def ui_delete_by_interval(expenses):
     start_day = ui_input_day('Enter the starting day: ')
     end_day = ui_input_day('Enter the ending day: ')
 
@@ -91,14 +91,14 @@ def ui_delete_for_interval(expenses):
     ui_print_expenses(deleted_expenses, 'Deleted expenses:')
     print()
 
-def ui_delete_for_type(expenses):
+def ui_delete_by_type(expenses):
     type_ = ui_input_type()
     deleted_expenses = expenses.do('delete', type_=type_)
 
     ui_print_expenses(deleted_expenses, 'Deleted expenses:')
     print()
 
-def ui_find_larger_than(expenses):
+def ui_find_larger_sum(expenses):
     min_sum = ui_input_sum()
 
     matching_expenses = expenses.do('find', min_sum=min_sum + 1, keep=False)
@@ -107,7 +107,7 @@ def ui_find_larger_than(expenses):
             'The expenses larger than {} are:'.format(min_sum))
     print()
 
-def ui_find_before_day_smaller_than(expenses):
+def ui_find_before_day_smaller_sum(expenses):
     max_day = ui_input_day()
     max_sum = ui_input_sum()
 
@@ -117,7 +117,7 @@ def ui_find_before_day_smaller_than(expenses):
             'The expenses before {} and smaller than {} are:'.format(max_day, max_sum))
     print()
 
-def ui_find_for_type(expenses):
+def ui_find_by_type(expenses):
     type_ = ui_input_type()
     type_name = Expense.types[type_]
 
@@ -127,7 +127,7 @@ def ui_find_for_type(expenses):
             'The expenses of type {} are:'.format(type_name))
     print()
 
-def ui_find_total_sum_for_type(expenses):
+def ui_find_sum_by_type(expenses):
     type_ = ui_input_type()
     type_name = Expense.types[type_]
 
@@ -139,7 +139,7 @@ def ui_find_total_sum_for_type(expenses):
     print('The total sum for expenses of type {} is {}.'.format(type_name, sum_))
     print()
 
-def ui_find_day_for_max_sum(expenses):
+def ui_find_day_with_max_sum(expenses):
     max_expense = None
 
     for expense in expenses.do('get', keep=False):
@@ -149,7 +149,7 @@ def ui_find_day_for_max_sum(expenses):
     print('The day with the maximum sum is {}.'.format(max_expense.get_day()))
     print()
 
-def ui_find_for_sum(expenses):
+def ui_find_by_sum(expenses):
     sum_ = ui_input_sum()
 
     matching_expenses = expenses.do('find', sum_=sum_, keep=False)
@@ -157,7 +157,7 @@ def ui_find_for_sum(expenses):
     ui_print_expenses(matching_expenses, 'The expenses of sum {} are:'.format(sum_))
     print()
 
-def ui_print_sorted_by_type(expenses):
+def ui_print_sorted(expenses):
     collection = expenses.do('find', keep=False)
 
     def sort_by_type(expense):
@@ -188,27 +188,27 @@ def ui_run():
     expenses = History(ExpensesCollection)
 
     add_menu = Menu([
-        Entry(1, 'Add a new expense', ui_add_expense, expenses),
-        Entry(2, 'Update an existing expense', ui_update_expense, expenses),
+        Entry(1, 'Add a new expense', ui_add, expenses),
+        Entry(2, 'Update an existing expense', ui_update, expenses),
     ])
 
     delete_menu = Menu([
-        Entry(1, 'Delete all expenses for any given day', ui_delete_for_day, expenses),
-        Entry(2, 'Delete all expenses made between two days', ui_delete_for_interval, expenses),
-        Entry(3, 'Delete all expenses of a given expense type', ui_delete_for_type, expenses),
+        Entry(1, 'Delete all expenses for any given day', ui_delete_by_day, expenses),
+        Entry(2, 'Delete all expenses made between two days', ui_delete_by_interval, expenses),
+        Entry(3, 'Delete all expenses of a given expense type', ui_delete_by_type, expenses),
     ])
 
     find_menu = Menu([
-        Entry(1, 'Find all expenses larger than a given sum', ui_find_larger_than, expenses),
-        Entry(2, 'Find all expenses before a given day and smaller than a given sum', ui_find_before_day_smaller_than, expenses),
-        Entry(3, 'Find all expenses of a given expense type', ui_find_for_type, expenses),
+        Entry(1, 'Find all expenses larger than a given sum', ui_find_larger_sum, expenses),
+        Entry(2, 'Find all expenses before a given day and smaller than a given sum', ui_find_before_day_smaller_sum, expenses),
+        Entry(3, 'Find all expenses of a given expense type', ui_find_by_type, expenses),
     ])
 
     report_menu = Menu([
-        Entry(1, 'Find the total sum for a given expense type', ui_find_total_sum_for_type, expenses),
-        Entry(2, 'Find the day with the maximum sum', ui_find_day_for_max_sum, expenses),
-        Entry(3, 'Find all the expenses with a given sum', ui_find_for_sum, expenses),
-        Entry(4, 'Show all the expenses sorted by type', ui_print_sorted_by_type, expenses),
+        Entry(1, 'Find the total sum for a given expense type', ui_find_sum_by_type, expenses),
+        Entry(2, 'Find the day with the maximum sum', ui_find_day_with_max_sum, expenses),
+        Entry(3, 'Find all the expenses with a given sum', ui_find_by_sum, expenses),
+        Entry(4, 'Show all the expenses sorted by type', ui_print_sorted, expenses),
     ])
 
     main_menu = Menu([
