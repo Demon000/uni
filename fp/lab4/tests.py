@@ -31,7 +31,7 @@ def run_tests():
     assert updated_expense.get_sum() == 500
 
     try:
-        added_expense = expenses.do('add_one', 5, 1, 2000)
+        added_expense = expenses.do('update_one', 5, 1, 2000)
         assert False
     except ValueError:
         pass
