@@ -32,8 +32,9 @@ def ui_input_sum(message='Enter a sum: ', error='Entered sum is invalid.'):
 
 def ui_print_expense(expense):
     day = expense.get_day()
-    type_name = Expense.types[expense.get_type()]
+    type_ = expense.get_type()
     sum_ = expense.get_sum()
+    type_name = Expense.types[type_]
     print('Day: {}, Type: {}, Sum: {}'.format(day, type_name, sum_))
 
 def ui_print_expenses(collection, title=None):
