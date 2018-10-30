@@ -46,8 +46,5 @@ def run_tests():
     collection = expenses.do('get')
     assert len(collection) == 1
 
-    serialization = expenses.do('serialize')
-    print(serialization)
-
 run_tests()
 print('Tests passed.')
