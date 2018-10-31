@@ -1,6 +1,7 @@
 from expenses import ExpensesCollection, Expense
 from history import History
 from menu import Menu, Entry
+from utils import save_as_json, load_from_json
 
 def ui_input(message, error, validate_fn=None, type_cast=None):
     while True:
@@ -18,6 +19,9 @@ def ui_input(message, error, validate_fn=None, type_cast=None):
             continue
 
         return value
+
+def ui_input_path(message='Enter a path: ', error='Entered path is invalid.'):
+    return ui_input(message, error)
 
 def ui_input_day(message='Enter a day: ', error='Entered day is invalid.'):
     return ui_input(message, error, Expense.is_valid_day, int)
@@ -185,6 +189,18 @@ def ui_redo(expenses):
     except ValueError as ve:
         print(ve)
 
+def ui_save(expenses):
+    path = ui_input_path()
+
+    serialized = expenses.do('get_serialized', keep=False)
+    save_as_json(serialized, path)
+
+def ui_load(expenses):
+    path = ui_input_path()
+
+    serialized = load_from_json(path)
+    expenses.do('add_serialized', serialized)
+
 def ui_exit():
     print('Goodbye.')
     exit()
@@ -223,6 +239,8 @@ def ui_run():
         Entry(4, 'Report', report_menu.run),
         Entry('u', 'Undo', ui_undo, expenses),
         Entry('r', 'Redo', ui_redo, expenses),
+        Entry('s', 'Save', ui_save, expenses),
+        Entry('l', 'Load', ui_load, expenses),
         Entry('x', 'Exit', ui_exit),
     ])
 

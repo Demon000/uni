@@ -246,7 +246,7 @@ class ExpensesCollection():
         self.collection = new_collection
         return deleted_expenses
 
-    def serialize(self):
+    def get_serialized(self):
         '''
         Returns:
             list: A serialized list containing all the expenses in the collection.
@@ -259,19 +259,12 @@ class ExpensesCollection():
 
         return serialized_collection
 
-    @staticmethod
-    def deserialize(serialized_collection):
+    def add_serialized(self, serialized_collection):
         '''
         Args:
             serialized_collection (list): A serialized list to be turned into an
                 expenses collection.
-
-        Returns:
-            ExpensesCollection: An expenses collection.
         '''
-        expenses = ExpensesCollection()
 
         for serialized in serialized_collection:
-            expenses.add_one(serialized['day'], serialized['type'], serialized['sum'])
-
-        return expenses
+            self.add_one(serialized['day'], serialized['type'], serialized['sum'])
