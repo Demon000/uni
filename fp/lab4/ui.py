@@ -2,6 +2,7 @@ from expenses import ExpensesCollection, Expense
 from history import History
 from menu import Menu, Entry
 from utils import save_as_json, load_from_json
+from base64 import b64decode
 
 def ui_input(message, error, validate_fn=None, type_cast=None):
     while True:
@@ -206,54 +207,9 @@ def ui_exit():
     exit()
 
 def ui_easter_egg():
-    '''
-    #
-     ##
-     ###
-      ####
-       #####
-       #######
-        #######
-        ########
-        ########
-        #########
-        ##########
-       ############
-     ##############
-    ################
-     ################
-       ##############
-        ##############                                              ####
-        ##############                                           #####
-         ##############                                      #######
-         ##############                                 ###########
-         ###############                              #############
-         ################                           ##############
-        #################      #                  ################
-        ##################     ##    #           #################
-       ####################   ###   ##          #################
-            ################  ########          #################
-             ################  #######         ###################
-               #######################       #####################
-                #####################       ###################
-                  ############################################
-                   ###########################################
-                   ##########################################
-                    ########################################
-                    ########################################
-                     ######################################
-                     ######################################
-                      ##########################      #####
-                      ###  ###################           ##
-                      ##    ###############
-                      #     ##  ##########
-                                ##    ###
-                                      ###
-                                      ##
-                                      #
-    '''
-
-    print(ui_easter_egg.__doc__)
+    easter_egg_b64 = 'ICAgICMKICAgICAjIwogICAgICMjIwogICAgICAjIyMjCiAgICAgICAjIyMjIwogICAgICAgIyMjIyMjIwogICAgICAgICMjIyMjIyMKICAgICAgICAjIyMjIyMjIwogICAgICAgICMjIyMjIyMjCiAgICAgICAgIyMjIyMjIyMjCiAgICAgICAgIyMjIyMjIyMjIwogICAgICAgIyMjIyMjIyMjIyMjCiAgICAgIyMjIyMjIyMjIyMjIyMKICAgICMjIyMjIyMjIyMjIyMjIyMKICAgICAjIyMjIyMjIyMjIyMjIyMjCiAgICAgICAjIyMjIyMjIyMjIyMjIwogICAgICAgICMjIyMjIyMjIyMjIyMjICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMjIyMKICAgICAgICAjIyMjIyMjIyMjIyMjIyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIyMjIwogICAgICAgICAjIyMjIyMjIyMjIyMjIyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyMjIyMjIwogICAgICAgICAjIyMjIyMjIyMjIyMjIyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMjIyMjIyMjIyMjCiAgICAgICAgICMjIyMjIyMjIyMjIyMjIyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMjIyMjIyMjIyMjIyMKICAgICAgICAgIyMjIyMjIyMjIyMjIyMjIyAgICAgICAgICAgICAgICAgICAgICAgICAgICMjIyMjIyMjIyMjIyMjCiAgICAgICAgIyMjIyMjIyMjIyMjIyMjIyMgICAgICAjICAgICAgICAgICAgICAgICAgIyMjIyMjIyMjIyMjIyMjIwogICAgICAgICMjIyMjIyMjIyMjIyMjIyMjIyAgICAgIyMgICAgIyAgICAgICAgICAgIyMjIyMjIyMjIyMjIyMjIyMKICAgICAgICMjIyMjIyMjIyMjIyMjIyMjIyMjICAgIyMjICAgIyMgICAgICAgICAgIyMjIyMjIyMjIyMjIyMjIyMKICAgICAgICAgICAgIyMjIyMjIyMjIyMjIyMjIyAgIyMjIyMjIyMgICAgICAgICAgIyMjIyMjIyMjIyMjIyMjIyMKICAgICAgICAgICAgICMjIyMjIyMjIyMjIyMjIyMgICMjIyMjIyMgICAgICAgICAjIyMjIyMjIyMjIyMjIyMjIyMjCiAgICAgICAgICAgICAgICMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjICAgICAgICMjIyMjIyMjIyMjIyMjIyMjIyMjIwogICAgICAgICAgICAgICAgIyMjIyMjIyMjIyMjIyMjIyMjIyMjICAgICAgICMjIyMjIyMjIyMjIyMjIyMjIyMKICAgICAgICAgICAgICAgICAgIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMKICAgICAgICAgICAgICAgICAgICMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMKICAgICAgICAgICAgICAgICAgICMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIwogICAgICAgICAgICAgICAgICAgICMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMKICAgICAgICAgICAgICAgICAgICAjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjCiAgICAgICAgICAgICAgICAgICAgICMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjCiAgICAgICAgICAgICAgICAgICAgICMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjCiAgICAgICAgICAgICAgICAgICAgICAjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyAgICAgICMjIyMjCiAgICAgICAgICAgICAgICAgICAgICAjIyMgICMjIyMjIyMjIyMjIyMjIyMjIyMgICAgICAgICAgICMjCiAgICAgICAgICAgICAgICAgICAgICAjIyAgICAjIyMjIyMjIyMjIyMjIyMKICAgICAgICAgICAgICAgICAgICAgICMgICAgICMjICAjIyMjIyMjIyMjCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyMgICAgIyMjCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyMjCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyMKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAj'
+    easter_egg = '\n'.join(b64decode(easter_egg_b64).decode('utf-8').split('\n'))
+    print(easter_egg)
 
 def ui_run():
     expenses = History(ExpensesCollection)
