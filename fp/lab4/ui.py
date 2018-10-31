@@ -2,11 +2,16 @@ from expenses import ExpensesCollection, Expense
 from history import History
 from menu import Menu, Entry
 
-def ui_input_validated(message, error, validate_fn):
+def ui_input_validated(message, error, validate_fn=None, type_cast=None):
     while True:
         try:
-            value = int(input(message))
-            if not validate_fn(value):
+            raw_value = input(message)
+            if type_cast is not None:
+                value = type_cast(raw_value)
+            else:
+                value = raw_value
+
+            if validate_fn is not None and not validate_fn(value):
                 raise ValueError()
         except ValueError:
             print(error)
@@ -15,17 +20,17 @@ def ui_input_validated(message, error, validate_fn):
         return value
 
 def ui_input_day(message='Enter a day: ', error='Entered day is invalid.'):
-    return ui_input_validated(message, error, Expense.is_valid_day)
+    return ui_input_int_validated(message, error, Expense.is_valid_day, int)
 
 def ui_input_type(message='Select a type: ', error='Selected type is invalid.'):
     print('Valid expense types:')
     for index, type_ in Expense.types.items():
         print('{}. {}'.format(index, type_))
 
-    return ui_input_validated(message, error, Expense.is_valid_type)
+    return ui_input_int_validated(message, error, Expense.is_valid_type, int)
 
 def ui_input_sum(message='Enter a sum: ', error='Entered sum is invalid.'):
-    return ui_input_validated(message, error, Expense.is_valid_sum)
+    return ui_input_int_validated(message, error, Expense.is_valid_sum, int)
 
 def ui_print_expense(expense):
     day = expense.get_day()
