@@ -262,7 +262,7 @@ class ExpensesCollection():
     def add_serialized(self, serialized_collection):
         '''
         Args:
-            serialized_collection (list): A serialized list to be turned into an
+            serialized_collection (list): A serialized list to be added to the
                 expenses collection.
         '''
 
