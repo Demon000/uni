@@ -2,7 +2,7 @@ from expenses import ExpensesCollection, Expense
 from history import History
 from menu import Menu, Entry
 
-def ui_input_validated(message, error, validate_fn=None, type_cast=None):
+def ui_input(message, error, validate_fn=None, type_cast=None):
     while True:
         try:
             raw_value = input(message)
@@ -20,17 +20,17 @@ def ui_input_validated(message, error, validate_fn=None, type_cast=None):
         return value
 
 def ui_input_day(message='Enter a day: ', error='Entered day is invalid.'):
-    return ui_input_int_validated(message, error, Expense.is_valid_day, int)
+    return ui_input(message, error, Expense.is_valid_day, int)
 
 def ui_input_type(message='Select a type: ', error='Selected type is invalid.'):
     print('Valid expense types:')
     for index, type_ in Expense.types.items():
         print('{}. {}'.format(index, type_))
 
-    return ui_input_int_validated(message, error, Expense.is_valid_type, int)
+    return ui_input(message, error, Expense.is_valid_type, int)
 
 def ui_input_sum(message='Enter a sum: ', error='Entered sum is invalid.'):
-    return ui_input_int_validated(message, error, Expense.is_valid_sum, int)
+    return ui_input(message, error, Expense.is_valid_sum, int)
 
 def ui_print_expense(expense):
     day = expense.get_day()
