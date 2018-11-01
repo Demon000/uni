@@ -11,8 +11,6 @@ class Entry():
             action (function): Function which will be called if the user
                 selects this command.
         '''
-        self.hidden = kwargs.pop('hidden', False)
-
         self.key = str(key)
         self.title = title
         self.action = action
@@ -23,9 +21,6 @@ class Entry():
         '''
         Print this entry.
         '''
-        if self.hidden:
-            return
-
         print('{}. {}'.format(self.key, self.title))
 
     def run(self):
