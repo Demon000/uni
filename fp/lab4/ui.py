@@ -36,13 +36,6 @@ def ui_input_type(message='Select a type: ', error='Selected type is invalid.'):
 def ui_input_sum(message='Enter a sum: ', error='Entered sum is invalid.'):
     return ui_input(message, error, Expense.is_valid_sum, int)
 
-def ui_print_expense(expense):
-    day = expense.get_day()
-    type_ = expense.get_type()
-    sum_ = expense.get_sum()
-    type_name = Expense.types[type_]
-    print('Day: {}, Type: {}, Sum: {}'.format(day, type_name, sum_))
-
 def ui_print_expenses(collection, title=None):
     if len(collection) == 0:
         print('There are no such expenses.')
@@ -52,7 +45,7 @@ def ui_print_expenses(collection, title=None):
         print(title)
 
     for expense in collection:
-        ui_print_expense(expense)
+        print(expense)
 
 def ui_add(expenses):
     day = ui_input_day()
@@ -66,7 +59,7 @@ def ui_add(expenses):
         return
 
     print('Added expense:')
-    ui_print_expense(expense)
+    print(expense)
     print()
 
 def ui_update(expenses):
@@ -81,7 +74,7 @@ def ui_update(expenses):
         return
 
     print('Updated expense:')
-    ui_print_expense(expense)
+    print(expense)
     print()
 
 def ui_delete_by_day(expenses):

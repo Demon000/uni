@@ -23,6 +23,14 @@ class Expense():
         self.type = type_
         self.sum = sum_
 
+    def __str__(self):
+        '''
+        Returns:
+            str: An user-friendly representation of an expense.
+        '''
+        type_name = self.types[self.type]
+        return 'Day: {}, Type: {}, Sum: {}'.format(self.day, type_name, self.sum)
+
     def matches(self, day=None, type_=None, sum_=None,
             min_day=None, max_day=None, min_sum=None, max_sum=None):
         '''
