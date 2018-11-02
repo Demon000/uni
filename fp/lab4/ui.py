@@ -140,10 +140,7 @@ def ui_find_sum_by_type(expenses):
     type_ = ui_input_type()
     type_name = Expense.types[type_]
 
-    matching_expenses = expenses.do('find', type_=type_, keep=False)
-    sum_ = 0
-    for expense in matching_expenses:
-        sum_ += expense.get_sum()
+    sum_ = expenses.do('find_total', type_=type_, keep=False)
 
     print('The total sum for expenses of type {} is {}.'.format(type_name, sum_))
     print()

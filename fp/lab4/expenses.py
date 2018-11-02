@@ -322,3 +322,17 @@ class ExpensesCollection():
                 max_expenses.append(expense)
 
         return max_expenses
+
+    def find_total(self, *args, **kwargs):
+        '''
+        Find the total sum of all the expenses matching the passed arguments.
+
+        Returns:
+            int: The total sum.
+        '''
+        sum_ = 0
+        matching_expenses = self.find(*args, **kwargs)
+        for expense in matching_expenses:
+            sum_ += expense.get_sum()
+
+        return sum_
