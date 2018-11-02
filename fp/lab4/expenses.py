@@ -301,3 +301,24 @@ class ExpensesCollection():
         groups.append(last)
 
         return groups
+
+    def find_max_sum(self):
+        '''
+        Find all the expenses of maximum sum.
+
+        Returns:
+            list: List containing all the expenses of maximum sum.
+        '''
+        max_expenses = []
+        max_sum = -1
+
+        for expense in self.collection:
+            expense_sum = expense.get_sum()
+
+            if max_sum < expense_sum:
+                max_expenses = [expense]
+                max_sum = expense_sum
+            elif max_sum == expense_sum:
+                max_expenses.append(expense)
+
+        return max_expenses

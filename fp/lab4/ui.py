@@ -149,13 +149,9 @@ def ui_find_sum_by_type(expenses):
     print()
 
 def ui_find_day_with_max_sum(expenses):
-    max_expense = None
+    max_expenses = expenses.do('find_max_sum', keep=False)
 
-    for expense in expenses.do('get', keep=False):
-        if max_expense is None or max_expense.get_sum() < expense.get_sum():
-            max_expense = expense
-
-    print('The day with the maximum sum is {}.'.format(max_expense.get_day()))
+    ui_print_expenses(max_expenses, 'The expenses of maximum sum are:')
     print()
 
 def ui_find_by_sum(expenses):
@@ -240,7 +236,7 @@ def ui_run():
 
     report_menu = Menu([
         Entry(1, 'Find the total sum for a given expense type', ui_find_sum_by_type, expenses),
-        Entry(2, 'Find the day with the maximum sum', ui_find_day_with_max_sum, expenses),
+        Entry(2, 'Find all the expenses of maximum sum', ui_find_day_with_max_sum, expenses),
         Entry(3, 'Find all the expenses with a given sum', ui_find_by_sum, expenses),
         Entry(4, 'Show all the expenses sorted by type', ui_print_sorted, expenses),
         Entry(5, 'Show all expenses grouped by sum', ui_print_grouped, expenses),
