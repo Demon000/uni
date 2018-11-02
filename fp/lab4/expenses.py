@@ -273,7 +273,7 @@ class ExpensesCollection():
 
     def group_by_sums(self, sums):
         '''
-        Groups the expenses in buckets using the given sums.
+        Group the expenses in buckets using the given sums.
 
         Args:
             sums: The sums to split into buckets by.
