@@ -176,12 +176,13 @@ def ui_print_grouped(expenses):
 
     print('The grouped expenses are:')
 
-    for index, sum_ in enumerate(sums):
-        print('<= ' + str(sum_))
-        ui_print_expenses(groups[index])
+    for index, group in enumerate(groups):
+        if index == len(sums):
+            print('>  ' + str(sums[-1]))
+        else:
+            print('<= ' + str(sums[index]))
 
-    print('>  ' + str(sums[-1]))
-    ui_print_expenses(groups[-1])
+        ui_print_expenses(group)
 
 def ui_undo(expenses):
     try:
