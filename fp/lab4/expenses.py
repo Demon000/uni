@@ -270,3 +270,34 @@ class ExpensesCollection():
 
         for serialized in serialized_collection:
             self.add_one(serialized['day'], serialized['type'], serialized['sum'])
+
+    def group_by_sums(self, sums):
+        '''
+        Groups the expenses in buckets using the given sums.
+
+        Args:
+            sums: The sums to split into buckets by.
+
+        Returns:
+            list: List of buckets containing expenses grouped by sums.
+        '''
+        groups = []
+        last = []
+
+        for sum_ in sums:
+            groups.append([])
+
+        for expense in self.collection:
+            appended = False
+            for index, sum_ in enumerate(sums):
+                if expense.get_sum() <= sum_:
+                    groups[index].append(expense)
+                    appended = True
+                    break
+
+            if not appended:
+                last.append(expense)
+
+        groups.append(last)
+
+        return groups

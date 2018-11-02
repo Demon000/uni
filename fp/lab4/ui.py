@@ -177,6 +177,19 @@ def ui_print_sorted(expenses):
     ui_print_expenses(collection, 'The expenses sorted by type are:')
     print()
 
+def ui_print_grouped(expenses):
+    sums = [100, 500]
+    groups = expenses.do('group_by_sums', sums, keep=False)
+
+    print('The grouped expenses are:')
+
+    for index, sum_ in enumerate(sums):
+        print('<= ' + str(sum_))
+        ui_print_expenses(groups[index])
+
+    print('>  ' + str(sums[-1]))
+    ui_print_expenses(groups[-1])
+
 def ui_undo(expenses):
     try:
         expenses.undo()
@@ -230,6 +243,7 @@ def ui_run():
         Entry(2, 'Find the day with the maximum sum', ui_find_day_with_max_sum, expenses),
         Entry(3, 'Find all the expenses with a given sum', ui_find_by_sum, expenses),
         Entry(4, 'Show all the expenses sorted by type', ui_print_sorted, expenses),
+        Entry(5, 'Show all expenses grouped by sum', ui_print_grouped, expenses),
     ])
 
     main_menu = Menu([
