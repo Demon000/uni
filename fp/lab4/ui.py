@@ -246,15 +246,19 @@ def ui_run():
         Entry(5, 'Show all expenses grouped by sum', ui_print_grouped, expenses),
     ])
 
+    operations_menu = Menu([
+        Entry('u', 'Undo', ui_undo, expenses),
+        Entry('r', 'Redo', ui_redo, expenses),
+        Entry('s', 'Save', ui_save, expenses),
+        Entry('l', 'Load', ui_load, expenses),
+    ])
+
     main_menu = Menu([
         Entry(1, 'Add', add_menu.run),
         Entry(2, 'Delete', delete_menu.run),
         Entry(3, 'Find', find_menu.run),
         Entry(4, 'Report', report_menu.run),
-        Entry('u', 'Undo', ui_undo, expenses),
-        Entry('r', 'Redo', ui_redo, expenses),
-        Entry('s', 'Save', ui_save, expenses),
-        Entry('l', 'Load', ui_load, expenses),
+        Entry('o', 'Operations', operations_menu.run),
         Entry('x', 'Exit', ui_exit),
     ])
 
