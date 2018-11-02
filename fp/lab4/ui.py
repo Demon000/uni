@@ -199,7 +199,7 @@ def ui_load(expenses):
     path = ui_input_path()
 
     serialized = load_from_json(path)
-    expenses.do('add_serialized', serialized)
+    expenses.do('set_serialized', serialized)
 
 def ui_exit():
     print('Goodbye.')

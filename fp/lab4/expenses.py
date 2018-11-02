@@ -259,12 +259,14 @@ class ExpensesCollection():
 
         return serialized_collection
 
-    def add_serialized(self, serialized_collection):
+    def set_serialized(self, serialized_collection):
         '''
         Args:
-            serialized_collection (list): A serialized list to be added to the
+            serialized_collection (list): A serialized list to be set as the
                 expenses collection.
         '''
+
+        self.delete()
 
         for serialized in serialized_collection:
             self.add_one(serialized['day'], serialized['type'], serialized['sum'])
