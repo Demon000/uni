@@ -117,6 +117,21 @@ def test_group_by_sums():
     assert groups[2][0].matches(4, 2, 400)
     assert groups[2][1].matches(5, 2, 500)
 
+def test_undo_redo():
+    expenses = History(ExpensesCollection)
+
+    added_expense = expenses.do('add_one', 6, 1, 600)
+    assert added_expense.matches(6, 1, 600)
+
+    expenses.undo()
+    collection = expenses.do('get', keep=False)
+    assert len(collection) == 0
+
+    expenses.redo()
+    collection = expenses.do('get', keep=False)
+    assert len(collection) == 1
+    assert collection[0].matches(6, 1, 600)
+
 def run_tests():
     test_add_one()
     test_update_one()
@@ -125,6 +140,7 @@ def run_tests():
     test_find_total()
     test_find_max_sum()
     test_group_by_sums()
+    test_undo_redo()
 
 run_tests()
 print('Tests passed.')
