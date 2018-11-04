@@ -93,6 +93,14 @@ def ui_delete_by_interval(expenses):
     ui_print_expenses(deleted_expenses, 'Deleted expenses:')
     print()
 
+def ui_delete_smaller_sum(expenses):
+    max_sum = ui_input_sum()
+
+    deleted_expenses = expenses.do('delete', max_sum=max_sum - 1)
+
+    ui_print_expenses(deleted_expenses, 'Deleted expenses:')
+    print()
+
 def ui_delete_by_type(expenses):
     type_ = ui_input_type()
     deleted_expenses = expenses.do('delete', type_=type_)
@@ -217,6 +225,7 @@ def ui_run():
         Entry(1, 'Delete all expenses for any given day', ui_delete_by_day, expenses),
         Entry(2, 'Delete all expenses made between two days', ui_delete_by_interval, expenses),
         Entry(3, 'Delete all expenses of a given expense type', ui_delete_by_type, expenses),
+        Entry(4, 'Delete all expenses smaller than a given sum', ui_delete_smaller_sum, expenses),
     ])
 
     find_menu = Menu([
