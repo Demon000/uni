@@ -184,6 +184,7 @@ def ui_show_grouped(expenses):
             print('<= ' + str(sums[index]))
 
         ui_print_expenses(group)
+    print()
 
 def ui_undo(expenses):
     try:
