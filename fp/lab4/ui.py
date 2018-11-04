@@ -129,7 +129,7 @@ def ui_find_by_type(expenses):
             'The expenses of type {} are:'.format(type_name))
     print()
 
-def ui_find_sum_by_type(expenses):
+def ui_show_sum_by_type(expenses):
     type_ = ui_input_type()
     type_name = Expense.types[type_]
 
@@ -138,13 +138,13 @@ def ui_find_sum_by_type(expenses):
     print('The total sum for expenses of type {} is {}.'.format(type_name, sum_))
     print()
 
-def ui_find_day_with_max_sum(expenses):
+def ui_show_day_with_max_sum(expenses):
     max_expenses = expenses.do('find_max_sum', keep=False)
 
     ui_print_expenses(max_expenses, 'The expenses of maximum sum are:')
     print()
 
-def ui_find_by_sum(expenses):
+def ui_show_by_sum(expenses):
     sum_ = ui_input_sum()
 
     matching_expenses = expenses.do('find', sum_=sum_, keep=False)
@@ -152,7 +152,7 @@ def ui_find_by_sum(expenses):
     ui_print_expenses(matching_expenses, 'The expenses of sum {} are:'.format(sum_))
     print()
 
-def ui_print_sorted(expenses):
+def ui_show_sorted(expenses):
     collection = expenses.do('find', keep=False)
 
     def sort_by_type(expense):
@@ -163,7 +163,7 @@ def ui_print_sorted(expenses):
     ui_print_expenses(collection, 'The expenses sorted by type are:')
     print()
 
-def ui_print_grouped(expenses):
+def ui_show_grouped(expenses):
     sums = [100, 500]
     groups = expenses.do('group_by_sums', sums, keep=False)
 
@@ -226,11 +226,11 @@ def ui_run():
     ])
 
     report_menu = Menu([
-        Entry(1, 'Find the total sum for a given expense type', ui_find_sum_by_type, expenses),
-        Entry(2, 'Find all the expenses of maximum sum', ui_find_day_with_max_sum, expenses),
-        Entry(3, 'Find all the expenses with a given sum', ui_find_by_sum, expenses),
-        Entry(4, 'Show all the expenses sorted by type', ui_print_sorted, expenses),
-        Entry(5, 'Show all expenses grouped by sum', ui_print_grouped, expenses),
+        Entry(1, 'Show the total sum for a given expense type', ui_show_sum_by_type, expenses),
+        Entry(2, 'Show all the expenses of maximum sum', ui_show_day_with_max_sum, expenses),
+        Entry(3, 'Show all the expenses with a given sum', ui_show_by_sum, expenses),
+        Entry(4, 'Show all the expenses sorted by type', ui_show_sorted, expenses),
+        Entry(5, 'Show all expenses grouped by sum', ui_show_grouped, expenses),
     ])
 
     operations_menu = Menu([
