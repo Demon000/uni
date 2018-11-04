@@ -1,6 +1,13 @@
 from expenses import ExpensesCollection, Expense
 from history import History
 
+def test_populate(expenses):
+    expenses.add_one(1, 1, 100)
+    expenses.add_one(2, 1, 200)
+    expenses.add_one(3, 1, 300)
+    expenses.add_one(4, 2, 400)
+    expenses.add_one(5, 2, 500)
+
 def test_add_one():
     expenses = ExpensesCollection()
 
@@ -29,13 +36,6 @@ def test_update_one():
         assert False
     except ValueError:
         pass
-
-def test_populate(expenses):
-    expenses.add_one(1, 1, 100)
-    expenses.add_one(2, 1, 200)
-    expenses.add_one(3, 1, 300)
-    expenses.add_one(4, 2, 400)
-    expenses.add_one(5, 2, 500)
 
 def test_delete():
     expenses = ExpensesCollection()
