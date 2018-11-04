@@ -25,7 +25,7 @@ def test_update_one():
 
     # Test invalid update
     try:
-        added_expense = expenses.update_one(31, 1, 500)
+        expenses.update_one(31, 1, 500)
         assert False
     except ValueError:
         pass
