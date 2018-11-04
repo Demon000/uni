@@ -79,5 +79,36 @@ def run_tests():
     matching_expenses = expenses.do('find', type_=4)
     assert matching_expenses[0].matches(8, 4, 500)
 
+    # Test report sum for expense type
+    sum_ = expenses.do('find_total', type_=1)
+    assert sum_ == 1500
+
+    # Test find expenses of maximum sum
+    matching_expenses = expenses.do('find_max_sum')
+    assert len(matching_expenses) == 4
+    assert matching_expenses[0].matches(4, 1, 500)
+    assert matching_expenses[1].matches(6, 1, 500)
+    assert matching_expenses[2].matches(7, 1, 500)
+    assert matching_expenses[3].matches(8, 4, 500)
+
+    # Test find expenses with a given sum
+    matching_expenses = expenses.do('find', sum_=500)
+    assert len(matching_expenses) == 4
+    assert matching_expenses[0].matches(4, 1, 500)
+    assert matching_expenses[1].matches(6, 1, 500)
+    assert matching_expenses[2].matches(7, 1, 500)
+    assert matching_expenses[3].matches(8, 4, 500)
+
+    # Test group expenses in buckets by sums
+    sums = [100, 500]
+    groups = expenses.do('group_by_sums', sums)
+    assert len(groups[0]) == 0
+    assert len(groups[1]) == 4
+    assert len(groups[2]) == 0
+    assert groups[1][0].matches(4, 1, 500)
+    assert groups[1][1].matches(6, 1, 500)
+    assert groups[1][2].matches(7, 1, 500)
+    assert groups[1][3].matches(8, 4, 500)
+
 run_tests()
 print('Tests passed.')
