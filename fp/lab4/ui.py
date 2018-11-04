@@ -237,9 +237,9 @@ def ui_run():
 
     report_menu = Menu([
         Entry(1, 'Show the total sum for a given expense type', ui_show_sum_by_type, expenses),
-        Entry(2, 'Show all the expenses of maximum sum', ui_show_day_with_max_sum, expenses),
-        Entry(3, 'Show all the expenses with a given sum', ui_show_by_sum, expenses),
-        Entry(4, 'Show all the expenses sorted by type', ui_show_sorted, expenses),
+        Entry(2, 'Show all expenses of maximum sum', ui_show_day_with_max_sum, expenses),
+        Entry(3, 'Show all expenses with a given sum', ui_show_by_sum, expenses),
+        Entry(4, 'Show all expenses sorted by type', ui_show_sorted, expenses),
         Entry(5, 'Show all expenses grouped by sum', ui_show_grouped, expenses),
     ])
 
