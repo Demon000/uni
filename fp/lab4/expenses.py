@@ -184,7 +184,7 @@ class ExpensesCollection():
     def add_one(self, day, type_, sum_):
         '''
         Create an expense using the passed day, type and sum and
-        add it to to the expenses list.
+        add it to the expenses list.
 
         Args:
             day (int): A day to use when creating the new expense.
