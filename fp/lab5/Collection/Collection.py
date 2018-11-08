@@ -31,23 +31,37 @@ class Collection():
 
         return False
 
+    def add(self, item):
+        '''
+        Add an item to the collection.
+
+        Args:
+            item (Item): The item to be added.
+
+        Raises:
+            ValueError: If an equal item already exists.
+        '''
+        if self.contains(item):
+            raise ValueError('Collection already contains an equivalent item '
+                    'of type {}'.format(self.__Type.__name__))
+
+        self.__items.append(item)
+
     def create(self, *args, **kwargs):
         '''
         Create an item using the passed arguments and assign it an unique id.
-        Add it to the expenses list.
 
         Args:
             Same arguments as Type(), except id_.
 
         Returns:
             Item: The newly created item.
-
-        Raises:
-            ValueError: If an equal item already exists.
         '''
         id_ = self.get_unique_id()
         item = self.__Type(id_, *args, **kwargs)
-        self.__items.append(item)
+
+        self.add(item)
+
         return item
 
     def get(self):
