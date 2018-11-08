@@ -7,7 +7,7 @@ class Collection():
         next_id = self.__next_id
         self.__next_id += 1
         return next_id
-        
+
     def __init__(self, Type):
         '''
         Initialize a collection.
@@ -132,3 +132,18 @@ class Collection():
         self.__items = left_items
 
         return deleted_items
+
+    def delete(self, item):
+        '''
+        Remove the passed item from the collection.
+
+        Args:
+            item (Item): The item to be removed.
+
+        Raises:
+            ValueError: If the item cannot be found in this collection.
+        '''
+        try:
+            self.__items.remove(item)
+        except ValueError:
+            raise ValueError('Collection does not contain this item.')
