@@ -109,7 +109,7 @@ class Collection():
 
         return item
 
-    def delete_matching(self, *args, **kwargs):
+    def remove_matching(self, *args, **kwargs):
         '''
         Find the items that match the passed arguments and
         remove them.
@@ -120,20 +120,20 @@ class Collection():
         Returns:
             list: A list containing the deleted items.
         '''
-        deleted_items = []
+        removed_items = []
         left_items = []
 
         for item in self.__items:
             if item.matches(*args, **kwargs):
-                deleted_items.append(item)
+                removed_items.append(item)
             else:
                 left_items.append(item)
 
         self.__items = left_items
 
-        return deleted_items
+        return removed_items
 
-    def delete(self, item):
+    def remove(self, item):
         '''
         Remove the passed item from the collection.
 
