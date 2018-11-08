@@ -4,8 +4,8 @@ class Collection():
         Returns:
             int: The next unique id of the collection.
         '''
-        next_id = self.next_id
-        self.next_id += 1
+        next_id = self.__next_id
+        self.__next_id += 1
         return next_id
         
     def __init__(self, Type):
@@ -15,9 +15,9 @@ class Collection():
         Args:
             Type (Class): The class initializer for the items.
         '''
-        self.items = []
-        self.Type = Type
-        self.next_id = 0
+        self.__items = []
+        self.__Type = Type
+        self.__next_id = 0
 
     def contains(self, other):
         '''
@@ -25,7 +25,7 @@ class Collection():
             bool: Whether there is any item in this list
             equal with the given item.
         '''
-        for item in self.items:
+        for item in self.__items:
             if item == other:
                 return True
 
@@ -46,8 +46,8 @@ class Collection():
             ValueError: If an equal item already exists.
         '''
         id_ = self.get_unique_id()
-        item = self.Type(id_, *args, **kwargs)
-        self.items.append(item)
+        item = self.__Type(id_, *args, **kwargs)
+        self.__items.append(item)
         return item
 
     def get(self):
@@ -55,7 +55,7 @@ class Collection():
         Returns:
             list: A copy of the items list.
         '''
-        items = self.items[:]
+        items = self.__items[:]
         return items
 
     def find_matching(self, *args, **kwargs):
@@ -70,7 +70,7 @@ class Collection():
         '''
         matching_items = []
 
-        for item in self.items:
+        for item in self.__items:
             if item.matches(*args, **kwargs):
                 matching_items.append(item)
 
@@ -109,12 +109,12 @@ class Collection():
         deleted_items = []
         left_items = []
 
-        for item in self.items:
+        for item in self.__items:
             if item.matches(*args, **kwargs):
                 deleted_items.append(item)
             else:
                 left_items.append(item)
 
-        self.items = left_items
+        self.__items = left_items
 
         return deleted_items

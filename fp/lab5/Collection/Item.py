@@ -6,35 +6,35 @@ class Item():
         Args:
             id_ (int): The id of this item.
         '''
-        self.id_ = id_
+        self.__id = id_
 
     def __eq__(self, other):
         '''
         Returns:
             bool: Whether this item is equal to the other item.
         '''
-        return self.matches(other.id_)
+        return self.matches(other.__id)
 
     def __str__(self):
         '''
         Returns:
             str: An user-friendly representation of the stored data.
         '''
-        return 'Id: {}'.format(self.id_)
+        return 'Id: {}'.format(self.__id)
 
     def get_id(self):
         '''
         Returns:
             int: The id of this item.
         '''
-        return self.id_
+        return self.__id
 
     def matches(self, id_=None):
         '''
         Returns:
             bool: Whether this item matches the passed arguments.
         '''
-        if id_ is not None and id_ != self.id_:
+        if id_ is not None and id_ != self.__id:
             return False
 
         return True
