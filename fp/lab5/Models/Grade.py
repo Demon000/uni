@@ -1,9 +1,11 @@
 from Collection.Item import Item
+from Utils.Utils import validate_int
 
 class Grade(Item):
     def __init__(self, id_, discipline_id, student_id, value):
         '''
         Initialize a grade and inherit from item.
+        Validate the passed arguments.
 
         Args:
             discipline_id (int): The id of the discipline that this grade has
@@ -11,6 +13,8 @@ class Grade(Item):
             student_id (int): The id of the student that got this grade.
             value (int): The value of this grade.
         '''
+        validate_int(value, 1, 10, 'Grade')
+
         super().__init__(id_)
         self.__discipline_id = discipline_id
         self.__student_id = student_id

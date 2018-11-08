@@ -1,14 +1,19 @@
 from Collection.Item import Item
+from Utils.Utils import validate_str
 
 class Student(Item):
     def __init__(self, id_, name):
         '''
         Initialize a student and inherit from item.
+        Validate the passed arguments.
 
         Args:
             id_ (int): The id of this item.
             name (str): The name of this student.
         '''
+
+        validate_str(name, 'Student name')
+
         super().__init__(id_)
         self.__name = name
 

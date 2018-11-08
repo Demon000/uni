@@ -1,14 +1,20 @@
 from Collection.Item import Item
+from Utils.Utils import validate_str
 
 class Discipline(Item):
     def __init__(self, id_, name, professor):
         '''
         Initialize a discipline and inherit from item.
+        Validate the passed arguments.
 
         Args:
             id_ (int): The id of this item.
             name (str): The name of this discipline.
         '''
+
+        validate_str(name, 'Discipline name')
+        validate_str(professor, 'Professor name')
+
         super().__init__(id_)
         self.__name = name
         self.__professor = professor
