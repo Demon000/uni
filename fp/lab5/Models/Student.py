@@ -35,6 +35,8 @@ class Student(Item):
         Args:
             name (str): A new name for this student.
         '''
+        Student.validate_name(name)
+
         self.__name = name
 
     @staticmethod

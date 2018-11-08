@@ -44,6 +44,8 @@ class Discipline(Item):
         Args:
             name (str): A new name for this discipline.
         '''
+        Discipline.validate_name(name)
+
         self.__name = name
 
     def set_professor(self, professor):
@@ -51,6 +53,8 @@ class Discipline(Item):
         Args:
             professor (str): The new professor teaching this discipline.
         '''
+        Discipline.validate_professor(professor)
+
         self.__professor = professor
 
     @staticmethod
