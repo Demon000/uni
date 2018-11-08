@@ -1,5 +1,9 @@
 class Collection():
     def get_unique_id(self):
+        '''
+        Returns:
+            int: The next unique id of the collection.
+        '''
         next_id = self.next_id
         self.next_id += 1
         return next_id
