@@ -261,5 +261,3 @@ def ui_run():
 
     while True:
         main_menu.run()
-
-ui_run()
