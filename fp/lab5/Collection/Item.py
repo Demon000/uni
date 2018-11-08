@@ -31,6 +31,9 @@ class Item():
 
     def matches(self, id_=None):
         '''
+        Args:
+            id_ (int, optional): An id that this item is matched against.
+
         Returns:
             bool: Whether this item matches the passed arguments.
         '''
