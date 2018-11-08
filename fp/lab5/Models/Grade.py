@@ -13,7 +13,7 @@ class Grade(Item):
             student_id (int): The id of the student that got this grade.
             value (int): The value of this grade.
         '''
-        validate_int(value, 1, 10, 'Grade')
+        Grade.validate_value(value)
 
         super().__init__(id_)
         self.__discipline_id = discipline_id
@@ -57,3 +57,16 @@ class Grade(Item):
             return False
 
         return True
+
+    @staticmethod
+    def validate_value(value):
+        '''
+        Validate a grade value.
+
+        Args:
+            value (int): The value to be validated.
+
+        Raises:
+            ValueError: If the value is invalid.
+        '''
+        validate_int(value, 1, 10, 'Grade')

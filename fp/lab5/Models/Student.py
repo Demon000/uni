@@ -11,8 +11,7 @@ class Student(Item):
             id_ (int): The id of this item.
             name (str): The name of this student.
         '''
-
-        validate_str(name, 'Student name')
+        Student.validate_name(name)
 
         super().__init__(id_)
         self.__name = name
@@ -37,3 +36,16 @@ class Student(Item):
             name (str): A new name for this student.
         '''
         self.__name = name
+
+    @staticmethod
+    def validate_name(name):
+        '''
+        Validate a student name.
+
+        Args:
+            name (str): The name to be validated.
+
+        Raises:
+            ValueError: If the name is invalid.
+        '''
+        validate_str(name, 'Student name')

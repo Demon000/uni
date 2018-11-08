@@ -11,9 +11,8 @@ class Discipline(Item):
             id_ (int): The id of this item.
             name (str): The name of this discipline.
         '''
-
-        validate_str(name, 'Discipline name')
-        validate_str(professor, 'Professor name')
+        Discipline.validate_name(name)
+        Discipline.validate_professor(professor)
 
         super().__init__(id_)
         self.__name = name
@@ -53,3 +52,29 @@ class Discipline(Item):
             professor (str): The new professor teaching this discipline.
         '''
         self.__professor = professor
+
+    @staticmethod
+    def validate_name(name):
+        '''
+        Validate a discipline name.
+
+        Args:
+            name (str): The name to be validated.
+
+        Raises:
+            ValueError: If the name is invalid.
+        '''
+        validate_str(name, 'Discipline name')
+
+    @staticmethod
+    def validate_professor(professor):
+        '''
+        Validate a professor name.
+
+        Args:
+            name (str): The name to be validated.
+
+        Raises:
+            ValueError: If the name is invalid.
+        '''
+        validate_str(professor, 'Professor name')
