@@ -3,7 +3,7 @@ from Utils.Utils import validate_str
 class Student():
     def __init__(self, name):
         '''
-        Initialize a student and inherit from item.
+        Initialize a student.
 
         Args:
             name (str): The name of this student.

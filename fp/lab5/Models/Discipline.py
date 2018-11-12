@@ -3,7 +3,7 @@ from Utils.Utils import validate_str
 class Discipline():
     def __init__(self, name, professor):
         '''
-        Initialize a discipline and inherit from item.
+        Initialize a discipline.
 
         Args:
             name (str): The name of this discipline.

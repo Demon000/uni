@@ -3,7 +3,7 @@ from Utils.Utils import validate_int
 class Grade():
     def __init__(self, discipline, student, value):
         '''
-        Initialize a grade and inherit from item.
+        Initialize a grade.
 
         Args:
             discipline_id (int): The id of the discipline that this grade has
