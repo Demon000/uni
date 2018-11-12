@@ -6,9 +6,8 @@ class Grade():
         Initialize a grade.
 
         Args:
-            discipline_id (int): The id of the discipline that this grade has
-                been given for.
-            student_id (int): The id of the student that got this grade.
+            discipline (int): The discipline that this grade has been given for.
+            student (int): The student that got this grade.
             value (int): The value of this grade.
         '''
         self.__discipline = discipline
