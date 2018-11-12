@@ -5,14 +5,11 @@ class Student(Item):
     def __init__(self, id_, name):
         '''
         Initialize a student and inherit from item.
-        Validate the passed arguments.
 
         Args:
             id_ (int): The id of this item.
             name (str): The name of this student.
         '''
-        Student.validate_name(name)
-
         super().__init__(id_)
         self.__name = name
 
@@ -35,8 +32,6 @@ class Student(Item):
         Args:
             name (str): A new name for this student.
         '''
-        Student.validate_name(name)
-
         self.__name = name
 
     @staticmethod
