@@ -7,6 +7,7 @@ class Discipline():
 
         Args:
             name (str): The name of this discipline.
+            professor (str): The name of name of professor teaching this discipline.
         '''
         self.__name = name
         self.__professor = professor
