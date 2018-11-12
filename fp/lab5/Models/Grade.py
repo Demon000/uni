@@ -1,7 +1,6 @@
-from Collection.Item import Item
 from Utils.Utils import validate_int
 
-class Grade(Item):
+class Grade():
     def __init__(self, discipline, student, value):
         '''
         Initialize a grade and inherit from item.

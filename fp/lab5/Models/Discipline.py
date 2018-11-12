@@ -1,7 +1,6 @@
-from Collection.Item import Item
 from Utils.Utils import validate_str
 
-class Discipline(Item):
+class Discipline():
     def __init__(self, name, professor):
         '''
         Initialize a discipline and inherit from item.

@@ -1,7 +1,6 @@
-from Collection.Item import Item
 from Utils.Utils import validate_str
 
-class Student(Item):
+class Student():
     def __init__(self, name):
         '''
         Initialize a student and inherit from item.
