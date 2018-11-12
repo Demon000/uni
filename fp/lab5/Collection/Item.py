@@ -1,43 +1,27 @@
 class Item():
-    def __init__(self, id_):
+    def __init__(self):
         '''
         Initialize an item.
-
-        Args:
-            id_ (int): The id of this item.
         '''
-        self.__id = id_
+        pass
 
     def __eq__(self, other):
         '''
         Returns:
             bool: Whether this item is equal to the other item.
         '''
-        return self.matches(other.__id)
+        pass
 
     def __str__(self):
         '''
         Returns:
             str: An user-friendly representation of the stored data.
         '''
-        return 'Id: {}'.format(self.__id)
-
-    def get_id(self):
-        '''
-        Returns:
-            int: The id of this item.
-        '''
-        return self.__id
+        pass
 
     def matches(self, id_=None):
         '''
-        Args:
-            id_ (int, optional): An id that this item is matched against.
-
         Returns:
             bool: Whether this item matches the passed arguments.
         '''
-        if id_ is not None and id_ != self.__id:
-            return False
-
-        return True
+        pass

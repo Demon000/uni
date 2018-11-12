@@ -1,13 +1,4 @@
 class Collection():
-    def get_unique_id(self):
-        '''
-        Returns:
-            int: The next unique id of the collection.
-        '''
-        next_id = self.__next_id
-        self.__next_id += 1
-        return next_id
-
     def __init__(self, Type):
         '''
         Initialize a collection.
@@ -17,7 +8,6 @@ class Collection():
         '''
         self.__items = []
         self.__Type = Type
-        self.__next_id = 0
 
     def contains(self, other):
         '''
@@ -52,13 +42,12 @@ class Collection():
         Create an item using the passed arguments and assign it an unique id.
 
         Args:
-            Same arguments as Type(), except id_.
+            Same arguments as Type().
 
         Returns:
             Item: The newly created item.
         '''
-        id_ = self.get_unique_id()
-        item = self.__Type(id_, *args, **kwargs)
+        item = self.__Type(*args, **kwargs)
 
         self.add(item)
 

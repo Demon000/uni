@@ -2,15 +2,13 @@ from Collection.Item import Item
 from Utils.Utils import validate_str
 
 class Discipline(Item):
-    def __init__(self, id_, name, professor):
+    def __init__(self, name, professor):
         '''
         Initialize a discipline and inherit from item.
 
         Args:
-            id_ (int): The id of this item.
             name (str): The name of this discipline.
         '''
-        super().__init__(id_)
         self.__name = name
         self.__professor = professor
 
@@ -19,7 +17,7 @@ class Discipline(Item):
         Returns:
             str: An user-friendly representation of the stored data.
         '''
-        return 'ID: {}, Name: {}, Professor: {}'.format(self.get_id(), self.__name, self.__professor)
+        return 'Name: {}, Professor: {}'.format(self.__name, self.__professor)
 
     def get_name(self):
         '''

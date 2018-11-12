@@ -2,7 +2,7 @@ from Collection.Item import Item
 from Utils.Utils import validate_int
 
 class Grade(Item):
-    def __init__(self, id_, discipline_id, student_id, value):
+    def __init__(self, discipline_id, student_id, value):
         '''
         Initialize a grade and inherit from item.
 
@@ -12,7 +12,6 @@ class Grade(Item):
             student_id (int): The id of the student that got this grade.
             value (int): The value of this grade.
         '''
-        super().__init__(id_)
         self.__discipline_id = discipline_id
         self.__student_id = student_id
         self.__value = value
@@ -31,12 +30,11 @@ class Grade(Item):
         '''
         return self.__value
 
-    def matches(self, id_=None, discipline_id=None, student_id=None, value=None):
+    def matches(self, discipline_id=None, student_id=None, value=None):
         '''
         Check if this grade matches the passed arguments.
 
         Args:
-            id_ (int, optional): An id that this grade is matched against.
             discipline_id (int, optional): A discipline id that this grade is matched against.
             student_id (int, optional): A student id that this grade is matched against.
             value (int, optional): A value that this grade is matched against.
@@ -44,9 +42,6 @@ class Grade(Item):
         Returns:
             bool: Whether this grade matches the passed arguments.
         '''
-        if not super().matches(id_):
-            return False
-
         if discipline_id is not None and discipline_id != self.__discipline_id:
             return False
 
