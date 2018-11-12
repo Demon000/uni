@@ -6,7 +6,7 @@ class DisciplineController():
         Initialize a discipline controller.
 
         Args:
-            disciplines (Collection): The disciplines controller.
+            disciplines (Collection): The disciplines collection.
         '''
         self.__disciplines = disciplines
 
