@@ -2,7 +2,7 @@ from Collection.Item import Item
 from Utils.Utils import validate_int
 
 class Grade(Item):
-    def __init__(self, discipline_id, student_id, value):
+    def __init__(self, discipline, student, value):
         '''
         Initialize a grade and inherit from item.
 
@@ -12,8 +12,8 @@ class Grade(Item):
             student_id (int): The id of the student that got this grade.
             value (int): The value of this grade.
         '''
-        self.__discipline_id = discipline_id
-        self.__student_id = student_id
+        self.__discipline = discipline
+        self.__student = student
         self.__value = value
 
     def __str__(self):
@@ -21,7 +21,8 @@ class Grade(Item):
         Returns:
             str: An user-friendly representation of the stored data.
         '''
-        return 'Student ID: {}, Discipline ID: {}, Grade: {}'.format(self.__student_id, self.__discipline_id, self.__value)
+        return 'Student: {}, Discipline: {}, Grade: {}' \
+                .format(self.__student.get_name(), self.__discipline.get_name(), self.__value)
 
     def get_value(self):
         '''
@@ -30,7 +31,7 @@ class Grade(Item):
         '''
         return self.__value
 
-    def matches(self, discipline_id=None, student_id=None, value=None):
+    def matches(self, discipline=None, student=None, value=None):
         '''
         Check if this grade matches the passed arguments.
 
@@ -42,10 +43,10 @@ class Grade(Item):
         Returns:
             bool: Whether this grade matches the passed arguments.
         '''
-        if discipline_id is not None and discipline_id != self.__discipline_id:
+        if discipline is not None and discipline != self.__discipline:
             return False
 
-        if student_id is not None and student_id != self.__student_id:
+        if student is not None and student != self.__student:
             return False
 
         return True
