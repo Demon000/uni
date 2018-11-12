@@ -1,25 +1,9 @@
 class Collection():
-    def __init__(self, Type):
+    def __init__(self):
         '''
         Initialize a collection.
-
-        Args:
-            Type (Class): The class initializer for the items.
         '''
         self.__items = []
-        self.__Type = Type
-
-    def contains(self, other):
-        '''
-        Returns:
-            bool: Whether there is any item in this list
-            equal with the given item.
-        '''
-        for item in self.__items:
-            if item == other:
-                return True
-
-        return False
 
     def add(self, item):
         '''
@@ -31,27 +15,7 @@ class Collection():
         Raises:
             ValueError: If an equal item already exists.
         '''
-        if self.contains(item):
-            raise ValueError('Collection already contains an equivalent item '
-                    'of type {}'.format(self.__Type.__name__))
-
         self.__items.append(item)
-
-    def create(self, *args, **kwargs):
-        '''
-        Create an item using the passed arguments and assign it an unique id.
-
-        Args:
-            Same arguments as Type().
-
-        Returns:
-            Item: The newly created item.
-        '''
-        item = self.__Type(*args, **kwargs)
-
-        self.add(item)
-
-        return item
 
     def get(self):
         '''
