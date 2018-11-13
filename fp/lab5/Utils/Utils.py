@@ -13,4 +13,4 @@ def validate_str(value, length=None, name='Value'):
         raise ValueError('{} must be a string.'.format(name))
 
     if length is not None and length > len(value):
-        raise ValueError('{} must not be empty.'.format(name))
+        raise ValueError('{} must be at least {} characters long.'.format(name, length))
