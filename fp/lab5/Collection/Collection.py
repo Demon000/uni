@@ -16,6 +16,7 @@ class Collection():
             ValueError: If an equal item already exists.
         '''
         self.__items.append(item)
+        return item
 
     def get(self):
         '''
