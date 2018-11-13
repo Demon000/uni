@@ -1,7 +1,7 @@
 from Models.Grade import Grade
 
 class GradeController():
-    self __init__(self, grades):
+    def __init__(self, grades):
         '''
         Initialize a grades controller.
 
@@ -10,7 +10,7 @@ class GradeController():
         '''
         self.__grades = grades
 
-    self add_grade(self, discipline, student, value):
+    def add_grade(self, discipline, student, value):
         '''
         Create and add a grade.
 
@@ -28,14 +28,14 @@ class GradeController():
         grade = Grade(discipline, student, value)
         return self.__grades.add(grade)
 
-    self get_grades(self):
+    def get_grades(self):
         '''
         Returns:
             list: A list containing all the grades.
         '''
         return self.__grades.get()
 
-    self remove_grade(self, grade):
+    def remove_grade(self, grade):
         '''
         Remove a grade.
 
@@ -47,7 +47,7 @@ class GradeController():
         '''
         return self.__grades.remove(grade)
 
-    self remove_matching_grades(self, discipline=None, student=None, value=None):
+    def remove_matching_grades(self, discipline=None, student=None, value=None):
         '''
         Remove all the grades that matched the passed arguments.
 

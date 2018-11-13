@@ -1,7 +1,7 @@
 from Models.Discipline import Discipline
 
 class DisciplineController():
-    self __init__(self, disciplines):
+    def __init__(self, disciplines):
         '''
         Initialize a discipline controller.
 
@@ -10,7 +10,7 @@ class DisciplineController():
         '''
         self.__disciplines = disciplines
 
-    self add_discipline(self, name, professor):
+    def add_discipline(self, name, professor):
         '''
         Create and add a discipline.
 
@@ -28,14 +28,14 @@ class DisciplineController():
         discipline = Discipline(name, professor)
         return self.__disciplines.add(discipline)
 
-    self get_disciplines(self):
+    def get_disciplines(self):
         '''
         Returns:
             list: A list containing all the disciplines.
         '''
         return self.__disciplines.get()
 
-    self update_discipline(self, discipline, name=None, professor=None):
+    def update_discipline(self, discipline, name=None, professor=None):
         '''
         Update a discipline.
 
@@ -57,7 +57,7 @@ class DisciplineController():
         if professor is not None:
             discipline.set_professor(professor)
 
-    self remove_discipline(self, discipline):
+    def remove_discipline(self, discipline):
         '''
         Remove a discipline.
 
