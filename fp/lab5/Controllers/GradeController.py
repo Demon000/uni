@@ -52,7 +52,7 @@ class GradeController():
         Remove all the grades that matched the passed arguments.
 
         Args:
-            Same arguments as Grade.matches()
+            Same arguments as Grade.matches().
 
         Returns:
             list: A list of the removed grades.
