@@ -43,6 +43,29 @@ class Grade():
         '''
         return self.__value
 
+    def matches(self, discipline=None, student=None, value=None):
+        '''
+        Check if this grade matches the passed arguments.
+
+        Args:
+            discipline_id (int, optional): A discipline id that this grade is matched against.
+            student_id (int, optional): A student id that this grade is matched against.
+            value (int, optional): A value that this grade is matched against.
+
+        Returns:
+            bool: Whether this grade matches the passed arguments.
+        '''
+        if discipline is not None and discipline != self.__discipline:
+            return False
+
+        if student is not None and student != self.__student:
+            return False
+
+        if value is not None and value != self.__value:
+            return False
+
+        return True
+
     @staticmethod
     def validate_value(value):
         '''
