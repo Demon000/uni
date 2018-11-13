@@ -22,6 +22,20 @@ class Grade():
         return 'Student: {}, Discipline: {}, Grade: {}' \
                 .format(self.__student.get_name(), self.__discipline.get_name(), self.__value)
 
+    def get_discipline(self):
+        '''
+        Returns:
+            Discipline: The discipline that this grade has been given for.
+        '''
+        return self.__discipline
+
+    def get_student(self):
+        '''
+        Returns:
+            Student: The student that got this grade.
+        '''
+        return self.__student
+
     def get_value(self):
         '''
         Returns:
