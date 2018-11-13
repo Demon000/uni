@@ -46,3 +46,22 @@ class GradeController():
             Grade: The removed grade.
         '''
         return self.__grades.remove(grade)
+
+    self remove_matching_grades(self, discipline=None, student=None, value=None):
+        '''
+        Remove all the grades that matched the passed arguments.
+
+        Args:
+            Same arguments as Grade.matches()
+
+        Returns:
+            list: A list of the removed grades.
+        '''
+        removed_grades = []
+
+        for grade in self.get_grades():
+            if grade.matches(discipline, student, value):
+                self.remove_grade(grade)
+                removed_grades.append(grade)
+
+        return removed_grades
