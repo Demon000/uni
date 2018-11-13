@@ -11,3 +11,6 @@ def validate_int(value, min_value=None, max_value=None, name='Value'):
 def validate_str(value, name='Value'):
     if type(value) is not str:
         raise ValueError('{} must be a string.'.format(name))
+
+    if not len(value):
+        raise ValueError('{} must not be empty.'.format(name))
