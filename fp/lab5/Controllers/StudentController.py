@@ -23,8 +23,6 @@ class StudentController():
         Returns:
             Student: The new student.
         '''
-        Student.validate_name(name)
-
         student = Student(name)
         return self.__students.add(student)
 
@@ -49,7 +47,6 @@ class StudentController():
             Student: The updated student.
         '''
         if name is not None:
-            Student.validate_name(name)
             student.set_name(name)
 
     self remove_student(self, student):

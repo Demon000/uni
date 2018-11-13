@@ -25,8 +25,6 @@ class GradeController():
         Returns:
             Grade: The new grade.
         '''
-        Grade.validate_name(name)
-
         grade = Grade(discipline, student, value)
         return self.__grades.add(grade)
 
