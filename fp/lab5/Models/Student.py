@@ -42,4 +42,4 @@ class Student():
         Raises:
             ValueError: If the name is invalid.
         '''
-        validate_str(name, 'Student name')
+        validate_str(name, 1, 'Student name')

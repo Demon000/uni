@@ -58,7 +58,7 @@ class Discipline():
         Raises:
             ValueError: If the name is invalid.
         '''
-        validate_str(name, 'Discipline name')
+        validate_str(name, 1, 'Discipline name')
 
     @staticmethod
     def validate_professor(professor):
@@ -71,4 +71,4 @@ class Discipline():
         Raises:
             ValueError: If the name is invalid.
         '''
-        validate_str(professor, 'Professor name')
+        validate_str(professor, 1, 'Professor name')
