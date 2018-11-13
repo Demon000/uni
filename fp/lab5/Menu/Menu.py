@@ -1,3 +1,5 @@
+from Menu.Entry import Entry
+
 class Menu():
     def __init__(self, entries):
         '''
