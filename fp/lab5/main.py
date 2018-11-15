@@ -3,6 +3,7 @@ from Controllers.StudentController import StudentController
 from Controllers.DisciplineController import DisciplineController
 from Controllers.GradeController import GradeController
 from UI.UI import UI
+from Tests.Tests import run_tests
 
 def run():
     disciplines_collection = Collection()
@@ -17,4 +18,5 @@ def run():
     ui = UI(discipline_controller, student_controller, grade_controller)
     ui.run()
 
+run_tests()
 run()
