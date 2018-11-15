@@ -145,6 +145,11 @@ class UI():
         for discipline in disciplines:
             print(discipline)
 
+    def show_grades(self):
+        grades = self.__grade_controller.get_grades()
+        for grade in grades:
+            print(grade)
+
     def exit(self):
         print('Goodbye.')
         exit()
@@ -164,10 +169,16 @@ class UI():
             Entry(4, 'Show disciplines', self.show_disciplines),
         ])
 
+        grade_menu = Menu([
+            Entry(1, 'Add grade', self.add_grade),
+            Entry(2, 'Show grades', self.show_grades),
+        ])
+
         main_menu = Menu([
             Entry(1,  'Students', student_menu.run),
             Entry(2, 'Disciplines', discipline_menu.run),
-            Entry('x', 'Exit', self.exit)
+            Entry(3, 'Grades', grade_menu.run),
+            Entry('x', 'Exit', self.exit),
         ])
 
         while True:
