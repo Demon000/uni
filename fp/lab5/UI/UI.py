@@ -77,7 +77,7 @@ class UI():
                     self.__discipline_controller.get_disciplines())
             student = UI.input_item('Choose a student: ',
                     self.__student_controller.get_students())
-            value = UI.input_int('Grade: ', type_cast=int,
+            value = UI.input_value('Grade: ', type_cast=int,
                     validate_fn=Grade.validate_value)
         except ValueError as ve:
             print(ve)
