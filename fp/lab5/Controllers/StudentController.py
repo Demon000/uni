@@ -33,7 +33,7 @@ class StudentController():
         '''
         return self.__students.get()
 
-    def update_student(self, name=None):
+    def update_student(self, student, name=None):
         '''
         Update a student.
 
