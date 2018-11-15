@@ -96,7 +96,7 @@ class UI():
             print(ve)
             return
 
-        student.set_name(name)
+        self.__student_controller.update_student(student, name)
 
     def update_discipline(self):
         try:
@@ -110,8 +110,7 @@ class UI():
             print(ve)
             return
 
-        discipline.set_name(name)
-        discipline.set_professor(professor)
+        self.__discipline_controller.update_discipline(discipline, name, professor)
 
     def remove_student(self):
         try:
