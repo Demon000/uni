@@ -77,6 +77,24 @@ def test_delete_student():
 
     assert len(students) == 0
 
+def test_add_grade():
+    disciplines_collection = Collection()
+    discipline_controller = DisciplineController(disciplines_collection)
+
+    students_collection = Collection()
+    student_controller = StudentController(students_collection)
+
+    grades_collection = Collection()
+    grade_controller = GradeController(grades_collection)
+
+    discipline = discipline_controller.add_discipline('Sport', 'Moca')
+    student = student_controller.add_student('Gigel')
+    grade = grade_controller.add_grade(discipline, student, 10)
+
+    assert grade.get_value() == 10
+
+def test_validate_username():
+    pass
 
 def run_tests():
     test_add_discipline()
@@ -88,3 +106,5 @@ def run_tests():
     test_get_students()
     test_update_student()
     test_delete_student()
+
+    test_add_grade()
