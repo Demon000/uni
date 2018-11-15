@@ -6,15 +6,15 @@ from UI.UI import UI
 
 def run():
     disciplines_collection = Collection()
-    disciplines_controller = DisciplineController(disciplines_collection)
+    discipline_controller = DisciplineController(disciplines_collection)
 
     students_collection = Collection()
-    students_controller = StudentController(students_collection)
+    student_controller = StudentController(students_collection)
 
     grades_collection = Collection()
-    grades_controller = GradeController(grades_collection)
+    grade_controller = GradeController(grades_collection)
 
-    ui = UI(disciplines_controller, students_controller, grades_controller)
+    ui = UI(discipline_controller, student_controller, grade_controller)
     ui.run()
 
 run()
