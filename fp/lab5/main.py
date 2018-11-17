@@ -1,12 +1,12 @@
 from Collection.Collection import Collection
 
-from Validators.Discipline import DisciplineValidator
-from Validators.Student import StudentValidator
-from Validators.Grade import GradeValidator
-
 from Controllers.DisciplineController import DisciplineController
 from Controllers.StudentController import StudentController
 from Controllers.GradeController import GradeController
+
+from Validators.Discipline import DisciplineValidator
+from Validators.Student import StudentValidator
+from Validators.Grade import GradeValidator
 
 from UI.UI import UI
 

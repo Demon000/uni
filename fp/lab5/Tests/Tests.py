@@ -1,15 +1,16 @@
 from Collection.Collection import Collection
-from Controllers.StudentController import StudentController
+
 from Controllers.DisciplineController import DisciplineController
+from Controllers.StudentController import StudentController
 from Controllers.GradeController import GradeController
 
-from Models.Discipline import Discipline
-from Models.Student import Student
-from Models.Grade import Grade
+from Validators.Discipline import DisciplineValidator
+from Validators.Student import StudentValidator
+from Validators.Grade import GradeValidator
 
 def test_add_discipline():
     disciplines_collection = Collection()
-    discipline_controller = DisciplineController(disciplines_collection)
+    discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
 
     discipline = discipline_controller.add_discipline('Sport', 'Moca')
     assert discipline.get_name() == 'Sport'
@@ -17,7 +18,7 @@ def test_add_discipline():
 
 def test_get_disciplines():
     disciplines_collection = Collection()
-    discipline_controller = DisciplineController(disciplines_collection)
+    discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
 
     discipline = discipline_controller.add_discipline('Sport', 'Moca')
     disciplines = discipline_controller.get_disciplines()
@@ -27,7 +28,7 @@ def test_get_disciplines():
 
 def test_update_discipline():
     disciplines_collection = Collection()
-    discipline_controller = DisciplineController(disciplines_collection)
+    discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
 
     discipline = discipline_controller.add_discipline('Sport', 'Moca')
     discipline_controller.update_discipline(discipline, 'Physical training', 'NotMoca')
@@ -36,7 +37,7 @@ def test_update_discipline():
 
 def test_delete_discipline():
     disciplines_collection = Collection()
-    discipline_controller = DisciplineController(disciplines_collection)
+    discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
 
     discipline = discipline_controller.add_discipline('Sport', 'Moca')
     discipline_controller.remove_discipline(discipline)
@@ -45,14 +46,14 @@ def test_delete_discipline():
 
 def test_add_student():
     students_collection = Collection()
-    student_controller = StudentController(students_collection)
+    student_controller = StudentController(students_collection, StudentValidator)
 
     student = student_controller.add_student('Gigel')
     assert student.get_name() == 'Gigel'
 
 def test_get_students():
     students_collection = Collection()
-    student_controller = StudentController(students_collection)
+    student_controller = StudentController(students_collection, StudentValidator)
 
     student = student_controller.add_student('Gigel')
     students = student_controller.get_students()
@@ -61,7 +62,7 @@ def test_get_students():
 
 def test_update_student():
     students_collection = Collection()
-    student_controller = StudentController(students_collection)
+    student_controller = StudentController(students_collection, StudentValidator)
 
     student = student_controller.add_student('Gigel')
     student_controller.update_student(student, 'Gigi')
@@ -69,7 +70,7 @@ def test_update_student():
 
 def test_delete_student():
     students_collection = Collection()
-    student_controller = StudentController(students_collection)
+    student_controller = StudentController(students_collection, StudentValidator)
 
     student = student_controller.add_student('Gigel')
     student_controller.remove_student(student)
@@ -79,13 +80,13 @@ def test_delete_student():
 
 def test_add_grade():
     disciplines_collection = Collection()
-    discipline_controller = DisciplineController(disciplines_collection)
+    discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
 
     students_collection = Collection()
-    student_controller = StudentController(students_collection)
+    student_controller = StudentController(students_collection, StudentValidator)
 
     grades_collection = Collection()
-    grade_controller = GradeController(grades_collection)
+    grade_controller = GradeController(grades_collection, GradeValidator)
 
     discipline = discipline_controller.add_discipline('Sport', 'Moca')
     student = student_controller.add_student('Gigel')
