@@ -43,6 +43,7 @@ class UI():
                 default=student.get_name())
 
         self.__student_controller.update_student(student, name)
+        print('Updated student: {}', student)
 
     def update_discipline(self):
         discipline = input_item('Choose a discipline: ',
@@ -55,6 +56,7 @@ class UI():
                 default=discipline.get_professor())
 
         self.__discipline_controller.update_discipline(discipline, name, professor)
+        print('Updated discipline: {}', discipline)
 
     def remove_student(self):
         student = input_item('Choose a student: ',
@@ -62,6 +64,7 @@ class UI():
 
         self.__student_controller.remove_student(student)
         self.__grade_controller.remove_matching_grades(student=student)
+        print('Removed student: {}', student)
 
     def remove_discipline(self):
         discipline = input_item('Choose a discipline: ',
@@ -69,6 +72,7 @@ class UI():
 
         self.__discipline_controller.remove_discipline(discipline)
         self.__grade_controller.remove_matching_grades(discipline=discipline)
+        print('Removed discipline: {}', discipline)
 
     def show_students(self):
         students = self.__student_controller.get_students()
