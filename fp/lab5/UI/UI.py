@@ -1,6 +1,3 @@
-from Models.Discipline import Discipline
-from Models.Student import Student
-from Models.Grade import Grade
 from Menu.Menu import Menu
 from Menu.Entry import Entry
 from Utils.Utils import validate_int
@@ -50,7 +47,7 @@ class UI():
     def add_student(self):
         try:
             name = UI.input_value('Student name: ',
-                    validate_fn=Student.validate_name)
+                    validate_fn=self.__student_controller.get_validator().validate_name)
         except ValueError as ve:
             print(ve)
             return
@@ -61,9 +58,9 @@ class UI():
     def add_discipline(self):
         try:
             name = UI.input_value('Discipline name: ',
-                    validate_fn=Discipline.validate_name)
+                    validate_fn=self.__discipline_controller.get_validator().validate_name)
             professor = UI.input_value('Professor name: ',
-                    validate_fn=Discipline.validate_professor)
+                    validate_fn=self.__discipline_controller.get_validator().validate_professor)
         except ValueError as ve:
             print(ve)
             return
@@ -78,7 +75,7 @@ class UI():
             student = UI.input_item('Choose a student: ',
                     self.__student_controller.get_students())
             value = UI.input_value('Grade: ', type_cast=int,
-                    validate_fn=Grade.validate_value)
+                    validate_fn=self.__grade_controller.get_validator().validate_value)
         except ValueError as ve:
             print(ve)
             return
@@ -91,7 +88,7 @@ class UI():
             student = UI.input_item('Choose a student: ',
                     self.__student_controller.get_students())
             name = UI.input_value('Student name: ',
-                    validate_fn=Student.validate_name, default=student.get_name())
+                    validate_fn=self.__student_controller.get_validator().validate_name, default=student.get_name())
         except ValueError as ve:
             print(ve)
             return
@@ -103,9 +100,9 @@ class UI():
             discipline = UI.input_item('Choose a discipline: ',
                     self.__discipline_controller.get_disciplines())
             name = UI.input_value('Discipline name: ',
-                    validate_fn=Discipline.validate_name, default=discipline.get_name())
+                    validate_fn=self.__discipline_controller.get_validator().validate_name, default=discipline.get_name())
             professor = UI.input_value('Professor name: ',
-                    validate_fn=Discipline.validate_professor, default=discipline.get_professor())
+                    validate_fn=self.__discipline_controller.get_validator().validate_professor, default=discipline.get_professor())
         except ValueError as ve:
             print(ve)
             return

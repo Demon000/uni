@@ -69,3 +69,10 @@ class GradeController():
                 removed_grades.append(grade)
 
         return removed_grades
+
+    def get_validator(self):
+        '''
+        Returns:
+            class: The validator.
+        '''
+        return self.__validator

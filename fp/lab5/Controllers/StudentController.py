@@ -65,3 +65,10 @@ class StudentController():
             Student: The removed student.
         '''
         return self.__students.remove(student)
+
+    def get_validator(self):
+        '''
+        Returns:
+            class: The validator.
+        '''
+        return self.__validator

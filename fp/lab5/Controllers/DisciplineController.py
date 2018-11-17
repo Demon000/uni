@@ -75,3 +75,10 @@ class DisciplineController():
             Discipline: The removed discipline.
         '''
         return self.__disciplines.remove(discipline)
+
+    def get_validator(self):
+        '''
+        Returns:
+            class: The validator.
+        '''
+        return self.__validator
