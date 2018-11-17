@@ -93,9 +93,6 @@ def test_add_grade():
 
     assert grade.get_value() == 10
 
-def test_validate_username():
-    pass
-
 def run_tests():
     test_add_discipline()
     test_get_disciplines()
