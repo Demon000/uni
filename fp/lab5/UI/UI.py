@@ -89,6 +89,9 @@ class UI():
         for grade in grades:
             print(grade)
 
+    def noop(self):
+        pass
+
     def exit(self):
         print('Goodbye.')
         exit()
@@ -99,6 +102,7 @@ class UI():
             Entry(2, 'Update student', self.update_student),
             Entry(3, 'Remove student', self.remove_student),
             Entry(4, 'Show students', self.show_students),
+            Entry(5, 'Back', self.noop),
         ])
 
         discipline_menu = Menu([
@@ -106,11 +110,13 @@ class UI():
             Entry(2, 'Update discipline', self.update_discipline),
             Entry(3, 'Remove discipline', self.remove_discipline),
             Entry(4, 'Show disciplines', self.show_disciplines),
+            Entry(5, 'Back', self.noop),
         ])
 
         grade_menu = Menu([
             Entry(1, 'Add grade', self.add_grade),
             Entry(2, 'Show grades', self.show_grades),
+            Entry(3, 'Back', self.noop),
         ])
 
         main_menu = Menu([
