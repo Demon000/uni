@@ -1,5 +1,3 @@
-from Utils.Utils import validate_str
-
 class Student():
     def __init__(self, name):
         '''
@@ -30,16 +28,3 @@ class Student():
             name (str): A new name for this student.
         '''
         self.__name = name
-
-    @staticmethod
-    def validate_name(name):
-        '''
-        Validate a student name.
-
-        Args:
-            name (str): The name to be validated.
-
-        Raises:
-            ValueError: If the name is invalid.
-        '''
-        validate_str(name, 1, 'Student name')
