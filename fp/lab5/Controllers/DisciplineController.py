@@ -27,8 +27,8 @@ class DisciplineController():
         Returns:
             Discipline: The new discipline.
         '''
-        self.__validator.validate_name()
-        self.__validator.validate_professor()
+        self.__validator.validate_name(name)
+        self.__validator.validate_professor(professor)
 
         discipline = Discipline(name, professor)
         return self.__disciplines.add(discipline)
@@ -57,11 +57,11 @@ class DisciplineController():
             Discipline: The updated discipline.
         '''
         if name is not None:
-            self.__validator.validate_name()
+            self.__validator.validate_name(name)
             discipline.set_name(name)
 
         if professor is not None:
-            self.__validator.validate_professor()
+            self.__validator.validate_professor(professor)
             discipline.set_professor(professor)
 
     def remove_discipline(self, discipline):
