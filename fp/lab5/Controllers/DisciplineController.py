@@ -7,6 +7,7 @@ class DisciplineController():
 
         Args:
             disciplines (Collection): The disciplines collection.
+            validator (class): The validator used for validating the given data.
         '''
         self.__disciplines = disciplines
         self.__validator = validator
