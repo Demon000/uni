@@ -1,7 +1,7 @@
 from Models.Grade import Grade
 
 class GradeController():
-    def __init__(self, grades):
+    def __init__(self, grades, validator):
         '''
         Initialize a grades controller.
 
@@ -9,6 +9,7 @@ class GradeController():
             grades (Collection): The grades collection.
         '''
         self.__grades = grades
+        self.__validator = validator
 
     def add_grade(self, discipline, student, value):
         '''
@@ -25,6 +26,8 @@ class GradeController():
         Returns:
             Grade: The new grade.
         '''
+        self.__validator.validate_value(value)
+
         grade = Grade(discipline, student, value)
         return self.__grades.add(grade)
 

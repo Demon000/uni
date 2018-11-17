@@ -1,7 +1,7 @@
 from Models.Student import Student
 
 class StudentController():
-    def __init__(self, students):
+    def __init__(self, students, validator):
         '''
         Initialize a students controller.
 
@@ -9,6 +9,7 @@ class StudentController():
             students (Collection): The students collection.
         '''
         self.__students = students
+        self.__validator = validator
 
     def add_student(self, name):
         '''
@@ -23,6 +24,8 @@ class StudentController():
         Returns:
             Student: The new student.
         '''
+        self.__validator.validate_name(name)
+
         student = Student(name)
         return self.__students.add(student)
 
@@ -47,6 +50,7 @@ class StudentController():
             Student: The updated student.
         '''
         if name is not None:
+            self.__validator.validate_name(name)
             student.set_name(name)
 
     def remove_student(self, student):
