@@ -1,6 +1,6 @@
 from Menu.Menu import Menu
 from Menu.Entry import Entry
-from Utils.Utils import validate_int, input_value, input_item
+from Utils.Utils import input_value, input_item
 
 class UI():
     def __init__(self, discipline_controller, student_controller, grade_controller):
