@@ -10,7 +10,7 @@ from Validators.Grade import GradeValidator
 
 from UI.UI import UI
 
-from Tests.Tests import run_tests
+from Tests.Tests import Tests
 
 def run():
     disciplines_collection = Collection()
@@ -24,6 +24,10 @@ def run():
 
     ui = UI(discipline_controller, student_controller, grade_controller)
     ui.run()
+
+def run_tests():
+    tests = Tests()
+    tests.run()
 
 run_tests()
 run()

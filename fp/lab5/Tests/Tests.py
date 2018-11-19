@@ -8,101 +8,101 @@ from Validators.Discipline import DisciplineValidator
 from Validators.Student import StudentValidator
 from Validators.Grade import GradeValidator
 
-def test_add_discipline():
-    disciplines_collection = Collection()
-    discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
+class Tests():
+    def init_disciplines(self):
+        disciplines_collection = Collection()
+        self.__discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
 
-    discipline = discipline_controller.add_discipline('Sport', 'Moca')
-    assert discipline.get_name() == 'Sport'
-    assert discipline.get_professor() == 'Moca'
+    def init_students(self):
+        students_collection = Collection()
+        self.__student_controller = StudentController(students_collection, StudentValidator)
 
-def test_get_disciplines():
-    disciplines_collection = Collection()
-    discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
+    def init_grades(self):
+        grades_collection = Collection()
+        self.__grade_controller = GradeController(grades_collection, GradeValidator)
 
-    discipline = discipline_controller.add_discipline('Sport', 'Moca')
-    disciplines = discipline_controller.get_disciplines()
-    assert len(disciplines) == 1
-    assert disciplines[0].get_name() == 'Sport'
-    assert disciplines[0].get_professor() == 'Moca'
+    def test_add_discipline(self):
+        self.init_disciplines()
 
-def test_update_discipline():
-    disciplines_collection = Collection()
-    discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
+        discipline = self.__discipline_controller.add_discipline('Sport', 'Moca')
+        assert discipline.get_name() == 'Sport'
+        assert discipline.get_professor() == 'Moca'
 
-    discipline = discipline_controller.add_discipline('Sport', 'Moca')
-    discipline_controller.update_discipline(discipline, 'Physical training', 'NotMoca')
-    assert discipline.get_name() == 'Physical training'
-    assert discipline.get_professor() == 'NotMoca'
+    def test_get_disciplines(self):
+        self.init_disciplines()
 
-def test_delete_discipline():
-    disciplines_collection = Collection()
-    discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
+        self.__discipline_controller.add_discipline('Sport', 'Moca')
+        disciplines = self.__discipline_controller.get_disciplines()
+        assert len(disciplines) == 1
+        assert disciplines[0].get_name() == 'Sport'
+        assert disciplines[0].get_professor() == 'Moca'
 
-    discipline = discipline_controller.add_discipline('Sport', 'Moca')
-    discipline_controller.remove_discipline(discipline)
-    disciplines = discipline_controller.get_disciplines()
-    assert len(disciplines) == 0
+    def test_update_discipline(self):
+        self.init_disciplines()
 
-def test_add_student():
-    students_collection = Collection()
-    student_controller = StudentController(students_collection, StudentValidator)
+        discipline = self.__discipline_controller.add_discipline('Sport', 'Moca')
+        self.__discipline_controller.update_discipline(discipline, 'Physical training', 'NotMoca')
+        assert discipline.get_name() == 'Physical training'
+        assert discipline.get_professor() == 'NotMoca'
 
-    student = student_controller.add_student('Gigel')
-    assert student.get_name() == 'Gigel'
+    def test_delete_discipline(self):
+        self.init_disciplines()
 
-def test_get_students():
-    students_collection = Collection()
-    student_controller = StudentController(students_collection, StudentValidator)
+        discipline = self.__discipline_controller.add_discipline('Sport', 'Moca')
+        self.__discipline_controller.remove_discipline(discipline)
+        disciplines = self.__discipline_controller.get_disciplines()
+        assert len(disciplines) == 0
 
-    student = student_controller.add_student('Gigel')
-    students = student_controller.get_students()
-    assert len(students) == 1
-    assert students[0].get_name() == 'Gigel'
+    def test_add_student(self):
+        self.init_students()
 
-def test_update_student():
-    students_collection = Collection()
-    student_controller = StudentController(students_collection, StudentValidator)
+        student = self.__student_controller.add_student('Gigel')
+        assert student.get_name() == 'Gigel'
 
-    student = student_controller.add_student('Gigel')
-    student_controller.update_student(student, 'Gigi')
-    assert student.get_name() == 'Gigi'
+    def test_get_students(self):
+        self.init_students()
 
-def test_delete_student():
-    students_collection = Collection()
-    student_controller = StudentController(students_collection, StudentValidator)
+        self.__student_controller.add_student('Gigel')
+        students = self.__student_controller.get_students()
+        assert len(students) == 1
+        assert students[0].get_name() == 'Gigel'
 
-    student = student_controller.add_student('Gigel')
-    student_controller.remove_student(student)
-    students = student_controller.get_students()
+    def test_update_student(self):
+        self.init_students()
 
-    assert len(students) == 0
+        student = self.__student_controller.add_student('Gigel')
+        self.__student_controller.update_student(student, 'Gigi')
+        assert student.get_name() == 'Gigi'
 
-def test_add_grade():
-    disciplines_collection = Collection()
-    discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
+    def test_delete_student(self):
+        self.init_students()
 
-    students_collection = Collection()
-    student_controller = StudentController(students_collection, StudentValidator)
+        student = self.__student_controller.add_student('Gigel')
+        self.__student_controller.remove_student(student)
+        students = self.__student_controller.get_students()
 
-    grades_collection = Collection()
-    grade_controller = GradeController(grades_collection, GradeValidator)
+        assert len(students) == 0
 
-    discipline = discipline_controller.add_discipline('Sport', 'Moca')
-    student = student_controller.add_student('Gigel')
-    grade = grade_controller.add_grade(discipline, student, 10)
+    def test_add_grade(self):
+        self.init_disciplines()
+        self.init_students()
+        self.init_grades()
 
-    assert grade.get_value() == 10
+        discipline = self.__discipline_controller.add_discipline('Sport', 'Moca')
+        student = self.__student_controller.add_student('Gigel')
+        grade = self.__grade_controller.add_grade(discipline, student, 10)
 
-def run_tests():
-    test_add_discipline()
-    test_get_disciplines()
-    test_update_discipline()
-    test_delete_discipline()
+        assert grade.get_value() == 10
 
-    test_add_student()
-    test_get_students()
-    test_update_student()
-    test_delete_student()
+    def run(self):
+        self.test_add_discipline()
+        self.test_get_disciplines()
+        self.test_update_discipline()
+        self.test_delete_discipline()
 
-    test_add_grade()
+        self.test_add_student()
+        self.test_get_students()
+        self.test_update_student()
+        self.test_delete_student()
+
+        self.test_add_grade()
