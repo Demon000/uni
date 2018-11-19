@@ -18,7 +18,8 @@ def input_value(message, type_cast=None, validate_fn=None, default=None):
             else:
                 value = raw_value
 
-            validate_fn(value)
+            if validate_fn is not None:
+                validate_fn(value)
         except ValueError as ve:
             print(ve)
             if default is not None:
