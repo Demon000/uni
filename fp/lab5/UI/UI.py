@@ -25,10 +25,12 @@ class UI():
         print('Added discipline: {}'.format(discipline))
 
     def add_grade(self):
-        discipline = input_item('Choose a discipline: ',
-                self.__discipline_controller.get_disciplines())
-        student = input_item('Choose a student: ',
-                self.__student_controller.get_students())
+        disciplines = self.__discipline_controller.get_disciplines()
+        discipline = input_item('Choose a discipline: ', disciplines)
+
+        students = self.__student_controller.get_students()
+        student = input_item('Choose a student: ', students)
+
         value = input_value('Grade: ', type_cast=int,
                 validate_fn=self.__grade_controller.get_validator().validate_value)
 
@@ -36,39 +38,46 @@ class UI():
         print('Added grade: {}'.format(grade))
 
     def update_student(self):
-        student = input_item('Choose a student: ',
-                self.__student_controller.get_students())
+        students = self.__student_controller.get_students()
+        student = input_item('Choose a student: ', students)
+
+        default_name = student.get_name()
+
         name = input_value('Student name: ',
                 validate_fn=self.__student_controller.get_validator().validate_name,
-                default=student.get_name())
+                default=default_name)
 
         self.__student_controller.update_student(student, name)
         print('Updated student: {}', student)
 
     def update_discipline(self):
-        discipline = input_item('Choose a discipline: ',
-                self.__discipline_controller.get_disciplines())
+        disciplines = self.__discipline_controller.get_disciplines()
+        discipline = input_item('Choose a discipline: ', disciplines)
+
+        default_name = discipline.get_name()
+        default_professor = discipline.get_professor()
+
         name = input_value('Discipline name: ',
                 validate_fn=self.__discipline_controller.get_validator().validate_name,
-                default=discipline.get_name())
+                default=default_name)
         professor = input_value('Professor name: ',
                 validate_fn=self.__discipline_controller.get_validator().validate_professor,
-                default=discipline.get_professor())
+                default=default_professor)
 
         self.__discipline_controller.update_discipline(discipline, name, professor)
         print('Updated discipline: {}', discipline)
 
     def remove_student(self):
-        student = input_item('Choose a student: ',
-                self.__student_controller.get_students())
+        students = self.__student_controller.get_students()
+        student = input_item('Choose a student: ', students)
 
         self.__student_controller.remove_student(student)
         self.__grade_controller.remove_matching_grades(student=student)
         print('Removed student: {}', student)
 
     def remove_discipline(self):
-        discipline = input_item('Choose a discipline: ',
-                self.__discipline_controller.get_disciplines())
+        disciplines = self.__discipline_controller.get_disciplines()
+        discipline = input_item('Choose a discipline: ', disciplines)
 
         self.__discipline_controller.remove_discipline(discipline)
         self.__grade_controller.remove_matching_grades(discipline=discipline)
