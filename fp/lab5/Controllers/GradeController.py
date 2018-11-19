@@ -92,3 +92,21 @@ class GradeController():
             class: The validator.
         '''
         return self.__validator
+
+    def get_student_average(self, student):
+        '''
+        Finds the average grade for a student.
+
+        Args:
+            student (Student): The student to find the average grade for.
+
+        Returns:
+            float: The average grade.
+        '''
+        grades = self.get_matching_grades(student=student)
+
+        sum_ = 0
+        for grade in grades:
+            sum_ += grade.get_value()
+
+        return sum_ / len(grades)
