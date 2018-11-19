@@ -98,6 +98,48 @@ class UI():
         for grade in grades:
             print(grade)
 
+    def get_grades_for_discipline(self):
+        disciplines = self.__discipline_controller.get_disciplines()
+        discipline = input_item('Choose a discipline: ', disciplines)
+
+        grades = self.__grade_controller.get_matching_grades(discipline=discipline)
+
+        return grades
+
+    def report_grades_sorted_by_name(self):
+        grades = self.get_grades_for_discipline()
+
+        grades.sort(key=lambda grade: grade.get_student().get_name())
+
+        for grade in grades:
+            print(grade)
+
+    def report_grades_sorted_by_value(self):
+        grades = self.get_grades_for_discipline()
+
+        grades.sort(key=lambda grade: grade.get_value(), reverse=True)
+
+        for grade in grades:
+            print(grade)
+
+    def report_students_sorted_by_average(self):
+        students = self.__student_controller.get_students()
+        students_average = []
+
+        for student in students:
+            average = self.__grade_controller.get_student_average(student)
+            students_average.append((student, average))
+
+        students_average.sort(key=lambda student_average: student_average[1], reverse=True)
+
+        i = 0
+        students_to_print = len(students) // 5 or 1
+        while i < students_to_print:
+            student, average = students_average[i]
+            i += 1
+
+            print('{}, Average grade: {}'.format(student, average))
+
     def noop(self):
         pass
 
@@ -128,10 +170,17 @@ class UI():
             Entry(3, 'Back', self.noop),
         ])
 
+        report_menu = Menu([
+            Entry(1, 'Grades for discipline sorted by name', self.report_grades_sorted_by_name),
+            Entry(2, 'Grades for discipline sorted by value', self.report_grades_sorted_by_value),
+            Entry(3, 'Students sorted by average grade', self.report_students_sorted_by_average),
+        ])
+
         main_menu = Menu([
             Entry(1,  'Students', student_menu.run),
             Entry(2, 'Disciplines', discipline_menu.run),
             Entry(3, 'Grades', grade_menu.run),
+            Entry(4, 'Report', report_menu.run),
             Entry('x', 'Exit', self.exit),
         ])
 
