@@ -39,6 +39,24 @@ class GradeController():
         '''
         return self.__grades.get()
 
+    def get_matching_grades(self, discipline=None, student=None, value=None):
+        '''
+        Get all the grades that match the passed arguments.
+
+        Args:
+            Same arguments as Grade.matches().
+
+        Returns:
+            list: A list of the matching grades.
+        '''
+        matching_grades = []
+
+        for grade in self.get_grades():
+            if grade.matches(discipline, student, value):
+                matching_grades.append(grade)
+
+        return matching_grades
+
     def remove_grade(self, grade):
         '''
         Remove a grade.
@@ -53,7 +71,7 @@ class GradeController():
 
     def remove_matching_grades(self, discipline=None, student=None, value=None):
         '''
-        Remove all the grades that matched the passed arguments.
+        Remove all the grades that match the passed arguments.
 
         Args:
             Same arguments as Grade.matches().
@@ -61,12 +79,10 @@ class GradeController():
         Returns:
             list: A list of the removed grades.
         '''
-        removed_grades = []
+        removed_grades = self.get_matching_grades(discipline, student, value)
 
-        for grade in self.get_grades():
-            if grade.matches(discipline, student, value):
-                self.remove_grade(grade)
-                removed_grades.append(grade)
+        for grade in removed_grades:
+            self.remove_grade(grade)
 
         return removed_grades
 
