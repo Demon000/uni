@@ -1,4 +1,5 @@
 from Models.Student import Student
+from Utils.Utils import get_similarity
 
 class StudentController():
     def __init__(self, students, validator):
@@ -72,3 +73,22 @@ class StudentController():
             class: The validator.
         '''
         return self.__validator
+
+    def get_similar_students(self, partial_name):
+        '''
+        Finds students that have a high similarity with the given partial name.
+
+        Args:
+            partial_name (str): A partial name to find the similarity against.
+
+        Returns:
+            list: List of students that have a high similarity.
+        '''
+        similar_students = []
+
+        for student in self.get_students():
+            similarity = get_similarity(partial_name, student.get_name())
+            if similarity > 0.5:
+                similar_students.append(student)
+
+        return similar_students

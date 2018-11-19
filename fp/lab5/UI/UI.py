@@ -98,6 +98,13 @@ class UI():
         for grade in grades:
             print(grade)
 
+    def search_students(self):
+        partial_name = input_value('Partial name: ')
+
+        similar_students = self.__student_controller.get_similar_students(partial_name)
+        for student in similar_students:
+            print(student)
+
     def get_grades_for_discipline(self):
         disciplines = self.__discipline_controller.get_disciplines()
         discipline = input_item('Choose a discipline: ', disciplines)
@@ -153,7 +160,8 @@ class UI():
             Entry(2, 'Update student', self.update_student),
             Entry(3, 'Remove student', self.remove_student),
             Entry(4, 'Show students', self.show_students),
-            Entry(5, 'Back', self.noop),
+            Entry(5, 'Search students', self.search_students),
+            Entry(6, 'Back', self.noop),
         ])
 
         discipline_menu = Menu([

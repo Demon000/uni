@@ -1,3 +1,5 @@
+from difflib import SequenceMatcher
+
 def validate_int(value, min_value=None, max_value=None, name='Value'):
     if min_value is not None and value < min_value:
         raise ValueError('{} must be larger than {}.'.format(name, min_value - 1))
@@ -42,3 +44,7 @@ def input_item(message, items):
 
     index = input_int(message, min_value=0, max_value=len(items) - 1)
     return items[index]
+
+def get_similarity(one, other):
+    sequence = SequenceMatcher(None, one, other)
+    return sequence.ratio()
