@@ -152,7 +152,7 @@ class UI():
 
         no_averages_to_print = len(students) // 5 or 1
         students_average_to_print = students_average[:no_averages_to_print]
-        for student, average in students_average_to_print
+        for student, average in students_average_to_print:
             print('{}, Average grade: {}'.format(student, average))
 
     def noop(self):
