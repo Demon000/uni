@@ -1,6 +1,6 @@
 from Menu.Menu import Menu
 from Menu.Entry import Entry
-from Utils.Utils import input_value, input_item
+from Utils.Utils import validate_int
 
 class UI():
     def __init__(self, discipline_service, student_service, grade_service):
@@ -8,17 +8,51 @@ class UI():
         self.__student_service = student_service
         self.__grade_service = grade_service
 
+    def input_value(self, message, type_cast=None, validate_fn=None, default=None):
+        while True:
+            try:
+                raw_value = input(message)
+                if type_cast is not None:
+                    value = type_cast(raw_value)
+                else:
+                    value = raw_value
+
+                if validate_fn is not None:
+                    validate_fn(value)
+            except ValueError as ve:
+                print(ve)
+                if default is not None:
+                    print('Using default value.')
+                    value = default
+                else:
+                    continue
+
+            return value
+
+    def input_int(self, message, min_value=None, max_value=None):
+        def validate(value):
+            validate_int(value, min_value=min_value, max_value=max_value)
+
+        return self.input_value(message, type_cast=int, validate_fn=validate)
+
+    def input_item(self, message, items):
+        for index, item in enumerate(items):
+            print('{}. {}'.format(index , item))
+
+        index = self.input_int(message, min_value=0, max_value=len(items) - 1)
+        return items[index]
+
     def add_student(self):
-        name = input_value('Student name: ',
+        name = self.input_value('Student name: ',
                 validate_fn=self.__student_service.get_validator().validate_name)
 
         student = self.__student_service.add_student(name)
         print('Added student: {}'.format(student))
 
     def add_discipline(self):
-        name = input_value('Discipline name: ',
+        name = self.input_value('Discipline name: ',
                 validate_fn=self.__discipline_service.get_validator().validate_name)
-        professor = input_value('Professor name: ',
+        professor = self.input_value('Professor name: ',
                 validate_fn=self.__discipline_service.get_validator().validate_professor)
 
         discipline = self.__discipline_service.add_discipline(name, professor)
@@ -26,12 +60,12 @@ class UI():
 
     def add_grade(self):
         disciplines = self.__discipline_service.get_disciplines()
-        discipline = input_item('Choose a discipline: ', disciplines)
+        discipline = self.input_item('Choose a discipline: ', disciplines)
 
         students = self.__student_service.get_students()
-        student = input_item('Choose a student: ', students)
+        student = self.input_item('Choose a student: ', students)
 
-        value = input_value('Grade: ', type_cast=int,
+        value = self.input_value('Grade: ', type_cast=int,
                 validate_fn=self.__grade_service.get_validator().validate_value)
 
         grade = self.__grade_service.add_grade(discipline, student, value)
@@ -39,11 +73,11 @@ class UI():
 
     def update_student(self):
         students = self.__student_service.get_students()
-        student = input_item('Choose a student: ', students)
+        student = self.input_item('Choose a student: ', students)
 
         default_name = student.get_name()
 
-        name = input_value('Student name: ',
+        name = self.input_value('Student name: ',
                 validate_fn=self.__student_service.get_validator().validate_name,
                 default=default_name)
 
@@ -52,15 +86,15 @@ class UI():
 
     def update_discipline(self):
         disciplines = self.__discipline_service.get_disciplines()
-        discipline = input_item('Choose a discipline: ', disciplines)
+        discipline = self.input_item('Choose a discipline: ', disciplines)
 
         default_name = discipline.get_name()
         default_professor = discipline.get_professor()
 
-        name = input_value('Discipline name: ',
+        name = self.input_value('Discipline name: ',
                 validate_fn=self.__discipline_service.get_validator().validate_name,
                 default=default_name)
-        professor = input_value('Professor name: ',
+        professor = self.input_value('Professor name: ',
                 validate_fn=self.__discipline_service.get_validator().validate_professor,
                 default=default_professor)
 
@@ -69,7 +103,7 @@ class UI():
 
     def remove_student(self):
         students = self.__student_service.get_students()
-        student = input_item('Choose a student: ', students)
+        student = self.input_item('Choose a student: ', students)
 
         self.__student_service.remove_student(student)
         self.__grade_service.remove_matching_grades(student=student)
@@ -77,7 +111,7 @@ class UI():
 
     def remove_discipline(self):
         disciplines = self.__discipline_service.get_disciplines()
-        discipline = input_item('Choose a discipline: ', disciplines)
+        discipline = self.input_item('Choose a discipline: ', disciplines)
 
         self.__discipline_service.remove_discipline(discipline)
         self.__grade_service.remove_matching_grades(discipline=discipline)
@@ -99,7 +133,7 @@ class UI():
             print(grade)
 
     def search_students(self):
-        partial_name = input_value('Partial name: ')
+        partial_name = self.input_value('Partial name: ')
 
         students = self.__student_service.get_students_sorted_by_similarity(partial_name)
         no_students_to_print = len(students) // 5 or 1
@@ -108,7 +142,7 @@ class UI():
             print(student)
 
     def search_disciplines(self):
-        partial_name = input_value('Partial name: ')
+        partial_name = self.input_value('Partial name: ')
 
         disciplines = self.__discipline_service.get_disciplines_sorted_by_similarity(partial_name)
         no_disciplines_to_print = len(disciplines) // 5 or 1
@@ -117,7 +151,7 @@ class UI():
             print(discipline)
 
     def add_random_students(self):
-        no_students = input_value('Number of students: ', int)
+        no_students = self.input_value('Number of students: ', int)
         students = self.__student_service.add_random_students(no_students)
 
         print('Added students:')
@@ -126,7 +160,7 @@ class UI():
 
     def get_grades_for_discipline(self):
         disciplines = self.__discipline_service.get_disciplines()
-        discipline = input_item('Choose a discipline: ', disciplines)
+        discipline = self.input_item('Choose a discipline: ', disciplines)
 
         grades = self.__grade_service.get_matching_grades(discipline=discipline)
 
