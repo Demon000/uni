@@ -1,4 +1,5 @@
 from Models.Discipline import Discipline
+from Utils.Utils import get_similarity
 
 class DisciplineController():
     def __init__(self, disciplines, validator):
@@ -82,3 +83,19 @@ class DisciplineController():
             class: The validator.
         '''
         return self.__validator
+
+    def get_disciplines_sorted_by_similarity(self, partial_name):
+        '''
+        Get all the disciplines sorted by similarity with the given partial name.
+
+        Args:
+            partial_name (str): A partial name to find the similarity against.
+
+        Returns:
+            list: List of disciplines sorted by similarity.
+        '''
+        disciplines = self.get_disciplines()
+
+        disciplines.sort(key=lambda discipline: get_similarity(discipline.get_name(), partial_name), reverse=True)
+
+        return disciplines

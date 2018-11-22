@@ -107,6 +107,15 @@ class UI():
         for student in students_to_print:
             print(student)
 
+    def search_disciplines(self):
+        partial_name = input_value('Partial name: ')
+
+        disciplines = self.__discipline_controller.get_disciplines_sorted_by_similarity(partial_name)
+        no_disciplines_to_print = len(disciplines) // 5 or 1
+        disciplines_to_print = disciplines[:no_disciplines_to_print]
+        for discipline in disciplines_to_print:
+            print(discipline)
+
     def get_grades_for_discipline(self):
         disciplines = self.__discipline_controller.get_disciplines()
         discipline = input_item('Choose a discipline: ', disciplines)
@@ -168,7 +177,8 @@ class UI():
             Entry(2, 'Update discipline', self.update_discipline),
             Entry(3, 'Remove discipline', self.remove_discipline),
             Entry(4, 'Show disciplines', self.show_disciplines),
-            Entry(5, 'Back', self.noop),
+            Entry(5, 'Search disciplines', self.search_disciplines),
+            Entry(6, 'Back', self.noop),
         ])
 
         grade_menu = Menu([
