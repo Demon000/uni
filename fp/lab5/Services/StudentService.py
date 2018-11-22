@@ -1,5 +1,8 @@
+import random
+import string
+
 from Models.Student import Student
-from Utils.Utils import get_similarity, get_random_name
+from Utils.Utils import get_similarity
 
 class StudentService():
     def __init__(self, students, validator):
@@ -90,6 +93,21 @@ class StudentService():
 
         return students
 
+    def get_random_name(self, length=None):
+        chars = []
+
+        if length is None:
+            length = random.randrange(5, 15)
+
+        first_char = random.choice(string.ascii_uppercase)
+        chars.append(first_char)
+
+        for i in range(length):
+            char = random.choice(string.ascii_lowercase)
+            chars.append(char)
+
+        return ''.join(chars)
+
     def add_random_students(self, no_students):
         '''
         Add a number of randomly generated students.
@@ -103,7 +121,7 @@ class StudentService():
         students = []
 
         for i in range(no_students):
-            name = get_random_name()
+            name = self.get_random_name()
             student = self.add_student(name)
             students.append(student)
 

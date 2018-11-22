@@ -1,6 +1,4 @@
 from difflib import SequenceMatcher
-import random
-import string
 
 def validate_int(value, min_value=None, max_value=None, name='Value'):
     if min_value is not None and value < min_value:
@@ -50,18 +48,3 @@ def input_item(message, items):
 def get_similarity(one, other):
     sequence = SequenceMatcher(None, one, other)
     return sequence.ratio()
-
-def get_random_name(length=None):
-    chars = []
-
-    if length is None:
-        length = random.randrange(5, 15)
-
-    first_char = random.choice(string.ascii_uppercase)
-    chars.append(first_char)
-
-    for i in range(length):
-        char = random.choice(string.ascii_lowercase)
-        chars.append(char)
-
-    return ''.join(chars)
