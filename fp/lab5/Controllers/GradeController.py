@@ -3,7 +3,7 @@ from Models.Grade import Grade
 class GradeController():
     def __init__(self, grades, validator):
         '''
-        Initialize a grades controller.
+        Initialize a grades service.
 
         Args:
             grades (Collection): The grades collection.

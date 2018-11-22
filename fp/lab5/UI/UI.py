@@ -3,105 +3,105 @@ from Menu.Entry import Entry
 from Utils.Utils import input_value, input_item
 
 class UI():
-    def __init__(self, discipline_controller, student_controller, grade_controller):
-        self.__discipline_controller = discipline_controller
-        self.__student_controller = student_controller
-        self.__grade_controller = grade_controller
+    def __init__(self, discipline_service, student_service, grade_service):
+        self.__discipline_service = discipline_service
+        self.__student_service = student_service
+        self.__grade_service = grade_service
 
     def add_student(self):
         name = input_value('Student name: ',
-                validate_fn=self.__student_controller.get_validator().validate_name)
+                validate_fn=self.__student_service.get_validator().validate_name)
 
-        student = self.__student_controller.add_student(name)
+        student = self.__student_service.add_student(name)
         print('Added student: {}'.format(student))
 
     def add_discipline(self):
         name = input_value('Discipline name: ',
-                validate_fn=self.__discipline_controller.get_validator().validate_name)
+                validate_fn=self.__discipline_service.get_validator().validate_name)
         professor = input_value('Professor name: ',
-                validate_fn=self.__discipline_controller.get_validator().validate_professor)
+                validate_fn=self.__discipline_service.get_validator().validate_professor)
 
-        discipline = self.__discipline_controller.add_discipline(name, professor)
+        discipline = self.__discipline_service.add_discipline(name, professor)
         print('Added discipline: {}'.format(discipline))
 
     def add_grade(self):
-        disciplines = self.__discipline_controller.get_disciplines()
+        disciplines = self.__discipline_service.get_disciplines()
         discipline = input_item('Choose a discipline: ', disciplines)
 
-        students = self.__student_controller.get_students()
+        students = self.__student_service.get_students()
         student = input_item('Choose a student: ', students)
 
         value = input_value('Grade: ', type_cast=int,
-                validate_fn=self.__grade_controller.get_validator().validate_value)
+                validate_fn=self.__grade_service.get_validator().validate_value)
 
-        grade = self.__grade_controller.add_grade(discipline, student, value)
+        grade = self.__grade_service.add_grade(discipline, student, value)
         print('Added grade: {}'.format(grade))
 
     def update_student(self):
-        students = self.__student_controller.get_students()
+        students = self.__student_service.get_students()
         student = input_item('Choose a student: ', students)
 
         default_name = student.get_name()
 
         name = input_value('Student name: ',
-                validate_fn=self.__student_controller.get_validator().validate_name,
+                validate_fn=self.__student_service.get_validator().validate_name,
                 default=default_name)
 
-        self.__student_controller.update_student(student, name)
+        self.__student_service.update_student(student, name)
         print('Updated student: {}', student)
 
     def update_discipline(self):
-        disciplines = self.__discipline_controller.get_disciplines()
+        disciplines = self.__discipline_service.get_disciplines()
         discipline = input_item('Choose a discipline: ', disciplines)
 
         default_name = discipline.get_name()
         default_professor = discipline.get_professor()
 
         name = input_value('Discipline name: ',
-                validate_fn=self.__discipline_controller.get_validator().validate_name,
+                validate_fn=self.__discipline_service.get_validator().validate_name,
                 default=default_name)
         professor = input_value('Professor name: ',
-                validate_fn=self.__discipline_controller.get_validator().validate_professor,
+                validate_fn=self.__discipline_service.get_validator().validate_professor,
                 default=default_professor)
 
-        self.__discipline_controller.update_discipline(discipline, name, professor)
+        self.__discipline_service.update_discipline(discipline, name, professor)
         print('Updated discipline: {}', discipline)
 
     def remove_student(self):
-        students = self.__student_controller.get_students()
+        students = self.__student_service.get_students()
         student = input_item('Choose a student: ', students)
 
-        self.__student_controller.remove_student(student)
-        self.__grade_controller.remove_matching_grades(student=student)
+        self.__student_service.remove_student(student)
+        self.__grade_service.remove_matching_grades(student=student)
         print('Removed student: {}', student)
 
     def remove_discipline(self):
-        disciplines = self.__discipline_controller.get_disciplines()
+        disciplines = self.__discipline_service.get_disciplines()
         discipline = input_item('Choose a discipline: ', disciplines)
 
-        self.__discipline_controller.remove_discipline(discipline)
-        self.__grade_controller.remove_matching_grades(discipline=discipline)
+        self.__discipline_service.remove_discipline(discipline)
+        self.__grade_service.remove_matching_grades(discipline=discipline)
         print('Removed discipline: {}', discipline)
 
     def show_students(self):
-        students = self.__student_controller.get_students()
+        students = self.__student_service.get_students()
         for student in students:
             print(student)
 
     def show_disciplines(self):
-        disciplines = self.__discipline_controller.get_disciplines()
+        disciplines = self.__discipline_service.get_disciplines()
         for discipline in disciplines:
             print(discipline)
 
     def show_grades(self):
-        grades = self.__grade_controller.get_grades()
+        grades = self.__grade_service.get_grades()
         for grade in grades:
             print(grade)
 
     def search_students(self):
         partial_name = input_value('Partial name: ')
 
-        students = self.__student_controller.get_students_sorted_by_similarity(partial_name)
+        students = self.__student_service.get_students_sorted_by_similarity(partial_name)
         no_students_to_print = len(students) // 5 or 1
         students_to_print = students[:no_students_to_print]
         for student in students_to_print:
@@ -110,17 +110,17 @@ class UI():
     def search_disciplines(self):
         partial_name = input_value('Partial name: ')
 
-        disciplines = self.__discipline_controller.get_disciplines_sorted_by_similarity(partial_name)
+        disciplines = self.__discipline_service.get_disciplines_sorted_by_similarity(partial_name)
         no_disciplines_to_print = len(disciplines) // 5 or 1
         disciplines_to_print = disciplines[:no_disciplines_to_print]
         for discipline in disciplines_to_print:
             print(discipline)
 
     def get_grades_for_discipline(self):
-        disciplines = self.__discipline_controller.get_disciplines()
+        disciplines = self.__discipline_service.get_disciplines()
         discipline = input_item('Choose a discipline: ', disciplines)
 
-        grades = self.__grade_controller.get_matching_grades(discipline=discipline)
+        grades = self.__grade_service.get_matching_grades(discipline=discipline)
 
         return grades
 
@@ -141,11 +141,11 @@ class UI():
             print(grade)
 
     def report_students_sorted_by_average(self):
-        students = self.__student_controller.get_students()
+        students = self.__student_service.get_students()
         students_average = []
 
         for student in students:
-            average = self.__grade_controller.get_student_average(student)
+            average = self.__grade_service.get_student_average(student)
             students_average.append((student, average))
 
         students_average.sort(key=lambda student_average: student_average[1], reverse=True)

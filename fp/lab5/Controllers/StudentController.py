@@ -4,7 +4,7 @@ from Utils.Utils import get_similarity
 class StudentController():
     def __init__(self, students, validator):
         '''
-        Initialize a students controller.
+        Initialize a students service.
 
         Args:
             students (Collection): The students collection.

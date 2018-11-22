@@ -4,7 +4,7 @@ from Utils.Utils import get_similarity
 class DisciplineController():
     def __init__(self, disciplines, validator):
         '''
-        Initialize a discipline controller.
+        Initialize a discipline service.
 
         Args:
             disciplines (Collection): The disciplines collection.

@@ -14,15 +14,15 @@ from Tests.Tests import Tests
 
 def run():
     disciplines_collection = Collection()
-    discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
+    discipline_service = DisciplineController(disciplines_collection, DisciplineValidator)
 
     students_collection = Collection()
-    student_controller = StudentController(students_collection, StudentValidator)
+    student_service = StudentController(students_collection, StudentValidator)
 
     grades_collection = Collection()
-    grade_controller = GradeController(grades_collection, GradeValidator)
+    grade_service = GradeController(grades_collection, GradeValidator)
 
-    ui = UI(discipline_controller, student_controller, grade_controller)
+    ui = UI(discipline_service, student_service, grade_service)
     ui.run()
 
 def run_tests():

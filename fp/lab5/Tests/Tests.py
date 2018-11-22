@@ -11,28 +11,28 @@ from Validators.Grade import GradeValidator
 class Tests():
     def init_disciplines(self):
         disciplines_collection = Collection()
-        self.__discipline_controller = DisciplineController(disciplines_collection, DisciplineValidator)
+        self.__discipline_service = DisciplineController(disciplines_collection, DisciplineValidator)
 
     def init_students(self):
         students_collection = Collection()
-        self.__student_controller = StudentController(students_collection, StudentValidator)
+        self.__student_service = StudentController(students_collection, StudentValidator)
 
     def init_grades(self):
         grades_collection = Collection()
-        self.__grade_controller = GradeController(grades_collection, GradeValidator)
+        self.__grade_service = GradeController(grades_collection, GradeValidator)
 
     def test_add_discipline(self):
         self.init_disciplines()
 
-        discipline = self.__discipline_controller.add_discipline('Sport', 'Moca')
+        discipline = self.__discipline_service.add_discipline('Sport', 'Moca')
         assert discipline.get_name() == 'Sport'
         assert discipline.get_professor() == 'Moca'
 
     def test_get_disciplines(self):
         self.init_disciplines()
 
-        self.__discipline_controller.add_discipline('Sport', 'Moca')
-        disciplines = self.__discipline_controller.get_disciplines()
+        self.__discipline_service.add_discipline('Sport', 'Moca')
+        disciplines = self.__discipline_service.get_disciplines()
         assert len(disciplines) == 1
         assert disciplines[0].get_name() == 'Sport'
         assert disciplines[0].get_professor() == 'Moca'
@@ -40,46 +40,46 @@ class Tests():
     def test_update_discipline(self):
         self.init_disciplines()
 
-        discipline = self.__discipline_controller.add_discipline('Sport', 'Moca')
-        self.__discipline_controller.update_discipline(discipline, 'Physical training', 'NotMoca')
+        discipline = self.__discipline_service.add_discipline('Sport', 'Moca')
+        self.__discipline_service.update_discipline(discipline, 'Physical training', 'NotMoca')
         assert discipline.get_name() == 'Physical training'
         assert discipline.get_professor() == 'NotMoca'
 
     def test_delete_discipline(self):
         self.init_disciplines()
 
-        discipline = self.__discipline_controller.add_discipline('Sport', 'Moca')
-        self.__discipline_controller.remove_discipline(discipline)
-        disciplines = self.__discipline_controller.get_disciplines()
+        discipline = self.__discipline_service.add_discipline('Sport', 'Moca')
+        self.__discipline_service.remove_discipline(discipline)
+        disciplines = self.__discipline_service.get_disciplines()
         assert len(disciplines) == 0
 
     def test_add_student(self):
         self.init_students()
 
-        student = self.__student_controller.add_student('Gigel')
+        student = self.__student_service.add_student('Gigel')
         assert student.get_name() == 'Gigel'
 
     def test_get_students(self):
         self.init_students()
 
-        self.__student_controller.add_student('Gigel')
-        students = self.__student_controller.get_students()
+        self.__student_service.add_student('Gigel')
+        students = self.__student_service.get_students()
         assert len(students) == 1
         assert students[0].get_name() == 'Gigel'
 
     def test_update_student(self):
         self.init_students()
 
-        student = self.__student_controller.add_student('Gigel')
-        self.__student_controller.update_student(student, 'Gigi')
+        student = self.__student_service.add_student('Gigel')
+        self.__student_service.update_student(student, 'Gigi')
         assert student.get_name() == 'Gigi'
 
     def test_delete_student(self):
         self.init_students()
 
-        student = self.__student_controller.add_student('Gigel')
-        self.__student_controller.remove_student(student)
-        students = self.__student_controller.get_students()
+        student = self.__student_service.add_student('Gigel')
+        self.__student_service.remove_student(student)
+        students = self.__student_service.get_students()
 
         assert len(students) == 0
 
@@ -88,9 +88,9 @@ class Tests():
         self.init_students()
         self.init_grades()
 
-        discipline = self.__discipline_controller.add_discipline('Sport', 'Moca')
-        student = self.__student_controller.add_student('Gigel')
-        grade = self.__grade_controller.add_grade(discipline, student, 10)
+        discipline = self.__discipline_service.add_discipline('Sport', 'Moca')
+        student = self.__student_service.add_student('Gigel')
+        grade = self.__grade_service.add_grade(discipline, student, 10)
 
         assert grade.get_value() == 10
 
