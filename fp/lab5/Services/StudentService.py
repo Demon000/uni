@@ -1,6 +1,5 @@
 from Models.Student import Student
-from Utils.Utils import get_similarity
-from Random.Student import RandomStudent
+from Utils.Utils import get_similarity, get_random_name
 
 class StudentService():
     def __init__(self, students, validator):
@@ -104,7 +103,7 @@ class StudentService():
         students = []
 
         for i in range(no_students):
-            name = RandomStudent.get_name()
+            name = get_random_name()
             student = self.add_student(name)
             students.append(student)
 
