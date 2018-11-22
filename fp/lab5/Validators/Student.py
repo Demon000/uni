@@ -1,8 +1,7 @@
 from Utils.Utils import validate_str
 
 class StudentValidator():
-    @staticmethod
-    def validate_name(name):
+    def validate_name(self, name):
         '''
         Validate a student name.
 

@@ -1,8 +1,7 @@
 from Utils.Utils import validate_int
 
 class GradeValidator():
-    @staticmethod
-    def validate_value(value):
+    def validate_value(self, value):
         '''
         Validate a grade value.
 

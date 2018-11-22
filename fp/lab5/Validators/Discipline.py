@@ -1,8 +1,7 @@
 from Utils.Utils import validate_str
 
 class DisciplineValidator():
-    @staticmethod
-    def validate_name(name):
+    def validate_name(self, name):
         '''
         Validate a discipline name.
 
@@ -14,8 +13,7 @@ class DisciplineValidator():
         '''
         validate_str(name, 1, 'Discipline name')
 
-    @staticmethod
-    def validate_professor(professor):
+    def validate_professor(self, professor):
         '''
         Validate a professor name.
 

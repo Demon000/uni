@@ -14,13 +14,16 @@ from Tests.Tests import Tests
 
 def run():
     disciplines_collection = Collection()
-    discipline_service = DisciplineService(disciplines_collection, DisciplineValidator)
+    discipline_validator = DisciplineValidator()
+    discipline_service = DisciplineService(disciplines_collection, discipline_validator)
 
     students_collection = Collection()
-    student_service = StudentService(students_collection, StudentValidator)
+    student_validator = StudentValidator()
+    student_service = StudentService(students_collection, student_validator)
 
     grades_collection = Collection()
-    grade_service = GradeService(grades_collection, GradeValidator)
+    grade_validator = GradeValidator()
+    grade_service = GradeService(grades_collection, grade_validator)
 
     ui = UI(discipline_service, student_service, grade_service)
     ui.run()
