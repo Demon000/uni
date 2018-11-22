@@ -11,15 +11,18 @@ from Validators.Grade import GradeValidator
 class Tests():
     def init_disciplines(self):
         disciplines_collection = Collection()
-        self.__discipline_service = DisciplineService(disciplines_collection, DisciplineValidator)
+        discipline_validator = DisciplineValidator()
+        self.__discipline_service = DisciplineService(disciplines_collection, discipline_validator)
 
     def init_students(self):
         students_collection = Collection()
-        self.__student_service = StudentService(students_collection, StudentValidator)
+        student_validator = StudentValidator()
+        self.__student_service = StudentService(students_collection, student_validator)
 
     def init_grades(self):
         grades_collection = Collection()
-        self.__grade_service = GradeService(grades_collection, GradeValidator)
+        grade_validator = GradeValidator()
+        self.__grade_service = GradeService(grades_collection, grade_validator)
 
     def test_add_discipline(self):
         self.init_disciplines()
