@@ -139,12 +139,9 @@ class UI():
 
         students_average.sort(key=lambda student_average: student_average[1], reverse=True)
 
-        i = 0
-        students_to_print = len(students) // 5 or 1
-        while i < students_to_print:
-            student, average = students_average[i]
-            i += 1
-
+        no_averages_to_print = len(students) // 5 or 1
+        students_average_to_print = students_average[:no_averages_to_print]
+        for student, average in students_average_to_print
             print('{}, Average grade: {}'.format(student, average))
 
     def noop(self):
