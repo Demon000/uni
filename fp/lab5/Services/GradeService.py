@@ -1,6 +1,6 @@
 from Models.Grade import Grade
 
-class GradeController():
+class GradeService():
     def __init__(self, grades, validator):
         '''
         Initialize a grades service.

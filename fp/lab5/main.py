@@ -1,8 +1,8 @@
 from Collection.Collection import Collection
 
-from Controllers.DisciplineController import DisciplineController
-from Controllers.StudentController import StudentController
-from Controllers.GradeController import GradeController
+from Services.DisciplineService import DisciplineService
+from Services.StudentService import StudentService
+from Services.GradeService import GradeService
 
 from Validators.Discipline import DisciplineValidator
 from Validators.Student import StudentValidator
@@ -14,13 +14,13 @@ from Tests.Tests import Tests
 
 def run():
     disciplines_collection = Collection()
-    discipline_service = DisciplineController(disciplines_collection, DisciplineValidator)
+    discipline_service = DisciplineService(disciplines_collection, DisciplineValidator)
 
     students_collection = Collection()
-    student_service = StudentController(students_collection, StudentValidator)
+    student_service = StudentService(students_collection, StudentValidator)
 
     grades_collection = Collection()
-    grade_service = GradeController(grades_collection, GradeValidator)
+    grade_service = GradeService(grades_collection, GradeValidator)
 
     ui = UI(discipline_service, student_service, grade_service)
     ui.run()

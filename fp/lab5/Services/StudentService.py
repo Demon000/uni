@@ -1,7 +1,8 @@
 from Models.Student import Student
 from Utils.Utils import get_similarity
+from Random.Student import RandomStudent
 
-class StudentController():
+class StudentService():
     def __init__(self, students, validator):
         '''
         Initialize a students service.
@@ -87,5 +88,24 @@ class StudentController():
         students = self.get_students()
 
         students.sort(key=lambda student: get_similarity(student.get_name(), partial_name), reverse=True)
+
+        return students
+
+    def add_random_students(self, no_students):
+        '''
+        Add a number of randomly generated students.
+
+        Args:
+            no_students (int): The number of random students to add.
+
+        Returns:
+            list: List of random students that were added.
+        '''
+        students = []
+
+        for i in range(no_students):
+            name = RandomStudent.get_name()
+            student = self.add_student(name)
+            students.append(student)
 
         return students

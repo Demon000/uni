@@ -1,7 +1,7 @@
 from Models.Discipline import Discipline
 from Utils.Utils import get_similarity
 
-class DisciplineController():
+class DisciplineService():
     def __init__(self, disciplines, validator):
         '''
         Initialize a discipline service.

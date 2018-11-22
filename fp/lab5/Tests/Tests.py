@@ -1,8 +1,8 @@
 from Collection.Collection import Collection
 
-from Controllers.DisciplineController import DisciplineController
-from Controllers.StudentController import StudentController
-from Controllers.GradeController import GradeController
+from Services.DisciplineService import DisciplineService
+from Services.StudentService import StudentService
+from Services.GradeService import GradeService
 
 from Validators.Discipline import DisciplineValidator
 from Validators.Student import StudentValidator
@@ -11,15 +11,15 @@ from Validators.Grade import GradeValidator
 class Tests():
     def init_disciplines(self):
         disciplines_collection = Collection()
-        self.__discipline_service = DisciplineController(disciplines_collection, DisciplineValidator)
+        self.__discipline_service = DisciplineService(disciplines_collection, DisciplineValidator)
 
     def init_students(self):
         students_collection = Collection()
-        self.__student_service = StudentController(students_collection, StudentValidator)
+        self.__student_service = StudentService(students_collection, StudentValidator)
 
     def init_grades(self):
         grades_collection = Collection()
-        self.__grade_service = GradeController(grades_collection, GradeValidator)
+        self.__grade_service = GradeService(grades_collection, GradeValidator)
 
     def test_add_discipline(self):
         self.init_disciplines()
