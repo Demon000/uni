@@ -116,6 +116,14 @@ class UI():
         for discipline in disciplines_to_print:
             print(discipline)
 
+    def add_random_students(self):
+        no_students = input_value('Number of students: ', int)
+        students = self.__student_service.add_random_students(no_students)
+
+        print('Added students:')
+        for student in students:
+            print(student)
+
     def get_grades_for_discipline(self):
         disciplines = self.__discipline_service.get_disciplines()
         discipline = input_item('Choose a discipline: ', disciplines)
@@ -169,7 +177,8 @@ class UI():
             Entry(3, 'Remove student', self.remove_student),
             Entry(4, 'Show students', self.show_students),
             Entry(5, 'Search students', self.search_students),
-            Entry(6, 'Back', self.noop),
+            Entry(6, 'Add random students', self.add_random_students),
+            Entry(7, 'Back', self.noop),
         ])
 
         discipline_menu = Menu([
