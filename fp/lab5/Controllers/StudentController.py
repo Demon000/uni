@@ -74,21 +74,18 @@ class StudentController():
         '''
         return self.__validator
 
-    def get_similar_students(self, partial_name):
+    def get_students_sorted_by_similarity(self, partial_name):
         '''
-        Finds students that have a high similarity with the given partial name.
+        Get all the students sorted by similarity with the given partial name.
 
         Args:
             partial_name (str): A partial name to find the similarity against.
 
         Returns:
-            list: List of students that have a high similarity.
+            list: List of students sorted by similarity.
         '''
-        similar_students = []
+        students = self.get_students()
 
-        for student in self.get_students():
-            similarity = get_similarity(partial_name, student.get_name())
-            if similarity > 0.5:
-                similar_students.append(student)
+        students.sort(key=lambda student: get_similarity(student.get_name(), partial_name), reverse=True)
 
-        return similar_students
+        return students

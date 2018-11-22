@@ -101,8 +101,10 @@ class UI():
     def search_students(self):
         partial_name = input_value('Partial name: ')
 
-        similar_students = self.__student_controller.get_similar_students(partial_name)
-        for student in similar_students:
+        students = self.__student_controller.get_students_sorted_by_similarity(partial_name)
+        no_students_to_print = len(students) // 5 or 1
+        students_to_print = students[:no_students_to_print]
+        for student in students_to_print:
             print(student)
 
     def get_grades_for_discipline(self):
