@@ -7,7 +7,7 @@ class GradeService():
 
         Args:
             grades (Collection): The grades collection.
-            validator (class): The validator used for validating the given data.
+            validator (object): The validator used for validating the given data.
         '''
         self.__grades = grades
         self.__validator = validator

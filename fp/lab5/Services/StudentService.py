@@ -11,7 +11,7 @@ class StudentService():
 
         Args:
             students (Collection): The students collection.
-            validator (class): The validator used for validating the given data.
+            validator (object): The validator used for validating the given data.
         '''
         self.__students = students
         self.__validator = validator
