@@ -80,7 +80,7 @@ class DisciplineService():
     def get_validator(self):
         '''
         Returns:
-            class: The validator.
+            object: The validator.
         '''
         return self.__validator
 
