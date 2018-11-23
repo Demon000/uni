@@ -10,7 +10,7 @@ class UI():
         self.__student_service = student_service
         self.__grade_service = grade_service
 
-    def input_value(self, message, type_cast=None, validate_fn=None, default=None):
+    def __input_value(self, message, type_cast=None, validate_fn=None, default=None):
         while True:
             try:
                 raw_value = input(message)
@@ -31,137 +31,137 @@ class UI():
 
             return value
 
-    def input_int(self, message, min_value=None, max_value=None):
+    def __input_int(self, message, min_value=None, max_value=None):
         def validate(value):
             validate_int(value, min_value=min_value, max_value=max_value)
 
-        return self.input_value(message, type_cast=int, validate_fn=validate)
+        return self.__input_value(message, type_cast=int, validate_fn=validate)
 
-    def input_item(self, message, items):
+    def __input_item(self, message, items):
         for index, item in enumerate(items):
             print('{}. {}'.format(index , item))
 
-        index = self.input_int(message, min_value=0, max_value=len(items) - 1)
+        index = self.__input_int(message, min_value=0, max_value=len(items) - 1)
         return items[index]
 
-    def input_student(self):
+    def __input_student(self):
         students = self.__student_service.get_students()
-        return self.input_item('Choose a student: ', students)
+        return self.__input_item('Choose a student: ', students)
 
-    def input_discipline(self):
+    def __input_discipline(self):
         disciplines = self.__discipline_service.get_disciplines()
-        return self.input_item('Choose a discipline: ', disciplines)
+        return self.__input_item('Choose a discipline: ', disciplines)
 
-    def add_student(self):
-        name = self.input_value('Student name: ',
+    def __add_student(self):
+        name = self.__input_value('Student name: ',
                 validate_fn=self.__student_service.get_validator().validate_name)
 
         student = self.__student_service.add_student(name)
         print('Added student: {}'.format(student))
 
-    def add_discipline(self):
-        name = self.input_value('Discipline name: ',
+    def __add_discipline(self):
+        name = self.__input_value('Discipline name: ',
                 validate_fn=self.__discipline_service.get_validator().validate_name)
-        professor = self.input_value('Professor name: ',
+        professor = self.__input_value('Professor name: ',
                 validate_fn=self.__discipline_service.get_validator().validate_professor)
 
         discipline = self.__discipline_service.add_discipline(name, professor)
         print('Added discipline: {}'.format(discipline))
 
-    def add_grade(self):
-        discipline = self.input_discipline()
-        student = self.input_student()
+    def __add_grade(self):
+        discipline = self.__input_discipline()
+        student = self.__input_student()
 
-        value = self.input_value('Grade: ', type_cast=int,
+        value = self.__input_value('Grade: ', type_cast=int,
                 validate_fn=self.__grade_service.get_validator().validate_value)
 
         grade = self.__grade_service.add_grade(discipline, student, value)
         print('Added grade: {}'.format(grade))
 
-    def update_student(self):
-        student = self.input_student()
+    def __update_student(self):
+        student = self.__input_student()
         default_name = student.get_name()
 
-        name = self.input_value('Student name: ',
+        name = self.__input_value('Student name: ',
                 validate_fn=self.__student_service.get_validator().validate_name,
                 default=default_name)
 
         self.__student_service.update_student(student, name)
         print('Updated student: {}', student)
 
-    def update_discipline(self):
-        discipline = self.input_discipline()
+    def __update_discipline(self):
+        discipline = self.__input_discipline()
         default_name = discipline.get_name()
         default_professor = discipline.get_professor()
 
-        name = self.input_value('Discipline name: ',
+        name = self.__input_value('Discipline name: ',
                 validate_fn=self.__discipline_service.get_validator().validate_name,
                 default=default_name)
-        professor = self.input_value('Professor name: ',
+        professor = self.__input_value('Professor name: ',
                 validate_fn=self.__discipline_service.get_validator().validate_professor,
                 default=default_professor)
 
         self.__discipline_service.update_discipline(discipline, name, professor)
         print('Updated discipline: {}', discipline)
 
-    def remove_student(self):
-        student = self.input_student()
+    def __remove_student(self):
+        student = self.__input_student()
 
         self.__student_service.remove_student(student)
         self.__grade_service.remove_matching_grades(student=student)
         print('Removed student: {}', student)
 
-    def remove_discipline(self):
-        discipline = self.input_discipline()
+    def __remove_discipline(self):
+        discipline = self.__input_discipline()
 
         self.__discipline_service.remove_discipline(discipline)
         self.__grade_service.remove_matching_grades(discipline=discipline)
         print('Removed discipline: {}', discipline)
 
-    def show_students(self):
+    def __show_students(self):
         students = self.__student_service.get_students()
         print('Students:')
         for student in students:
             print(student)
 
-    def show_disciplines(self):
+    def __show_disciplines(self):
         disciplines = self.__discipline_service.get_disciplines()
         print('Disciplines:')
         for discipline in disciplines:
             print(discipline)
 
-    def show_grades(self):
+    def __show_grades(self):
         grades = self.__grade_service.get_grades()
         print('Grades:')
         for grade in grades:
             print(grade)
 
-    def search_students(self):
-        partial_name = self.input_value('Partial name: ')
+    def __search_students(self):
+        partial_name = self.__input_value('Partial name: ')
 
         students = self.__student_service.get_most_similar_students(partial_name)
         print('Similar students:')
         for student in students:
             print(student)
 
-    def search_disciplines(self):
-        partial_name = self.input_value('Partial name: ')
+    def __search_disciplines(self):
+        partial_name = self.__input_value('Partial name: ')
 
         disciplines = self.__discipline_service.get_most_similar_disciplines(partial_name)
         print('Similar disciplines:')
         for discipline in disciplines:
             print(discipline)
 
-    def add_random_students(self):
-        no_students = self.input_value('Number of students: ', int)
+    def __add_random_students(self):
+        no_students = self.__input_value('Number of students: ', int)
         students = self.__student_service.add_random_students(no_students)
 
         print('Added students:')
         for student in students:
             print(student)
 
-    def report_grades_sorted_by_name(self):
-        discipline = self.input_discipline()
+    def __report_grades_sorted_by_name(self):
+        discipline = self.__input_discipline()
         grades = self.__grade_service.get_matching_grades_sorted(
                 discipline=discipline, by_name=True)
 
@@ -169,8 +169,8 @@ class UI():
         for grade in grades:
             print(grade)
 
-    def report_grades_sorted_by_value(self):
-        discipline = self.input_discipline()
+    def __report_grades_sorted_by_value(self):
+        discipline = self.__input_discipline()
         grades = self.__grade_service.get_matching_grades_sorted(
                 discipline=discipline, by_value=True)
 
@@ -178,7 +178,7 @@ class UI():
         for grade in grades:
             print(grade)
 
-    def report_students_sorted_by_average(self):
+    def __report_students_sorted_by_average(self):
         averages = self.__grade_service.get_averages()
 
         no_averages_to_print = math.ceil(len(averages) / 5)
@@ -187,43 +187,43 @@ class UI():
         for average in averages_to_print:
             print(average)
 
-    def noop(self):
+    def __noop(self):
         pass
 
-    def exit(self):
+    def __exit(self):
         print('Goodbye.')
         exit()
 
     def run(self):
         student_menu = Menu([
-            Entry(1, 'Add student', self.add_student),
-            Entry(2, 'Update student', self.update_student),
-            Entry(3, 'Remove student', self.remove_student),
-            Entry(4, 'Show students', self.show_students),
-            Entry(5, 'Search students', self.search_students),
-            Entry(6, 'Add random students', self.add_random_students),
-            Entry(7, 'Back', self.noop),
+            Entry(1, 'Add student', self.__add_student),
+            Entry(2, 'Update student', self.__update_student),
+            Entry(3, 'Remove student', self.__remove_student),
+            Entry(4, 'Show students', self.__show_students),
+            Entry(5, 'Search students', self.__search_students),
+            Entry(6, 'Add random students', self.__add_random_students),
+            Entry(7, 'Back', self.__noop),
         ])
 
         discipline_menu = Menu([
-            Entry(1, 'Add discipline', self.add_discipline),
-            Entry(2, 'Update discipline', self.update_discipline),
-            Entry(3, 'Remove discipline', self.remove_discipline),
-            Entry(4, 'Show disciplines', self.show_disciplines),
-            Entry(5, 'Search disciplines', self.search_disciplines),
-            Entry(6, 'Back', self.noop),
+            Entry(1, 'Add discipline', self.__add_discipline),
+            Entry(2, 'Update discipline', self.__update_discipline),
+            Entry(3, 'Remove discipline', self.__remove_discipline),
+            Entry(4, 'Show disciplines', self.__show_disciplines),
+            Entry(5, 'Search disciplines', self.__search_disciplines),
+            Entry(6, 'Back', self.__noop),
         ])
 
         grade_menu = Menu([
-            Entry(1, 'Add grade', self.add_grade),
-            Entry(2, 'Show grades', self.show_grades),
-            Entry(3, 'Back', self.noop),
+            Entry(1, 'Add grade', self.__add_grade),
+            Entry(2, 'Show grades', self.__show_grades),
+            Entry(3, 'Back', self.__noop),
         ])
 
         report_menu = Menu([
-            Entry(1, 'Grades for discipline sorted by name', self.report_grades_sorted_by_name),
-            Entry(2, 'Grades for discipline sorted by value', self.report_grades_sorted_by_value),
-            Entry(3, 'Students sorted by average grade', self.report_students_sorted_by_average),
+            Entry(1, 'Grades for discipline sorted by name', self.__report_grades_sorted_by_name),
+            Entry(2, 'Grades for discipline sorted by value', self.__report_grades_sorted_by_value),
+            Entry(3, 'Students sorted by average grade', self.__report_students_sorted_by_average),
         ])
 
         main_menu = Menu([
@@ -231,7 +231,7 @@ class UI():
             Entry(2, 'Disciplines', discipline_menu.run),
             Entry(3, 'Grades', grade_menu.run),
             Entry(4, 'Report', report_menu.run),
-            Entry('x', 'Exit', self.exit),
+            Entry('x', 'Exit', self.__exit),
         ])
 
         while True:
