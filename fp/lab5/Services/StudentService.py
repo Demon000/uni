@@ -77,21 +77,30 @@ class StudentService():
         '''
         return self.__validator
 
-    def get_students_sorted_by_similarity(self, partial_name):
+    def get_most_similar_students(self, partial_name):
         '''
-        Get all the students sorted by similarity with the given partial name.
+        Get the students most similar with the given partial name.
 
         Args:
             partial_name (str): A partial name to find the similarity against.
 
         Returns:
-            list: List of students sorted by similarity.
+            list: List of students most similar.
         '''
         students = self.get_students()
+        groups = {}
+        max_similarity = 0
+        for student in students:
+            similarity = get_similarity(student.get_name(), partial_name)
+            if similarity > max_similarity:
+                max_similarity = similarity
 
-        students.sort(key=lambda student: get_similarity(student.get_name(), partial_name), reverse=True)
+            if similarity not in groups:
+                groups[similarity] = []
 
-        return students
+            groups[similarity].append(student)
+
+        return groups[max_similarity]
 
     def get_random_name(self, length=None):
         '''

@@ -84,18 +84,27 @@ class DisciplineService():
         '''
         return self.__validator
 
-    def get_disciplines_sorted_by_similarity(self, partial_name):
+    def get_most_similar_disciplines(self, partial_name):
         '''
-        Get all the disciplines sorted by similarity with the given partial name.
+        Get the disciplines most similar with the given partial name.
 
         Args:
             partial_name (str): A partial name to find the similarity against.
 
         Returns:
-            list: List of disciplines sorted by similarity.
+            list: List of disciplines most similar.
         '''
         disciplines = self.get_disciplines()
+        groups = {}
+        max_similarity = 0
+        for discipline in disciplines:
+            similarity = get_similarity(discipline.get_name(), partial_name)
+            if similarity > max_similarity:
+                max_similarity = similarity
 
-        disciplines.sort(key=lambda discipline: get_similarity(discipline.get_name(), partial_name), reverse=True)
+            if similarity not in groups:
+                groups[similarity] = []
 
-        return disciplines
+            groups[similarity].append(discipline)
+
+        return groups[max_similarity]

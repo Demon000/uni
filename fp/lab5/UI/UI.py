@@ -135,19 +135,15 @@ class UI():
     def search_students(self):
         partial_name = self.input_value('Partial name: ')
 
-        students = self.__student_service.get_students_sorted_by_similarity(partial_name)
-        no_students_to_print = len(students) // 5 or 1
-        students_to_print = students[:no_students_to_print]
-        for student in students_to_print:
+        students = self.__student_service.get_most_similar_students(partial_name)
+        for student in students:
             print(student)
 
     def search_disciplines(self):
         partial_name = self.input_value('Partial name: ')
 
-        disciplines = self.__discipline_service.get_disciplines_sorted_by_similarity(partial_name)
-        no_disciplines_to_print = len(disciplines) // 5 or 1
-        disciplines_to_print = disciplines[:no_disciplines_to_print]
-        for discipline in disciplines_to_print:
+        disciplines = self.__discipline_service.get_most_similar_disciplines(partial_name)
+        for discipline in disciplines:
             print(discipline)
 
     def add_random_students(self):
