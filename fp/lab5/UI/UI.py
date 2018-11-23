@@ -42,6 +42,14 @@ class UI():
         index = self.input_int(message, min_value=0, max_value=len(items) - 1)
         return items[index]
 
+    def input_student(self):
+        students = self.__student_service.get_students()
+        return self.input_item('Choose a student: ', students)
+
+    def input_discipline(self):
+        disciplines = self.__discipline_service.get_disciplines()
+        return self.input_item('Choose a discipline: ', disciplines)
+
     def add_student(self):
         name = self.input_value('Student name: ',
                 validate_fn=self.__student_service.get_validator().validate_name)
@@ -59,11 +67,8 @@ class UI():
         print('Added discipline: {}'.format(discipline))
 
     def add_grade(self):
-        disciplines = self.__discipline_service.get_disciplines()
-        discipline = self.input_item('Choose a discipline: ', disciplines)
-
-        students = self.__student_service.get_students()
-        student = self.input_item('Choose a student: ', students)
+        discipline = self.input_discipline()
+        student = self.input_student()
 
         value = self.input_value('Grade: ', type_cast=int,
                 validate_fn=self.__grade_service.get_validator().validate_value)
@@ -72,9 +77,7 @@ class UI():
         print('Added grade: {}'.format(grade))
 
     def update_student(self):
-        students = self.__student_service.get_students()
-        student = self.input_item('Choose a student: ', students)
-
+        student = self.input_student()
         default_name = student.get_name()
 
         name = self.input_value('Student name: ',
@@ -85,9 +88,7 @@ class UI():
         print('Updated student: {}', student)
 
     def update_discipline(self):
-        disciplines = self.__discipline_service.get_disciplines()
-        discipline = self.input_item('Choose a discipline: ', disciplines)
-
+        discipline = self.input_discipline()
         default_name = discipline.get_name()
         default_professor = discipline.get_professor()
 
@@ -102,16 +103,14 @@ class UI():
         print('Updated discipline: {}', discipline)
 
     def remove_student(self):
-        students = self.__student_service.get_students()
-        student = self.input_item('Choose a student: ', students)
+        student = self.input_student()
 
         self.__student_service.remove_student(student)
         self.__grade_service.remove_matching_grades(student=student)
         print('Removed student: {}', student)
 
     def remove_discipline(self):
-        disciplines = self.__discipline_service.get_disciplines()
-        discipline = self.input_item('Choose a discipline: ', disciplines)
+        discipline = self.input_discipline()
 
         self.__discipline_service.remove_discipline(discipline)
         self.__grade_service.remove_matching_grades(discipline=discipline)
@@ -154,16 +153,9 @@ class UI():
         for student in students:
             print(student)
 
-    def get_grades_for_discipline(self):
-        disciplines = self.__discipline_service.get_disciplines()
-        discipline = self.input_item('Choose a discipline: ', disciplines)
-
-        grades = self.__grade_service.get_matching_grades(discipline=discipline)
-
-        return grades
-
     def report_grades_sorted_by_name(self):
-        grades = self.get_grades_for_discipline()
+        discipline = self.input_discipline()
+        grades = self.__grade_service.get_grades_for_discipline(discipline)
 
         grades.sort(key=lambda grade: grade.get_student().get_name())
 
@@ -171,7 +163,8 @@ class UI():
             print(grade)
 
     def report_grades_sorted_by_value(self):
-        grades = self.get_grades_for_discipline()
+        discipline = self.input_discipline()
+        grades = self.__grade_service.get_grades_for_discipline(discipline)
 
         grades.sort(key=lambda grade: grade.get_value(), reverse=True)
 
