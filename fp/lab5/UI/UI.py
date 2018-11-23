@@ -155,18 +155,16 @@ class UI():
 
     def report_grades_sorted_by_name(self):
         discipline = self.input_discipline()
-        grades = self.__grade_service.get_matching_grades(discipline=discipline)
-
-        grades.sort(key=lambda grade: grade.get_student().get_name())
+        grades = self.__grade_service.get_matching_grades_sorted(
+                discipline=discipline, by_name=True)
 
         for grade in grades:
             print(grade)
 
     def report_grades_sorted_by_value(self):
         discipline = self.input_discipline()
-        grades = self.__grade_service.get_matching_grades(discipline=discipline)
-
-        grades.sort(key=lambda grade: grade.get_value(), reverse=True)
+        grades = self.__grade_service.get_matching_grades_sorted(
+                discipline=discipline, by_value=True)
 
         for grade in grades:
             print(grade)

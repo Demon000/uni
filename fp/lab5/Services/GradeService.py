@@ -51,6 +51,29 @@ class GradeService():
         '''
         return self.__grades.get_matching(discipline, student, value)
 
+    def get_matching_grades_sorted(self, discipline=None, student=None,
+            value=None, by_value=False, by_name=False):
+        '''
+        Get all the grades that match the passed arguments, sorted by the
+        selected criteria.
+
+        Args:
+            Same arguments as Grade.matches().
+            by_value (bool, optional): To sort the grades by value.
+            by_name (bool, optional): To sort the grades by the student's name.
+
+        Returns:
+            list: A list of the sorted matching grades.
+        '''
+        matching_grades = self.get_matching_grades(discipline, student, value)
+
+        if by_value is not None:
+            matching_grades.sort(key=lambda grade: grade.get_value(), reverse=True)
+        elif by_name is not None:
+            matching_grades.sort(key=lambda grade: grade.get_student().get_name())
+
+        return matching_grades
+
     def remove_grade(self, grade):
         '''
         Remove a grade.
