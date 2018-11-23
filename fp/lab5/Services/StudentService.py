@@ -94,6 +94,15 @@ class StudentService():
         return students
 
     def get_random_name(self, length=None):
+        '''
+        Generate a random name.
+
+        Args:
+            length (int, optional): The length of the generated name.
+
+        Returns:
+            The randomly generated name.
+        '''
         chars = []
 
         if length is None:
