@@ -155,7 +155,7 @@ class UI():
 
     def report_grades_sorted_by_name(self):
         discipline = self.input_discipline()
-        grades = self.__grade_service.get_grades_for_discipline(discipline)
+        grades = self.__grade_service.get_matching_grades(discipline=discipline)
 
         grades.sort(key=lambda grade: grade.get_student().get_name())
 
@@ -164,7 +164,7 @@ class UI():
 
     def report_grades_sorted_by_value(self):
         discipline = self.input_discipline()
-        grades = self.__grade_service.get_grades_for_discipline(discipline)
+        grades = self.__grade_service.get_matching_grades(discipline=discipline)
 
         grades.sort(key=lambda grade: grade.get_value(), reverse=True)
 
