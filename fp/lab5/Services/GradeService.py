@@ -1,7 +1,8 @@
 from Models.Grade import Grade
+from Models.Average import Average
 
 class GradeService():
-    def __init__(self, grades, validator):
+    def __init__(self, disciplines, students, grades, validator):
         '''
         Initialize a grades service.
 
@@ -9,6 +10,8 @@ class GradeService():
             grades (Collection): The grades collection.
             validator (object): The validator used for validating the given data.
         '''
+        self.__disciplines = disciplines
+        self.__students = students
         self.__grades = grades
         self.__validator = validator
 
@@ -122,3 +125,22 @@ class GradeService():
             sum_ += grade.get_value()
 
         return sum_ / len(grades)
+
+    def get_averages(self):
+        '''
+        Gets the average grade for each student.
+
+        Returns:
+            list: List containing one Average for each student.
+        '''
+        students = self.__students.get()
+        averages = []
+
+        for student in students:
+            grade = self.get_student_average(student)
+            average = Average(student, grade)
+            averages.append(average)
+
+        averages.sort(key=lambda average: average.get_grade(), reverse=True)
+
+        return averages

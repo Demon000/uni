@@ -2,6 +2,8 @@ from Menu.Menu import Menu
 from Menu.Entry import Entry
 from Utils.Utils import validate_int
 
+import math
+
 class UI():
     def __init__(self, discipline_service, student_service, grade_service):
         self.__discipline_service = discipline_service
@@ -170,19 +172,12 @@ class UI():
             print(grade)
 
     def report_students_sorted_by_average(self):
-        students = self.__student_service.get_students()
-        students_average = []
+        averages = self.__grade_service.get_averages()
 
-        for student in students:
-            average = self.__grade_service.get_student_average(student)
-            students_average.append((student, average))
-
-        students_average.sort(key=lambda student_average: student_average[1], reverse=True)
-
-        no_averages_to_print = len(students) // 5 or 1
-        students_average_to_print = students_average[:no_averages_to_print]
-        for student, average in students_average_to_print:
-            print('{}, Average grade: {}'.format(student, average))
+        no_averages_to_print = math.ceil(len(averages) / 5)
+        averages_to_print = averages[:no_averages_to_print]
+        for average in averages_to_print:
+            print(average)
 
     def noop(self):
         pass

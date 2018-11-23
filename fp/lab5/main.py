@@ -23,7 +23,8 @@ def run():
 
     grades_collection = Collection()
     grade_validator = GradeValidator()
-    grade_service = GradeService(grades_collection, grade_validator)
+    grade_service = GradeService(disciplines_collection, students_collection,
+            grades_collection, grade_validator)
 
     ui = UI(discipline_service, student_service, grade_service)
     ui.run()
