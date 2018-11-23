@@ -26,6 +26,24 @@ class Collection():
         items = self.__items[:]
         return items
 
+    def get_matching(self, *args, **kwargs):
+        '''
+        Get all the items that match the passed arguments.
+
+        Args:
+            Same arguments as Item.matches().
+
+        Returns:
+            list: A list of the matching items.
+        '''
+        matching_items = []
+
+        for item in self.__items:
+            if item.matches(*args, **kwargs):
+                matching_items.append(item)
+
+        return matching_items
+
     def remove(self, item):
         '''
         Remove the passed item from the collection.
@@ -40,3 +58,20 @@ class Collection():
             self.__items.remove(item)
         except ValueError:
             raise ValueError('Collection does not contain this item.')
+
+    def remove_matching(self, *args, **kwargs):
+        '''
+        Remove all the items that match the passed arguments.
+
+        Args:
+            Same arguments as Item.matches().
+
+        Returns:
+            list: A list of the removed items.
+        '''
+        removed_items = self.get_matching(*args, **kwargs)
+
+        for item in removed_items:
+            self.remove(item)
+
+        return removed_items

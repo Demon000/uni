@@ -49,13 +49,7 @@ class GradeService():
         Returns:
             list: A list of the matching grades.
         '''
-        matching_grades = []
-
-        for grade in self.get_grades():
-            if grade.matches(discipline, student, value):
-                matching_grades.append(grade)
-
-        return matching_grades
+        return self.__grades.get_matching(discipline, student, value)
 
     def remove_grade(self, grade):
         '''
@@ -79,12 +73,7 @@ class GradeService():
         Returns:
             list: A list of the removed grades.
         '''
-        removed_grades = self.get_matching_grades(discipline, student, value)
-
-        for grade in removed_grades:
-            self.remove_grade(grade)
-
-        return removed_grades
+        return self.__grades.remove_matching(discipline, student, value)
 
     def get_validator(self):
         '''
