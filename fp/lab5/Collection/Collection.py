@@ -44,6 +44,15 @@ class Collection():
 
         return matching_items
 
+    def update(self, item, *args, **kwargs):
+        '''
+        Update the item using the passed arguments.
+
+        Args:
+            item (Item): The item to be updated.
+        '''
+        item.set_multiple(*args, **kwargs)
+
     def remove(self, item):
         '''
         Remove the passed item from the collection.

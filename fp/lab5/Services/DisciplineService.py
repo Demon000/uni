@@ -59,11 +59,11 @@ class DisciplineService():
         '''
         if name is not None:
             self.__validator.validate_name(name)
-            discipline.set_name(name)
 
         if professor is not None:
             self.__validator.validate_professor(professor)
-            discipline.set_professor(professor)
+
+        self.__disciplines.update(discipline, name, professor)
 
     def remove_discipline(self, discipline):
         '''

@@ -28,3 +28,11 @@ class Student():
             name (str): A new name for this student.
         '''
         self.__name = name
+
+    def set_multiple(self, name=None):
+        '''
+        Args:
+            name (str): A new name for this student.
+        '''
+        if name is not None:
+            self.set_name(name)

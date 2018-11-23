@@ -44,3 +44,15 @@ class Discipline():
             professor (str): The new professor teaching this discipline.
         '''
         self.__professor = professor
+
+    def set_multiple(self, name=None, professor=None):
+        '''
+        Args:
+            name (str): A new name for this discipline.
+            professor (str): The new professor teaching this discipline.
+        '''
+        if name is not None:
+            self.set_name(name)
+
+        if professor is not None:
+            self.set_professor(professor)
