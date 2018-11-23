@@ -120,16 +120,19 @@ class UI():
 
     def show_students(self):
         students = self.__student_service.get_students()
+        print('Students:')
         for student in students:
             print(student)
 
     def show_disciplines(self):
         disciplines = self.__discipline_service.get_disciplines()
+        print('Disciplines:')
         for discipline in disciplines:
             print(discipline)
 
     def show_grades(self):
         grades = self.__grade_service.get_grades()
+        print('Grades:')
         for grade in grades:
             print(grade)
 
@@ -137,6 +140,7 @@ class UI():
         partial_name = self.input_value('Partial name: ')
 
         students = self.__student_service.get_most_similar_students(partial_name)
+        print('Similar students:')
         for student in students:
             print(student)
 
@@ -144,6 +148,7 @@ class UI():
         partial_name = self.input_value('Partial name: ')
 
         disciplines = self.__discipline_service.get_most_similar_disciplines(partial_name)
+        print('Similar disciplines:')
         for discipline in disciplines:
             print(discipline)
 
@@ -160,6 +165,7 @@ class UI():
         grades = self.__grade_service.get_matching_grades_sorted(
                 discipline=discipline, by_name=True)
 
+        print('Grades sorted by student name:')
         for grade in grades:
             print(grade)
 
@@ -168,6 +174,7 @@ class UI():
         grades = self.__grade_service.get_matching_grades_sorted(
                 discipline=discipline, by_value=True)
 
+        print('Grades sorted by value:')
         for grade in grades:
             print(grade)
 
@@ -176,6 +183,7 @@ class UI():
 
         no_averages_to_print = math.ceil(len(averages) / 5)
         averages_to_print = averages[:no_averages_to_print]
+        print('Students average:')
         for average in averages_to_print:
             print(average)
 
