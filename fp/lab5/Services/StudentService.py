@@ -57,7 +57,7 @@ class StudentService():
         if name is not None:
             self.__validator.validate_name(name)
 
-        self.__students.update_student(student, name)
+        self.__students.update(student, name)
 
     def remove_student(self, student):
         '''
