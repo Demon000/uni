@@ -110,7 +110,7 @@ class GradeService():
 
     def get_student_average(self, student):
         '''
-        Finds the average grade for a student.
+        Find the average grade for a student.
 
         Args:
             student (Student): The student to find the average grade for.
@@ -128,7 +128,7 @@ class GradeService():
 
     def get_averages(self):
         '''
-        Gets the average grade for each student.
+        Get the average grade for each student.
 
         Returns:
             list: List containing one Average for each student.
