@@ -1,5 +1,6 @@
 from Models.Grade import Grade
 from Models.Average import Average
+from Models.MostGrades import MostGrades
 
 class GradeService():
     def __init__(self, disciplines, students, grades, validator):
@@ -143,3 +144,29 @@ class GradeService():
         averages.sort(key=lambda average: average.get_grade(), reverse=True)
 
         return averages
+
+    def get_student_with_most_grades(self, over_value):
+        '''
+        Get the students with the most grades over a given value.
+
+        Returns:
+            MostGrades: The student with the most grades.
+        '''
+        students = self.__students.get()
+        students_most_grades = []
+
+        def get_grades_over(grade):
+            return grade.get_value() > over_value
+
+        def get_no_grades(student):
+            grades = self.get_matching_grades(student=student, test_fn=get_grades_over)
+            return len(grades)
+
+        for student in students:
+            no_grades = get_no_grades(student)
+            most_grades = MostGrades(student, no_grades, over_value)
+            students_most_grades.append(most_grades)
+
+        students_most_grades.sort(key=lambda most_grades: most_grades.get_no_grades(), reverse=True)
+
+        return students_most_grades[0]

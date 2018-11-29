@@ -187,6 +187,13 @@ class UI():
         for average in averages_to_print:
             print(average)
 
+    def __report_student_with_most_grades_over(self):
+        value = self.__input_value('Grade: ', type_cast=int,
+                validate_fn=self.__grade_service.get_validator().validate_value)
+
+        most_grades = self.__grade_service.get_student_with_most_grades(value)
+        print(most_grades)
+
     def __noop(self):
         pass
 
@@ -224,6 +231,7 @@ class UI():
             Entry(1, 'Grades for discipline sorted by name', self.__report_grades_sorted_by_name),
             Entry(2, 'Grades for discipline sorted by value', self.__report_grades_sorted_by_value),
             Entry(3, 'Students sorted by average grade', self.__report_students_sorted_by_average),
+            Entry(4, 'Student with most grades over a given value', self.__report_student_with_most_grades_over),
         ])
 
         main_menu = Menu([
