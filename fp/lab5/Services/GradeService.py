@@ -42,7 +42,7 @@ class GradeService():
         '''
         return self.__grades.get()
 
-    def get_matching_grades(self, discipline=None, student=None, value=None):
+    def get_matching_grades(self, *args, **kwargs):
         '''
         Get all the grades that match the passed arguments.
 
@@ -52,10 +52,9 @@ class GradeService():
         Returns:
             list: A list of the matching grades.
         '''
-        return self.__grades.get_matching(discipline, student, value)
+        return self.__grades.get_matching(*args, **kwargs)
 
-    def get_matching_grades_sorted(self, discipline=None, student=None,
-            value=None, by_value=False, by_name=False):
+    def get_matching_grades_sorted(self, by_value=False, by_name=False, *args, **kwargs):
         '''
         Get all the grades that match the passed arguments, sorted by the
         selected criteria.
@@ -68,7 +67,7 @@ class GradeService():
         Returns:
             list: A list of the sorted matching grades.
         '''
-        matching_grades = self.get_matching_grades(discipline, student, value)
+        matching_grades = self.get_matching_grades(*args, **kwargs)
 
         if by_value is not None:
             matching_grades.sort(key=lambda grade: grade.get_value(), reverse=True)
@@ -89,7 +88,7 @@ class GradeService():
         '''
         return self.__grades.remove(grade)
 
-    def remove_matching_grades(self, discipline=None, student=None, value=None):
+    def remove_matching_grades(self, *args, **kwargs):
         '''
         Remove all the grades that match the passed arguments.
 
@@ -99,7 +98,7 @@ class GradeService():
         Returns:
             list: A list of the removed grades.
         '''
-        return self.__grades.remove_matching(discipline, student, value)
+        return self.__grades.remove_matching(*args, **kwargs)
 
     def get_validator(self):
         '''
