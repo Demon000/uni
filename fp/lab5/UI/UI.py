@@ -87,7 +87,7 @@ class UI():
                 default=default_name)
 
         self.__student_service.update_student(student, name)
-        print('Updated student: {}', student)
+        print('Updated student: {}'.format(student))
 
     def __update_discipline(self):
         discipline = self.__input_discipline()
@@ -102,19 +102,19 @@ class UI():
                 default=default_professor)
 
         self.__discipline_service.update_discipline(discipline, name, professor)
-        print('Updated discipline: {}', discipline)
+        print('Updated discipline: {}'.format(discipline))
 
     def __remove_student(self):
         student = self.__input_student()
 
         self.__grade_service.remove_student(student)
-        print('Removed student: {}', student)
+        print('Removed student: {}'.format(student))
 
     def __remove_discipline(self):
         discipline = self.__input_discipline()
 
         self.__grade_service.remove_discipline(discipline)
-        print('Removed discipline: {}', discipline)
+        print('Removed discipline: {}'.format(discipline))
 
     def __show_students(self):
         students = self.__student_service.get_students()
