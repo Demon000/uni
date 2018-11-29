@@ -107,15 +107,13 @@ class UI():
     def __remove_student(self):
         student = self.__input_student()
 
-        self.__student_service.remove_student(student)
-        self.__grade_service.remove_matching_grades(student=student)
+        self.__grade_service.remove_student(student)
         print('Removed student: {}', student)
 
     def __remove_discipline(self):
         discipline = self.__input_discipline()
 
-        self.__discipline_service.remove_discipline(discipline)
-        self.__grade_service.remove_matching_grades(discipline=discipline)
+        self.__grade_service.remove_discipline(discipline)
         print('Removed discipline: {}', discipline)
 
     def __show_students(self):

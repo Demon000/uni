@@ -89,6 +89,33 @@ class GradeService():
         '''
         return self.__grades.remove(grade)
 
+    def remove_student(self, student):
+        '''
+        Remove a student.
+
+        Args:
+            student (Student): The student to remove.
+
+        Returns:
+            Student: The removed student.
+        '''
+        self.remove_matching_grades(student=student)
+        return self.__students.remove(student)
+
+
+    def remove_discipline(self, discipline):
+        '''
+        Remove a discipline.
+
+        Args:
+            discipline (Discipline): The discipline to remove.
+
+        Returns:
+            Discipline: The removed discipline.
+        '''
+        self.remove_matching_grades(discipline=discipline)
+        return self.__disciplines.remove(discipline)
+
     def remove_matching_grades(self, *args, **kwargs):
         '''
         Remove all the grades that match the passed arguments.

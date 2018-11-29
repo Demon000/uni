@@ -65,18 +65,6 @@ class DisciplineService():
 
         self.__disciplines.update(discipline, name, professor)
 
-    def remove_discipline(self, discipline):
-        '''
-        Remove a discipline.
-
-        Args:
-            discipline (Discipline): The discipline to remove.
-
-        Returns:
-            Discipline: The removed discipline.
-        '''
-        return self.__disciplines.remove(discipline)
-
     def get_validator(self):
         '''
         Returns:

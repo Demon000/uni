@@ -51,7 +51,7 @@ class Tests():
         self.init_empty()
 
         discipline = self.__discipline_service.add_discipline('Sport', 'Moca')
-        self.__discipline_service.remove_discipline(discipline)
+        self.__grade_service.remove_discipline(discipline)
         disciplines = self.__discipline_service.get_disciplines()
         assert len(disciplines) == 0
 
@@ -80,7 +80,7 @@ class Tests():
         self.init_empty()
 
         student = self.__student_service.add_student('Gigel')
-        self.__student_service.remove_student(student)
+        self.__grade_service.remove_student(student)
         students = self.__student_service.get_students()
 
         assert len(students) == 0

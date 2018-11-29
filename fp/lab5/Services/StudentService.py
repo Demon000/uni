@@ -59,18 +59,6 @@ class StudentService():
 
         self.__students.update(student, name)
 
-    def remove_student(self, student):
-        '''
-        Remove a student.
-
-        Args:
-            student (Student): The student to remove.
-
-        Returns:
-            Student: The removed student.
-        '''
-        return self.__students.remove(student)
-
     def get_validator(self):
         '''
         Returns:
