@@ -41,7 +41,7 @@ class Grade():
         '''
         return self.__value
 
-    def matches(self, discipline=None, student=None, value=None):
+    def matches(self, discipline=None, student=None, value=None, test_fn=None):
         '''
         Check if this grade matches the passed arguments.
 
@@ -60,6 +60,9 @@ class Grade():
             return False
 
         if value is not None and value != self.__value:
+            return False
+
+        if test_fn is not None and not test_fn(self):
             return False
 
         return True
