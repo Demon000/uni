@@ -1,12 +1,16 @@
-class Discipline():
-    def __init__(self, name, professor):
+from Models.Item import Item
+
+class Discipline(Item):
+    def __init__(self, id_, name, professor):
         '''
         Initialize a discipline.
 
         Args:
+            id_ (int): The id of the discipline.
             name (str): The name of this discipline.
             professor (str): The name of name of professor teaching this discipline.
         '''
+        super().__init__(id_)
         self.__name = name
         self.__professor = professor
 

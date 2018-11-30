@@ -1,13 +1,17 @@
-class Grade():
-    def __init__(self, discipline, student, value):
+from Models.Item import Item
+
+class Grade(Item):
+    def __init__(self, id_, discipline, student, value):
         '''
         Initialize a grade.
 
         Args:
+            id_ (int): The id of the grade.
             discipline (Discipline): The discipline that this grade has been given for.
             student (Student): The student that got this grade.
             value (int): The value of this grade.
         '''
+        super().__init__(id_)
         self.__discipline = discipline
         self.__student = student
         self.__value = value

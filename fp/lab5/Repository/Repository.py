@@ -5,6 +5,17 @@ class Repository():
         '''
         self.__items = []
 
+    def contains(self, other):
+        '''
+        Returns:
+            bool: Whether the repository contains an item.
+        '''
+        for item in self.__items:
+            if item.get_id() == other.get_id():
+                return True
+
+        return False
+
     def add(self, item):
         '''
         Add an item to the repository.
@@ -15,6 +26,9 @@ class Repository():
         Raises:
             ValueError: If an equal item already exists.
         '''
+        if self.contains(item):
+            raise ValueError('Item already exists.')
+
         self.__items.append(item)
         return item
 
