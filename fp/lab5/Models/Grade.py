@@ -50,8 +50,8 @@ class Grade(Item):
         Check if this grade matches the passed arguments.
 
         Args:
-            discipline_id (int, optional): A discipline id that this grade is matched against.
-            student_id (int, optional): A student id that this grade is matched against.
+            discipline (Discipline): A discipline that this grade is matched against.
+            student (Student): A student that this grade is matched against.
             value (int, optional): A value that this grade is matched against.
 
         Returns:
