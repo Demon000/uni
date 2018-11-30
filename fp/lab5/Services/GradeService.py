@@ -8,7 +8,7 @@ class GradeService():
         Initialize a grades service.
 
         Args:
-            grades (Collection): The grades collection.
+            grades (Repository): The grades repository.
             validator (object): The validator used for validating the given data.
         '''
         self.__disciplines = disciplines

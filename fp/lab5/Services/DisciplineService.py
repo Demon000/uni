@@ -7,7 +7,7 @@ class DisciplineService():
         Initialize a discipline service.
 
         Args:
-            disciplines (Collection): The disciplines collection.
+            disciplines (Repository): The disciplines repository.
             validator (object): The validator used for validating the given data.
         '''
         self.__disciplines = disciplines

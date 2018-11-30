@@ -1,13 +1,13 @@
-class Collection():
+class Repository():
     def __init__(self):
         '''
-        Initialize a collection.
+        Initialize a repository.
         '''
         self.__items = []
 
     def add(self, item):
         '''
-        Add an item to the collection.
+        Add an item to the repository.
 
         Args:
             item (Item): The item to be added.
@@ -55,18 +55,18 @@ class Collection():
 
     def remove(self, item):
         '''
-        Remove the passed item from the collection.
+        Remove the passed item from the repository.
 
         Args:
             item (Item): The item to be removed.
 
         Raises:
-            ValueError: If the item cannot be found in this collection.
+            ValueError: If the item cannot be found in this repository.
         '''
         try:
             self.__items.remove(item)
         except ValueError:
-            raise ValueError('Collection does not contain this item.')
+            raise ValueError('Repository does not contain this item.')
 
     def remove_matching(self, *args, **kwargs):
         '''

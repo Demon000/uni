@@ -10,7 +10,7 @@ class StudentService():
         Initialize a students service.
 
         Args:
-            students (Collection): The students collection.
+            students (Repository): The students repository.
             validator (object): The validator used for validating the given data.
         '''
         self.__students = students

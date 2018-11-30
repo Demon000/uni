@@ -1,4 +1,4 @@
-from Collection.Collection import Collection
+from Repository.Repository import Repository
 
 from Services.DisciplineService import DisciplineService
 from Services.StudentService import StudentService
@@ -13,18 +13,18 @@ from UI.UI import UI
 from Tests.Tests import Tests
 
 def run():
-    disciplines_collection = Collection()
+    disciplines_repository = Repository()
     discipline_validator = DisciplineValidator()
-    discipline_service = DisciplineService(disciplines_collection, discipline_validator)
+    discipline_service = DisciplineService(disciplines_repository, discipline_validator)
 
-    students_collection = Collection()
+    students_repository = Repository()
     student_validator = StudentValidator()
-    student_service = StudentService(students_collection, student_validator)
+    student_service = StudentService(students_repository, student_validator)
 
-    grades_collection = Collection()
+    grades_repository = Repository()
     grade_validator = GradeValidator()
-    grade_service = GradeService(disciplines_collection, students_collection,
-            grades_collection, grade_validator)
+    grade_service = GradeService(disciplines_repository, students_repository,
+            grades_repository, grade_validator)
 
     ui = UI(discipline_service, student_service, grade_service)
     ui.run()

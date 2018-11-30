@@ -1,4 +1,4 @@
-from Collection.Collection import Collection
+from Repository.Repository import Repository
 
 from Services.DisciplineService import DisciplineService
 from Services.StudentService import StudentService
@@ -10,18 +10,18 @@ from Validators.Grade import GradeValidator
 
 class Tests():
     def init_empty(self):
-        disciplines_collection = Collection()
-        students_collection = Collection()
-        grades_collection = Collection()
+        disciplines_repository = Repository()
+        students_repository = Repository()
+        grades_repository = Repository()
 
         discipline_validator = DisciplineValidator()
         student_validator = StudentValidator()
         grade_validator = GradeValidator()
 
-        self.__discipline_service = DisciplineService(disciplines_collection, discipline_validator)
-        self.__student_service = StudentService(students_collection, student_validator)
-        self.__grade_service = GradeService(disciplines_collection, students_collection,
-                grades_collection, grade_validator)
+        self.__discipline_service = DisciplineService(disciplines_repository, discipline_validator)
+        self.__student_service = StudentService(students_repository, student_validator)
+        self.__grade_service = GradeService(disciplines_repository, students_repository,
+                grades_repository, grade_validator)
 
     def test_add_discipline(self):
         self.init_empty()
