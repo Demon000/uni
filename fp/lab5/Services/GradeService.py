@@ -8,6 +8,8 @@ class GradeService():
         Initialize a grades service.
 
         Args:
+            disciplines (Repository): The disciplines repository.
+            students (Repository): The students repository.
             grades (Repository): The grades repository.
             validator (object): The validator used for validating the given data.
         '''
