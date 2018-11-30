@@ -35,7 +35,8 @@ class GradeService():
         '''
         self.__validator.validate_value(value)
 
-        grade = Grade(discipline, student, value)
+        id_ = self.__grades.get_available_id()
+        grade = Grade(id_, discipline, student, value)
         return self.__grades.add(grade)
 
     def get_grades(self):

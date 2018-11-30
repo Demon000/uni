@@ -31,7 +31,8 @@ class DisciplineService():
         self.__validator.validate_name(name)
         self.__validator.validate_professor(professor)
 
-        discipline = Discipline(name, professor)
+        id_ = self.__disciplines.get_available_id()
+        discipline = Discipline(id_, name, professor)
         return self.__disciplines.add(discipline)
 
     def get_disciplines(self):

@@ -31,7 +31,8 @@ class StudentService():
         '''
         self.__validator.validate_name(name)
 
-        student = Student(name)
+        id_ = self.__students.get_available_id()
+        student = Student(id_, name)
         return self.__students.add(student)
 
     def get_students(self):

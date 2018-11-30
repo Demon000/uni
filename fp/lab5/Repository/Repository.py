@@ -4,6 +4,14 @@ class Repository():
         Initialize a repository.
         '''
         self.__items = []
+        self.__available_id = 0
+
+    def get_available_id(self):
+        '''
+        Returns:
+            int: The first available id.
+        '''
+        return self.__available_id
 
     def contains(self, other):
         '''
@@ -28,6 +36,8 @@ class Repository():
         '''
         if self.contains(item):
             raise ValueError('Item already exists.')
+
+        self.__available_id = max(self.__available_id, item.get_id()) + 1
 
         self.__items.append(item)
         return item
