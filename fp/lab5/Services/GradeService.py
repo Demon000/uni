@@ -1,5 +1,5 @@
 from Models.Grade import Grade
-from Models.Average import Average
+from Models.AverageGrade import AverageGrade
 from Models.MostGrades import MostGrades
 
 class GradeService():
@@ -158,22 +158,22 @@ class GradeService():
 
     def get_averages(self):
         '''
-        Get the average grade for each student.
+        Get an average grade for each student.
 
         Returns:
-            list: List containing one Average for each student.
+            list: List containing an AverageGrade for each student.
         '''
         students = self.__students.get()
-        averages = []
+        average_grades = []
 
         for student in students:
-            grade = self.get_student_average(student)
-            average = Average(student, grade)
-            averages.append(average)
+            value = self.get_student_average(student)
+            average_grade = AverageGrade(student, value)
+            average_grades.append(average_grade)
 
-        averages.sort(key=lambda average: average.get_grade(), reverse=True)
+        average_grades.sort(key=lambda average_grade: average_grade.get_value(), reverse=True)
 
-        return averages
+        return average_grades
 
     def get_student_with_most_grades(self, over_value):
         '''
