@@ -8,6 +8,13 @@ class Item():
         '''
         self.__id = id_
 
+    def __eq__(self, other):
+        '''
+        Returns:
+            bool: Whether this item matches the other item.
+        '''
+        return self.get_id() == other.get_id()
+
     def get_id(self):
         '''
         Returns:
@@ -15,9 +22,17 @@ class Item():
         '''
         return self.__id
 
-    def __eq__(self, other):
+    def matches(self, id_=None):
         '''
+        Check if this item matches the passed arguments.
+
+        Args:
+            id_ (int, optional): An id that this item is matched against.
+
         Returns:
-            bool: Whether this item matches the other item.
+            bool: Whether this item matches the passed arguments.
         '''
-        return self.get_id() == other.get_id()
+        if id_ is not None and id_ != self.__id:
+            return False
+
+        return True
