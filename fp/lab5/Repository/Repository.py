@@ -13,13 +13,13 @@ class Repository():
         '''
         return self.__available_id
 
-    def contains(self, other):
+    def contains(self, item):
         '''
         Returns:
-            bool: Whether the repository contains an item.
+            bool: Whether the repository contains an item equal to the passed one.
         '''
-        for item in self.__items:
-            if item.get_id() == other.get_id():
+        for other in self.__items:
+            if item == other:
                 return True
 
         return False
