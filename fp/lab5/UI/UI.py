@@ -53,17 +53,17 @@ class UI():
         return self.__input_item('Choose a discipline: ', disciplines)
 
     def __add_student(self):
-        name = self.__input_value('Student name: ',
-                validate_fn=self.__student_service.get_validator().validate_name)
+        name_validator = self.__student_service.get_validator().validate_name
+        name = self.__input_value('Student name: ', validate_fn=name_validator)
 
         student = self.__student_service.add_student(name)
         print('Added student: {}'.format(student))
 
     def __add_discipline(self):
-        name = self.__input_value('Discipline name: ',
-                validate_fn=self.__discipline_service.get_validator().validate_name)
-        professor = self.__input_value('Professor name: ',
-                validate_fn=self.__discipline_service.get_validator().validate_professor)
+        name_validator = self.__discipline_service.get_validator().validate_name
+        name = self.__input_value('Discipline name: ', validate_fn=name_validator)
+        professor_validator = self.__discipline_service.get_validator().validate_professor
+        professor = self.__input_value('Professor name: ', validate_fn=professor_validator)
 
         discipline = self.__discipline_service.add_discipline(name, professor)
         print('Added discipline: {}'.format(discipline))
@@ -72,8 +72,8 @@ class UI():
         discipline = self.__input_discipline()
         student = self.__input_student()
 
-        value = self.__input_value('Grade: ', type_cast=int,
-                validate_fn=self.__grade_service.get_validator().validate_value)
+        value_validator = self.__grade_service.get_validator().validate_value
+        value = self.__input_value('Grade: ', type_cast=int, validate_fn=value_validator)
 
         grade = self.__grade_service.add_grade(discipline, student, value)
         print('Added grade: {}'.format(grade))
@@ -82,9 +82,9 @@ class UI():
         student = self.__input_student()
         default_name = student.get_name()
 
+        name_validator = self.__student_service.get_validator().validate_name
         name = self.__input_value('Student name: ',
-                validate_fn=self.__student_service.get_validator().validate_name,
-                default=default_name)
+                validate_fn=name_validator, default=default_name)
 
         self.__student_service.update_student(student, name)
         print('Updated student: {}'.format(student))
@@ -94,12 +94,12 @@ class UI():
         default_name = discipline.get_name()
         default_professor = discipline.get_professor()
 
+        name_validator = self.__discipline_service.get_validator().validate_name
         name = self.__input_value('Discipline name: ',
-                validate_fn=self.__discipline_service.get_validator().validate_name,
-                default=default_name)
+                validate_fn=name_validator, default=default_name)
+        professor_validator = self.__discipline_service.get_validator().validate_professor
         professor = self.__input_value('Professor name: ',
-                validate_fn=self.__discipline_service.get_validator().validate_professor,
-                default=default_professor)
+                validate_fn=professor_validator, default=default_professor)
 
         self.__discipline_service.update_discipline(discipline, name, professor)
         print('Updated discipline: {}'.format(discipline))
@@ -186,8 +186,8 @@ class UI():
             print(average)
 
     def __report_student_with_most_grades_over(self):
-        value = self.__input_value('Grade: ', type_cast=int,
-                validate_fn=self.__grade_service.get_validator().validate_value)
+        value_validator = self.__grade_service.get_validator().validate_value
+        value = self.__input_value('Grade: ', type_cast=int, validate_fn=value_validator)
 
         most_grades = self.__grade_service.get_student_with_most_grades(value)
         print(most_grades)
