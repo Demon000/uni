@@ -22,7 +22,7 @@ class GradeService():
     def __complete_grade(self, grade):
         '''
         Returns:
-            CompleteGrade: A completed grades built from the given grade.
+            CompleteGrade: A complete grade built from the given grade.
         '''
         discipline_id = grade.get_discipline_id()
         discipline = self.__disciplines.get_one_matching(id_=discipline_id)
@@ -36,7 +36,7 @@ class GradeService():
     def __complete_grades(self, grades):
         '''
         Returns:
-            list: A list of completed grades built from the given grades.
+            list: A list of complete grades built from the given grades.
         '''
         complete_grades = []
 
@@ -59,7 +59,7 @@ class GradeService():
             ValueError: If the value of the new grade is invalid.
 
         Returns:
-            Grade: The new grade.
+            CompleteGrade: The new grade.
         '''
         self.__validator.validate_value(value)
 
@@ -76,7 +76,7 @@ class GradeService():
     def get_grades(self):
         '''
         Returns:
-            list: A list containing all the grades.
+            list: A list containing all the complete grades.
         '''
         grades = self.__grades.get()
         complete_grades = self.__complete_grades(grades)
@@ -84,13 +84,13 @@ class GradeService():
 
     def get_matching_grades(self, *args, **kwargs):
         '''
-        Get all the grades that match the passed arguments.
+        Get all the complete grades that match the passed arguments.
 
         Args:
             Same arguments as Grade.matches().
 
         Returns:
-            list: A list of the matching grades.
+            list: A list of the complete matching grades.
         '''
         matching_grades = self.__grades.get_matching(*args, **kwargs)
         complete_matching_grades = self.__complete_grades(matching_grades)
@@ -98,7 +98,7 @@ class GradeService():
 
     def get_matching_grades_sorted(self, by_value=False, by_name=False, *args, **kwargs):
         '''
-        Get all the grades that match the passed arguments, sorted by the
+        Get all the complete grades that match the passed arguments, sorted by the
         selected criteria.
 
         Args:
@@ -107,7 +107,7 @@ class GradeService():
             by_name (bool, optional): To sort the grades by the student's name.
 
         Returns:
-            list: A list of the sorted matching grades.
+            list: A list of the sorted complete matching grades.
         '''
         matching_grades = self.get_matching_grades(*args, **kwargs)
 
@@ -126,7 +126,7 @@ class GradeService():
             Same arguments as Grade.matches().
 
         Returns:
-            list: A list of the removed grades.
+            list: A list of the complete removed grades.
         '''
         removed_grades = self.__grades.remove_matching(*args, **kwargs)
         complete_removed_grades = self.__complete_grades(removed_grades)
