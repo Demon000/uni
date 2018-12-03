@@ -80,18 +80,6 @@ class GradeService():
 
         return matching_grades
 
-    def remove_grade(self, grade):
-        '''
-        Remove a grade.
-
-        Args:
-            grade (Grade): The grade to remove.
-
-        Returns:
-            Grade: The removed grade.
-        '''
-        return self.__grades.remove(grade)
-
     def remove_student(self, student):
         '''
         Remove a student.
