@@ -68,6 +68,25 @@ class Repository():
 
         return matching_items
 
+    def get_one_matching(self, *args, **kwargs):
+        '''
+        Get the first item that matches the passed arguments.
+
+        Args:
+            Same arguments as Item.matches().
+
+        Returns:
+            Item: The first item that matches the passed arguments.
+        '''
+        matching_items = self.get_matching()
+
+        if len(matching_items):
+            item = matching_items[0]
+        else:
+            item = None
+
+        return item
+
     def update(self, item, *args, **kwargs):
         '''
         Update the item using the passed arguments.
