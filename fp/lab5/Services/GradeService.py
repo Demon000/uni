@@ -1,4 +1,5 @@
 from Models.Grade import Grade
+from Models.CompleteGrade import CompleteGrade
 from Models.AverageGrade import AverageGrade
 from Models.MostGrades import MostGrades
 
@@ -18,6 +19,33 @@ class GradeService():
         self.__grades = grades
         self.__validator = validator
 
+    def __complete_grade(self, grade):
+        '''
+        Returns:
+            CompleteGrade: A completed grades built from the given grade.
+        '''
+        discipline_id = grade.get_discipline_id()
+        discipline = self.__disciplines.get_one_matching(id_=discipline_id)
+
+        student_id = grade.get_student_id()
+        student = self.__students.get_one_matching(id_=student_id)
+
+        complete_grade = CompleteGrade(grade, discipline, student)
+        return complete_grade
+
+    def __complete_grades(self, grades):
+        '''
+        Returns:
+            list: A list of completed grades built from the given grades.
+        '''
+        complete_grades = []
+
+        for grade in grades:
+            complete_grade = self.__complete_grade(grade)
+            complete_grades.append(complete_grade)
+
+        return complete_grades
+
     def add_grade(self, discipline, student, value):
         '''
         Create and add a grade.
@@ -36,15 +64,23 @@ class GradeService():
         self.__validator.validate_value(value)
 
         id_ = self.__grades.get_available_id()
-        grade = Grade(id_, discipline, student, value)
-        return self.__grades.add(grade)
+        discipline_id = discipline.get_id()
+        student_id = student.get_id()
+
+        grade = Grade(id_, discipline_id, student_id, value)
+        self.__grades.add(grade)
+
+        complete_grade = CompleteGrade(grade, discipline, student)
+        return complete_grade
 
     def get_grades(self):
         '''
         Returns:
             list: A list containing all the grades.
         '''
-        return self.__grades.get()
+        grades = self.__grades.get()
+        complete_grades = self.__complete_grades(grades)
+        return complete_grades
 
     def get_matching_grades(self, *args, **kwargs):
         '''
@@ -56,7 +92,9 @@ class GradeService():
         Returns:
             list: A list of the matching grades.
         '''
-        return self.__grades.get_matching(*args, **kwargs)
+        matching_grades = self.__grades.get_matching(*args, **kwargs)
+        complete_matching_grades = self.__complete_grades(matching_grades)
+        return complete_matching_grades
 
     def get_matching_grades_sorted(self, by_value=False, by_name=False, *args, **kwargs):
         '''
@@ -80,6 +118,20 @@ class GradeService():
 
         return matching_grades
 
+    def remove_matching_grades(self, *args, **kwargs):
+        '''
+        Remove all the grades that match the passed arguments.
+
+        Args:
+            Same arguments as Grade.matches().
+
+        Returns:
+            list: A list of the removed grades.
+        '''
+        removed_grades = self.__grades.remove_matching(*args, **kwargs)
+        complete_removed_grades = self.__complete_grades(removed_grades)
+        return complete_removed_grades
+
     def remove_student(self, student):
         '''
         Remove a student.
@@ -93,7 +145,6 @@ class GradeService():
         self.remove_matching_grades(student=student)
         return self.__students.remove(student)
 
-
     def remove_discipline(self, discipline):
         '''
         Remove a discipline.
@@ -106,18 +157,6 @@ class GradeService():
         '''
         self.remove_matching_grades(discipline=discipline)
         return self.__disciplines.remove(discipline)
-
-    def remove_matching_grades(self, *args, **kwargs):
-        '''
-        Remove all the grades that match the passed arguments.
-
-        Args:
-            Same arguments as Grade.matches().
-
-        Returns:
-            list: A list of the removed grades.
-        '''
-        return self.__grades.remove_matching(*args, **kwargs)
 
     def get_validator(self):
         '''

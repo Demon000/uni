@@ -1,42 +1,34 @@
 from Models.Item import Item
 
 class Grade(Item):
-    def __init__(self, id_, discipline, student, value):
+    def __init__(self, id_, discipline_id, student_id, value):
         '''
         Initialize a grade.
 
         Args:
             id_ (int): The id of the grade.
-            discipline (Discipline): The discipline that this grade has been given for.
-            student (Student): The student that got this grade.
+            discipline_id (int): The id of the discipline that this grade has been given for.
+            student_id (int): The id of the student that got this grade.
             value (int): The value of this grade.
         '''
         super().__init__(id_)
-        self.__discipline = discipline
-        self.__student = student
+        self.__discipline_id = discipline_id
+        self.__student_id = student_id
         self.__value = value
 
-    def __str__(self):
+    def get_discipline_id(self):
         '''
         Returns:
-            str: An user-friendly representation of the stored data.
+            int: The id of the discipline that this grade has been given for.
         '''
-        return 'Student: {}, Discipline: {}, Grade: {}' \
-                .format(self.__student.get_name(), self.__discipline.get_name(), self.__value)
+        return self.__discipline_id
 
-    def get_discipline(self):
+    def get_student_id(self):
         '''
         Returns:
-            Discipline: The discipline that this grade has been given for.
+            int: The id of the student that got this grade.
         '''
-        return self.__discipline
-
-    def get_student(self):
-        '''
-        Returns:
-            Student: The student that got this grade.
-        '''
-        return self.__student
+        return self.__student_id
 
     def get_value(self):
         '''
@@ -45,22 +37,31 @@ class Grade(Item):
         '''
         return self.__value
 
-    def matches(self, discipline=None, student=None, value=None, test_fn=None):
+    def matches(self, discipline=None, student=None,
+            discipline_id=None, student_id=None, value=None, test_fn=None):
         '''
         Check if this grade matches the passed arguments.
 
         Args:
             discipline (Discipline): A discipline that this grade is matched against.
             student (Student): A student that this grade is matched against.
+            discipline_id (int, optional): A discipline id that this grade is matched against.
+            student_id (int, optional): A student id that this grade is matched against.
             value (int, optional): A value that this grade is matched against.
 
         Returns:
             bool: Whether this grade matches the passed arguments.
         '''
-        if discipline is not None and discipline != self.__discipline:
+        if discipline is not None and discipline.get_id() != self.__discipline_id:
             return False
 
-        if student is not None and student != self.__student:
+        if student is not None and student.get_id() != self.__student_id:
+            return False
+
+        if discipline_id is not None and discipline_id != self.__discipline_id:
+            return False
+
+        if student_id is not None and student_id != self.__student_id:
             return False
 
         if value is not None and value != self.__value:
