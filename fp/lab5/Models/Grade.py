@@ -94,4 +94,9 @@ class Grade(Item):
             Grade: A new grade instance deserialized from the given serialization.
         '''
         args = serialization.split('\t')
-        return Grade(*args)
+        id_ = int(args[0])
+        discipline_id = int(args[1])
+        student_id = int(args[2])
+        value = int(args[3])
+        grade = Grade(id_, discipline_id, student_id, value)
+        return grade
