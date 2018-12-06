@@ -1,3 +1,5 @@
+from Errors.Errors import RepositoryError
+
 class Repository():
     def __init__(self):
         '''
@@ -32,10 +34,10 @@ class Repository():
             item (Item): The item to be added.
 
         Raises:
-            ValueError: If an equal item already exists.
+            RepositoryError: If an equal item already exists.
         '''
         if self.contains(item):
-            raise ValueError('Item already exists.')
+            raise RepositoryError('Item already exists.')
 
         self.__available_id = max(self.__available_id, item.get_id()) + 1
 
@@ -103,12 +105,12 @@ class Repository():
             item (Item): The item to be removed.
 
         Raises:
-            ValueError: If the item cannot be found in this repository.
+            RepositoryError: If the item cannot be found in this repository.
         '''
         try:
             self.__items.remove(item)
         except ValueError:
-            raise ValueError('Repository does not contain this item.')
+            raise RepositoryError('Repository does not contain this item.')
 
     def remove_matching(self, *args, **kwargs):
         '''

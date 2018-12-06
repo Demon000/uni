@@ -1,5 +1,7 @@
 import os
 
+from Errors.Errors import RepositoryError
+
 class FileRepository():
     def __init__(self, path, serialize, deserialize):
         '''
@@ -109,10 +111,10 @@ class FileRepository():
             item (Item): The item to be added.
 
         Raises:
-            ValueError: If an equal item already exists.
+            RepositoryError: If an equal item already exists.
         '''
         if self.contains(item):
-            raise ValueError('Item already exists.')
+            raise RepositoryError('Item already exists.')
 
         self.append(item)
 
@@ -185,7 +187,7 @@ class FileRepository():
             item (Item): The item to be removed.
 
         Raises:
-            ValueError: If the item cannot be found in this repository.
+            RepositoryError: If the item cannot be found in this repository.
         '''
         items = self.load()
         removed = False
@@ -196,7 +198,7 @@ class FileRepository():
                 removed = True
 
         if not removed:
-            raise ValueError('Repository does not contain this item.')
+            raise RepositoryError('Repository does not contain this item.')
 
     def remove_matching(self, *args, **kwargs):
         '''
