@@ -19,7 +19,7 @@ class FileRepository():
         self.__serialize = serialize
         self.__deserialize = deserialize
 
-    def create(self):
+    def __create(self):
         '''
         Create the file used for persistent storage if it doesn't exist.
         '''
@@ -29,7 +29,7 @@ class FileRepository():
         with open(self.__path, 'w') as file:
             pass
 
-    def save(self, items):
+    def __save(self, items):
         '''
         Save the items to the repository file.
 
@@ -41,18 +41,18 @@ class FileRepository():
             item_serialization = self.__serialize(item)
             serialized_items.append(item_serialization)
 
-        self.create()
+        self.__create()
         with open(self.__path, 'w') as file:
             file.writelines(serialized_items)
 
-    def load(self):
+    def __load(self):
         '''
         Load items from the repository file.
 
         Returns:
             list: The items loaded from the repository file.
         '''
-        self.create()
+        self.__create()
         with open(self.__path, 'r') as file:
             serialized_items = file.readlines()
 
@@ -72,7 +72,7 @@ class FileRepository():
         '''
         item_serialization = self.__serialize(item)
 
-        self.create()
+        self.__create()
         with open(self.__path, 'a') as file:
             file.write(item_serialization)
             file.write('\n')
@@ -84,7 +84,7 @@ class FileRepository():
         '''
         available_id = 0
 
-        items = self.load()
+        items = self.__load()
         for item in items:
             if item.get_id() >= available_id:
                 available_id = item.get_id() + 1
@@ -96,7 +96,7 @@ class FileRepository():
         Returns:
             bool: Whether the repository contains an item equal to the passed one.
         '''
-        items = self.load()
+        items = self.__load()
         for other in items:
             if item == other:
                 return True
@@ -125,7 +125,7 @@ class FileRepository():
         Returns:
             list: A copy of the items list.
         '''
-        items = self.load()
+        items = self.__load()
         return items
 
     def get_matching(self, *args, **kwargs):
@@ -140,7 +140,7 @@ class FileRepository():
         '''
         matching_items = []
 
-        items = self.load()
+        items = self.__load()
         for item in items:
             if item.matches(*args, **kwargs):
                 matching_items.append(item)
@@ -173,13 +173,13 @@ class FileRepository():
         Args:
             item (Item): The item to be updated.
         '''
-        items = self.load()
+        items = self.__load()
 
         for other in items:
             if other == item:
                 other.set_multiple(*args, **kwargs)
 
-        self.save(items)
+        self.__save(items)
 
     def remove(self, item):
         '''
@@ -191,13 +191,15 @@ class FileRepository():
         Raises:
             RepositoryError: If the item cannot be found in this repository.
         '''
-        items = self.load()
+        items = self.__load()
         removed = False
 
         for other in items:
             if other == item:
                 items.remove(other)
                 removed = True
+
+        self.__save(items)
 
         if not removed:
             raise RepositoryError('Repository does not contain this item.')
