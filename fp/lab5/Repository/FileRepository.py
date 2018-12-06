@@ -63,7 +63,7 @@ class FileRepository():
 
         return items
 
-    def append(self, item):
+    def __append(self, item):
         '''
         Append the given item to the repository file.
 
@@ -116,7 +116,7 @@ class FileRepository():
         if self.contains(item):
             raise RepositoryError('Item already exists.')
 
-        self.append(item)
+        self.__append(item)
 
         return item
 
