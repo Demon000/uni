@@ -47,7 +47,7 @@ class Student(Item):
         Returns:
             A serialized version of the student.
         '''
-        serialization = '{}\t{}'.format(student.__id, student.__name)
+        serialization = '{}\t{}'.format(student.get_id(), student.get_id())
         return serialization
 
     @staticmethod

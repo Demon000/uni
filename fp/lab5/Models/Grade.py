@@ -78,8 +78,8 @@ class Grade(Item):
         Returns:
             A serialized version of the grade.
         '''
-        serialization = '{}\t{}\t{}\t{}'.format(grade.__id, grade.__discipline_id,
-                grade.__student_id, grade.__value)
+        serialization = '{}\t{}\t{}\t{}'.format(grade.get_id(), grade.get_discipline_id(),
+                grade.get_student_id(), grade.get_value())
         return serialization
 
     @staticmethod
