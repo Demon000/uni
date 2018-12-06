@@ -77,7 +77,7 @@ class Repository():
         Returns:
             Item: The first item that matches the passed arguments.
         '''
-        matching_items = self.get_matching()
+        matching_items = self.get_matching(*args, **kwargs)
 
         if len(matching_items):
             item = matching_items[0]
