@@ -62,7 +62,7 @@ class Discipline(Item):
             self.set_professor(professor)
 
     @staticmethod
-    def serialize(self, discipline):
+    def serialize(discipline):
         '''
         Returns:
             A serialized version of the discipline.
@@ -72,7 +72,7 @@ class Discipline(Item):
         return serialization
 
     @staticmethod
-    def deserialize(self, serialization):
+    def deserialize(serialization):
         '''
         Deserialize a given serialization into a Discipline.
 

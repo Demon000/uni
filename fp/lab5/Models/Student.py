@@ -42,7 +42,7 @@ class Student(Item):
             self.set_name(name)
 
     @staticmethod
-    def serialize(self,  student):
+    def serialize(student):
         '''
         Returns:
             A serialized version of the student.
@@ -51,7 +51,7 @@ class Student(Item):
         return serialization
 
     @staticmethod
-    def deserialize(self, serialization):
+    def deserialize(serialization):
         '''
         Deserialize a given serialization into a Student.
 

@@ -73,7 +73,7 @@ class Grade(Item):
         return True
 
     @staticmethod
-    def serialize(self, grade):
+    def serialize(grade):
         '''
         Returns:
             A serialized version of the grade.
@@ -83,7 +83,7 @@ class Grade(Item):
         return serialization
 
     @staticmethod
-    def deserialize(self, serialization):
+    def deserialize(serialization):
         '''
         Deserialize a given serialization into a Grade.
 
