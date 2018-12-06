@@ -41,12 +41,13 @@ class Student(Item):
         if name is not None:
             self.set_name(name)
 
-    def serialize(self):
+    @staticmethod
+    def serialize(self,  student):
         '''
         Returns:
             A serialized version of the student.
         '''
-        serialization = '{}\t{}'.format(self.__id, self.__name)
+        serialization = '{}\t{}'.format(student.__id, student.__name)
         return serialization
 
     @staticmethod

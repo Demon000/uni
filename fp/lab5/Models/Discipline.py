@@ -61,12 +61,14 @@ class Discipline(Item):
         if professor is not None:
             self.set_professor(professor)
 
-    def serialize(self):
+    @staticmethod
+    def serialize(self, discipline):
         '''
         Returns:
             A serialized version of the discipline.
         '''
-        serialization = '{}\t{}\t{}'.format(self.__id, self.__name, self.__professor)
+        serialization = '{}\t{}\t{}'.format(discipline.__id, discipline.__name,
+                discipline.__professor)
         return serialization
 
     @staticmethod

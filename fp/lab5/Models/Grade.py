@@ -72,12 +72,14 @@ class Grade(Item):
 
         return True
 
-    def serialize(self):
+    @staticmethod
+    def serialize(self, grade):
         '''
         Returns:
             A serialized version of the grade.
         '''
-        serialization = '{}\t{}\t{}\t{}'.format(self.__id, self.__discipline_id, self.__student_id, self.__value)
+        serialization = '{}\t{}\t{}\t{}'.format(grade.__id, grade.__discipline_id,
+                grade.__student_id, grade.__value)
         return serialization
 
     @staticmethod
