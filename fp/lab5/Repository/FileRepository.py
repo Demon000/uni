@@ -86,7 +86,7 @@ class FileRepository():
 
         items = self.load()
         for item in items:
-            if item.get_id() > available_id:
+            if item.get_id() >= available_id:
                 available_id = item.get_id() + 1
 
         return available_id
