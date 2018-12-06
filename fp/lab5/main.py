@@ -18,8 +18,6 @@ from Menu.Entry import Entry
 
 from UI.UI import UI
 
-from Tests.Tests import Tests
-
 class Coordinator():
     def __run_in_memory(self):
         disciplines_repository = Repository()
@@ -74,6 +72,3 @@ class Coordinator():
 if __name__ == "__main__":
     coordinator = Coordinator()
     coordinator.run()
-
-    tests = Tests()
-    tests.run()
