@@ -40,7 +40,6 @@ class Repository():
         self.__available_id = max(self.__available_id, item.get_id()) + 1
 
         self.__items.append(item)
-        return item
 
     def get(self):
         '''
