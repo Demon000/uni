@@ -61,7 +61,7 @@ class Student(Item):
         Returns:
             Student: A new student instance deserialized from the given serialization.
         '''
-        args = serialization.split('\t')
+        args = serialization.strip().split('\t')
         id_ = int(args[0])
         name = args[1]
         student = Student(id_, name)

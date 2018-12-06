@@ -82,7 +82,7 @@ class Discipline(Item):
         Returns:
             Discipline: A new discipline instance deserialized from the given serialization.
         '''
-        args = serialization.split('\t')
+        args = serialization.strip().split('\t')
         id_ = int(args[0])
         name = args[1]
         professor = args[2]
