@@ -21,7 +21,7 @@ class UI():
 
                 if validate_fn is not None:
                     validate_fn(value)
-            except ValueError as ve:
+            except (ValueError, ValidationError) as ve:
                 print(ve)
                 if default is not None:
                     print('Using default value.')

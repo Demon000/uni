@@ -9,6 +9,6 @@ class GradeValidator():
             value (int): The value to be validated.
 
         Raises:
-            ValueError: If the value is invalid.
+            ValidationError: If the value is invalid.
         '''
         validate_int(value, 1, 10, 'Grade')

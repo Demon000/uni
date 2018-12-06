@@ -9,7 +9,7 @@ class DisciplineValidator():
             name (str): The name to be validated.
 
         Raises:
-            ValueError: If the name is invalid.
+            ValidationError: If the name is invalid.
         '''
         validate_str(name, 1, 'Discipline name')
 
@@ -21,6 +21,6 @@ class DisciplineValidator():
             name (str): The name to be validated.
 
         Raises:
-            ValueError: If the name is invalid.
+            ValidationError: If the name is invalid.
         '''
         validate_str(professor, 1, 'Professor name')

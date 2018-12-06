@@ -9,6 +9,6 @@ class StudentValidator():
             name (str): The name to be validated.
 
         Raises:
-            ValueError: If the name is invalid.
+            ValidationError: If the name is invalid.
         '''
         validate_str(name, 1, 'Student name')
