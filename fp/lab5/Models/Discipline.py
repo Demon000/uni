@@ -60,3 +60,25 @@ class Discipline(Item):
 
         if professor is not None:
             self.set_professor(professor)
+
+    def serialize(self):
+        '''
+        Returns:
+            A serialized version of the discipline.
+        '''
+        serialization = '{}\t{}\t{}'.format(self.__id, self.__name, self.__professor)
+        return serialization
+
+    @staticmethod
+    def deserialize(self, serialization):
+        '''
+        Deserialize a given serialization into a Discipline.
+
+        Args:
+            serialization (str): The serialization to deserialize.
+
+        Returns:
+            Discipline: A new discipline instance deserialized from the given serialization.
+        '''
+        args = serialization.split('\t')
+        return Discipline(*args)

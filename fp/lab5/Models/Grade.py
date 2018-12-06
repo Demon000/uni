@@ -71,3 +71,25 @@ class Grade(Item):
             return False
 
         return True
+
+    def serialize(self):
+        '''
+        Returns:
+            A serialized version of the grade.
+        '''
+        serialization = '{}\t{}\t{}\t{}'.format(self.__id, self.__discipline_id, self.__student_id, self.__value)
+        return serialization
+
+    @staticmethod
+    def deserialize(self, serialization):
+        '''
+        Deserialize a given serialization into a Grade.
+
+        Args:
+            serialization (str): The serialization to deserialize.
+
+        Returns:
+            Grade: A new grade instance deserialized from the given serialization.
+        '''
+        args = serialization.split('\t')
+        return Grade(*args)

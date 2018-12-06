@@ -40,3 +40,25 @@ class Student(Item):
         '''
         if name is not None:
             self.set_name(name)
+
+    def serialize(self):
+        '''
+        Returns:
+            A serialized version of the student.
+        '''
+        serialization = '{}\t{}'.format(self.__id, self.__name)
+        return serialization
+
+    @staticmethod
+    def deserialize(self, serialization):
+        '''
+        Deserialize a given serialization into a Student.
+
+        Args:
+            serialization (str): The serialization to deserialize.
+
+        Returns:
+            Student: A new student instance deserialized from the given serialization.
+        '''
+        args = serialization.split('\t')
+        return Student(*args)
