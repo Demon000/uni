@@ -118,6 +118,8 @@ class FileRepository():
 
         self.append(item)
 
+        return item
+
     def get(self):
         '''
         Returns:
