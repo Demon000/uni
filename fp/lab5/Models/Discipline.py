@@ -67,7 +67,7 @@ class Discipline(Item):
         Returns:
             A serialized version of the discipline.
         '''
-        serialization = '{}\t{}\t{}'.format(discipline.get_id(), discipline.get_name(),
+        serialization = '{}\t{}\t{}\n'.format(discipline.get_id(), discipline.get_name(),
                 discipline.get_professor())
         return serialization
 

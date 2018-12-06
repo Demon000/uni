@@ -75,7 +75,6 @@ class FileRepository():
         self.__create()
         with open(self.__path, 'a') as file:
             file.write(item_serialization)
-            file.write('\n')
 
     def get_available_id(self):
         '''
