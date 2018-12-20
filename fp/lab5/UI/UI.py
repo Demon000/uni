@@ -178,7 +178,7 @@ class UI():
             print(grade)
 
     def __report_students_sorted_by_average(self):
-        averages = self.__grade_service.get_averages()
+        averages = self.__grade_service.get_sorted_averages()
 
         no_averages_to_print = math.ceil(len(averages) / 5)
         averages_to_print = averages[:no_averages_to_print]

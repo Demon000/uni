@@ -3,6 +3,8 @@ from Models.CompleteGrade import CompleteGrade
 from Models.AverageGrade import AverageGrade
 from Models.MostGrades import MostGrades
 
+from Sort.Sort import gnomesort
+
 class GradeService():
     def __init__(self, disciplines, students, grades, validator):
         '''
@@ -110,11 +112,10 @@ class GradeService():
             list: A list of the sorted complete matching grades.
         '''
         matching_grades = self.get_matching_grades(*args, **kwargs)
-
         if by_value is not None:
-            matching_grades.sort(key=lambda grade: grade.get_value(), reverse=True)
+            matching_grades = gnomesort(matching_grades, key=lambda grade: grade.get_value(), reverse=True)
         elif by_name is not None:
-            matching_grades.sort(key=lambda grade: grade.get_student().get_name())
+            matching_grades = gnomesort(matching_grades, key=lambda grade: grade.get_student().get_name())
 
         return matching_grades
 
@@ -183,9 +184,9 @@ class GradeService():
 
         return sum_ / len(grades)
 
-    def get_averages(self):
+    def get_sorted_averages(self):
         '''
-        Get an average grade for each student.
+        Get average grades for each student, sorted by value, from higher to lower.
 
         Returns:
             list: List containing an AverageGrade for each student.
@@ -198,7 +199,8 @@ class GradeService():
             average_grade = AverageGrade(student, value)
             average_grades.append(average_grade)
 
-        average_grades.sort(key=lambda average_grade: average_grade.get_value(), reverse=True)
+        average_grades = gnomesort(average_grades,
+                key=lambda average_grade: average_grade.get_value(), reverse=True)
 
         return average_grades
 
@@ -224,6 +226,7 @@ class GradeService():
             most_grades = MostGrades(student, no_grades, over_value)
             students_most_grades.append(most_grades)
 
-        students_most_grades.sort(key=lambda most_grades: most_grades.get_no_grades(), reverse=True)
+        sorted_most_grades = gnomesort(students_most_grades,
+                key=lambda most_grades: most_grades.get_no_grades(), reverse=True)
 
         return students_most_grades[0]
