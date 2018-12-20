@@ -182,6 +182,9 @@ class GradeService():
         for grade in grades:
             sum_ += grade.get_value()
 
+        if not len(grades):
+            return 0
+
         return sum_ / len(grades)
 
     def get_sorted_averages(self):
