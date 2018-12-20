@@ -12,7 +12,10 @@ from Models.Discipline import Discipline
 from Models.Student import Student
 from Models.Grade import Grade
 
+from Sort.Sort import quicksort, gnomesort
+
 import unittest
+from random import randint
 
 class DisciplineTest(unittest.TestCase):
     def test_create(self):
@@ -124,5 +127,44 @@ class Tests(unittest.TestCase):
         grade = self.__grade_service.add_grade(discipline, student, 10)
 
         self.assertEqual(grade.get_value(), 10)
+
+class SortTest(unittest.TestCase):
+    def __test_large_with(self, fn):
+        for i in range(0, 100):
+            list_len = randint(200, 500)
+            list_ = [randint(0, 1000000000) for k in range(list_len)]
+
+            proper_sorted_list = sorted(list_)
+            own_sorted_list = fn(list_)
+            self.assertEqual(proper_sorted_list, own_sorted_list)
+
+            proper_sorted_list = sorted(list_, reverse=True)
+            own_sorted_list = fn(list_, reverse=True)
+            self.assertEqual(proper_sorted_list, own_sorted_list)
+
+    def __test_small_with(self, fn):
+        def reverse_cmp(a, b):
+            if a > b:
+                return -1
+
+            if a < b:
+                return 1
+
+            return 0
+
+        list_ = [5, 1, 3, 6, 2, 7, 8]
+        self.assertEqual(fn(list_), [1, 2, 3, 5, 6, 7, 8])
+        self.assertEqual(fn(list_, reverse=True), [8, 7, 6, 5, 3, 2, 1])
+        self.assertEqual(fn(list_, key=lambda x: -x), [8, 7, 6, 5, 3, 2, 1])
+        self.assertEqual(fn(list_, cmp_=reverse_cmp), [8, 7, 6, 5, 3, 2, 1])
+
+    def test_quicksort(self):
+        self.__test_large_with(quicksort)
+        self.__test_small_with(quicksort)
+
+    def test_gnomesort(self):
+        self.__test_large_with(gnomesort)
+        self.__test_small_with(gnomesort)
+
 
 unittest.main()
