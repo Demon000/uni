@@ -112,9 +112,9 @@ class GradeService():
             list: A list of the sorted complete matching grades.
         '''
         matching_grades = self.get_matching_grades(*args, **kwargs)
-        if by_value is not None:
+        if by_value:
             matching_grades = gnomesort(matching_grades, key=lambda grade: grade.get_value(), reverse=True)
-        elif by_name is not None:
+        elif by_name:
             matching_grades = gnomesort(matching_grades, key=lambda grade: grade.get_student().get_name())
 
         return matching_grades
