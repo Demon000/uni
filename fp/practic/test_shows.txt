@@ -1,0 +1,10 @@
+Jurnal,Stiri,1,Informatii
+Vreme,Stiri,1,Starea vremii
+Sport,Stiri,1,Noutati in sport
+Meci,Stiri,2,Romania - Portugalia
+Viata la sat,Informare,2,Fermieri si chestii
+Romania te iubesc,Informare,2,Despre tara noastra
+5 Sense,Film,3,Un film
+Expandables,Film,3,Alt film
+Expandables 2,Film,3,Inca un film
+The mask,Film,3,Ultimul film
