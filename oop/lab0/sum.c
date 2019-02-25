@@ -6,7 +6,6 @@ int main() {
 
     do {
         scanf("%d", &number);
-
         sum += number;
     } while(number);
 
