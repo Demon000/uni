@@ -110,7 +110,6 @@ void free_nth_cousin_primes_pair(struct pair* primes) {
     free(primes);
 }
 
-
 /*
  * Generate the first n pairs of cousin prime numbers.
  */
@@ -120,6 +119,11 @@ void run_generate_prime_pairs() {
 
     printf("Introduce the number of cousin prime pairs to generate: ");
     scanf("%d", &n);
+
+    if (n < 1) {
+        printf("The number you entered is not larger than 0.\n");
+        return;
+    }
 
     printf("The first %d pairs of cousin prime numbers are:\n", n);
     for (i = 1; i <= n; i++) {
