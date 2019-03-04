@@ -135,12 +135,59 @@ void run_generate_prime_pairs() {
     }
 }
 
+/*
+ * Check if the given number is prime.
+ *
+ * Args:
+ *      n (int): The number to check.
+ *
+ * Returns:
+ *      int: 1 if the number is prime, 0 otherwise.
+ */
+int is_prime(int n) {
+    for (int i = 2; i <= n / 2; i++) {
+        if (n % i == 0) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+/*
+ * Decompose even number larger than 2 into the sum of 2 prime numbers.
+ */
+void run_decompose_even_number() {
+    int n;
+
+    printf("Introduce an even number: ");
+    scanf("%d", &n);
+
+    if (n < 3) {
+        printf("The number you entered is not larger than 2.\n");
+        return;
+    }
+
+    if (n % 2 != 0) {
+        printf("The number you entered is not even.\n");
+        return;
+    }
+
+    for (int i = 2; i <= n / 2; i++) {
+        if (is_prime(i) && is_prime(n - i)) {
+            printf("%d + %d = %d\n", i, n - i, n);
+            break;
+        }
+    }
+}
+
 int main() {
     int command;
 
     while(1) {
         printf("1. Find the number of 0s in the product of a list of number.\n");
         printf("2. Find the first n pairs of cousin prime numbers.\n");
+        printf("3. Decompose an even number larger than 2 into the sum of 2 prime numbers.\n");
         printf("0. Exit.\n");
         printf("Enter a command: ");
         scanf("%d", &command);
@@ -164,6 +211,12 @@ int main() {
          */
         else if (command == 2) {
             run_generate_prime_pairs();
+        }
+        /* 14. Descompune un numar natural par, mai mare strict ca 2, intr-o suma
+         *  de doua numere prime (verificarea ipotezei lui Goldbach).
+         */
+        else if (command == 3) {
+            run_decompose_even_number();
         } else {
             printf("The command you entered is invalid.\n");
         }
