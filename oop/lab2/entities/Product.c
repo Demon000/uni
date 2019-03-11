@@ -15,6 +15,8 @@ Product* Product__create(ProductId id,
     strcpy(product->type, type);
     strcpy(product->brand, brand);
     strcpy(product->model, model);
+
+    return product;
 }
 
 void Product__destroy(Product* product) {
