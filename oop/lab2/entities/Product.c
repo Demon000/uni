@@ -53,3 +53,14 @@ Product* ProductsList__get(ProductsList* list, int i) {
 
     return list->items[i];
 }
+
+void ProductsList__swap(ProductsList* list, int first, int second) {
+    if (first < 0 || first >= list->length ||
+            second < 0 || second >= list->length) {
+        return;
+    }
+
+    Product* aux = list->items[first];
+    list->items[first] = list->items[second];
+    list->items[second] = aux;
+}

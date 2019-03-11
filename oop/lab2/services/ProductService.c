@@ -61,6 +61,35 @@ ProductsList* ProductService__get_products(ProductService* service) {
     return list;
 }
 
+ProductsList* ProductService__get_sorted_products(ProductService* service,
+        ProductSortType type, ProductSortOrder order) {
+    ProductsList* list = ProductRepository__get_products(service->repository);
+    int length = ProductsList__get_length(list);
+    for (int i = 0; i < length; i++) {
+        for (int j = i + 1; j < length; j++) {
+            Product* first = ProductsList__get(list, i);
+            Product* second = ProductsList__get(list, j);
+            int value;
+
+            if (type == SORT_BY_PRICE) {
+                value = second->price - first->price;
+            } else if (type == SORT_BY_AMOUNT) {
+                value = second->amount - first->amount;
+            }
+
+            if (order == SORT_DESCENDING) {
+                value = -value;
+            }
+
+            if (value < 0) {
+                ProductsList__swap(list, i, j);
+            }
+        }
+    }
+
+    return list;
+}
+
 ProductsList* ProductService__get_products_by_brand(ProductService* service, char* brand) {
 
 }

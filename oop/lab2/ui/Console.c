@@ -128,6 +128,31 @@ void Console__show_products(Console* console) {
     ProductsList__destroy(list);
 }
 
+void Console__ask_sort_option(Console* console) {
+    ProductSortType type;
+    ProductSortOrder order;
+    int value;
+
+    printf("Sort type:\n"
+            "1. Price\n"
+            "2. Amount\n");
+
+    Console__ask_number_ranged("Sort type: ", &value, 1, 1, 2);
+    type = value - 1;
+
+    printf("Sort order:\n"
+            "1. Ascending\n"
+            "2. Descending\n");
+
+    Console__ask_number_ranged("Sort order: ", &value, 1, 1, 2);
+    order = value - 1;
+
+    ProductsList* list = ProductService__get_sorted_products(console->service,
+            type, order);
+    Console__print_products(list);
+    ProductsList__destroy(list);
+}
+
 int Console__ask_option(Console* console) {
     int option;
 
@@ -136,9 +161,10 @@ int Console__ask_option(Console* console) {
             "2. Update a product\n"
             "3. Delete a product\n"
             "4. Show products\n"
+            "5. Show products soretd by price or quantity\n"
             "0. Exit\n");
 
-    Console__ask_number_ranged("Option: ", &option, 0, 0, 4);
+    Console__ask_number_ranged("Option: ", &option, 0, 0, 5);
     switch (option) {
     case 0:
         Console__exit(console);
@@ -154,6 +180,9 @@ int Console__ask_option(Console* console) {
         break;
     case 4:
         Console__show_products(console);
+        break;
+    case 5:
+        Console__ask_sort_option(console);
         break;
     }
 

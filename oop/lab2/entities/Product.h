@@ -34,5 +34,6 @@ void ProductsList__destroy(ProductsList*);
 
 int ProductsList__get_length(ProductsList*);
 Product* ProductsList__get(ProductsList*, int);
+void ProductsList__swap(ProductsList*, int, int);
 
 #endif //PRODUCT_H
