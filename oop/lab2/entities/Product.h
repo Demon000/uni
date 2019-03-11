@@ -4,9 +4,9 @@
 #define PRODUCT_STRING_MAX_SIZE 32
 #define PRODUCT_REPRESENTATION_MAX_SIZE 256
 
-typedef int ProductId
-typedef int ProductPrice
-typedef int ProductAmount
+typedef int ProductId;
+typedef int ProductPrice;
+typedef int ProductAmount;
 
 typedef struct Pruduct {
     ProductId id;
@@ -31,5 +31,8 @@ void Product__set_amount(Product*, ProductAmount);
 
 char* Product__get_str(Product*);
 void Product__free_str(char*);
+
+ProductsList* ProductsList__create(int);
+void ProductsList__destroy(ProductsList*);
 
 #endif //PRODUCT_H
