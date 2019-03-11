@@ -21,8 +21,8 @@ typedef struct Pruduct {
 Product* Product__create(ProductId, ProductPrice, ProductAmount, char*, char*, char*);
 void Product__destroy(Product*);
 
-void Product__set_price(Product*, int);
-void Product__set_amount(Product*, int);
+void Product__set_price(Product*, ProductPrice);
+void Product__set_amount(Product*, ProductAmount);
 
 char* Product__get_str(Product*);
 void Product__free_str(char*);
