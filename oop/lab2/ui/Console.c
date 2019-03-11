@@ -75,6 +75,7 @@ void Console__add_product(Console* console) {
     Product* product = ProductService__add_product(console->service, id,
             price, amount, type, brand, model);
 
+    printf("Added product: ");
     Console__print_product(product);
 }
 
