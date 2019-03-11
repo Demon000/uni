@@ -2,12 +2,14 @@
 
 #include "Vector.h"
 
-void Vector__create() {
+Vector* Vector__create() {
     Vector* v = malloc(sizeof(Vector));
 
     v->size = VECTOR_INIT_SIZE;
     v->length = 0;
     v->items = malloc(sizeof(void *) * v->size);
+
+    return v;
 }
 
 void Vector__destroy(Vector* v) {

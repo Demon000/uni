@@ -9,7 +9,7 @@ typedef struct Vector {
     int length;
 } Vector;
 
-void Vector__create();
+Vector* Vector__create();
 void Vector__destroy(Vector*);
 
 int Vector__get_length(Vector*);
