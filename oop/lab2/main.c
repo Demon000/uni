@@ -6,7 +6,9 @@ int main() {
     ProductRepository* repository = ProductRepository__create();
     ProductService* service = ProductService__create(repository);
 
-    Console__run();
+    Console* console = Console__create(service);
+    Console__run(console);
+    Console__destroy(console);
 
     ProductService__destroy(service);
     ProductRepository__destroy(repository);
