@@ -52,6 +52,11 @@ void Console__ask_str(char* message, char* str, int loop) {
 }
 
 void Console__print_product(Product* product) {
+    if (!product) {
+        printf("Product does not exist.\n");
+        return;
+    }
+
     printf("Id: %d, Type: %s, Brand: %s, Model: %s, "
             "Price: %d, Amount %d\n", product->id,
             product->type, product->brand, product->model,
