@@ -153,6 +153,39 @@ void Console__ask_sort_option(Console* console) {
     ProductsList__destroy(list);
 }
 
+void Console__ask_filter_option(Console* console) {
+    char brand[PRODUCT_STRING_MAX_SIZE];
+    ProductPrice price;
+    ProductAmount amount;
+    int option;
+
+    printf("Filter by:\n"
+            "1. Brand\n"
+            "2. Price\n"
+            "3. Amount\n");
+
+    Console__ask_number_ranged("Filter by: ", &option, 1, 1, 3);
+
+    ProductsList* list;
+    switch (option) {
+    case 1:
+        Console__ask_str("Brand: ", brand, 1);
+        list = ProductService__get_products_by_brand(console->service, brand);
+        break;
+    case 2:
+        Console__ask_number("Price: ", &price, 1);
+        list = ProductService__get_products_by_price(console->service, price);
+        break;
+    case 3:
+        Console__ask_number("Amount: ", &amount, 1);
+        list = ProductService__get_products_by_amount(console->service, amount);
+        break;
+    }
+
+    Console__print_products(list);
+    ProductsList__destroy(list);
+}
+
 int Console__ask_option(Console* console) {
     int option;
 
@@ -161,10 +194,11 @@ int Console__ask_option(Console* console) {
             "2. Update a product\n"
             "3. Delete a product\n"
             "4. Show products\n"
-            "5. Show products soretd by price or quantity\n"
+            "5. Show products sorted by price or quantity\n"
+            "6. Show products matching a filter\n"
             "0. Exit\n");
 
-    Console__ask_number_ranged("Option: ", &option, 0, 0, 5);
+    Console__ask_number_ranged("Option: ", &option, 0, 0, 6);
     switch (option) {
     case 0:
         Console__exit(console);
@@ -183,6 +217,9 @@ int Console__ask_option(Console* console) {
         break;
     case 5:
         Console__ask_sort_option(console);
+        break;
+    case 6:
+        Console__ask_filter_option(console);
         break;
     }
 

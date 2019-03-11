@@ -57,32 +57,34 @@ Product* ProductRepository__get_product_by_id(ProductRepository* repository, Pro
     return NULL;
 }
 
+#define GET_PRODUCTS_LIST(condition) \
+        int length = Vector__get_length(repository->products); \
+        ProductsList* list = ProductsList__create(length); \
+        Product* product; \
+        int index = 0; \
+        for (int i = 0; i < length; i++) { \
+            product = Vector__get(repository->products, i); \
+            if (condition) { \
+                list->items[index++] = product; \
+            } \
+        } \
+        list->length = index; \
+        return list;
+
 ProductsList* ProductRepository__get_products(ProductRepository* repository) {
-    int length = Vector__get_length(repository->products);
-    ProductsList* list = ProductsList__create(length);
-    Product* product;
-    int index = 0;
-
-    for (int i = 0; i < length; i++) {
-        product = Vector__get(repository->products, i);
-        list->items[index++] = product;
-    }
-
-    list->length = index;
-
-    return list;
+    GET_PRODUCTS_LIST(1)
 }
 
 ProductsList* ProductRepository__get_products_by_brand(ProductRepository* repository, char* brand) {
-
+    GET_PRODUCTS_LIST(strcmp(product->brand, brand) == 0)
 }
 
 ProductsList* ProductRepository__get_products_by_price(ProductRepository* repository, ProductPrice price) {
-
+    GET_PRODUCTS_LIST(product->price == price)
 }
 
 ProductsList* ProductRepository__get_products_by_amount(ProductRepository* repository, ProductAmount amount) {
-
+    GET_PRODUCTS_LIST(product->amount == amount)
 }
 
 void ProductRepository__free_products(ProductsList* list) {

@@ -90,14 +90,23 @@ ProductsList* ProductService__get_sorted_products(ProductService* service,
     return list;
 }
 
-ProductsList* ProductService__get_products_by_brand(ProductService* service, char* brand) {
-
+ProductsList* ProductService__get_products_by_brand(ProductService* service,
+        char* brand) {
+    ProductsList* list = ProductRepository__get_products_by_brand(
+            service->repository, brand);
+    return list;
 }
 
-ProductsList* ProductService__get_products_by_price(ProductService* service, ProductPrice price) {
-
+ProductsList* ProductService__get_products_by_price(ProductService* service,
+        ProductPrice price) {
+    ProductsList* list = ProductRepository__get_products_by_price(
+            service->repository, price);
+    return list;
 }
 
-ProductsList* ProductService__get_products_by_amount(ProductService* service, ProductAmount amount) {
-
+ProductsList* ProductService__get_products_by_amount(ProductService* service,
+        ProductAmount amount) {
+    ProductsList* list = ProductRepository__get_products_by_amount(
+            service->repository, amount);
+    return list;
 }
