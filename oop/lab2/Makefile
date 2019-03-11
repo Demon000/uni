@@ -12,5 +12,5 @@ files = $(cfiles) \
 		ui/Console.h \
 		utils/Vector.h
 
-convert: $(files)
+lab2: $(files)
 	gcc -o lab2 -std=c99 $(cfiles)
