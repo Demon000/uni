@@ -104,8 +104,8 @@ void Console__update_product(Console* console) {
     ProductAmount amount = -1;
 
     Console__ask_number("Id: ", &id, 1);
-    Console__ask_number("New price (leave empty to skip): ", &price, 0);
-    Console__ask_number("New amount (leave empty to skip): ", &amount, 0);
+    Console__ask_number("New price (invalid to skip): ", &price, 0);
+    Console__ask_number("New amount (invalid to skip): ", &amount, 0);
 
     Product* product = ProductService__update_product(console->service, id, price, amount);
     Console__print_product(product);
