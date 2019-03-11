@@ -11,8 +11,8 @@ struct ProductRepository {
 struct ProductRepository* ProductRepository__create();
 void ProductRepository__destroy(struct ProductRepository*);
 
-void ProductRepository__add_product(struct Product*);
-void ProductRepository__remove_product(struct Product*);
+void ProductRepository__add_product(struct ProductRepository*, struct Product*);
+void ProductRepository__remove_product(struct ProductRepository*, struct Product*);
 
 struct Product** ProductRepository__get_products(struct ProductRepository*);
 struct Product** ProductRepository__get_products_by_brand(struct ProductRepository*, char*);
