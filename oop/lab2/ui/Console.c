@@ -78,12 +78,12 @@ void Console__add_product(Console* console) {
     char brand[PRODUCT_STRING_MAX_SIZE];
     char model[PRODUCT_STRING_MAX_SIZE];
 
-    Console__ask_int("Id: ", &id, true);
-    Console__ask_str("Type: ", type, true);
-    Console__ask_str("Brand: ", brand, true);
-    Console__ask_str("Model: ", model, true);
-    Console__ask_int("Price: ", &price, true);
-    Console__ask_int("Amount: ", &amount, true);
+    Console__ask_int("Id: ", &id, 1);
+    Console__ask_str("Type: ", type, 1);
+    Console__ask_str("Brand: ", brand, 1);
+    Console__ask_str("Model: ", model, 1);
+    Console__ask_int("Price: ", &price, 1);
+    Console__ask_int("Amount: ", &amount, 1);
 
     Product* product = ProductService__add_product(console->service, id,
             price, amount, type, brand, model);
@@ -116,7 +116,7 @@ int Console__ask_option(Console* console) {
             "4. Show products\n"
             "0. Exit\n");
 
-    Console__ask_int("Option: ", &option, false);
+    Console__ask_int("Option: ", &option, 0);
     switch (option) {
     case 0:
         break;
