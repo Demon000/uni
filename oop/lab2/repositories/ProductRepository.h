@@ -5,7 +5,7 @@
 #define PRODUCT_REPOSITORY_H
 
 typedef struct ProductRepository {
-    struct Vector* products;
+    Vector* products;
 } ProductRepository;
 
 ProductRepository* ProductRepository__create();
