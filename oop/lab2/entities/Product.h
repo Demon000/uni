@@ -29,9 +29,6 @@ void Product__destroy(Product*);
 void Product__set_price(Product*, ProductPrice);
 void Product__set_amount(Product*, ProductAmount);
 
-char* Product__get_str(Product*);
-void Product__free_str(char*);
-
 ProductsList* ProductsList__create(int);
 void ProductsList__destroy(ProductsList*);
 

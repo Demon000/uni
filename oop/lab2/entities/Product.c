@@ -31,21 +31,6 @@ void Product__set_amount(Product* product, int amount) {
     product->amount = amount;
 }
 
-char* Product__get_str(Product* product) {
-    char* str = malloc(sizeof(char) * PRODUCT_REPRESENTATION_MAX_SIZE);
-
-    sprintf(str, "Id: %d, Type: %s, Brand: %s, Model: %s, "
-            "Price: %d, Amount %d\n", product->id,
-            product->type, product->brand, product->model,
-            product->price, product->amount);
-
-    return str;
-}
-
-void Product__free_str(char* str) {
-    free(str);
-}
-
 ProductsList* ProductsList__create(int length) {
     ProductsList* list = malloc(sizeof(ProductsList));
     list->items = malloc(sizeof(Product*) * length);
