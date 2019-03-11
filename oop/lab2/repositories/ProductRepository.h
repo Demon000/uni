@@ -20,6 +20,6 @@ Product** ProductRepository__get_products(ProductRepository*);
 Product** ProductRepository__get_products_by_brand(ProductRepository*, char*);
 Product** ProductRepository__get_products_by_price(ProductRepository*, ProductPrice);
 Product** ProductRepository__get_products_by_amount(ProductRepository*, ProductAmount);
-void ProductRepository__free_products(ProductRepository*, Product**);
+void ProductRepository__free_products(Product**);
 
 #endif // PRODUCT_REPOSITORY_H
