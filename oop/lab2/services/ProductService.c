@@ -23,6 +23,7 @@ Product* ProductService__add_product(ProductService* service,
     }
 
     Product* product = Product__create(id, price, amount, type, brand, model);
+    ProductRepository__add_product(service->repository, product);
 
     return product;
 }
