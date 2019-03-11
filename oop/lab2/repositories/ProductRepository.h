@@ -20,6 +20,5 @@ ProductsList* ProductRepository__get_products(ProductRepository*);
 ProductsList* ProductRepository__get_products_by_brand(ProductRepository*, char*);
 ProductsList* ProductRepository__get_products_by_price(ProductRepository*, ProductPrice);
 ProductsList* ProductRepository__get_products_by_amount(ProductRepository*, ProductAmount);
-void ProductRepository__free_products(ProductsList*);
 
 #endif // PRODUCT_REPOSITORY_H
