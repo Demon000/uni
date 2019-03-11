@@ -18,6 +18,11 @@ typedef struct Pruduct {
     char model[PRODUCT_STRING_MAX_SIZE];
 } Product;
 
+typedef struct ProductsList {
+    Product** items;
+    int length;
+} ProductsList;
+
 Product* Product__create(ProductId, ProductPrice, ProductAmount, char*, char*, char*);
 void Product__destroy(Product*);
 

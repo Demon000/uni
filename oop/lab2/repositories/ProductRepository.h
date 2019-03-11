@@ -16,10 +16,10 @@ void ProductRepository__remove_product(ProductRepository*, Product*);
 
 Product* ProductRepository__get_product_by_id(ProductRepository*, ProductId);
 
-Product** ProductRepository__get_products(ProductRepository*);
-Product** ProductRepository__get_products_by_brand(ProductRepository*, char*);
-Product** ProductRepository__get_products_by_price(ProductRepository*, ProductPrice);
-Product** ProductRepository__get_products_by_amount(ProductRepository*, ProductAmount);
-void ProductRepository__free_products(Product**);
+ProductsList* ProductRepository__get_products(ProductRepository*);
+ProductsList* ProductRepository__get_products_by_brand(ProductRepository*, char*);
+ProductsList* ProductRepository__get_products_by_price(ProductRepository*, ProductPrice);
+ProductsList* ProductRepository__get_products_by_amount(ProductRepository*, ProductAmount);
+void ProductRepository__free_products(ProductsList*);
 
 #endif // PRODUCT_REPOSITORY_H
