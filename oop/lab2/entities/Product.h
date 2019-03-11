@@ -8,7 +8,7 @@ typedef int ProductId
 typedef int ProductPrice
 typedef int ProductAmount
 
-struct Pruduct {
+typedef struct Pruduct {
     ProductId id;
     ProductPrice price;
     ProductAmount amount;
@@ -16,15 +16,15 @@ struct Pruduct {
     char type[PRODUCT_STRING_MAX_SIZE];
     char brand[PRODUCT_STRING_MAX_SIZE];
     char model[PRODUCT_STRING_MAX_SIZE];
-};
+} Product;
 
-struct Product* Product__create(ProductId, ProductPrice, ProductAmount, char*, char*, char*);
-void Product__destroy(struct Product*);
+Product* Product__create(ProductId, ProductPrice, ProductAmount, char*, char*, char*);
+void Product__destroy(Product*);
 
-void Product__set_price(struct Product*, int);
-void Product__set_amount(struct Product*, int);
+void Product__set_price(Product*, int);
+void Product__set_amount(Product*, int);
 
-char* Product__get_str(struct Product*);
+char* Product__get_str(Product*);
 void Product__free_str(char*);
 
 #endif //PRODUCT_H

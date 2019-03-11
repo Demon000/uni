@@ -4,20 +4,20 @@
 #ifndef PRODUCT_REPOSITORY_H
 #define PRODUCT_REPOSITORY_H
 
-struct ProductRepository {
+typedef struct ProductRepository {
     struct Vector* products;
-};
+} ProductRepository;
 
-struct ProductRepository* ProductRepository__create();
-void ProductRepository__destroy(struct ProductRepository*);
+ProductRepository* ProductRepository__create();
+void ProductRepository__destroy(ProductRepository*);
 
-void ProductRepository__add_product(struct ProductRepository*, struct Product*);
-void ProductRepository__remove_product(struct ProductRepository*, struct Product*);
+void ProductRepository__add_product(ProductRepository*, Product*);
+void ProductRepository__remove_product(ProductRepository*, Product*);
 
-struct Product** ProductRepository__get_products(struct ProductRepository*);
-struct Product** ProductRepository__get_products_by_brand(struct ProductRepository*, char*);
-struct Product** ProductRepository__get_products_by_price(struct ProductRepository*, int);
-struct Product** ProductRepository__get_products_by_amount(struct ProductRepository*, int);
-struct Product* ProductRepository__get_product_by_id(struct ProductRepository*, ProductId);
+Product** ProductRepository__get_products(ProductRepository*);
+Product** ProductRepository__get_products_by_brand(ProductRepository*, char*);
+Product** ProductRepository__get_products_by_price(ProductRepository*, int);
+Product** ProductRepository__get_products_by_amount(ProductRepository*, int);
+Product* ProductRepository__get_product_by_id(ProductRepository*, ProductId);
 
 #endif // PRODUCT_REPOSITORY_H
