@@ -13,6 +13,10 @@ void Console__destroy(Console* console) {
     free(console);
 }
 
+void Console__exit(Console* console) {
+    printf("Goodbye.\n");
+}
+
 void Console__ask_number(char* message, int* value, int loop) {
     int result;
 
@@ -130,6 +134,7 @@ int Console__ask_option(Console* console) {
     Console__ask_number("Option: ", &option, 0);
     switch (option) {
     case 0:
+        Console__exit(console);
         break;
     case 1:
         Console__add_product(console);
@@ -152,8 +157,8 @@ int Console__ask_option(Console* console) {
 }
 
 void Console__run(Console* console) {
-    int result;
-    while (1) {
+    int result = -1;
+    while (result) {
         result = Console__ask_option(console);
     }
 }
