@@ -112,7 +112,9 @@ void Console__update_product(Console* console) {
 }
 
 void Console__delete_product(Console* console) {
-
+    ProductId id;
+    Console__ask_number("Id: ", &id, 1);
+    ProductService__remove_product(console->service, id);
 }
 
 void Console__show_products(Console* console) {
