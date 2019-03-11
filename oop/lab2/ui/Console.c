@@ -17,23 +17,28 @@ void Console__exit(Console* console) {
     printf("Goodbye.\n");
 }
 
+#define Console__ask_number_cond(message, value, loop, condition) \
+        int result; \
+        while (1) { \
+            printf("%s", message); \
+            result = scanf("%d", value); \
+            if (*value > -1 && result == 1 && condition) { \
+                break; \
+            } \
+            printf("Invalid number.\n"); \
+            while (getchar() != '\n'); \
+            if (!loop) { \
+                break; \
+            } \
+        }
+
+void Console__ask_number_ranged(char* message, int* value, int loop,
+    int min, int max) {
+    Console__ask_number_cond(message, value, loop, *value >= min && *value <= max);
+}
+
 void Console__ask_number(char* message, int* value, int loop) {
-    int result;
-
-    while (1) {
-        printf("%s", message);
-        result = scanf("%d", value);
-        if (*value > -1 && result == 1) {
-            break;
-        }
-
-        printf("Invalid number.\n");
-        while (getchar() != '\n');
-
-        if (!loop) {
-            break;
-        }
-    }
+    Console__ask_number_cond(message, value, loop, 1);
 }
 
 void Console__ask_str(char* message, char* str, int loop) {
@@ -133,7 +138,7 @@ int Console__ask_option(Console* console) {
             "4. Show products\n"
             "0. Exit\n");
 
-    Console__ask_number("Option: ", &option, 0);
+    Console__ask_number_ranged("Option: ", &option, 0, 0, 4);
     switch (option) {
     case 0:
         Console__exit(console);
@@ -149,9 +154,6 @@ int Console__ask_option(Console* console) {
         break;
     case 4:
         Console__show_products(console);
-        break;
-    default:
-        printf("Invalid option");
         break;
     }
 
