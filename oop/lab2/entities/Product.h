@@ -32,4 +32,7 @@ void Product__set_amount(Product*, ProductAmount);
 ProductsList* ProductsList__create(int);
 void ProductsList__destroy(ProductsList*);
 
+int ProductsList__get_length(ProductsList*);
+Product* ProductsList__get(ProductsList*, int);
+
 #endif //PRODUCT_H

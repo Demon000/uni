@@ -41,3 +41,15 @@ void ProductsList__destroy(ProductsList* list) {
     free(list->items);
     free(list);
 }
+
+int ProductsList__get_length(ProductsList* list) {
+    return list->length;
+}
+
+Product* ProductsList__get(ProductsList* list, int i) {
+    if (i >= list->length) {
+        return NULL;
+    }
+
+    return list->items[i];
+}

@@ -38,6 +38,24 @@ void ProductService__remove_product(ProductService* service, ProductId id) {
     Product__destroy(product);
 }
 
+Product* ProductService__update_product(ProductService* service,
+        ProductId id, ProductPrice price, ProductAmount amount) {
+    Product* product = ProductRepository__get_product_by_id(service->repository, id);
+    if (!product) {
+        return NULL;
+    }
+
+    if (price != -1) {
+        Product__set_price(product, price);
+    }
+
+    if (amount != -1) {
+        Product__set_amount(product, amount);
+    }
+
+    return product;
+}
+
 ProductsList* ProductService__get_products(ProductService* service) {
     ProductsList* list = ProductRepository__get_products(service->repository);
     return list;

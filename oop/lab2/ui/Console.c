@@ -64,8 +64,10 @@ void Console__print_product(Product* product) {
 }
 
 void Console__print_products(ProductsList* list) {
-    for (int i = 0; i < list->length; i++) {
-        Console__print_product(list->items[i]);
+    int length = ProductsList__get_length(list);
+    for (int i = 0; i < length; i++) {
+        Product* product = ProductsList__get(list, i);
+        Console__print_product(product);
     }
 }
 
@@ -78,12 +80,12 @@ void Console__add_product(Console* console) {
     char brand[PRODUCT_STRING_MAX_SIZE];
     char model[PRODUCT_STRING_MAX_SIZE];
 
-    Console__ask_int("Id: ", &id, 1);
+    Console__ask_number("Id: ", &id, 1);
     Console__ask_str("Type: ", type, 1);
     Console__ask_str("Brand: ", brand, 1);
     Console__ask_str("Model: ", model, 1);
-    Console__ask_int("Price: ", &price, 1);
-    Console__ask_int("Amount: ", &amount, 1);
+    Console__ask_number("Price: ", &price, 1);
+    Console__ask_number("Amount: ", &amount, 1);
 
     Product* product = ProductService__add_product(console->service, id,
             price, amount, type, brand, model);
@@ -93,7 +95,16 @@ void Console__add_product(Console* console) {
 }
 
 void Console__update_product(Console* console) {
+    ProductId id;
+    ProductPrice price = -1;
+    ProductAmount amount = -1;
 
+    Console__ask_number("Id: ", &id, 1);
+    Console__ask_number("New price (leave empty to skip): ", &price, 0);
+    Console__ask_number("New amount (leave empty to skip): ", &amount, 0);
+
+    Product* product = ProductService__update_product(console->service, id, price, amount);
+    Console__print_product(product);
 }
 
 void Console__delete_product(Console* console) {
@@ -116,7 +127,7 @@ int Console__ask_option(Console* console) {
             "4. Show products\n"
             "0. Exit\n");
 
-    Console__ask_int("Option: ", &option, 0);
+    Console__ask_number("Option: ", &option, 0);
     switch (option) {
     case 0:
         break;

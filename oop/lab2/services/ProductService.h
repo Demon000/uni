@@ -13,6 +13,7 @@ void ProductService__destroy(ProductService*);
 
 Product* ProductService__add_product(ProductService*, ProductId, ProductPrice, ProductAmount, char*, char*, char*);
 void ProductService__remove_product(ProductService*, ProductId);
+Product* ProductService__update_product(ProductService*, ProductId, ProductPrice, ProductAmount);
 
 ProductsList* ProductService__get_products(ProductService*);
 ProductsList* ProductService__get_products_by_brand(ProductService*, char*);
