@@ -19,7 +19,7 @@ void read_list(FILE *file, struct Edges *edges) {
     }
 }
 
-void write_adjacent(FILE *file, struct Edges *edges) {
+void write_adjacence(FILE *file, struct Edges *edges) {
     int adjacent[edges->number_of_edges][edges->number_of_edges];
     memset(&adjacent, 0,
             sizeof(int) * edges->number_of_points * edges->number_of_points);
@@ -41,7 +41,7 @@ void write_adjacent(FILE *file, struct Edges *edges) {
     }
 }
 
-int read_adjacent(FILE *file, struct Edges *edges) {
+int read_adjacence(FILE *file, struct Edges *edges) {
     int max_point;
     fscanf(file, "%d", &max_point);
 
@@ -128,21 +128,23 @@ int main() {
     struct Edges edges;
     FILE* file;
 
+    // list -> adjacence
     file = fopen("list_input.txt", "r");
     read_list(file, &edges);
     fclose(file);
     print_edges(&edges, "edges read using list:");
 
-    file = fopen("adjacent.txt", "w");
-    write_adjacent(file, &edges);
+    file = fopen("adjacence.txt", "w");
+    write_adjacence(file, &edges);
     fclose(file);
 
     Edges__deinit(&edges);
 
-    file = fopen("adjacent.txt", "r");
-    read_adjacent(file, &edges);
+    // adjacence -> incidence
+    file = fopen("adjacence.txt", "r");
+    read_adjacence(file, &edges);
     fclose(file);
-    print_edges(&edges, "edges read using adjacent:");
+    print_edges(&edges, "edges read using adjacence:");
 
     file = fopen("incidence.txt", "w");
     write_incidence(file, &edges);
@@ -150,10 +152,23 @@ int main() {
 
     Edges__deinit(&edges);
 
+    // incidence -> adjacence
     file = fopen("incidence.txt", "r");
     read_incidence(file, &edges);
     fclose(file);
     print_edges(&edges, "edges read using incidence:");
+
+    file = fopen("adjacence.txt", "w");
+    write_adjacence(file, &edges);
+    fclose(file);
+
+    Edges__deinit(&edges);
+
+    // adjacence -> list
+    file = fopen("adjacence.txt", "r");
+    read_adjacence(file, &edges);
+    fclose(file);
+    print_edges(&edges, "edges read using adjacence:");
 
     file = fopen("list_output.txt", "w");
     write_list(file, &edges);
