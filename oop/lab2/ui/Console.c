@@ -13,22 +13,26 @@ void Console__destroy(Console* console) {
     free(console);
 }
 
-void Console__ask_int(char* message, int* value) {
+void Console__ask_number(char* message, int* value, int loop) {
     int result;
 
     while (1) {
         printf("%s", message);
         result = scanf("%d", value);
-        if (result == 1) {
+        if (*value > -1 && result == 1) {
             break;
         }
 
         printf("Invalid number.\n");
         while (getchar() != '\n');
+
+        if (!loop) {
+            break;
+        }
     }
 }
 
-void Console__ask_str(char* message, char* str) {
+void Console__ask_str(char* message, char* str, int loop) {
     int result;
 
     while (1) {
@@ -40,6 +44,10 @@ void Console__ask_str(char* message, char* str) {
 
         printf("Invalid string.\n");
         while (getchar() != '\n');
+
+        if (!loop) {
+            break;
+        }
     }
 }
 
@@ -65,12 +73,12 @@ void Console__add_product(Console* console) {
     char brand[PRODUCT_STRING_MAX_SIZE];
     char model[PRODUCT_STRING_MAX_SIZE];
 
-    Console__ask_int("Id: ", &id);
-    Console__ask_str("Type: ", type);
-    Console__ask_str("Brand: ", brand);
-    Console__ask_str("Model: ", model);
-    Console__ask_int("Price: ", &price);
-    Console__ask_int("Amount: ", &amount);
+    Console__ask_int("Id: ", &id, true);
+    Console__ask_str("Type: ", type, true);
+    Console__ask_str("Brand: ", brand, true);
+    Console__ask_str("Model: ", model, true);
+    Console__ask_int("Price: ", &price, true);
+    Console__ask_int("Amount: ", &amount, true);
 
     Product* product = ProductService__add_product(console->service, id,
             price, amount, type, brand, model);
@@ -103,7 +111,7 @@ int Console__ask_option(Console* console) {
             "4. Show products\n"
             "0. Exit\n");
 
-    Console__ask_int("Option: ", &option);
+    Console__ask_int("Option: ", &option, false);
     switch (option) {
     case 0:
         break;
