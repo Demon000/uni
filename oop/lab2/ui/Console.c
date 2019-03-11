@@ -89,7 +89,8 @@ void Console__delete_product(Console* console) {
 
 void Console__show_products(Console* console) {
     ProductsList* list = ProductService__get_products(console->service);
-
+    Console__print_products(list);
+    ProductsList__destroy(list);
 }
 
 int Console__ask_option(Console* console) {
