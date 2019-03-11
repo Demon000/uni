@@ -18,7 +18,7 @@ Product* ProductService__add_product(ProductService* service,
     Product* existing_product = ProductRepository__get_product_by_id(service->repository, id);
 
     if (existing_product) {
-        existing_product->amount = amount;
+        Product__set_amount(existing_product, amount);
         return existing_product;
     }
 
@@ -27,6 +27,7 @@ Product* ProductService__add_product(ProductService* service,
 
     return product;
 }
+
 void ProductService__remove_product(ProductService* service, ProductId id) {
     Product* product = ProductRepository__get_product_by_id(service->repository, id);
     if (!product) {
