@@ -16,27 +16,12 @@ typedef struct ProductRepository {
 ProductRepository* ProductRepository__create();
 
 /**
- * Destroy a product repository.
- *
- * @param repository A pointer to the product repository.
- */
-void ProductRepository__destroy(ProductRepository*);
-
-/**
  * Add a product to a product repository.
  *
  * @param repository A pointer to the product repository.
  * @param product A pointer to the product to be added.
  */
 void ProductRepository__add_product(ProductRepository*, Product*);
-
-/**
- * Remove a product from a product repository.
- *
- * @param repository A pointer to the product repository.
- * @param product A pointer to the product to be removed.
- */
-void ProductRepository__remove_product(ProductRepository*, Product*);
 
 /**
  * Get a product from a product repository by the product id.
@@ -86,5 +71,20 @@ ProductsList* ProductRepository__get_products_by_price(ProductRepository*, Produ
  * @return A pointer to the list of products.
  */
 ProductsList* ProductRepository__get_products_by_amount(ProductRepository*, ProductAmount);
+
+/**
+ * Remove a product from a product repository.
+ *
+ * @param repository A pointer to the product repository.
+ * @param product A pointer to the product to be removed.
+ */
+void ProductRepository__remove_product(ProductRepository*, Product*);
+
+/**
+ * Destroy a product repository.
+ *
+ * @param repository A pointer to the product repository.
+ */
+void ProductRepository__destroy(ProductRepository*);
 
 #endif // PRODUCT_REPOSITORY_H

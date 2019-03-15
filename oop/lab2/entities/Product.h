@@ -38,13 +38,6 @@ typedef struct ProductsList {
 Product* Product__create(ProductId, ProductPrice, ProductAmount, char*, char*, char*);
 
 /**
- * Destroy a product.
- *
- * @param product A pointer to the product.
- */
-void Product__destroy(Product*);
-
-/**
  * Set the price of a product.
  *
  * @param product A pointer to the product.
@@ -61,6 +54,13 @@ void Product__set_price(Product*, ProductPrice);
 void Product__set_amount(Product*, ProductAmount);
 
 /**
+ * Destroy a product.
+ *
+ * @param product A pointer to the product.
+ */
+void Product__destroy(Product*);
+
+/**
  * Create a list of products with a static length.
  *
  * @param size The maximum size of the list.
@@ -68,13 +68,6 @@ void Product__set_amount(Product*, ProductAmount);
  * @return A pointer to the created products list.
  */
 ProductsList* ProductsList__create(int);
-
-/**
- * Destroy a list of products.
- *
- * @param list A pointer to the list of products.
- */
-void ProductsList__destroy(ProductsList*);
 
 /**
  * Add a product to a list of products.
@@ -111,5 +104,12 @@ Product* ProductsList__get(ProductsList*, int);
  * @param second The index of the second product.
  */
 void ProductsList__swap(ProductsList*, int, int);
+
+/**
+ * Destroy a list of products.
+ *
+ * @param list A pointer to the list of products.
+ */
+void ProductsList__destroy(ProductsList*);
 
 #endif //PRODUCT_H

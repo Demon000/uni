@@ -28,13 +28,6 @@ typedef enum ProductSortOrder {
 ProductService* ProductService__create(ProductRepository*);
 
 /**
- * Destroy a product service.
- *
- * @param A pointer to the product service.
- */
-void ProductService__destroy(ProductService*);
-
-/**
  * Create a product and add it to the repository.
  *
  * @param id The id of the product.
@@ -47,24 +40,6 @@ void ProductService__destroy(ProductService*);
  * @return A pointer to the newly created product.
  */
 Product* ProductService__add_product(ProductService*, ProductId, ProductPrice, ProductAmount, char*, char*, char*);
-
-/**
- * Find a product by id and remove it from the repository.
- *
- * @param id The id of the product.
- */
-void ProductService__remove_product(ProductService*, ProductId);
-
-/**
- * Find a product by id and update it.
- *
- * @param id The id of the product.
- * @param price The new price of the product.
- * @param amount The new amount of the product.
- *
- * @return A pointer to the updated product.
- */
-Product* ProductService__update_product(ProductService*, ProductId, ProductPrice, ProductAmount);
 
 /**
  * Get all the products sorted by the provided type and order.
@@ -115,5 +90,30 @@ ProductsList* ProductService__get_products_by_price(ProductService*, ProductPric
  * @return A pointer to the list of products.
  */
 ProductsList* ProductService__get_products_by_amount(ProductService*, ProductAmount);
+
+/**
+ * Find a product by id and update it.
+ *
+ * @param id The id of the product.
+ * @param price The new price of the product.
+ * @param amount The new amount of the product.
+ *
+ * @return A pointer to the updated product.
+ */
+Product* ProductService__update_product(ProductService*, ProductId, ProductPrice, ProductAmount);
+
+/**
+ * Find a product by id and remove it from the repository.
+ *
+ * @param id The id of the product.
+ */
+void ProductService__remove_product(ProductService*, ProductId);
+
+/**
+ * Destroy a product service.
+ *
+ * @param A pointer to the product service.
+ */
+void ProductService__destroy(ProductService*);
 
 #endif // PRODUCT_SERVICE_H

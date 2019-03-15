@@ -8,10 +8,6 @@ ProductService* ProductService__create(ProductRepository* repository) {
     service->repository = repository;
 }
 
-void ProductService__destroy(ProductService* service) {
-    free(service);
-}
-
 Product* ProductService__add_product(ProductService* service,
         ProductId id, ProductPrice price, ProductAmount amount,
         char* type, char* brand, char* model) {
@@ -24,34 +20,6 @@ Product* ProductService__add_product(ProductService* service,
 
     Product* product = Product__create(id, price, amount, type, brand, model);
     ProductRepository__add_product(service->repository, product);
-
-    return product;
-}
-
-void ProductService__remove_product(ProductService* service, ProductId id) {
-    Product* product = ProductRepository__get_product_by_id(service->repository, id);
-    if (!product) {
-        return;
-    }
-
-    ProductRepository__remove_product(service->repository, product);
-    Product__destroy(product);
-}
-
-Product* ProductService__update_product(ProductService* service,
-        ProductId id, ProductPrice price, ProductAmount amount) {
-    Product* product = ProductRepository__get_product_by_id(service->repository, id);
-    if (!product) {
-        return NULL;
-    }
-
-    if (price != -1) {
-        Product__set_price(product, price);
-    }
-
-    if (amount != -1) {
-        Product__set_amount(product, amount);
-    }
 
     return product;
 }
@@ -109,4 +77,36 @@ ProductsList* ProductService__get_products_by_amount(ProductService* service,
     ProductsList* list = ProductRepository__get_products_by_amount(
             service->repository, amount);
     return list;
+}
+
+Product* ProductService__update_product(ProductService* service,
+        ProductId id, ProductPrice price, ProductAmount amount) {
+    Product* product = ProductRepository__get_product_by_id(service->repository, id);
+    if (!product) {
+        return NULL;
+    }
+
+    if (price != -1) {
+        Product__set_price(product, price);
+    }
+
+    if (amount != -1) {
+        Product__set_amount(product, amount);
+    }
+
+    return product;
+}
+
+void ProductService__remove_product(ProductService* service, ProductId id) {
+    Product* product = ProductRepository__get_product_by_id(service->repository, id);
+    if (!product) {
+        return;
+    }
+
+    ProductRepository__remove_product(service->repository, product);
+    Product__destroy(product);
+}
+
+void ProductService__destroy(ProductService* service) {
+    free(service);
 }

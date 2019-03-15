@@ -10,32 +10,8 @@ ProductRepository* ProductRepository__create() {
     repository->products = Vector__create();
 }
 
-void ProductRepository__destroy(ProductRepository* repository) {
-    Vector__destroy(repository->products);
-
-    free(repository);
-}
-
 void ProductRepository__add_product(ProductRepository* repository, Product* product) {
     Vector__add(repository->products, product);
-}
-void ProductRepository__remove_product(ProductRepository* repository, Product* product) {
-    int length = Vector__get_length(repository->products);
-    int i;
-
-    for (i = 0; i < length; i++) {
-        Product* aux_product = Vector__get(repository->products, i);
-        if (aux_product == product) {
-            break;
-        }
-    }
-
-    if (i < length) {
-        Vector__delete(repository->products, i);
-        return;
-    }
-
-    return;
 }
 
 Product* ProductRepository__get_product_by_id(ProductRepository* repository, ProductId id) {
@@ -86,6 +62,27 @@ ProductsList* ProductRepository__get_products_by_amount(ProductRepository* repos
     GET_PRODUCTS_LIST(product->amount == amount)
 }
 
-void ProductRepository__free_products(ProductsList* list) {
-    ProductsList__destroy(list);
+void ProductRepository__remove_product(ProductRepository* repository, Product* product) {
+    int length = Vector__get_length(repository->products);
+    int i;
+
+    for (i = 0; i < length; i++) {
+        Product* aux_product = Vector__get(repository->products, i);
+        if (aux_product == product) {
+            break;
+        }
+    }
+
+    if (i < length) {
+        Vector__delete(repository->products, i);
+        return;
+    }
+
+    return;
+}
+
+void ProductRepository__destroy(ProductRepository* repository) {
+    Vector__destroy(repository->products);
+
+    free(repository);
 }

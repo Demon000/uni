@@ -12,11 +12,6 @@ Vector* Vector__create() {
     return v;
 }
 
-void Vector__destroy(Vector* v) {
-    free(v->items);
-    free(v);
-}
-
 int Vector__get_length(Vector* v) {
     return v->length;
 }
@@ -71,4 +66,9 @@ void Vector__delete(Vector* v, int index) {
     if (v->length > 0 && v->length == v->size / 4) {
         Vector__resize(v, v->size / 2);
     }
+}
+
+void Vector__destroy(Vector* v) {
+    free(v->items);
+    free(v);
 }

@@ -19,10 +19,6 @@ Product* Product__create(ProductId id,
     return product;
 }
 
-void Product__destroy(Product* product) {
-    free(product);
-}
-
 void Product__set_price(Product* product, int price) {
     product->price = price;
 }
@@ -31,16 +27,15 @@ void Product__set_amount(Product* product, int amount) {
     product->amount = amount;
 }
 
+void Product__destroy(Product* product) {
+    free(product);
+}
+
 ProductsList* ProductsList__create(int size) {
     ProductsList* list = malloc(sizeof(ProductsList));
     list->items = malloc(sizeof(Product*) * size);
     list->length = 0;
     return list;
-}
-
-void ProductsList__destroy(ProductsList* list) {
-    free(list->items);
-    free(list);
 }
 
 void ProductsList__add(ProductsList* list, Product* product) {
@@ -68,4 +63,9 @@ void ProductsList__swap(ProductsList* list, int first, int second) {
     Product* aux = list->items[first];
     list->items[first] = list->items[second];
     list->items[second] = aux;
+}
+
+void ProductsList__destroy(ProductsList* list) {
+    free(list->items);
+    free(list);
 }

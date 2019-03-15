@@ -17,13 +17,6 @@ typedef struct Vector {
 Vector* Vector__create();
 
 /**
- * Destroy a vector.
- *
- * @param vector A pointer to the vector.
- */
-void Vector__destroy(Vector*);
-
-/**
  * Get the length of a vector.
  *
  * @param vector A pointer to the vector.
@@ -66,5 +59,12 @@ void* Vector__get(Vector*, int);
  * @param index An index number.
  */
 void Vector__delete(Vector*, int);
+
+/**
+ * Destroy a vector.
+ *
+ * @param vector A pointer to the vector.
+ */
+void Vector__destroy(Vector*);
 
 #endif
