@@ -65,11 +65,10 @@ Product* ProductRepository__get_product_by_id(ProductRepository* repository, Pro
         for (int i = 0; i < length; i++) { \
             product = Vector__get(repository->products, i); \
             if (condition) { \
-                list->items[index++] = product; \
+                ProductsList__add(list, product); \
             } \
         } \
-        list->length = index; \
-        return list;
+        return list; \
 
 ProductsList* ProductRepository__get_products(ProductRepository* repository) {
     GET_PRODUCTS_LIST(1)

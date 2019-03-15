@@ -31,15 +31,20 @@ void Product__set_amount(Product* product, int amount) {
     product->amount = amount;
 }
 
-ProductsList* ProductsList__create(int length) {
+ProductsList* ProductsList__create(int size) {
     ProductsList* list = malloc(sizeof(ProductsList));
-    list->items = malloc(sizeof(Product*) * length);
+    list->items = malloc(sizeof(Product*) * size);
+    list->length = 0;
     return list;
 }
 
 void ProductsList__destroy(ProductsList* list) {
     free(list->items);
     free(list);
+}
+
+void ProductsList__add(ProductsList* list, Product* product) {
+    list->items[list->length++] = product;
 }
 
 int ProductsList__get_length(ProductsList* list) {
