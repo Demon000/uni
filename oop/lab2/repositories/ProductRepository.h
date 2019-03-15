@@ -73,6 +73,14 @@ ProductsList* ProductRepository__get_products_by_price(ProductRepository*, Produ
 ProductsList* ProductRepository__get_products_by_amount(ProductRepository*, ProductAmount);
 
 /**
+ * Update a product from a product repository.
+ *
+ * @param repository A pointer to the product repository.
+ * @param product A pointer to the product to be updated.
+ */
+void ProductRepository__update_product(ProductRepository*, Product*, ProductPrice, ProductAmount);
+
+/**
  * Remove a product from a product repository.
  *
  * @param repository A pointer to the product repository.

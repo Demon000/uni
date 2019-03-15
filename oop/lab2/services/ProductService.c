@@ -86,14 +86,7 @@ Product* ProductService__update_product(ProductService* service,
         return NULL;
     }
 
-    if (price != -1) {
-        Product__set_price(product, price);
-    }
-
-    if (amount != -1) {
-        Product__set_amount(product, amount);
-    }
-
+    ProductRepository__update_product(service->repository, product, price, amount);
     return product;
 }
 

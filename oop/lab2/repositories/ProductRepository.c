@@ -62,6 +62,17 @@ ProductsList* ProductRepository__get_products_by_amount(ProductRepository* repos
     GET_PRODUCTS_LIST(product->amount == amount)
 }
 
+void ProductRepository__update_product(ProductRepository* repository,
+        Product* product, ProductPrice price, ProductAmount amount) {
+    if (price != -1) {
+        Product__set_price(product, price);
+    }
+
+    if (amount != -1) {
+        Product__set_amount(product, amount);
+    }
+}
+
 void ProductRepository__remove_product(ProductRepository* repository, Product* product) {
     int length = Vector__get_length(repository->products);
     int i;
