@@ -73,7 +73,7 @@ Product* ProductService__update_product(ProductService*, ProductId, ProductPrice
  * @param type The type of sort to apply.
  * @param order The order of the sort.
  *
- * @return list A pointer to the list of products.
+ * @return A pointer to the list of products.
  */
 ProductsList* ProductService__get_sorted_products(ProductService*, ProductSortType, ProductSortOrder);
 
@@ -82,7 +82,7 @@ ProductsList* ProductService__get_sorted_products(ProductService*, ProductSortTy
  *
  * @param service A pointer to the product service.
  *
- * @return list A pointer to the list of products.
+ * @return A pointer to the list of products.
  */
 ProductsList* ProductService__get_products(ProductService*);
 
@@ -92,7 +92,7 @@ ProductsList* ProductService__get_products(ProductService*);
  * @param service A pointer to the product service.
  * @param brand The brand to look for.
  *
- * @return list A pointer to the list of products.
+ * @return A pointer to the list of products.
  */
 ProductsList* ProductService__get_products_by_brand(ProductService*, char*);
 
@@ -102,7 +102,7 @@ ProductsList* ProductService__get_products_by_brand(ProductService*, char*);
  * @param service A pointer to the product service.
  * @param price The price to look for.
  *
- * @return list A pointer to the list of products.
+ * @return A pointer to the list of products.
  */
 ProductsList* ProductService__get_products_by_price(ProductService*, ProductPrice);
 
@@ -112,7 +112,7 @@ ProductsList* ProductService__get_products_by_price(ProductService*, ProductPric
  * @param service A pointer to the product service.
  * @param amount The amount to look for.
  *
- * @return list A pointer to the list of products.
+ * @return A pointer to the list of products.
  */
 ProductsList* ProductService__get_products_by_amount(ProductService*, ProductAmount);
 

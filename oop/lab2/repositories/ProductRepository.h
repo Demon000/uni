@@ -53,7 +53,7 @@ Product* ProductRepository__get_product_by_id(ProductRepository*, ProductId);
  *
  * @param repository A pointer to the product repository.
  *
- * @return list A pointer to the list of products.
+ * @return A pointer to the list of products.
  */
 ProductsList* ProductRepository__get_products(ProductRepository*);
 
@@ -63,7 +63,7 @@ ProductsList* ProductRepository__get_products(ProductRepository*);
  * @param repository A pointer to the product repository.
  * @param brand The brand to look for.
  *
- * @return list A pointer to the list of products.
+ * @return A pointer to the list of products.
  */
 ProductsList* ProductRepository__get_products_by_brand(ProductRepository*, char*);
 
@@ -73,7 +73,7 @@ ProductsList* ProductRepository__get_products_by_brand(ProductRepository*, char*
  * @param repository A pointer to the product repository.
  * @param price The price to look for.
  *
- * @return list A pointer to the list of products.
+ * @return A pointer to the list of products.
  */
 ProductsList* ProductRepository__get_products_by_price(ProductRepository*, ProductPrice);
 
@@ -83,7 +83,7 @@ ProductsList* ProductRepository__get_products_by_price(ProductRepository*, Produ
  * @param repository A pointer to the product repository.
  * @param amount The amount to look for.
  *
- * @return list A pointer to the list of products.
+ * @return A pointer to the list of products.
  */
 ProductsList* ProductRepository__get_products_by_amount(ProductRepository*, ProductAmount);
 
