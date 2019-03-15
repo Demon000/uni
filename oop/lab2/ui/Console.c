@@ -134,15 +134,15 @@ void Console__ask_sort_option(Console* console) {
     int value;
 
     printf("Sort type:\n"
-            "1. Price\n"
-            "2. Amount\n");
+            "\t1. Price\n"
+            "\t2. Amount\n");
 
     Console__ask_number_ranged("Sort type: ", &value, 1, 1, 2);
     type = value - 1;
 
     printf("Sort order:\n"
-            "1. Ascending\n"
-            "2. Descending\n");
+            "\t1. Ascending\n"
+            "\t2. Descending\n");
 
     Console__ask_number_ranged("Sort order: ", &value, 1, 1, 2);
     order = value - 1;
@@ -160,9 +160,9 @@ void Console__ask_filter_option(Console* console) {
     int option;
 
     printf("Filter by:\n"
-            "1. Brand\n"
-            "2. Price\n"
-            "3. Amount\n");
+            "\t1. Brand\n"
+            "\t2. Price\n"
+            "\t3. Amount\n");
 
     Console__ask_number_ranged("Filter by: ", &option, 1, 1, 3);
 
@@ -190,13 +190,13 @@ int Console__ask_option(Console* console) {
     int option;
 
     printf("Options:\n"
-            "1. Add a product\n"
-            "2. Update a product\n"
-            "3. Delete a product\n"
-            "4. Show products\n"
-            "5. Show products sorted by price or quantity\n"
-            "6. Show products matching a filter\n"
-            "0. Exit\n");
+            "\t1. Add a product\n"
+            "\t2. Update a product\n"
+            "\t3. Delete a product\n"
+            "\t4. Show products\n"
+            "\t5. Show products sorted by price or quantity\n"
+            "\t6. Show products matching a filter\n"
+            "\t0. Exit\n");
 
     Console__ask_number_ranged("Option: ", &option, 0, 0, 6);
     switch (option) {
