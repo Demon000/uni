@@ -28,7 +28,8 @@ typedef enum ProductSortOrder {
 ProductService* ProductService__create(ProductRepository*);
 
 /**
- * Create a product and add it to the repository.
+ * Create a product and add it to the repository if the id doesn't already
+ * exist, or update the amount if it does.
  *
  * @param id The id of the product.
  * @param price The price of the product.
@@ -37,7 +38,7 @@ ProductService* ProductService__create(ProductRepository*);
  * @param brand The brand of the product.
  * @param model The model of the product.
  *
- * @return A pointer to the newly created product.
+ * @return A pointer to the newly created or updated product.
  */
 Product* ProductService__add_product(ProductService*, ProductId, ProductPrice, ProductAmount, char*, char*, char*);
 
