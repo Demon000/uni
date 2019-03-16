@@ -101,5 +101,15 @@ void ProductService__remove_product(ProductService* service, ProductId id) {
 }
 
 void ProductService__destroy(ProductService* service) {
+    ProductsList* list = ProductRepository__get_products(service->repository);
+
+    int length = ProductsList__get_length(list);
+    for (int i = 0; i < length; i++) {
+        Product* product = ProductsList__get(list, i);
+        Product__destroy(product);
+    }
+
+    ProductsList__destroy(list);
+
     free(service);
 }
