@@ -19,6 +19,30 @@ Product* Product__create(ProductId id,
     return product;
 }
 
+ProductId Product__get_id(Product* product) {
+    return product->id;
+}
+
+ProductPrice Product__get_price(Product* product) {
+    return product->price;
+}
+
+ProductAmount Product__get_amount(Product* product) {
+    return product->amount;
+}
+
+char* Product__get_type(Product* product) {
+    return product->type;
+}
+
+char* Product__get_brand(Product* product) {
+    return product->brand;
+}
+
+char* Product__get_model(Product* product) {
+    return product->model;
+}
+
 void Product__set_price(Product* product, int price) {
     product->price = price;
 }

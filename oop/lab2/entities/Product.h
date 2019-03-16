@@ -38,6 +38,60 @@ typedef struct ProductsList {
 Product* Product__create(ProductId, ProductPrice, ProductAmount, char*, char*, char*);
 
 /**
+ * Get the id of a product.
+ *
+ * @param product A pointer to the product.
+ *
+ * @return The id of the product.
+ */
+ProductId Product__get_id(Product*);
+
+/**
+ * Get the price of a product.
+ *
+ * @param product A pointer to the product.
+ *
+ * @return The price of the product.
+ */
+ProductPrice Product__get_price(Product*);
+
+/**
+ * Get the amount of a product.
+ *
+ * @param product A pointer to the product.
+ *
+ * @return The amount of the product.
+ */
+ProductAmount Product__get_amount(Product*);
+
+/**
+ * Get the type of a product.
+ *
+ * @param product A pointer to the product.
+ *
+ * @return The type of the product.
+ */
+char* Product__get_type(Product*);
+
+/**
+ * Get the brand of a product.
+ *
+ * @param product A pointer to the product.
+ *
+ * @return The brand of the product.
+ */
+char* Product__get_brand(Product*);
+
+/**
+ * Get the model of a product.
+ *
+ * @param product A pointer to the product.
+ *
+ * @return The model of the product.
+ */
+char* Product__get_model(Product*);
+
+/**
  * Set the price of a product.
  *
  * @param product A pointer to the product.

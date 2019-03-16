@@ -67,9 +67,13 @@ void Console__print_product(Product* product) {
     }
 
     printf("Id: %d, Type: %s, Brand: %s, Model: %s, "
-            "Price: %d, Amount %d\n", product->id,
-            product->type, product->brand, product->model,
-            product->price, product->amount);
+            "Price: %d, Amount %d\n",
+            Product__get_id(product),
+            Product__get_type(product),
+            Product__get_brand(product),
+            Product__get_model(product),
+            Product__get_price(product),
+            Product__get_amount(product));
 }
 
 void Console__print_products(ProductsList* list) {
