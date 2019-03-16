@@ -24,7 +24,7 @@ void test_product() {
     Product__destroy(product);
 }
 
-void test_products_list_first() {
+void test_products_list() {
     ProductsList* list = ProductsList__create(1);
     Product* retrieved;
 
@@ -58,15 +58,71 @@ void test_products_list_first() {
     ProductsList__destroy(list);
 }
 
-int main() {
+void test_repository() {
     ProductRepository* repository = ProductRepository__create();
-    ProductService* service = ProductService__create(repository);
+    ProductsList* list;
+    Product* retrieved;
 
-    test_product();
-    test_products_list_first();
+    Product* first = Product__create(1, 200, 20,
+        "TV", "Samsung", "Infinity");
+    ProductRepository__add_product(repository, first);
 
-    ProductService__destroy(service);
+    Product* second = Product__create(2, 300, 30,
+        "TV", "LG", "Failtinity");
+    ProductRepository__add_product(repository, second);
+
+    Product* third = Product__create(3, 500, 10,
+        "TV", "Samsung", "Spectacular");
+    ProductRepository__add_product(repository, third);
+
+    retrieved = ProductRepository__get_product_by_id(repository, 2);
+    assert(retrieved == second);
+
+    retrieved = ProductRepository__get_product_by_id(repository, 4);
+    assert(retrieved == NULL);
+
+    list = ProductRepository__get_products(repository);
+    assert(ProductsList__get_length(list) == 3);
+    assert(ProductsList__get(list, 0) == first);
+    assert(ProductsList__get(list, 1) == second);
+    assert(ProductsList__get(list, 2) == third);
+    ProductsList__destroy(list);
+
+    list = ProductRepository__get_products_by_brand(repository, "Samsung");
+    assert(ProductsList__get_length(list) == 2);
+    assert(ProductsList__get(list, 0) == first);
+    assert(ProductsList__get(list, 1) == third);
+    ProductsList__destroy(list);
+
+    list = ProductRepository__get_products_by_price(repository, 200);
+    assert(ProductsList__get_length(list) == 1);
+    assert(ProductsList__get(list, 0) == first);
+    ProductsList__destroy(list);
+
+    list = ProductRepository__get_products_by_amount(repository, 10);
+    assert(ProductsList__get_length(list) == 1);
+    assert(ProductsList__get(list, 0) == third);
+    ProductsList__destroy(list);
+
+    ProductRepository__update_product(repository, first, 350, 40);
+    retrieved = ProductRepository__get_product_by_id(repository, 1);
+    assert(retrieved == first);
+    assert(Product__get_price(retrieved) == 350);
+    assert(Product__get_amount(retrieved) == 40);
+
+    ProductRepository__remove_product(repository, first);
+    retrieved = ProductRepository__get_product_by_id(repository, 1);
+    assert(retrieved == NULL);
+
+    ProductRepository__remove_product(repository, first);
+
     ProductRepository__destroy(repository);
+}
+
+int main() {
+    test_product();
+    test_products_list();
+    test_repository();
 
     return 0;
 }
