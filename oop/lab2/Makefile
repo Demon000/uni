@@ -22,7 +22,20 @@ test_cfiles = $(program_cfiles) \
 test_files = $(test_cfiles)
 
 main: $(console_files)
-	gcc -o main -std=c99 $(console_cfiles)
+	gcc \
+		-std=c99 \
+		-o main \
+		-g $(console_cfiles)
 
 test: $(test_files)
-	gcc -o test -std=c99 $(test_cfiles)
+	gcc \
+		--coverage \
+		-std=c99 \
+		-o test \
+		-g $(test_cfiles)
+
+	./test
+
+	gcov \
+		-o . \
+		$(test_cfiles)
