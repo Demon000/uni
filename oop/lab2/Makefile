@@ -21,12 +21,14 @@ test_cfiles = $(program_cfiles) \
 
 test_files = $(test_cfiles)
 
+.SILENT: main
 main: $(console_files)
 	gcc \
 		-std=c99 \
 		-o main \
 		-g $(console_cfiles)
 
+.SILENT: test
 test: $(test_files)
 	gcc \
 		--coverage \
