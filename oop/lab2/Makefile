@@ -39,3 +39,8 @@ test: $(test_files)
 	gcov \
 		-o . \
 		$(test_cfiles)
+
+	rm test \
+		*.gcov \
+		*.gcda \
+		*.gcno
