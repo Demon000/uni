@@ -8,6 +8,8 @@ ProductRepository* ProductRepository__create() {
             malloc(sizeof(ProductRepository));
 
     repository->products = Vector__create();
+
+    return repository;
 }
 
 void ProductRepository__add_product(ProductRepository* repository, Product* product) {
