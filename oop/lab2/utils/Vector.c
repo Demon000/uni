@@ -62,10 +62,6 @@ void Vector__delete(Vector* v, int index) {
     }
 
     v->length--;
-
-    if (v->length > 0 && v->length == v->size / 4) {
-        Vector__resize(v, v->size / 2);
-    }
 }
 
 void Vector__destroy(Vector* v) {
