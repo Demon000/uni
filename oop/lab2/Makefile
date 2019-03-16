@@ -42,7 +42,10 @@ test: $(test_files)
 		-o . \
 		$(test_cfiles)
 
+	rm -rf gcov
+	mkdir gcov
+	mv *.gcov gcov
+
 	rm test \
-		*.gcov \
 		*.gcda \
 		*.gcno
