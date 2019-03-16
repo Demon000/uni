@@ -1,1 +1,6 @@
 *.csv
+*.gcda
+*.gcno
+*.gcov
+main
+test
