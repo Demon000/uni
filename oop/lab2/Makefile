@@ -16,6 +16,13 @@ console_cfiles = $(program_cfiles) \
 console_files = $(console_cfiles) \
 		ui/Console.h
 
+test_cfiles = $(program_cfiles) \
+		test.c
 
-lab2: $(console_files)
-	gcc -o lab2 -std=c99 $(console_cfiles)
+test_files = $(test_cfiles)
+
+main: $(console_files)
+	gcc -o main -std=c99 $(console_cfiles)
+
+test: $(test_files)
+	gcc -o test -std=c99 $(test_cfiles)
