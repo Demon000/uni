@@ -1,16 +1,21 @@
-cfiles = entities/Product.c \
+program_cfiles = entities/Product.c \
 		repositories/ProductRepository.c \
 		services/ProductService.c \
-		ui/Console.c \
-		utils/Vector.c \
-		main.c
+		utils/Vector.c
 
-files = $(cfiles) \
+program_files = $(program_cfiles) \
 		entities/Product.h \
 		repositories/ProductRepository.h \
 		services/ProductService.h \
-		ui/Console.h \
 		utils/Vector.h
 
-lab2: $(files)
-	gcc -o lab2 -std=c99 $(cfiles)
+console_cfiles = $(program_cfiles) \
+		ui/Console.c \
+		main.c
+
+console_files = $(console_cfiles) \
+		ui/Console.h
+
+
+lab2: $(console_files)
+	gcc -o lab2 -std=c99 $(console_cfiles)
