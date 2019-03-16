@@ -1,5 +1,6 @@
 #include "../utils/Vector.h"
 #include "../entities/Product.h"
+#include "../entities/ProductsList.h"
 
 #ifndef PRODUCT_REPOSITORY_H
 #define PRODUCT_REPOSITORY_H

@@ -1,22 +1,29 @@
-program_cfiles = entities/Product.c \
+program_cfiles = \
+		entities/Product.c \
+		entities/ProductsList.c \
 		repositories/ProductRepository.c \
 		services/ProductService.c \
 		utils/Vector.c
 
-program_files = $(program_cfiles) \
+program_files = \
+		$(program_cfiles) \
 		entities/Product.h \
+		entities/ProductsList.h \
 		repositories/ProductRepository.h \
 		services/ProductService.h \
 		utils/Vector.h
 
-console_cfiles = $(program_cfiles) \
+console_cfiles = \
+		$(program_cfiles) \
 		ui/Console.c \
 		main.c
 
-console_files = $(console_cfiles) \
+console_files = \
+		$(console_cfiles) \
 		ui/Console.h
 
-test_cfiles = $(program_cfiles) \
+test_cfiles = \
+		$(program_cfiles) \
 		test.c
 
 test_files = $(test_cfiles)

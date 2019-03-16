@@ -1,4 +1,5 @@
 #include "../entities/Product.h"
+#include "../entities/ProductsList.h"
 #include "../repositories/ProductRepository.h"
 
 #ifndef PRODUCT_SERVICE_H
