@@ -5,6 +5,7 @@
 
 typedef struct ProductsList {
     Product** items;
+    int size;
     int length;
 } ProductsList;
 

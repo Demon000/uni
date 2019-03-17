@@ -4,12 +4,18 @@
 
 ProductsList* ProductsList__create(int size) {
     ProductsList* list = malloc(sizeof(ProductsList));
-    list->items = malloc(sizeof(Product*) * size);
+    list->size = size;
     list->length = 0;
+    list->items = malloc(sizeof(Product*) * size);
+
     return list;
 }
 
 void ProductsList__add(ProductsList* list, Product* product) {
+    if (list->length == list->size) {
+        return;
+    }
+
     list->items[list->length++] = product;
 }
 
