@@ -43,7 +43,10 @@ test: $(test_files)
 		-o test \
 		-g $(test_cfiles)
 
-	./test
+	valgrind \
+		--leak-check=full \
+		--track-origins=yes \
+		./test
 
 	gcov \
 		-o . \
