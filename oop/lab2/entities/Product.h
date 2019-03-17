@@ -2,7 +2,6 @@
 #define PRODUCT_H
 
 #define PRODUCT_STRING_MAX_SIZE 32
-#define PRODUCT_REPRESENTATION_MAX_SIZE 256
 
 typedef int ProductId;
 typedef int ProductPrice;

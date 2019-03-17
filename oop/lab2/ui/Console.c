@@ -117,6 +117,7 @@ void Console__update_product(Console* console) {
     Console__ask_number("New amount (invalid to skip): ", &amount, 0);
 
     Product* product = ProductService__update_product(console->service, id, price, amount);
+    printf("Updated product: ");
     Console__print_product(product);
 }
 
@@ -128,6 +129,7 @@ void Console__delete_product(Console* console) {
 
 void Console__show_products(Console* console) {
     ProductsList* list = ProductService__get_products(console->service);
+    printf("Products:\n");
     Console__print_products(list);
     ProductsList__destroy(list);
 }
@@ -153,6 +155,7 @@ void Console__ask_sort_option(Console* console) {
 
     ProductsList* list = ProductService__get_sorted_products(console->service,
             type, order);
+    printf("Sorted products:\n");
     Console__print_products(list);
     ProductsList__destroy(list);
 }
@@ -186,6 +189,7 @@ void Console__ask_filter_option(Console* console) {
         break;
     }
 
+    printf("Filtered products:\n");
     Console__print_products(list);
     ProductsList__destroy(list);
 }
