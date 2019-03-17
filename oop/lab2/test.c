@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "repositories/ProductRepository.h"
 #include "services/ProductService.h"
@@ -25,7 +26,7 @@ void test_product() {
 }
 
 void test_products_list() {
-    ProductsList* list = ProductsList__create(1);
+    ProductsList* list = ProductsList__create(3);
     Product* retrieved;
 
     Product* first = Product__create(1, 200, 20,
