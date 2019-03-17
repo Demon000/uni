@@ -126,7 +126,7 @@ void Console__delete_product(Console* console) {
     Console__ask_number("Id: ", &id, 1);
     ProductError result = ProductService__remove_product(console->service, id);
     if (result == PRODUCT_NOT_FOUND) {
-        printf("Product with Id: %d not found.\n", id);
+        printf("Product with Id: %d does not exist.\n", id);
     } else {
         printf("Deleted product with Id: %d.\n", id);
     }
