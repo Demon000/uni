@@ -118,12 +118,98 @@ void test_repository() {
     ProductRepository__remove_product(repository, first);
 
     ProductRepository__destroy(repository);
+    Product__destroy(first);
+    Product__destroy(second);
+    Product__destroy(third);
+}
+
+void test_service() {
+    ProductRepository* repository = ProductRepository__create();
+    ProductService* service = ProductService__create(repository);
+    ProductsList* list;
+
+    Product* first = ProductService__add_product(service, 1, 200, 60,
+        "TV", "Samsung", "Infinity");
+
+    Product* second = ProductService__add_product(service, 2, 300, 30,
+        "TV", "LG", "Failtinity");
+
+    Product* third = ProductService__add_product(service, 3, 500, 10,
+        "TV", "Samsung", "Spectacular");
+
+    Product* forth = ProductService__add_product(service, 1, 200, 20,
+        "TV", "Samsung", "Infinity");
+    assert(first == forth);
+
+    list = ProductService__get_products(service);
+    assert(ProductsList__get_length(list) == 3);
+    assert(ProductsList__get(list, 0) == first);
+    assert(ProductsList__get(list, 1) == second);
+    assert(ProductsList__get(list, 2) == third);
+    ProductsList__destroy(list);
+
+    list = ProductService__get_products_by_brand(service, "Samsung");
+    assert(ProductsList__get_length(list) == 2);
+    assert(ProductsList__get(list, 0) == first);
+    assert(ProductsList__get(list, 1) == third);
+    ProductsList__destroy(list);
+
+    list = ProductService__get_products_by_price(service, 200);
+    assert(ProductsList__get_length(list) == 1);
+    assert(ProductsList__get(list, 0) == first);
+    ProductsList__destroy(list);
+
+    list = ProductService__get_products_by_amount(service, 10);
+    assert(ProductsList__get_length(list) == 1);
+    assert(ProductsList__get(list, 0) == third);
+    ProductsList__destroy(list);
+
+    list = ProductService__get_sorted_products(service, SORT_BY_PRICE, SORT_ASCENDING);
+    assert(ProductsList__get_length(list) == 3);
+    assert(ProductsList__get(list, 0) == first);
+    assert(ProductsList__get(list, 1) == second);
+    assert(ProductsList__get(list, 2) == third);
+    ProductsList__destroy(list);
+
+    list = ProductService__get_sorted_products(service, SORT_BY_PRICE, SORT_DESCENDING);
+    assert(ProductsList__get_length(list) == 3);
+    assert(ProductsList__get(list, 0) == third);
+    assert(ProductsList__get(list, 1) == second);
+    assert(ProductsList__get(list, 2) == first);
+    ProductsList__destroy(list);
+
+    list = ProductService__get_sorted_products(service, SORT_BY_AMOUNT, SORT_ASCENDING);
+    assert(ProductsList__get_length(list) == 3);
+    assert(ProductsList__get(list, 0) == third);
+    assert(ProductsList__get(list, 1) == first);
+    assert(ProductsList__get(list, 2) == second);
+    ProductsList__destroy(list);
+
+    list = ProductService__get_sorted_products(service, SORT_BY_AMOUNT, SORT_DESCENDING);
+    assert(ProductsList__get_length(list) == 3);
+    assert(ProductsList__get(list, 0) == second);
+    assert(ProductsList__get(list, 1) == first);
+    assert(ProductsList__get(list, 2) == third);
+    ProductsList__destroy(list);
+
+    ProductService__update_product(service, 1, 200, 60);
+    assert(Product__get_price(first) == 200);
+    assert(Product__get_amount(first) == 60);
+
+    ProductService__remove_product(service, 1);
+    ProductService__update_product(service, 1, 200, 60);
+
+    ProductService__destroy(service);
+    ProductRepository__destroy(repository);
 }
 
 int main() {
     test_product();
     test_products_list();
     test_repository();
+    test_service();
+
+    printf("Tests passed.\n");
 
     return 0;
 }
