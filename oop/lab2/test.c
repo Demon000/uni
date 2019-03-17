@@ -225,8 +225,9 @@ void test_service() {
     assert(Product__get_price(first) == 200);
     assert(Product__get_amount(first) == 60);
 
-    ProductService__remove_product(service, 1);
-    ProductService__update_product(service, 1, 200, 60);
+    assert(ProductService__remove_product(service, 1) == PRODUCT_NO_ERROR);
+    assert(ProductService__remove_product(service, 1) == PRODUCT_NOT_FOUND);
+    assert(ProductService__update_product(service, 1, 200, 60) == NULL);
 
     ProductService__destroy(service);
     ProductRepository__destroy(repository);

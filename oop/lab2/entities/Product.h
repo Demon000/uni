@@ -17,6 +17,11 @@ typedef struct Pruduct {
     char model[PRODUCT_STRING_MAX_SIZE];
 } Product;
 
+typedef enum ProductError {
+    PRODUCT_NO_ERROR,
+    PRODUCT_NOT_FOUND,
+} ProductError;
+
 /**
  * Create a new product using the provided data.
  *

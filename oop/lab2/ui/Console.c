@@ -124,7 +124,12 @@ void Console__update_product(Console* console) {
 void Console__delete_product(Console* console) {
     ProductId id;
     Console__ask_number("Id: ", &id, 1);
-    ProductService__remove_product(console->service, id);
+    ProductError result = ProductService__remove_product(console->service, id);
+    if (result == PRODUCT_NOT_FOUND) {
+        printf("Product with Id: %d not found.\n", id);
+    } else {
+        printf("Deleted product with Id: %d.\n", id);
+    }
 }
 
 void Console__show_products(Console* console) {

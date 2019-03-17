@@ -90,14 +90,16 @@ Product* ProductService__update_product(ProductService* service,
     return product;
 }
 
-void ProductService__remove_product(ProductService* service, ProductId id) {
+ProductError ProductService__remove_product(ProductService* service, ProductId id) {
     Product* product = ProductRepository__get_product_by_id(service->repository, id);
     if (!product) {
-        return;
+        return PRODUCT_NOT_FOUND;
     }
 
     ProductRepository__remove_product(service->repository, product);
     Product__destroy(product);
+
+    return PRODUCT_NO_ERROR;
 }
 
 void ProductService__destroy(ProductService* service) {

@@ -108,8 +108,11 @@ Product* ProductService__update_product(ProductService*, ProductId, ProductPrice
  * Find a product by id and remove it from the repository.
  *
  * @param id The id of the product.
+ *
+ * @return PRODUCT_NO_ERROR if the product has been deleted,
+ *      PRODUCT_NOT_FOUND couldn't be found.
  */
-void ProductService__remove_product(ProductService*, ProductId);
+ProductError ProductService__remove_product(ProductService*, ProductId);
 
 /**
  * Destroy a product service.
