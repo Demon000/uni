@@ -2,8 +2,37 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "utils/Vector.h"
+#include "entities/Product.h"
+#include "entities/ProductsList.h"
 #include "repositories/ProductRepository.h"
 #include "services/ProductService.h"
+
+void test_vector() {
+    Vector* v = Vector__create();
+    int x = 3;
+    int y = 2;
+    int* first = &x;
+    int* second = &y;
+
+    Vector__add(v, first);
+    Vector__add(v, first);
+    Vector__add(v, first);
+    Vector__add(v, first);
+    Vector__add(v, first);
+    Vector__add(v, first);
+    Vector__add(v, first);
+    Vector__add(v, first);
+    Vector__add(v, first);
+    assert(Vector__get_length(v) == 9);
+
+    Vector__set(v, 0, second);
+    assert(Vector__get(v, 0) == second);
+
+    assert(Vector__get(v, -1) == NULL);
+
+    Vector__destroy(v);
+}
 
 void test_product() {
     Product* product = Product__create(1, 200, 20,
@@ -204,6 +233,7 @@ void test_service() {
 }
 
 int main() {
+    test_vector();
     test_product();
     test_products_list();
     test_repository();
