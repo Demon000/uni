@@ -7,6 +7,9 @@ Console* Console__create(ProductService* service) {
     Console* console = malloc(sizeof(Console));
 
     console->service = service;
+
+    return console;
+
 }
 
 void Console__destroy(Console* console) {
@@ -14,6 +17,7 @@ void Console__destroy(Console* console) {
 }
 
 void Console__exit(Console* console) {
+    (void)(console);
     printf("Goodbye.\n");
 }
 
@@ -239,7 +243,25 @@ int Console__ask_option(Console* console) {
     return option;
 }
 
+void Console__add_test_products(Console* console) {
+    ProductService__add_product(console->service, 1,
+            1599, 10, "TV", "Samsung", "40NU7122");
+    ProductService__add_product(console->service, 2,
+            899, 50, "TV", "Samsung", "32N4002");
+    ProductService__add_product(console->service, 3,
+            2199, 20, "TV", "Samsung", "49NU7302");
+
+    ProductService__add_product(console->service, 4,
+            899, 10, "Fridge", "Samsung", "RT25HAR4DS9");
+    ProductService__add_product(console->service, 5,
+            2249, 30, "Fridge", "LG", "GBB539NSQPB");
+    ProductService__add_product(console->service, 6,
+            1399, 100, "Fridge", "Arctic", "AF54250");
+}
+
 void Console__run(Console* console) {
+    Console__add_test_products(console);
+
     int result = -1;
     while (result) {
         result = Console__ask_option(console);

@@ -31,6 +31,7 @@ test_files = $(test_cfiles)
 .SILENT: main
 main: $(console_files)
 	gcc \
+		-Wall -Wextra \
 		-std=c99 \
 		-o main \
 		-g $(console_cfiles)
@@ -38,6 +39,7 @@ main: $(console_files)
 .SILENT: test
 test: $(test_files)
 	gcc \
+		-Wall -Wextra \
 		--coverage \
 		-std=c99 \
 		-o test \

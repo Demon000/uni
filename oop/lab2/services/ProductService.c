@@ -6,6 +6,8 @@ ProductService* ProductService__create(ProductRepository* repository) {
     ProductService* service = malloc(sizeof(ProductService));
 
     service->repository = repository;
+
+    return service;
 }
 
 Product* ProductService__add_product(ProductService* service,

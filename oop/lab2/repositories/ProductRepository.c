@@ -39,7 +39,6 @@ Product* ProductRepository__get_product_by_id(ProductRepository* repository, Pro
         int length = Vector__get_length(repository->products); \
         ProductsList* list = ProductsList__create(length); \
         Product* product; \
-        int index = 0; \
         for (int i = 0; i < length; i++) { \
             product = Vector__get(repository->products, i); \
             if (condition) { \
@@ -66,6 +65,7 @@ ProductsList* ProductRepository__get_products_by_amount(ProductRepository* repos
 
 void ProductRepository__update_product(ProductRepository* repository,
         Product* product, ProductPrice price, ProductAmount amount) {
+    (void)(repository);
     if (price != -1) {
         Product__set_price(product, price);
     }
