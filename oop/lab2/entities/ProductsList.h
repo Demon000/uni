@@ -9,6 +9,8 @@ typedef struct ProductsList {
     int length;
 } ProductsList;
 
+typedef int (*ProductsListSortFn)(Product*, Product*);
+
 /**
  * Create a list of products with a static length.
  *
@@ -46,13 +48,12 @@ int ProductsList__get_length(ProductsList*);
 Product* ProductsList__get(ProductsList*, int);
 
 /**
- * Swap two products from a list of products.
+ * Sort a list of products.
  *
  * @param list A pointer to the list of products.
- * @param first The index of the first product.
- * @param second The index of the second product.
+ * @param sort_fn A pointer to a function which decides which product comes first.
  */
-void ProductsList__swap(ProductsList*, int, int);
+void ProductsList__sort(ProductsList*, ProductsListSortFn);
 
 /**
  * Destroy a list of products.

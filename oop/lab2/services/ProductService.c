@@ -32,29 +32,37 @@ ProductsList* ProductService__get_products(ProductService* service) {
     return list;
 }
 
+int ProductService__compare_products_price(Product* first, Product* second) {
+    return second->price - first->price;
+}
+
+int ProductService__compare_products_amount(Product* first, Product* second) {
+    return second->amount - first->amount;
+}
+
+int ProductService__compare_products_price_desc(Product* first, Product* second) {
+    return first->price - second->price;
+}
+
+int ProductService__compare_products_amount_desc(Product* first, Product* second) {
+    return first->amount - second->amount;
+}
+
 ProductsList* ProductService__get_sorted_products(ProductService* service,
         ProductSortType type, ProductSortOrder order) {
     ProductsList* list = ProductRepository__get_products(service->repository);
-    int length = ProductsList__get_length(list);
-    for (int i = 0; i < length; i++) {
-        for (int j = i + 1; j < length; j++) {
-            Product* first = ProductsList__get(list, i);
-            Product* second = ProductsList__get(list, j);
-            int value;
 
-            if (type == SORT_BY_PRICE) {
-                value = second->price - first->price;
-            } else if (type == SORT_BY_AMOUNT) {
-                value = second->amount - first->amount;
-            }
-
-            if (order == SORT_DESCENDING) {
-                value = -value;
-            }
-
-            if (value < 0) {
-                ProductsList__swap(list, i, j);
-            }
+    if (type == SORT_BY_PRICE) {
+        if (order == SORT_ASCENDING) {
+            ProductsList__sort(list, ProductService__compare_products_price);
+        } else if (order == SORT_DESCENDING) {
+            ProductsList__sort(list, ProductService__compare_products_price_desc);
+        }
+    } else if (type == SORT_BY_AMOUNT) {
+        if (order == SORT_ASCENDING) {
+            ProductsList__sort(list, ProductService__compare_products_amount);
+        } else if (order == SORT_DESCENDING) {
+            ProductsList__sort(list, ProductService__compare_products_amount_desc);
         }
     }
 

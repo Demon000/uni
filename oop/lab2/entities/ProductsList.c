@@ -31,15 +31,20 @@ Product* ProductsList__get(ProductsList* list, int i) {
     return list->items[i];
 }
 
-void ProductsList__swap(ProductsList* list, int first, int second) {
-    if (first < 0 || first >= list->length ||
-            second < 0 || second >= list->length) {
-        return;
-    }
+void ProductsList__sort(ProductsList* list, ProductsListSortFn sort_fn) {
+    for (int i = 0; i < list->length; i++) {
+        for (int j = i + 1; j < list->length; j++) {
+            Product* first = list->items[i];
+            Product* second = list->items[j];
+            int value = sort_fn(first, second);
 
-    Product* aux = list->items[first];
-    list->items[first] = list->items[second];
-    list->items[second] = aux;
+            if (value < 0) {
+                Product* aux = list->items[i];
+                list->items[i] = list->items[j];
+                list->items[j] = aux;
+            }
+        }
+    }
 }
 
 void ProductsList__destroy(ProductsList* list) {

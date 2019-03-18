@@ -71,14 +71,6 @@ void test_products_list() {
     retrieved = ProductsList__get(list, 0);
     assert(retrieved == first);
 
-    ProductsList__swap(list, 0, 1);
-
-    retrieved = ProductsList__get(list, 0);
-    assert(retrieved == second);
-
-    retrieved = ProductsList__get(list, 1);
-    assert(retrieved == first);
-
     retrieved = ProductsList__get(list, 2);
     assert(retrieved == NULL);
 
