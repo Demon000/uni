@@ -13,7 +13,8 @@ ProductService* ProductService__create(ProductRepository* repository) {
 Product* ProductService__add_product(ProductService* service,
         ProductId id, ProductPrice price, ProductAmount amount,
         char* type, char* brand, char* model) {
-    Product* existing_product = ProductRepository__get_product_by_id(service->repository, id);
+    Product* existing_product =
+            ProductRepository__get_product_by_id(service->repository, id);
 
     if (existing_product) {
         Product__set_amount(existing_product, amount);
@@ -83,17 +84,21 @@ ProductsList* ProductService__get_products_by_amount(ProductService* service,
 
 Product* ProductService__update_product(ProductService* service,
         ProductId id, ProductPrice price, ProductAmount amount) {
-    Product* product = ProductRepository__get_product_by_id(service->repository, id);
+    Product* product =
+            ProductRepository__get_product_by_id(service->repository, id);
     if (!product) {
         return NULL;
     }
 
-    ProductRepository__update_product(service->repository, product, price, amount);
+    ProductRepository__update_product(service->repository,
+            product, price, amount);
     return product;
 }
 
-ProductError ProductService__remove_product(ProductService* service, ProductId id) {
-    Product* product = ProductRepository__get_product_by_id(service->repository, id);
+ProductError ProductService__remove_product(ProductService* service,
+        ProductId id) {
+    Product* product =
+            ProductRepository__get_product_by_id(service->repository, id);
     if (!product) {
         return PRODUCT_NOT_FOUND;
     }

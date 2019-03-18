@@ -12,11 +12,13 @@ ProductRepository* ProductRepository__create() {
     return repository;
 }
 
-void ProductRepository__add_product(ProductRepository* repository, Product* product) {
+void ProductRepository__add_product(ProductRepository* repository,
+        Product* product) {
     Vector__add(repository->products, product);
 }
 
-Product* ProductRepository__get_product_by_id(ProductRepository* repository, ProductId id) {
+Product* ProductRepository__get_product_by_id(ProductRepository* repository,
+        ProductId id) {
     int length = Vector__get_length(repository->products);
     Product* product;
     int i;
@@ -51,15 +53,18 @@ ProductsList* ProductRepository__get_products(ProductRepository* repository) {
     GET_PRODUCTS_LIST(1)
 }
 
-ProductsList* ProductRepository__get_products_by_brand(ProductRepository* repository, char* brand) {
+ProductsList* ProductRepository__get_products_by_brand(
+        ProductRepository* repository, char* brand) {
     GET_PRODUCTS_LIST(strcmp(product->brand, brand) == 0)
 }
 
-ProductsList* ProductRepository__get_products_by_price(ProductRepository* repository, ProductPrice price) {
+ProductsList* ProductRepository__get_products_by_price(
+        ProductRepository* repository, ProductPrice price) {
     GET_PRODUCTS_LIST(product->price == price)
 }
 
-ProductsList* ProductRepository__get_products_by_amount(ProductRepository* repository, ProductAmount amount) {
+ProductsList* ProductRepository__get_products_by_amount(
+        ProductRepository* repository, ProductAmount amount) {
     GET_PRODUCTS_LIST(product->amount == amount)
 }
 
@@ -75,7 +80,8 @@ void ProductRepository__update_product(ProductRepository* repository,
     }
 }
 
-void ProductRepository__remove_product(ProductRepository* repository, Product* product) {
+void ProductRepository__remove_product(
+        ProductRepository* repository, Product* product) {
     int length = Vector__get_length(repository->products);
     int i;
 

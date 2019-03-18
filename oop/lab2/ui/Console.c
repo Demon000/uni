@@ -38,7 +38,8 @@ void Console__exit(Console* console) {
 
 void Console__ask_number_ranged(char* message, int* value, int loop,
     int min, int max) {
-    Console__ask_number_cond(message, value, loop, *value >= min && *value <= max);
+    Console__ask_number_cond(message, value, loop,
+            *value >= min && *value <= max);
 }
 
 void Console__ask_number(char* message, int* value, int loop) {
@@ -120,7 +121,8 @@ void Console__update_product(Console* console) {
     Console__ask_number("New price (invalid to skip): ", &price, 0);
     Console__ask_number("New amount (invalid to skip): ", &amount, 0);
 
-    Product* product = ProductService__update_product(console->service, id, price, amount);
+    Product* product = ProductService__update_product(console->service,
+            id, price, amount);
     printf("Updated product: ");
     Console__print_product(product);
 }
