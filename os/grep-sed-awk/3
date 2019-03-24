@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Problem
+# Display the full names of the users having a username that starts with "m" and
+# with a user ID divisible by 7.
+
+# Expected output
+# Malinescu Amalia-Greta
+# Martinescu Bogdan
+# Malinescu Bianca-Liliana
+# Malinescu Diana-Flavia
+# Malinescu Elena-Ioana
+# Martinescu Laurentiu
+
+cat passwd.fake | sed -rn "s/[a-z]{4,4}([0-9]{4,4}):.+:.+:.+:(M.+):.+:.+/\1:\2/gp;d" | awk -F':' '{ if ($0 % 7 == 0) { print $2 } }'

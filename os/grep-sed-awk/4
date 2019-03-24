@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Problem
+# Display all the distinct TTYs used by user root.
+
+# Expected output
+# ?
+# pts/2
+# tty1
+# tty2
+# tty3
+# tty4
+# tty5
+# tty6
+
+cat ps.fake | awk '{ if ($1 == "root") { print $6; } }' | sort | uniq

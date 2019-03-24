@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Problem
+# Find all the distinct usernames starting with "r" that are currently
+# running programs, and display them duplicating every vowel.
+
+# Expected output
+# raarees
+# roooot
+# rpc
+# rpcuuseer
+# rtkiit
+
+cat ps.fake | sed -rn "s/([aeiou])/\1\1/gp;d" | sed -rn "s/^(r\S+)(\s+\S+){6,6}.+$/\1/gp;d" | sort | uniq

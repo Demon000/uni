@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Problem
+# Find all the usernames that logged in from "economica" on a Sunday.
+
+# Expected output
+# boir1417
+# giie1411
+# piir1546
+# vlir1593
+
+cat last.fake | sed -r "s/^([a-z]{4,4}[0-9]{4,4}).+economica.+Sun.+/\1/gp;d" | sort | uniq

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Problem
+# Display all the distinct lines left in /etc/passwd after deleting all
+# letters and digits and spaces.
+
+# Expected output
+# ::::-:////://
+# :::::////://
+
+cat passwd.fake | sed -r "s/([0-9a-zA-z ])//g" | sort | uniq

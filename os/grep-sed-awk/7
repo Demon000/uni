@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Problem
+# Find all usersnames starting with "t" that logged on "pts/9".
+
+# Expected output
+# tmir1388
+# toie1637
+# toir1583
+
+cat last.fake | sed -rn "s/(t[a-z]{3,3}[0-9]{4,4}).+pts\/9.+/\1/gp;d" | sort | uniq

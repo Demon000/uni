@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Problem
+# Find all users whose user ID has three digits and starts with 23.
+
+# Expected output
+# Malinescu Elena-Greta
+# Malinescu Elena-Ioana
+# Malinescu Elena-Liliana
+# Malinescu Elena-Monica
+
+cat passwd.fake | sed -rn "s/.+:.+:23[0-9]:.+:(.+):.+:.+/\1/gp;d"

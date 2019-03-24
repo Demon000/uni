@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Problem
+# Find the full names of all the users whose username ends in 88.
+
+# Expected output
+# Lobodescu Amalia-Monica
+# Leopardescu Dan
+
+cat passwd.fake | sed -rn "s/[a-z]{4,4}[0-9]{2,2}88:.+:.+:.+:(.+):.+:.+/\1/gp;d"

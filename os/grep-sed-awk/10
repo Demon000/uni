@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Problem
+# Display all the distinct lines left in /etc/passwd after deleting all characters except "r".
+
+# Expected output
+# ::::-:////://
+# :::::////://
+
+cat passwd.fake | sed -r "s/([^r])//g" | sort | uniq
