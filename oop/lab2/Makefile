@@ -63,6 +63,7 @@ test: $(test_files)
 		./test
 
 	gcov \
+		-r \
 		-o . \
 		$(test_cfiles)
 
