@@ -5,28 +5,40 @@ program_cfiles = \
 		services/ProductService.c \
 		utils/Vector.c
 
-program_files = \
-		$(program_cfiles) \
+program_hfiles = \
 		entities/Product.h \
 		entities/ProductsList.h \
 		repositories/ProductRepository.h \
 		services/ProductService.h \
 		utils/Vector.h
 
+program_files = \
+		$(program_cfiles) \
+		$(program_hfiles)
+
 console_cfiles = \
 		$(program_cfiles) \
 		ui/Console.c \
 		main.c
 
+console_hfiles = \
+		$(program_hfiles) \
+		ui/Console.h
+
 console_files = \
 		$(console_cfiles) \
-		ui/Console.h
+		$(console_hfiles)
 
 test_cfiles = \
 		$(program_cfiles) \
 		test.c
 
-test_files = $(test_cfiles)
+test_hfiles = \
+		$(program_hfiles)
+
+test_files = \
+		$(test_cfiles) \
+		$(test_hfiles)
 
 .SILENT: main
 main: $(console_files)
