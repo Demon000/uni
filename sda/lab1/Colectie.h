@@ -1,6 +1,9 @@
-#include "IteratorColectie.h"
+#ifndef COLECTIE_H
+#define COLECTIE_H
 
 typedef int TElem;
+
+class IteratorColectie;
 
 class Colectie {
 	private:
@@ -17,3 +20,18 @@ class Colectie {
 		IteratorColectie iterator() const;
 		~Colectie();
 };
+
+class IteratorColectie {
+	private:
+		IteratorColectie(const Colectie& c);
+		const Colectie& c;
+
+		friend class Colectie;
+	public:
+		void prim();
+		void urmator();
+		bool valid() const;
+		TElem element() const;
+};
+
+#endif // COLECTIE_H

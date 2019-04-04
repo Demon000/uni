@@ -1,10 +1,11 @@
 #include <assert.h>
-#include "Colectie.h"
-#include "TestExtins.h"
-#include "IteratorColectie.h"
 #include <iostream>
 #include <vector>
 #include <exception>
+
+#include "Colectie.h"
+
+#include "TestExtins.h"
 
 using namespace std;
 

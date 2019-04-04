@@ -1,11 +1,8 @@
-#include "TestScurt.h"
 #include <assert.h>
+
 #include "Colectie.h"
-#include "IteratorColectie.h"
 
-
-
-
+#include "TestScurt.h"
 
 void testAll() { //apelam fiecare functie sa vedem daca exista
 	Colectie c;
