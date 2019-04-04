@@ -29,5 +29,5 @@ void testAll() { //apelam fiecare functie sa vedem daca exista
 	while (ic.valid()) {
 		TElem e = ic.element();
 		ic.urmator();
-	}	 
+	}
 }
