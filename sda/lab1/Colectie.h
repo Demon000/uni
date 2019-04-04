@@ -6,32 +6,35 @@ typedef int TElem;
 class IteratorColectie;
 
 class Colectie {
-	private:
+private:
+    TElem min_item;
+    TElem max_item;
+    TElem* items;
 
-	public:
-		Colectie();
+public:
+    Colectie();
 
-		void adauga(TElem e);
-		bool sterge(TElem e);
-		bool cauta(TElem elem) const;
-		int nrAparitii(TElem elem) const;
-		int dim() const;
-		bool vida() const;
-		IteratorColectie iterator() const;
-		~Colectie();
+    void adauga(TElem e);
+    bool sterge(TElem e);
+    bool cauta(TElem elem) const;
+    int nrAparitii(TElem elem) const;
+    int dim() const;
+    bool vida() const;
+    IteratorColectie iterator() const;
+    ~Colectie();
 };
 
 class IteratorColectie {
-	private:
-		IteratorColectie(const Colectie& c);
-		const Colectie& c;
+private:
+    IteratorColectie(const Colectie& c);
+    const Colectie& c;
 
-		friend class Colectie;
-	public:
-		void prim();
-		void urmator();
-		bool valid() const;
-		TElem element() const;
+    friend class Colectie;
+public:
+    void prim();
+    void urmator();
+    bool valid() const;
+    TElem element() const;
 };
 
 #endif // COLECTIE_H
