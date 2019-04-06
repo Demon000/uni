@@ -317,9 +317,14 @@ void testQuantity() {//scopul e sa adaugam multe date
 
 
 void testAllExtins() {
+	std::cout << "testCreeaza" << std::endl;
 	testCreeaza();
+	std::cout << "testAdauga" << std::endl;
 	testAdauga();
+	std::cout << "testSterge" << std::endl;
 	testSterge();
+	std::cout << "testIterator" << std::endl;
 	testIterator();
+	std::cout << "testQuantity" << std::endl;
 	testQuantity();
 }
