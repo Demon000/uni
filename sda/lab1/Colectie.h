@@ -7,29 +7,44 @@ class IteratorColectie;
 
 class Colectie {
 private:
-    TElem min_item;
-    TElem max_item;
-    TElem* items;
+    TElem minItem;
+    TElem maxItem;
+    int* items;
+    int size;
+    int total;
+
+    void expand(int);
+    void insert(int, int);
+    void modifyOccurances(TElem, int);
+    int getOccurances(TElem) const;
+
+    friend class IteratorColectie;
 
 public:
     Colectie();
 
-    void adauga(TElem e);
-    bool sterge(TElem e);
-    bool cauta(TElem elem) const;
-    int nrAparitii(TElem elem) const;
+    void adauga(TElem);
+    bool sterge(TElem);
+    bool cauta(TElem) const;
+    int nrAparitii(TElem) const;
     int dim() const;
     bool vida() const;
-    IteratorColectie iterator() const;
+    void goleste();
+    IteratorColectie iterator();
     ~Colectie();
 };
 
 class IteratorColectie {
 private:
-    IteratorColectie(const Colectie& c);
-    const Colectie& c;
+    IteratorColectie(const Colectie*);
+    void moveToFirstOccuring(int);
+
+    const Colectie* collection;
+    int occurances;
+    TElem current;
 
     friend class Colectie;
+
 public:
     void prim();
     void urmator();
