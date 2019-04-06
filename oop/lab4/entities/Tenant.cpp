@@ -10,6 +10,10 @@ using std::endl;
 Tenant::Tenant(int number, string name, int surface, string type) :
         number{number}, name{name}, surface{surface}, type{type} {}
 
+bool Tenant::operator==(const Tenant& other) const {
+    return getNumber() == other.getNumber();
+}
+
 string Tenant::toString() const {
     ostringstream oss;
     oss << "Number: " << number << ", Name: " << name << ", Surface: "

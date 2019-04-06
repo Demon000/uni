@@ -15,19 +15,18 @@ enum TenantSortType {
 
 class TenantService {
 public:
-    TenantService(TenantRepository*);
-    ~TenantService();
+    TenantService(TenantRepository&);
 
-    Tenant* createTenant(int, const std::string&, int, const std::string&) const;
-    Tenant* getTenant(int) const;
-    std::vector<Tenant*> getTenantsBySurface(int) const;
-    std::vector<Tenant*> getTenantsByType(const std::string&) const;
-    std::vector<Tenant*> getTenantsSortedBy(TenantSortType) const;
-    Tenant* updateTenant(int, std::string) const;
-    void removeTenant(int) const;
+    Tenant createTenant(int, const std::string&, int, const std::string&);
+    Tenant getTenant(int) const;
+    std::vector<Tenant> getTenantsBySurface(int) const;
+    std::vector<Tenant> getTenantsByType(const std::string&) const;
+    std::vector<Tenant> getTenantsSortedBy(TenantSortType) const;
+    Tenant updateTenant(int, std::string);
+    void removeTenant(int);
 
 private:
-    TenantRepository* repository;
+    TenantRepository& repository;
 };
 
 #endif // TENANT_SERVICE_H

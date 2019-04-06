@@ -8,13 +8,13 @@ using std::string;
 using std::vector;
 using std::exception;
 
-void TenantRepository::addTenant(Tenant* tenant) {
+void TenantRepository::addTenant(const Tenant& tenant) {
     tenants.push_back(tenant);
 }
 
-Tenant* TenantRepository::getTenantByNumber(int number) const {
-    for (auto t: tenants) {
-        if (t->getNumber() == number) {
+Tenant TenantRepository::getTenantByNumber(int number) {
+    for (const auto& t: tenants) {
+        if (t.getNumber() == number) {
             return t;
         }
     }
@@ -22,14 +22,14 @@ Tenant* TenantRepository::getTenantByNumber(int number) const {
     throw exception();
 }
 
-vector<Tenant*> TenantRepository::getTenants() const {
+vector<Tenant> TenantRepository::getTenants() {
     return tenants;
 }
 
-vector<Tenant*> TenantRepository::getTenantsBySurface(int surface) const {
-    vector<Tenant*> filtered;
-    for (auto t: tenants) {
-        if (t->getSurface() == surface) {
+vector<Tenant> TenantRepository::getTenantsBySurface(int surface) {
+    vector<Tenant> filtered;
+    for (const auto& t: tenants) {
+        if (t.getSurface() == surface) {
             filtered.push_back(t);
         }
     }
@@ -37,10 +37,10 @@ vector<Tenant*> TenantRepository::getTenantsBySurface(int surface) const {
     return filtered;
 }
 
-vector<Tenant*> TenantRepository::getTenantsByType(const string& type) const {
-    vector<Tenant*> filtered;
-    for (auto t: tenants) {
-        if (t->getType() == type) {
+vector<Tenant> TenantRepository::getTenantsByType(const string& type) {
+    vector<Tenant> filtered;
+    for (const auto& t: tenants) {
+        if (t.getType() == type) {
             filtered.push_back(t);
         }
     }
@@ -48,16 +48,26 @@ vector<Tenant*> TenantRepository::getTenantsByType(const string& type) const {
     return filtered;
 }
 
-void TenantRepository::updateTenant(Tenant* tenant, string name) const {
-    tenant->setName(name);
+Tenant TenantRepository::updateTenant(Tenant& tenant, string name) {
+    for (auto& t: tenants) {
+        if (t == tenant) {
+            t.setName(name);
+            tenant.setName(name);
+            return t;
+        }
+    }
+
+    throw exception();
 }
 
-void TenantRepository::removeTenant(const Tenant* tenant) {
+void TenantRepository::removeTenant(const Tenant& tenant) {
     for (auto it = tenants.begin(); it != tenants.end(); it++) {
-        Tenant* t = *it;
+        Tenant& t = *it;
         if (t == tenant) {
             tenants.erase(it);
             return;
         }
     }
+
+    throw exception();
 }

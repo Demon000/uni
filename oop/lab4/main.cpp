@@ -7,8 +7,8 @@
 using std::endl;
 
 int main() {
-    TenantRepository* repository = new TenantRepository();
-    TenantService* service = new TenantService(repository);
+    TenantRepository repository;
+    TenantService service{repository};
 
     return 0;
 }
