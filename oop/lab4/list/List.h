@@ -25,6 +25,7 @@ public:
     List();
     ~List();
 
+    int size();
     void push_back(const T&);
     void sort(std::function<bool(const T&, const T&)>);
 
@@ -33,7 +34,7 @@ private:
     void swap_data(Node<T>* first, Node<T>* second);
 
     Node<T>* sentinel;
-    int size;
+    int size_;
 };
 
 template <typename T>
@@ -49,7 +50,7 @@ Node<T>::Node(const T& data, Node<T>* prev, Node<T>* next) :
 template <typename T>
 List<T>::List() {
     sentinel = new Node<T>();
-    size = 0;
+    size_ = 0;
 }
 
 template <typename T>
@@ -66,10 +67,16 @@ List<T>::~List() {
 }
 
 template <typename T>
+int List<T>::size() {
+    return size_;
+}
+
+template <typename T>
 void List<T>::insert_before(Node<T>* next, const T& data) {
     Node<T>* node = new Node<T>(data, next->prev, next);
     next->prev->next = node;
     next->prev = node;
+    size_++;
 }
 
 template <typename T>
