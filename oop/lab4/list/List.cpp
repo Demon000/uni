@@ -54,11 +54,6 @@ void List<T>::push_back(const T& data) {
 }
 
 template <typename T>
-void List<T>::push_front(const T& data) {
-    insert_before(sentinel->next, data);
-}
-
-template <typename T>
 void List<T>::sort(function<bool(const T&, const T&)> cmp) {
 
 }

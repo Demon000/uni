@@ -26,7 +26,6 @@ public:
     ~List();
 
     void push_back(const T&);
-    void push_front(const T&);
     void sort(std::function<bool(const T&, const T&)>);
 
 private:
