@@ -107,9 +107,9 @@ int main(int argc, char** argv) {
 
         if (nodes[first]->distance + edge->weight < nodes[second]->distance) {
 #ifdef INFOARENA
-            printf("Ciclu negativ!");
-#else
             fprintf(file, "Ciclu negativ!");
+#else
+            printf("Ciclu negativ!");
 #endif
             return 0;
         }
@@ -119,9 +119,9 @@ int main(int argc, char** argv) {
         Node* node = nodes[i];
 
 #ifdef INFOARENA
-        printf("%d ", node->distance);
-#else
         fprintf(file, "%d ", node->distance);
+#else
+        printf("%d ", node->distance);
 #endif
     }
 
