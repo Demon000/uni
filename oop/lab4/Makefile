@@ -1,8 +1,7 @@
 program_cppfiles = \
 		entities/Tenant.cpp \
 		repositories/TenantRepository.cpp \
-		services/TenantService.cpp \
-		list/List.cpp
+		services/TenantService.cpp
 
 program_hfiles = \
 		entities/Tenant.h \
