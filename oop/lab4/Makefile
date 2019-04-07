@@ -1,12 +1,14 @@
 program_cppfiles = \
 		entities/Tenant.cpp \
 		repositories/TenantRepository.cpp \
-		services/TenantService.cpp
+		services/TenantService.cpp \
+		list/List.cpp
 
 program_hfiles = \
 		entities/Tenant.h \
 		repositories/TenantRepository.h \
-		services/TenantService.h
+		services/TenantService.h \
+		list/List.h
 
 program_files = \
 		$(program_cppfiles) \
