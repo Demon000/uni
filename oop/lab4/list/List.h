@@ -1,3 +1,5 @@
+#include <functional>
+
 #ifndef LIST_H
 #define LIST_H
 
@@ -22,6 +24,7 @@ public:
 
     void push_back(const T&);
     void push_front(const T&);
+    void sort(std::function<bool(const T&, const T&)>);
 
 private:
     void insert_before(Node<T>*, const T&);
