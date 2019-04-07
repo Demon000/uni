@@ -62,7 +62,7 @@ Tenant TenantRepository::updateTenant(Tenant& tenant, string name) {
 
 void TenantRepository::removeTenant(const Tenant& tenant) {
     for (auto it = tenants.begin(); it != tenants.end(); it++) {
-        Tenant& t = *it;
+        const Tenant& t = *it;
         if (t == tenant) {
             tenants.erase(it);
             return;
