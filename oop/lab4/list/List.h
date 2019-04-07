@@ -4,8 +4,11 @@
 #define LIST_H
 
 template <typename T>
+class List;
+
+template <typename T>
 class Node {
-    friend class List;
+    friend class List<T>;
 
 private:
     T data;
