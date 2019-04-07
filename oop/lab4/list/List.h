@@ -1,4 +1,5 @@
 #include <functional>
+#include <stdexcept>
 
 #ifndef LIST_H
 #define LIST_H
@@ -24,10 +25,12 @@ class List {
 public:
     List();
     ~List();
+    T& operator[](int);
 
     int size();
     void push_back(const T&);
     void sort(std::function<bool(const T&, const T&)>);
+    bool for_each(std::function<bool(const T&)>);
 
 private:
     void insert_before(Node<T>*, const T&);
@@ -108,6 +111,37 @@ void List<T>::sort(std::function<bool(const T&, const T&)> cmp) {
 
         first = first->next;
     }
+}
+
+template <typename T>
+T& List<T>::operator[](int position) {
+    if (position < 0 || position >= size_) {
+        throw std::out_of_range("invalid position");
+    }
+    Node<T>* node = sentinel->next;
+
+    int i = 0;
+    while (i < position) {
+        node = node->next;
+        i++;
+    }
+
+    return node->data;
+}
+
+template <typename T>
+bool List<T>::for_each(std::function<bool(const T&)> fn) {
+    Node<T>* node = sentinel->next;
+    while (node != sentinel) {
+        bool done = fn(node->data);
+        if (done) {
+            return true;
+        }
+
+        node = node->next;
+    }
+
+    return false;
 }
 
 #endif // LIST_H
