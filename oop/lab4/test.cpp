@@ -142,6 +142,12 @@ void test_tenant_service() {
         assert(true);
     }
 
+    tenants = service.getTenants();
+    assert(tenants[0] == first);
+    assert(tenants[1] == second);
+    assert(tenants[2] == third);
+    assert(tenants[3] == forth);
+
     tenants = service.getTenantsBySurface(20);
     assert(tenants[0] == first);
     assert(tenants[1] == forth);
