@@ -147,7 +147,7 @@ void Console::sortApartments() {
 		break;
 	default:
 		cout << "Sort type invalid.\n";
-		break;
+		return;
 	}
 
 	List<Tenant> tenants = service.getTenantsSortedBy(sortType);

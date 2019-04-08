@@ -156,12 +156,6 @@ void test_tenant_service() {
     assert(tenants[2] == second);
     assert(tenants[3] == third);
 
-    tenants = service.getTenantsSortedBy(TenantSortType::SortByType);
-    assert(tenants[0] == forth);
-    assert(tenants[1] == second || tenants[1] == third);
-    assert(tenants[2] == second || tenants[2] == third);
-    assert(tenants[3] == first);
-
     tenants = service.getTenantsSortedBy(TenantSortType::SortBySurface);
     assert(tenants[0] == first || tenants[0] == forth);
     assert(tenants[1] == first || tenants[1] == forth);
