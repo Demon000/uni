@@ -24,17 +24,23 @@ template <typename T>
 class List {
 public:
     List();
+    List(const List&);
     ~List();
     T& operator[](int);
+    List<T>& operator=(const List<T>&);
 
     int size() const;
     void push_back(const T&);
     void sort(std::function<bool(const T&, const T&)>);
-    bool for_each(std::function<bool(const T&)>);
+    bool for_each(std::function<bool(T&)>);
+    bool for_each(std::function<bool(const T&)>) const;
+    void remove(int position);
+    void empty();
 
 private:
     void insert_before(Node<T>*, const T&);
     void swap_data(Node<T>* first, Node<T>* second);
+    Node<T>* node_at(int position);
 
     Node<T>* sentinel;
     int size_;
@@ -57,7 +63,31 @@ List<T>::List() {
 }
 
 template <typename T>
-List<T>::~List() {
+List<T>::List(const List& other) {
+    other.for_each([&](const T& data) {
+        push_back(data);
+        return false;
+    });
+}
+
+template <typename T>
+List<T>& List<T>::operator=(const List<T>& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    empty();
+    other.for_each([&](const T& data) {
+        push_back(data);
+        return false;
+    });
+
+
+    return *this;
+}
+
+template <typename T>
+void List<T>::empty() {
     Node<T>* node = sentinel->next;
     Node<T>* temp;
     while (node != sentinel) {
@@ -66,6 +96,14 @@ List<T>::~List() {
         node = temp;
     }
 
+    sentinel->next = sentinel;
+    sentinel->prev = sentinel;
+    size_ = 0;
+}
+
+template <typename T>
+List<T>::~List() {
+    empty();
     delete sentinel;
 }
 
@@ -114,23 +152,48 @@ void List<T>::sort(std::function<bool(const T&, const T&)> cmp) {
 }
 
 template <typename T>
-T& List<T>::operator[](int position) {
-    if (position < 0 || position >= size_) {
-        throw std::out_of_range("invalid position");
-    }
+Node<T>* List<T>::node_at(int position) {
     Node<T>* node = sentinel->next;
-
     int i = 0;
     while (i < position) {
         node = node->next;
         i++;
     }
 
+    return node;
+}
+
+template <typename T>
+T& List<T>::operator[](int position) {
+    Node<T>* node = node_at(position);
     return node->data;
 }
 
 template <typename T>
-bool List<T>::for_each(std::function<bool(const T&)> fn) {
+void List<T>::remove(int position) {
+    Node<T>* node = node_at(position);
+    node->prev->next = node->next;
+    node->next->prev = node->prev;
+    delete node;
+}
+
+template <typename T>
+bool List<T>::for_each(std::function<bool(const T&)> fn) const {
+    Node<T>* node = sentinel->next;
+    while (node != sentinel) {
+        bool done = fn(node->data);
+        if (done) {
+            return true;
+        }
+
+        node = node->next;
+    }
+
+    return false;
+}
+
+template <typename T>
+bool List<T>::for_each(std::function<bool(T&)> fn) {
     Node<T>* node = sentinel->next;
     while (node != sentinel) {
         bool done = fn(node->data);

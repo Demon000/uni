@@ -1,5 +1,4 @@
-#include <vector>
-
+#include "../list/List.h"
 #include "../entities/Tenant.h"
 #include "../repositories/TenantRepository.h"
 
@@ -19,9 +18,9 @@ public:
 
     Tenant createTenant(int, const std::string&, int, const std::string&);
     Tenant getTenant(int) const;
-    std::vector<Tenant> getTenantsBySurface(int) const;
-    std::vector<Tenant> getTenantsByType(const std::string&) const;
-    std::vector<Tenant> getTenantsSortedBy(TenantSortType) const;
+    List<Tenant> getTenantsBySurface(int) const;
+    List<Tenant> getTenantsByType(const std::string&) const;
+    List<Tenant> getTenantsSortedBy(TenantSortType) const;
     Tenant updateTenant(int, std::string);
     void removeTenant(int);
 

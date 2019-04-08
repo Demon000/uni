@@ -1,11 +1,9 @@
 #include <string>
-#include <vector>
 #include <exception>
 
 #include "TenantRepository.h"
 
 using std::string;
-using std::vector;
 using std::exception;
 
 void TenantRepository::addTenant(const Tenant& tenant) {
@@ -13,60 +11,93 @@ void TenantRepository::addTenant(const Tenant& tenant) {
 }
 
 Tenant TenantRepository::getTenantByNumber(int number) {
-    for (const auto& t: tenants) {
+    Tenant tenant;
+    int done = tenants.for_each([&](const Tenant& t) {
         if (t.getNumber() == number) {
-            return t;
+            tenant = t;
+            return true;
         }
+
+        return false;
+    });
+
+    if (done) {
+        return tenant;
     }
 
     throw exception();
 }
 
-vector<Tenant> TenantRepository::getTenants() {
-    return tenants;
+List<Tenant> TenantRepository::getTenants() {
+    List<Tenant> all;
+    tenants.for_each([&](const Tenant& t) {
+        all.push_back(t);
+        return false;
+    });
+
+    return all;
 }
 
-vector<Tenant> TenantRepository::getTenantsBySurface(int surface) {
-    vector<Tenant> filtered;
-    for (const auto& t: tenants) {
+List<Tenant> TenantRepository::getTenantsBySurface(int surface) {
+    List<Tenant> filtered;
+    tenants.for_each([&](const Tenant& t) {
         if (t.getSurface() == surface) {
             filtered.push_back(t);
         }
-    }
+
+        return false;
+    });
 
     return filtered;
 }
 
-vector<Tenant> TenantRepository::getTenantsByType(const string& type) {
-    vector<Tenant> filtered;
-    for (const auto& t: tenants) {
+List<Tenant> TenantRepository::getTenantsByType(const string& type) {
+    List<Tenant> filtered;
+    tenants.for_each([&](const Tenant& t) {
         if (t.getType() == type) {
             filtered.push_back(t);
         }
-    }
+
+        return false;
+    });
 
     return filtered;
 }
 
 Tenant TenantRepository::updateTenant(Tenant& tenant, string name) {
-    for (auto& t: tenants) {
+    bool done = tenants.for_each([&](Tenant& t) {
         if (t == tenant) {
             t.setName(name);
             tenant.setName(name);
-            return t;
+            return true;
         }
+
+        return false;
+    });
+
+
+    if (done) {
+        return tenant;
     }
 
     throw exception();
 }
 
 void TenantRepository::removeTenant(const Tenant& tenant) {
-    for (auto it = tenants.begin(); it != tenants.end(); it++) {
-        const Tenant& t = *it;
+    int i = 0;
+    bool done = tenants.for_each([&](const Tenant& t) {
         if (t == tenant) {
-            tenants.erase(it);
-            return;
+            tenants.remove(i);
+            return true;
         }
+
+        i++;
+
+        return false;
+    });
+
+    if (done) {
+        return;
     }
 
     throw exception();
