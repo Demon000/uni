@@ -7,6 +7,8 @@ using std::string;
 using std::ostringstream;
 using std::endl;
 
+Tenant::Tenant() : number{0}, name{""}, surface{0}, type{""} {}
+
 Tenant::Tenant(int number, string name, int surface, string type) :
         number{number}, name{name}, surface{surface}, type{type} {}
 

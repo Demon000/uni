@@ -5,6 +5,7 @@
 
 class Tenant {
 public:
+    Tenant();
     Tenant(int, std::string, int, std::string);
     bool operator==(const Tenant&) const;
 

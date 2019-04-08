@@ -51,7 +51,7 @@ void test_tenant() {
 void test_tenant_repository() {
     TenantRepository repository;
     std::vector<Tenant> tenants;
-    Tenant retrieved{0, "", 0, ""};
+    Tenant retrieved;
 
     const Tenant first{1,  "Cristi", 20, "studio"};
     repository.addTenant(first);
@@ -118,7 +118,7 @@ void test_tenant_service() {
     TenantRepository repository;
     TenantService service{repository};
     std::vector<Tenant> tenants;
-    Tenant retrieved{0, "", 0, ""};
+    Tenant retrieved;
 
     const Tenant first = service.createTenant(1,  "Cristi", 20, "studio");
     const Tenant second = service.createTenant(2, "Gigi", 200, "penthouse");
