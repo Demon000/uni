@@ -1,6 +1,6 @@
 #include <string>
+#include <vector>
 
-#include "../list/List.h"
 #include "../entities/Tenant.h"
 #include "../repositories/TenantRepository.h"
 #include "../services/TenantService.h"
@@ -17,7 +17,7 @@ private:
 	int readInt(const std::string&);
 	std::string readStr(const std::string&);
 	void printTenant(const Tenant&, const std::string&);
-	void printTenants(const List<Tenant>&, const std::string&);
+	void printTenants(std::vector<Tenant>, const std::string&);
 	void addTenant();
 	void updateTenant();
 	void deleteTenant();

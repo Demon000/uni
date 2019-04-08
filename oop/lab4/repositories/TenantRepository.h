@@ -1,4 +1,5 @@
-#include "../list/List.h"
+#include <vector>
+
 #include "../entities/Tenant.h"
 
 #ifndef TENANT_REPOSITORY_H
@@ -27,7 +28,7 @@ public:
      *
      * @return The tenants.
      */
-    List<Tenant> getTenants();
+    std::vector<Tenant> getTenants();
 
      /**
      * Get the tenants matching a surface.
@@ -36,7 +37,7 @@ public:
      *
      * @return The tenants matching the given surface.
      */
-    List<Tenant> getTenantsBySurface(int);
+    std::vector<Tenant> getTenantsBySurface(int);
 
      /**
      * Get the tenants matching a type.
@@ -45,17 +46,15 @@ public:
      *
      * @return The tenants matching the given type.
      */
-    List<Tenant> getTenantsByType(const std::string&);
+    std::vector<Tenant> getTenantsByType(const std::string&);
 
      /**
      * Update the name of a tenant.
      *
      * @param tenant The tenant to update.
      * @param name The new name of the tenant.
-     *
-     * @return The updated tenant.
      */
-    Tenant updateTenant(Tenant&, std::string);
+    void updateTenant(Tenant&, std::string);
 
      /**
      * Remove a tenant.
@@ -65,7 +64,7 @@ public:
     void removeTenant(const Tenant&);
 
 private:
-    List<Tenant> tenants;
+    std::vector<Tenant> tenants;
 };
 
 #endif // TENANT_REPOSITORY_H

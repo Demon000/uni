@@ -1,104 +1,69 @@
 #include <string>
+#include <vector>
 #include <exception>
+#include <algorithm>
 
 #include "TenantRepository.h"
 
 using std::string;
+using std::vector;
 using std::exception;
+using std::copy_if;
+using std::back_inserter;
 
 void TenantRepository::addTenant(const Tenant& tenant) {
     tenants.push_back(tenant);
 }
 
 Tenant TenantRepository::getTenantByNumber(int number) {
-    Tenant tenant;
-    int done = tenants.for_each([&](const Tenant& t) {
-        if (t.getNumber() == number) {
-            tenant = t;
-            return true;
-        }
-
-        return false;
+    auto it = find_if(tenants.begin(), tenants.end(), [&](const Tenant& t) {
+        return t.getNumber() == number;
     });
 
-    if (done) {
-        return tenant;
+    if (it == tenants.end()) {
+        throw TenantMissingException();
     }
 
-    throw TenantMissingException();
+    return *it;
 }
 
-List<Tenant> TenantRepository::getTenants() {
-    List<Tenant> all;
-    tenants.for_each([&](const Tenant& t) {
-        all.push_back(t);
-        return false;
-    });
-
-    return all;
+vector<Tenant> TenantRepository::getTenants() {
+    return tenants;
 }
 
-List<Tenant> TenantRepository::getTenantsBySurface(int surface) {
-    List<Tenant> filtered;
-    tenants.for_each([&](const Tenant& t) {
-        if (t.getSurface() == surface) {
-            filtered.push_back(t);
-        }
-
-        return false;
+vector<Tenant> TenantRepository::getTenantsBySurface(int surface) {
+    vector<Tenant> filtered;
+    copy_if(tenants.begin(), tenants.end(), back_inserter(filtered), [&](const Tenant& t) {
+        return t.getSurface() == surface;
     });
 
     return filtered;
 }
 
-List<Tenant> TenantRepository::getTenantsByType(const string& type) {
-    List<Tenant> filtered;
-    tenants.for_each([&](const Tenant& t) {
-        if (t.getType() == type) {
-            filtered.push_back(t);
-        }
-
-        return false;
+vector<Tenant> TenantRepository::getTenantsByType(const string& type) {
+    vector<Tenant> filtered;
+    copy_if(tenants.begin(), tenants.end(), back_inserter(filtered), [&](const Tenant& t) {
+        return t.getType() == type;
     });
 
     return filtered;
 }
 
-Tenant TenantRepository::updateTenant(Tenant& tenant, string name) {
-    bool done = tenants.for_each([&](Tenant& t) {
-        if (t == tenant) {
-            t.setName(name);
-            tenant.setName(name);
-            return true;
-        }
-
-        return false;
-    });
-
-
-    if (done) {
-        return tenant;
+void TenantRepository::updateTenant(Tenant& tenant, string name) {
+    auto it = find(tenants.begin(), tenants.end(), tenant);
+    if (it == tenants.end()) {
+        throw TenantMissingException();
     }
 
-    throw TenantMissingException();
+    it->setName(name);
+    tenant.setName(name);
 }
 
 void TenantRepository::removeTenant(const Tenant& tenant) {
-    int i = 0;
-    bool done = tenants.for_each([&](const Tenant& t) {
-        if (t == tenant) {
-            tenants.remove(i);
-            return true;
-        }
-
-        i++;
-
-        return false;
-    });
-
-    if (done) {
-        return;
+    auto it = find(tenants.begin(), tenants.end(), tenant);
+    if (it == tenants.end()) {
+        throw TenantMissingException();
     }
 
-    throw TenantMissingException();
+    tenants.erase(it);
 }

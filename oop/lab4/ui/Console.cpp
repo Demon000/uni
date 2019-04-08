@@ -5,6 +5,7 @@
 
 #include "Console.h"
 
+using std::vector;
 using std::string;
 using std::cin;
 using std::cout;
@@ -52,12 +53,11 @@ void Console::printTenant(const Tenant& tenant, const string& message) {
 	cout << tenant.toString() << "\n";
 }
 
-void Console::printTenants(const List<Tenant>& tenants, const string& message) {
+void Console::printTenants(vector<Tenant> tenants, const string& message) {
 	cout << message << ":\n";
-	tenants.for_each([](const Tenant& tenant) {
+	for(const auto& tenant : tenants) {
 		cout << tenant.toString() << "\n";
-		return false;
-	});
+	}
 }
 
 void Console::addTenant() {
@@ -98,7 +98,7 @@ void Console::deleteTenant() {
 }
 
 void Console::showTenants() {
-	List<Tenant> tenants = service.getTenants();
+	vector<Tenant> tenants = service.getTenants();
 	printTenants(tenants, "Tenants");
 }
 
@@ -114,7 +114,7 @@ void Console::findApartment() {
 }
 
 void Console::filterApartments() {
-	List<Tenant> tenants;
+	vector<Tenant> tenants;
 	string type;
 	int surface;
 
@@ -165,7 +165,7 @@ void Console::sortApartments() {
 		return;
 	}
 
-	List<Tenant> tenants = service.getTenantsSortedBy(sortType);
+	vector<Tenant> tenants = service.getTenantsSortedBy(sortType);
 	printTenants(tenants, "Sorted tenants");
 }
 

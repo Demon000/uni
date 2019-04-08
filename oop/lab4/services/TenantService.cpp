@@ -1,9 +1,13 @@
+#include <algorithm>
 #include <string>
+#include <vector>
 #include <exception>
 
 #include "TenantService.h"
 
+using std::sort;
 using std::string;
+using std::vector;
 using std::exception;
 
 TenantService::TenantService(TenantRepository& repository) :
@@ -26,21 +30,21 @@ Tenant TenantService::getTenant(int number) const {
     return repository.getTenantByNumber(number);
 }
 
-List<Tenant> TenantService::getTenants() const {
+vector<Tenant> TenantService::getTenants() const {
     return repository.getTenants();
 }
 
-List<Tenant> TenantService::getTenantsBySurface(int surface) const {
+vector<Tenant> TenantService::getTenantsBySurface(int surface) const {
     return repository.getTenantsBySurface(surface);
 }
 
-List<Tenant> TenantService::getTenantsByType(const string& type) const {
+vector<Tenant> TenantService::getTenantsByType(const string& type) const {
     return repository.getTenantsByType(type);
 }
 
-List<Tenant> TenantService::getTenantsSortedBy(TenantSortType by) const {
-    List<Tenant> tenants = repository.getTenants();
-    tenants.sort([&](const Tenant& first,
+vector<Tenant> TenantService::getTenantsSortedBy(TenantSortType by) const {
+    vector<Tenant> tenants = repository.getTenants();
+    sort(tenants.begin(), tenants.end(), [&](const Tenant& first,
             const Tenant& second) {
         if (by == TenantSortType::SortByName) {
             return first.getName() < second.getName();

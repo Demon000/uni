@@ -6,8 +6,7 @@ program_cppfiles = \
 program_hfiles = \
 		entities/Tenant.h \
 		repositories/TenantRepository.h \
-		services/TenantService.h \
-		list/List.h
+		services/TenantService.h
 
 program_files = \
 		$(program_cppfiles) \

@@ -1,4 +1,5 @@
-#include "../list/List.h"
+#include <vector>
+
 #include "../entities/Tenant.h"
 #include "../repositories/TenantRepository.h"
 
@@ -46,7 +47,7 @@ public:
      *
      * @return The tenants.
      */
-    List<Tenant> getTenants() const;
+    std::vector<Tenant> getTenants() const;
 
      /**
      * Get the tenants matching a surface.
@@ -55,7 +56,7 @@ public:
      *
      * @return The tenants matching the given surface.
      */
-    List<Tenant> getTenantsBySurface(int) const;
+    std::vector<Tenant> getTenantsBySurface(int) const;
 
      /**
      * Get the tenants matching a type.
@@ -64,7 +65,7 @@ public:
      *
      * @return The tenants matching the given type.
      */
-    List<Tenant> getTenantsByType(const std::string&) const;
+    std::vector<Tenant> getTenantsByType(const std::string&) const;
 
      /**
      * Get the tenants sorted by a criteria.
@@ -73,7 +74,7 @@ public:
      *
      * @return The sorted tenants.
      */
-    List<Tenant> getTenantsSortedBy(TenantSortType) const;
+    std::vector<Tenant> getTenantsSortedBy(TenantSortType) const;
 
      /**
      * Update a tenant.

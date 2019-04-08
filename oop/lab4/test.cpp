@@ -2,37 +2,12 @@
 #include <cassert>
 #include <exception>
 
-#include "list/List.h"
 #include "entities/Tenant.h"
 #include "repositories/TenantRepository.h"
 #include "services/TenantService.h"
 
+using std::vector;
 using std::exception;
-
-void test_list() {
-    List<int> l;
-
-    l.push_back(3);
-    l.push_back(30);
-    l.push_back(5);
-    l.push_back(1);
-    l.sort([](int first, int second) {
-        return first < second;
-    });
-
-    assert(l[0] == 1);
-    assert(l[1] == 3);
-    assert(l[2] == 5);
-    assert(l[3] == 30);
-
-    l.for_each([](int i) {
-        if (i == 3) {
-            return true;
-        }
-
-        return false;
-    });
-}
 
 void test_tenant() {
     Tenant tenant{1,  "Cristi", 1, "studio"};
@@ -50,7 +25,7 @@ void test_tenant() {
 
 void test_tenant_repository() {
     TenantRepository repository;
-    List<Tenant> tenants;
+    std::vector<Tenant> tenants;
     Tenant retrieved;
 
     const Tenant first{1,  "Cristi", 20, "studio"};
@@ -117,7 +92,7 @@ void test_tenant_repository() {
 void test_tenant_service() {
     TenantRepository repository;
     TenantService service{repository};
-    List<Tenant> tenants;
+    std::vector<Tenant> tenants;
     Tenant retrieved;
 
     const Tenant first = service.createTenant(1,  "Cristi", 20, "studio");
@@ -189,7 +164,6 @@ void test_tenant_service() {
 }
 
 int main() {
-    test_list();
     test_tenant();
     test_tenant_repository();
     test_tenant_service();
