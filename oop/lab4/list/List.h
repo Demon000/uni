@@ -30,12 +30,47 @@ public:
     T& operator[](int);
     List<T>& operator=(const List<T>&);
 
+    /**
+     * Get the size of the list.
+     *
+     * @return The size of the list.
+     */
     int size() const;
+
+    /**
+     * Add a new element to the list.
+     *
+     * @param The new element.
+     */
     void push_back(const T&);
+
+    /**
+     * Sort the elements of the list.
+     *
+     * @param cmp A comparator function.
+     */
     void sort(std::function<bool(const T&, const T&)>);
+
+    /**
+     * Go over the elements of the list.
+     *
+     * @param fn A function to be called for each element of the list.
+     *
+     * @return Whether the list has been iterated until the end or not.
+     */
     bool for_each(std::function<bool(T&)>);
     bool for_each(std::function<bool(const T&)>) const;
-    void remove(int position);
+
+    /**
+     * Remove an element from the list.
+     *
+     * @param position The index of the element to remove.
+     */
+    void remove(int);
+
+    /**
+     * Empty the list.
+     */
     void empty();
 
 private:
