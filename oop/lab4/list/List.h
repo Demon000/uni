@@ -1,5 +1,6 @@
 #include <functional>
 #include <stdexcept>
+#include <iostream>
 
 #ifndef LIST_H
 #define LIST_H

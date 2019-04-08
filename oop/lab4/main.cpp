@@ -6,6 +6,7 @@ int main() {
     TenantRepository repository;
     TenantService service{repository};
     Console console{service};
+    console.run();
 
     return 0;
 }

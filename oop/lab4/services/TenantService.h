@@ -8,7 +8,6 @@
 enum TenantSortType {
     SortByName,
     SortBySurface,
-    SortByType,
     SortByTypeAndSurface,
 };
 
@@ -18,11 +17,12 @@ public:
 
     Tenant createTenant(int, const std::string&, int, const std::string&);
     Tenant getTenant(int) const;
+    List<Tenant> getTenants() const;
     List<Tenant> getTenantsBySurface(int) const;
     List<Tenant> getTenantsByType(const std::string&) const;
     List<Tenant> getTenantsSortedBy(TenantSortType) const;
     Tenant updateTenant(int, std::string);
-    void removeTenant(int);
+    Tenant removeTenant(int);
 
 private:
     TenantRepository& repository;

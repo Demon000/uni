@@ -1,3 +1,6 @@
+#include <string>
+
+#include "../list/List.h"
 #include "../entities/Tenant.h"
 #include "../repositories/TenantRepository.h"
 #include "../services/TenantService.h"
@@ -8,8 +11,24 @@
 class Console {
 public:
     Console(TenantService&);
+    void run();
 
 private:
+	int readInt(const std::string&);
+	std::string readStr(const std::string&);
+	void printTenant(const Tenant&, const std::string&);
+	void printTenants(const List<Tenant>&, const std::string&);
+	void addTenant();
+	void updateTenant();
+	void deleteTenant();
+	void showTenants();
+	void findApartment();
+	void filterApartments();
+	void sortApartments();
+	void goodbye();
+	void addTenants();
+	int askOption();
+
     TenantService& service;
 };
 
