@@ -27,7 +27,7 @@ public:
     ~List();
     T& operator[](int);
 
-    int size();
+    int size() const;
     void push_back(const T&);
     void sort(std::function<bool(const T&, const T&)>);
     bool for_each(std::function<bool(const T&)>);
@@ -70,7 +70,7 @@ List<T>::~List() {
 }
 
 template <typename T>
-int List<T>::size() {
+int List<T>::size() const {
     return size_;
 }
 
