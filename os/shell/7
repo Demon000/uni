@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Problem
+# Consider a file containing a username on each line. Generate a comma-separated
+# string with email addresses of the users that exist. The email address will
+# be obtained by appending "@scs.ubbcluj.ro" at the end of each username.
+# Make sure the generated string does NOT end in a comma.
+
+# Input file
+# a
+# b
+# c
+
+# Expected output
+# a@scs.ubbcluj.ro,b@scs.ubbcluj.ro,c@scs.ubbcluj.ro
+
+while read USER; do
+	PASSWD_MATCHES=$(cat passwd.fake | grep -E "^$USER:")
+	if [ ! "$PASSWD_MATCHES" = "" ]; then
+		USERS="$USERS,$USER{@scs.ubbcluj.ro}"
+	fi
+done <<< $(cat "$1")
+
+USERS=$(echo "$USERS" | sed -r "s/,//")
+
+echo "$USERS"

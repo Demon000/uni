@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Problem
+# Write a script that finds in a given directory hierarchy,
+# all duplicate files and displays their paths. Hint: use checksums to detect
+# whether two files are identical.	
+
+FILES=$(find $1 -type f)
+FILES_ONE_LINE=$(echo "$FILES" | tr '\n' ' ')
+SUMS_FILES=$(md5sum $FILES_ONE_LINE | sort)
+ORIGINAL_SUM="bad"
+ORIGINAL_FILE="bad"
+while read SUM_FILE; do
+	SUM=$(echo "$SUM_FILE" | awk '{ print($1); }')
+	FILE=$(echo "$SUM_FILE" | awk '{ print($2); }')
+	if [ ! "$SUM" = "$ORIGINAL_SUM" ]; then
+		ORIGINAL_SUM="$SUM"
+		ORIGINAL_FILE="$FILE"
+	fi
+
+	if [ ! "$FILE" = "$ORIGINAL_FILE" ]; then
+		echo "$FILE duplicate of $ORIGINAL_FILE"
+	fi
+done <<< "$SUMS_FILES"

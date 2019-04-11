@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Problem
+# Find recursively in a directory, all the files with the extension ".log"
+# and sort their lines (replace the original file with the sorted content).	
+
+# Expected output
+# The *.log files in test directory "dir" should be all sorted.
+
+
+FILES=$(find "$1" -type f -name "*.log")
+while read FILE; do
+	SORTED=$(sort "$FILE")
+	$(echo "$SORTED" > "$FILE")
+done <<< "$FILES"

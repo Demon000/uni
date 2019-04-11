@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Problem
+# Display a report showing the full name of all the users currently connected,
+# and the number of processes belonging to each of them.
+
+# Expected output
+# bradu 2
+# horea 2
+# rares 3
+
+USERS=$(cat who.fake | cut -d" " -f1)
+while read USER; do
+	PROCESSES=$(cat ps.fake | cut -d" " -f1 | grep "^${USER}$" | wc -l)
+	echo "$USER $PROCESSES"
+done <<< "$USERS"

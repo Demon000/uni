@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Problem
+# Find recursively in a directory, all the files that have write permissions 
+# for everyone. Display their names, and the permissions before and after
+# removing the write permission for everybody. You will need to use chmod's
+# symbolic permissions mode, instead of the octal mode we have used in class.
+# The the chmod manual for details.
+
+# Expected output
+# -rwxrwxrwx dir/d/c/b/15.c
+# -rwxrwxr-x dir/d/c/b/15.c
+# -rwxr---w- dir/d/b/6.txt
+# -rwxr----- dir/d/b/6.txt
+# -rwx-w-rw- dir/c/b/9.sh
+# -rwx-w-r-- dir/c/b/9.sh
+
+FILES=$(find "$1")
+while read FILE; do
+	PERMISSION=$(ls -ld "$FILE" | cut -d" " -f1)
+	MATCH_PERMISSION=$(echo "$PERMISSION" | grep -E "..w..w..w.")
+	if [ ! "$MATCH_PERMISSION" = "" ]; then
+		$(chmod a-w "$FILE")
+		NEW_PERMISSION=$(ls -ld "$FILE" | cut -d" " -f1)
+		echo "$PERMISSION $NEW_PERMISSION $FILE"
+	fi
+done <<< "$FILES"

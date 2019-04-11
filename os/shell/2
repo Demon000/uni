@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Problem
+# Find recursively in a directory all ".c" files having more than 500 lines.
+# Stop after finding 2 such files.
+
+# Expected output
+# dir/11.c
+# dir/d/a/13.c
+
+FILES=$(find "$1" -type f -name "*.c")
+NO_BIG_FILES=0
+while read FILE; do
+	NO_LINES=$(wc -l "$FILE" | cut -d" " -f1)
+	if [ $NO_LINES -gt 500 ] && [ $NO_BIG_FILES -lt 2 ]; then
+		echo "$FILE"
+		((NO_BIG_FILES+=1))
+	fi
+done <<< "$FILES"

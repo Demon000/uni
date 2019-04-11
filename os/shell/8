@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Problem
+# Display all the mounted file systems who are either smaller than than 1GB
+# or have less than 20% free space.	
+
+# Expected output
+# /dev
+# /run
+# /dev/shm
+# /run/lock
+# /sys/fs/cgroup
+# /run/user/1000
+# /home/rares/osvm
+
+cat df.fake | tail -n +2 | awk '
+{
+	size=substr($2, 0, length($2) - 1) + 0
+	used=substr($5, 0, length($5) - 1) + 0
+	path=$6
+	if (size < 1024 || used > 80) {
+		print(path);
+	}
+}
+'
