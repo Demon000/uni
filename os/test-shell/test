@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [ "$#" -lt 3 ]; then
+	echo "Not enough arguments."
+	exit
+fi
+
+SEARCHED_WORD="$1"
+NO_SEARCHED_WORDS="$2"
+
+while [ ! "$3" = "" ]; do
+	FPATH="$3"
+	NO_WORDS=0
+	WORDS=$(cat "$FPATH" | sed "s/ /\n/g")
+	while read WORD; do
+		if [ "$WORD" = "$SEARCHED_WORD" ]; then
+			((NO_WORDS+=1))
+		fi
+	done <<< "$WORDS"
+
+	if [ "$NO_WORDS" -gt "$NO_SEARCHED_WORDS" ]; then
+		echo "$FPATH"
+	fi
+	shift
+done
