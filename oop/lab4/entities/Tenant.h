@@ -71,4 +71,7 @@ private:
     std::string type;
 };
 
+class TenantMissingException : public std::exception {};
+class TenantExistsException : public std::exception {};
+
 #endif // TENANT_H

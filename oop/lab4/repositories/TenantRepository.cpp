@@ -25,7 +25,7 @@ Tenant TenantRepository::getTenantByNumber(int number) {
         return tenant;
     }
 
-    throw exception();
+    throw TenantMissingException();
 }
 
 List<Tenant> TenantRepository::getTenants() {
@@ -80,7 +80,7 @@ Tenant TenantRepository::updateTenant(Tenant& tenant, string name) {
         return tenant;
     }
 
-    throw exception();
+    throw TenantMissingException();
 }
 
 void TenantRepository::removeTenant(const Tenant& tenant) {
@@ -100,5 +100,5 @@ void TenantRepository::removeTenant(const Tenant& tenant) {
         return;
     }
 
-    throw exception();
+    throw TenantMissingException();
 }

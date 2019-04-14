@@ -19,7 +19,7 @@ Tenant TenantService::createTenant(int number, const string& name,
         return tenant;
     }
 
-    throw exception();
+    throw TenantExistsException();
 }
 
 Tenant TenantService::getTenant(int number) const {
