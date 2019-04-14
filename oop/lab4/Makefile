@@ -36,37 +36,45 @@ test_files = \
 		$(test_cppfiles) \
 		$(test_hfiles)
 
+output_dir = ./bin
+gcov_dir = ./gcov
+main_file = $(output_dir)/main
+test_file = $(output_dir)/test
+gcov_files = *.gcov
+gcov_ignored_files = *.gcda *.gcno
+
 .SILENT: main
 main: $(console_files)
+	-mkdir $(output_dir)
+
 	g++ \
 		-std=c++11 \
 		-Wall -Wextra \
-		-o main \
-		-g $(console_cppfiles)
+		-g $(console_cppfiles) \
+		-o $(main_file)
 
 .SILENT: test
 test: $(test_files)
+	-mkdir $(output_dir)
+	-mkdir $(gcov_dir)
+
 	g++ \
 		-std=c++11 \
 		-Wall -Wextra \
 		--coverage \
-		-o test \
-		-g $(test_cppfiles)
+		-g $(test_cppfiles) \
+		-o $(test_file)
 
 	valgrind \
 		--leak-check=full \
 		--track-origins=yes \
-		./test
+		$(test_file)
 
 	gcov \
 		-r \
 		-o . \
 		$(program_cppfiles)
 
-	rm -rf gcov
-	mkdir gcov
-	mv *.gcov gcov
+	mv $(gcov_files) $(gcov_dir)
 
-	rm test \
-		*.gcda \
-		*.gcno
+	rm $(gcov_ignored_files)

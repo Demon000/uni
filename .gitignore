@@ -1,6 +1,2 @@
-*.csv
-*.gcda
-*.gcno
-*.gcov
-main
-test
+bin/
+gcov/
