@@ -4,8 +4,6 @@
 #define INFINITY 1 << 28
 #define NO_PARENT -1
 
-#define INFOARENA 1
-
 typedef struct Node {
     int distance;
     int parent;
@@ -48,16 +46,12 @@ int main(int argc, char** argv) {
     int no_nodes;
     int no_edges;
 
-#ifdef INFOARENA
-    FILE* file = fopen("bellmanford.in", "r");
-#else
     if (argc < 2) {
         printf("./bellman_ford <file_name>\n");
         return 0;
     }
 
     FILE* file = fopen(argv[1], "r");
-#endif
 
     fscanf(file, "%d %d", &no_nodes, &no_edges);
 
@@ -72,11 +66,6 @@ int main(int argc, char** argv) {
     for (int i = 0; i < no_edges; i++) {
         int first, second, weight;
         fscanf(file, "%d %d %d", &first, &second, &weight);
-
-#if INFOARENA
-        first--;
-        second--;
-#endif
 
         edges[i] = Edge__create(first, second, weight);
     }
@@ -96,38 +85,21 @@ int main(int argc, char** argv) {
         }
     }
 
-#ifdef INFOARENA
-    file = fopen("bellmanford.out", "w");
-#endif
-
     for (int e = 0; e < no_edges; e++) {
         Edge* edge = edges[e];
         int first = edge->first;
         int second = edge->second;
 
         if (nodes[first]->distance + edge->weight < nodes[second]->distance) {
-#ifdef INFOARENA
-            fprintf(file, "Ciclu negativ!");
-#else
-            printf("Ciclu negativ!");
-#endif
+            printf("Negative cycle.");
             return 0;
         }
     }
 
     for (int i = 1; i < no_nodes; i++) {
         Node* node = nodes[i];
-
-#ifdef INFOARENA
-        fprintf(file, "%d ", node->distance);
-#else
         printf("%d ", node->distance);
-#endif
     }
-
-#ifdef INFOARENA
-    fclose(file);
-#endif
 
     for (int i = 0; i < no_nodes; i++) {
         Node__destroy(nodes[i]);
