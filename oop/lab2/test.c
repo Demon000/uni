@@ -28,8 +28,6 @@ void test_vector() {
     Vector__set(v, 0, second);
     assert(Vector__get(v, 0) == second);
 
-    assert(Vector__get(v, -1) == NULL);
-
     Vector__destroy(v);
 }
 

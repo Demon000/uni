@@ -34,26 +34,14 @@ void Vector__add(Vector* v, void *item) {
 }
 
 void Vector__set(Vector* v, int index, void *item) {
-    if (index < 0 || index >= v->length) {
-        return;
-    }
-
     v->items[index] = item;
 }
 
 void* Vector__get(Vector* v, int index) {
-    if (index < 0 || index >= v->length) {
-        return NULL;
-    }
-
     return v->items[index];
 }
 
 void Vector__delete(Vector* v, int index) {
-    if (index < 0 || index >= v->length) {
-        return;
-    }
-
     v->items[index] = NULL;
 
     for (int i = index; i < v->length - 1; i++) {
