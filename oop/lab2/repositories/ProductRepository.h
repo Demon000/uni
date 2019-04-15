@@ -1,6 +1,5 @@
 #include "../utils/Vector.h"
 #include "../entities/Product.h"
-#include "../entities/ProductsList.h"
 
 #ifndef PRODUCT_REPOSITORY_H
 #define PRODUCT_REPOSITORY_H
@@ -39,9 +38,9 @@ Product* ProductRepository__get_product_by_id(ProductRepository*, ProductId);
  *
  * @param repository A pointer to the product repository.
  *
- * @return A pointer to the list of products.
+ * @return A pointer to the vector of products.
  */
-ProductsList* ProductRepository__get_products(ProductRepository*);
+Vector* ProductRepository__get_products(ProductRepository*);
 
 /**
  * Get all the products matching the provided brand from a product repository.
@@ -49,9 +48,9 @@ ProductsList* ProductRepository__get_products(ProductRepository*);
  * @param repository A pointer to the product repository.
  * @param brand The brand to look for.
  *
- * @return A pointer to the list of products.
+ * @return A pointer to the vector of products.
  */
-ProductsList* ProductRepository__get_products_by_brand(ProductRepository*, char*);
+Vector* ProductRepository__get_products_by_brand(ProductRepository*, char*);
 
 /**
  * Get all the products matching the provided price from a product repository.
@@ -59,9 +58,9 @@ ProductsList* ProductRepository__get_products_by_brand(ProductRepository*, char*
  * @param repository A pointer to the product repository.
  * @param price The price to look for.
  *
- * @return A pointer to the list of products.
+ * @return A pointer to the vector of products.
  */
-ProductsList* ProductRepository__get_products_by_price(ProductRepository*, ProductPrice);
+Vector* ProductRepository__get_products_by_price(ProductRepository*, ProductPrice);
 
 /**
  * Get all the products matching the provided amount from a product repository.
@@ -69,9 +68,9 @@ ProductsList* ProductRepository__get_products_by_price(ProductRepository*, Produ
  * @param repository A pointer to the product repository.
  * @param amount The amount to look for.
  *
- * @return A pointer to the list of products.
+ * @return A pointer to the vector of products.
  */
-ProductsList* ProductRepository__get_products_by_amount(ProductRepository*, ProductAmount);
+Vector* ProductRepository__get_products_by_amount(ProductRepository*, ProductAmount);
 
 /**
  * Update a product from a product repository.

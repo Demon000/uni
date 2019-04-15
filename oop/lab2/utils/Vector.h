@@ -3,6 +3,8 @@
 
 #define VECTOR_INIT_SIZE 4
 
+typedef int (*VectorSortFn)(void*, void*);
+
 typedef struct Vector {
     void **items;
     int size;
@@ -59,6 +61,14 @@ void* Vector__get(Vector*, int);
  * @param index An index number.
  */
 void Vector__delete(Vector*, int);
+
+/**
+ * Sort the items of the vector.
+ *
+ * @param vector A pointer to the vector.
+ * @param sort_fn A comparator function.
+ */
+void Vector__sort(Vector*, VectorSortFn);
 
 /**
  * Destroy a vector.

@@ -27,67 +27,75 @@ Product* ProductService__add_product(ProductService* service,
     return product;
 }
 
-ProductsList* ProductService__get_products(ProductService* service) {
-    ProductsList* list = ProductRepository__get_products(service->repository);
-    return list;
+Vector* ProductService__get_products(ProductService* service) {
+    Vector* products = ProductRepository__get_products(service->repository);
+    return products;
 }
 
-int ProductService__compare_products_price(Product* first, Product* second) {
-    return second->price - first->price;
+int ProductService__compare_products_price(void* first, void* second) {
+    Product* first_product = (Product*) first;
+    Product* second_product = (Product*) second;
+    return second_product->price - first_product->price;
 }
 
-int ProductService__compare_products_amount(Product* first, Product* second) {
-    return second->amount - first->amount;
+int ProductService__compare_products_amount(void* first, void* second) {
+    Product* first_product = (Product*) first;
+    Product* second_product = (Product*) second;
+    return second_product->amount - first_product->amount;
 }
 
-int ProductService__compare_products_price_desc(Product* first, Product* second) {
-    return first->price - second->price;
+int ProductService__compare_products_price_desc(void* first, void* second) {
+    Product* first_product = (Product*) first;
+    Product* second_product = (Product*) second;
+    return first_product->price - second_product->price;
 }
 
-int ProductService__compare_products_amount_desc(Product* first, Product* second) {
-    return first->amount - second->amount;
+int ProductService__compare_products_amount_desc(void* first, void* second) {
+    Product* first_product = (Product*) first;
+    Product* second_product = (Product*) second;
+    return first_product->amount - second_product->amount;
 }
 
-ProductsList* ProductService__get_sorted_products(ProductService* service,
+Vector* ProductService__get_sorted_products(ProductService* service,
         ProductSortType type, ProductSortOrder order) {
-    ProductsList* list = ProductRepository__get_products(service->repository);
+    Vector* products = ProductRepository__get_products(service->repository);
 
     if (type == SORT_BY_PRICE) {
         if (order == SORT_ASCENDING) {
-            ProductsList__sort(list, ProductService__compare_products_price);
+            Vector__sort(products, ProductService__compare_products_price);
         } else if (order == SORT_DESCENDING) {
-            ProductsList__sort(list, ProductService__compare_products_price_desc);
+            Vector__sort(products, ProductService__compare_products_price_desc);
         }
     } else if (type == SORT_BY_AMOUNT) {
         if (order == SORT_ASCENDING) {
-            ProductsList__sort(list, ProductService__compare_products_amount);
+            Vector__sort(products, ProductService__compare_products_amount);
         } else if (order == SORT_DESCENDING) {
-            ProductsList__sort(list, ProductService__compare_products_amount_desc);
+            Vector__sort(products, ProductService__compare_products_amount_desc);
         }
     }
 
-    return list;
+    return products;
 }
 
-ProductsList* ProductService__get_products_by_brand(ProductService* service,
+Vector* ProductService__get_products_by_brand(ProductService* service,
         char* brand) {
-    ProductsList* list = ProductRepository__get_products_by_brand(
+    Vector* products = ProductRepository__get_products_by_brand(
             service->repository, brand);
-    return list;
+    return products;
 }
 
-ProductsList* ProductService__get_products_by_price(ProductService* service,
+Vector* ProductService__get_products_by_price(ProductService* service,
         ProductPrice price) {
-    ProductsList* list = ProductRepository__get_products_by_price(
+    Vector* products = ProductRepository__get_products_by_price(
             service->repository, price);
-    return list;
+    return products;
 }
 
-ProductsList* ProductService__get_products_by_amount(ProductService* service,
+Vector* ProductService__get_products_by_amount(ProductService* service,
         ProductAmount amount) {
-    ProductsList* list = ProductRepository__get_products_by_amount(
+    Vector* products = ProductRepository__get_products_by_amount(
             service->repository, amount);
-    return list;
+    return products;
 }
 
 Product* ProductService__update_product(ProductService* service,
@@ -118,15 +126,15 @@ ProductError ProductService__remove_product(ProductService* service,
 }
 
 void ProductService__destroy(ProductService* service) {
-    ProductsList* list = ProductRepository__get_products(service->repository);
+    Vector* products = ProductRepository__get_products(service->repository);
 
-    int length = ProductsList__get_length(list);
+    int length = Vector__get_length(products);
     for (int i = 0; i < length; i++) {
-        Product* product = ProductsList__get(list, i);
+        Product* product = Vector__get(products, i);
         Product__destroy(product);
     }
 
-    ProductsList__destroy(list);
+    Vector__destroy(products);
 
     free(service);
 }

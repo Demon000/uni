@@ -4,7 +4,6 @@
 
 #include "utils/Vector.h"
 #include "entities/Product.h"
-#include "entities/ProductsList.h"
 #include "repositories/ProductRepository.h"
 #include "services/ProductService.h"
 
@@ -54,35 +53,9 @@ void test_product() {
     Product__destroy(product);
 }
 
-void test_products_list() {
-    ProductsList* list = ProductsList__create(3);
-    Product* retrieved;
-
-    Product* first = Product__create(1, 200, 20,
-        "TV", "Samsung", "Infinity");
-    ProductsList__add(list, first);
-    assert(ProductsList__get_length(list) == 1);
-
-    Product* second = Product__create(2, 300, 30,
-        "TV", "LG", "Fail");
-    ProductsList__add(list, second);
-    assert(ProductsList__get_length(list) == 2);
-
-    retrieved = ProductsList__get(list, 0);
-    assert(retrieved == first);
-
-    retrieved = ProductsList__get(list, 2);
-    assert(retrieved == NULL);
-
-
-    Product__destroy(second);
-    Product__destroy(first);
-    ProductsList__destroy(list);
-}
-
 void test_repository() {
     ProductRepository* repository = ProductRepository__create();
-    ProductsList* list;
+    Vector* products;
     Product* retrieved;
 
     Product* first = Product__create(1, 200, 20,
@@ -103,28 +76,28 @@ void test_repository() {
     retrieved = ProductRepository__get_product_by_id(repository, 4);
     assert(retrieved == NULL);
 
-    list = ProductRepository__get_products(repository);
-    assert(ProductsList__get_length(list) == 3);
-    assert(ProductsList__get(list, 0) == first);
-    assert(ProductsList__get(list, 1) == second);
-    assert(ProductsList__get(list, 2) == third);
-    ProductsList__destroy(list);
+    products = ProductRepository__get_products(repository);
+    assert(Vector__get_length(products) == 3);
+    assert(Vector__get(products, 0) == first);
+    assert(Vector__get(products, 1) == second);
+    assert(Vector__get(products, 2) == third);
+    Vector__destroy(products);
 
-    list = ProductRepository__get_products_by_brand(repository, "Samsung");
-    assert(ProductsList__get_length(list) == 2);
-    assert(ProductsList__get(list, 0) == first);
-    assert(ProductsList__get(list, 1) == third);
-    ProductsList__destroy(list);
+    products = ProductRepository__get_products_by_brand(repository, "Samsung");
+    assert(Vector__get_length(products) == 2);
+    assert(Vector__get(products, 0) == first);
+    assert(Vector__get(products, 1) == third);
+    Vector__destroy(products);
 
-    list = ProductRepository__get_products_by_price(repository, 200);
-    assert(ProductsList__get_length(list) == 1);
-    assert(ProductsList__get(list, 0) == first);
-    ProductsList__destroy(list);
+    products = ProductRepository__get_products_by_price(repository, 200);
+    assert(Vector__get_length(products) == 1);
+    assert(Vector__get(products, 0) == first);
+    Vector__destroy(products);
 
-    list = ProductRepository__get_products_by_amount(repository, 10);
-    assert(ProductsList__get_length(list) == 1);
-    assert(ProductsList__get(list, 0) == third);
-    ProductsList__destroy(list);
+    products = ProductRepository__get_products_by_amount(repository, 10);
+    assert(Vector__get_length(products) == 1);
+    assert(Vector__get(products, 0) == third);
+    Vector__destroy(products);
 
     ProductRepository__update_product(repository, first, 350, 40);
     retrieved = ProductRepository__get_product_by_id(repository, 1);
@@ -147,7 +120,7 @@ void test_repository() {
 void test_service() {
     ProductRepository* repository = ProductRepository__create();
     ProductService* service = ProductService__create(repository);
-    ProductsList* list;
+    Vector* products;
 
     Product* first = ProductService__add_product(service, 1, 200, 60,
         "TV", "Samsung", "Infinity");
@@ -162,56 +135,56 @@ void test_service() {
         "TV", "Samsung", "Infinity");
     assert(first == forth);
 
-    list = ProductService__get_products(service);
-    assert(ProductsList__get_length(list) == 3);
-    assert(ProductsList__get(list, 0) == first);
-    assert(ProductsList__get(list, 1) == second);
-    assert(ProductsList__get(list, 2) == third);
-    ProductsList__destroy(list);
+    products = ProductService__get_products(service);
+    assert(Vector__get_length(products) == 3);
+    assert(Vector__get(products, 0) == first);
+    assert(Vector__get(products, 1) == second);
+    assert(Vector__get(products, 2) == third);
+    Vector__destroy(products);
 
-    list = ProductService__get_products_by_brand(service, "Samsung");
-    assert(ProductsList__get_length(list) == 2);
-    assert(ProductsList__get(list, 0) == first);
-    assert(ProductsList__get(list, 1) == third);
-    ProductsList__destroy(list);
+    products = ProductService__get_products_by_brand(service, "Samsung");
+    assert(Vector__get_length(products) == 2);
+    assert(Vector__get(products, 0) == first);
+    assert(Vector__get(products, 1) == third);
+    Vector__destroy(products);
 
-    list = ProductService__get_products_by_price(service, 200);
-    assert(ProductsList__get_length(list) == 1);
-    assert(ProductsList__get(list, 0) == first);
-    ProductsList__destroy(list);
+    products = ProductService__get_products_by_price(service, 200);
+    assert(Vector__get_length(products) == 1);
+    assert(Vector__get(products, 0) == first);
+    Vector__destroy(products);
 
-    list = ProductService__get_products_by_amount(service, 10);
-    assert(ProductsList__get_length(list) == 1);
-    assert(ProductsList__get(list, 0) == third);
-    ProductsList__destroy(list);
+    products = ProductService__get_products_by_amount(service, 10);
+    assert(Vector__get_length(products) == 1);
+    assert(Vector__get(products, 0) == third);
+    Vector__destroy(products);
 
-    list = ProductService__get_sorted_products(service, SORT_BY_PRICE, SORT_ASCENDING);
-    assert(ProductsList__get_length(list) == 3);
-    assert(ProductsList__get(list, 0) == first);
-    assert(ProductsList__get(list, 1) == second);
-    assert(ProductsList__get(list, 2) == third);
-    ProductsList__destroy(list);
+    products = ProductService__get_sorted_products(service, SORT_BY_PRICE, SORT_ASCENDING);
+    assert(Vector__get_length(products) == 3);
+    assert(Vector__get(products, 0) == first);
+    assert(Vector__get(products, 1) == second);
+    assert(Vector__get(products, 2) == third);
+    Vector__destroy(products);
 
-    list = ProductService__get_sorted_products(service, SORT_BY_PRICE, SORT_DESCENDING);
-    assert(ProductsList__get_length(list) == 3);
-    assert(ProductsList__get(list, 0) == third);
-    assert(ProductsList__get(list, 1) == second);
-    assert(ProductsList__get(list, 2) == first);
-    ProductsList__destroy(list);
+    products = ProductService__get_sorted_products(service, SORT_BY_PRICE, SORT_DESCENDING);
+    assert(Vector__get_length(products) == 3);
+    assert(Vector__get(products, 0) == third);
+    assert(Vector__get(products, 1) == second);
+    assert(Vector__get(products, 2) == first);
+    Vector__destroy(products);
 
-    list = ProductService__get_sorted_products(service, SORT_BY_AMOUNT, SORT_ASCENDING);
-    assert(ProductsList__get_length(list) == 3);
-    assert(ProductsList__get(list, 0) == third);
-    assert(ProductsList__get(list, 1) == first);
-    assert(ProductsList__get(list, 2) == second);
-    ProductsList__destroy(list);
+    products = ProductService__get_sorted_products(service, SORT_BY_AMOUNT, SORT_ASCENDING);
+    assert(Vector__get_length(products) == 3);
+    assert(Vector__get(products, 0) == third);
+    assert(Vector__get(products, 1) == first);
+    assert(Vector__get(products, 2) == second);
+    Vector__destroy(products);
 
-    list = ProductService__get_sorted_products(service, SORT_BY_AMOUNT, SORT_DESCENDING);
-    assert(ProductsList__get_length(list) == 3);
-    assert(ProductsList__get(list, 0) == second);
-    assert(ProductsList__get(list, 1) == first);
-    assert(ProductsList__get(list, 2) == third);
-    ProductsList__destroy(list);
+    products = ProductService__get_sorted_products(service, SORT_BY_AMOUNT, SORT_DESCENDING);
+    assert(Vector__get_length(products) == 3);
+    assert(Vector__get(products, 0) == second);
+    assert(Vector__get(products, 1) == first);
+    assert(Vector__get(products, 2) == third);
+    Vector__destroy(products);
 
     ProductService__update_product(service, 1, 200, 60);
     assert(Product__get_price(first) == 200);
@@ -228,7 +201,6 @@ void test_service() {
 int main() {
     test_vector();
     test_product();
-    test_products_list();
     test_repository();
     test_service();
 

@@ -1,13 +1,11 @@
 program_cfiles = \
 		entities/Product.c \
-		entities/ProductsList.c \
 		repositories/ProductRepository.c \
 		services/ProductService.c \
 		utils/Vector.c
 
 program_hfiles = \
 		entities/Product.h \
-		entities/ProductsList.h \
 		repositories/ProductRepository.h \
 		services/ProductService.h \
 		utils/Vector.h

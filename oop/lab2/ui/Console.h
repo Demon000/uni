@@ -1,5 +1,5 @@
+#include "../utils/Vector.h"
 #include "../entities/Product.h"
-#include "../entities/ProductsList.h"
 #include "../repositories/ProductRepository.h"
 #include "../services/ProductService.h"
 

@@ -64,6 +64,22 @@ void Vector__delete(Vector* v, int index) {
     v->length--;
 }
 
+void Vector__sort(Vector* v, VectorSortFn sort_fn) {
+    for (int i = 0; i < v->length; i++) {
+        for (int j = i + 1; j < v->length; j++) {
+            void* first = v->items[i];
+            void* second = v->items[j];
+            int value = sort_fn(first, second);
+
+            if (value < 0) {
+                void* aux = v->items[i];
+                v->items[i] = v->items[j];
+                v->items[j] = aux;
+            }
+        }
+    }
+}
+
 void Vector__destroy(Vector* v) {
     free(v->items);
     free(v);

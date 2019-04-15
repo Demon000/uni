@@ -1,5 +1,5 @@
+#include "../utils/Vector.h"
 #include "../entities/Product.h"
-#include "../entities/ProductsList.h"
 #include "../repositories/ProductRepository.h"
 
 #ifndef PRODUCT_SERVICE_H
@@ -50,18 +50,18 @@ Product* ProductService__add_product(ProductService*, ProductId, ProductPrice, P
  * @param type The type of sort to apply.
  * @param order The order of the sort.
  *
- * @return A pointer to the list of products.
+ * @return A pointer to the vector of products.
  */
-ProductsList* ProductService__get_sorted_products(ProductService*, ProductSortType, ProductSortOrder);
+Vector* ProductService__get_sorted_products(ProductService*, ProductSortType, ProductSortOrder);
 
 /**
  * Get all the products from a product service.
  *
  * @param service A pointer to the product service.
  *
- * @return A pointer to the list of products.
+ * @return A pointer to the vector of products.
  */
-ProductsList* ProductService__get_products(ProductService*);
+Vector* ProductService__get_products(ProductService*);
 
 /**
  * Get all the products matching the provided brand from a product service.
@@ -69,9 +69,9 @@ ProductsList* ProductService__get_products(ProductService*);
  * @param service A pointer to the product service.
  * @param brand The brand to look for.
  *
- * @return A pointer to the list of products.
+ * @return A pointer to the vector of products.
  */
-ProductsList* ProductService__get_products_by_brand(ProductService*, char*);
+Vector* ProductService__get_products_by_brand(ProductService*, char*);
 
 /**
  * Get all the products matching the provided price from a product service.
@@ -79,9 +79,9 @@ ProductsList* ProductService__get_products_by_brand(ProductService*, char*);
  * @param service A pointer to the product service.
  * @param price The price to look for.
  *
- * @return A pointer to the list of products.
+ * @return A pointer to the vector of products.
  */
-ProductsList* ProductService__get_products_by_price(ProductService*, ProductPrice);
+Vector* ProductService__get_products_by_price(ProductService*, ProductPrice);
 
 /**
  * Get all the products matching the provided amount from a product service.
@@ -89,9 +89,9 @@ ProductsList* ProductService__get_products_by_price(ProductService*, ProductPric
  * @param service A pointer to the product service.
  * @param amount The amount to look for.
  *
- * @return A pointer to the list of products.
+ * @return A pointer to the vector of products.
  */
-ProductsList* ProductService__get_products_by_amount(ProductService*, ProductAmount);
+Vector* ProductService__get_products_by_amount(ProductService*, ProductAmount);
 
 /**
  * Find a product by id and update it.

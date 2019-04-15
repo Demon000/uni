@@ -39,31 +39,31 @@ Product* ProductRepository__get_product_by_id(ProductRepository* repository,
 
 #define GET_PRODUCTS_LIST(condition) \
         int length = Vector__get_length(repository->products); \
-        ProductsList* list = ProductsList__create(length); \
+        Vector* products = Vector__create(length); \
         Product* product; \
         for (int i = 0; i < length; i++) { \
             product = Vector__get(repository->products, i); \
             if (condition) { \
-                ProductsList__add(list, product); \
+                Vector__add(products, product); \
             } \
         } \
-        return list; \
+        return products; \
 
-ProductsList* ProductRepository__get_products(ProductRepository* repository) {
+Vector* ProductRepository__get_products(ProductRepository* repository) {
     GET_PRODUCTS_LIST(1)
 }
 
-ProductsList* ProductRepository__get_products_by_brand(
+Vector* ProductRepository__get_products_by_brand(
         ProductRepository* repository, char* brand) {
     GET_PRODUCTS_LIST(strcmp(product->brand, brand) == 0)
 }
 
-ProductsList* ProductRepository__get_products_by_price(
+Vector* ProductRepository__get_products_by_price(
         ProductRepository* repository, ProductPrice price) {
     GET_PRODUCTS_LIST(product->price == price)
 }
 
-ProductsList* ProductRepository__get_products_by_amount(
+Vector* ProductRepository__get_products_by_amount(
         ProductRepository* repository, ProductAmount amount) {
     GET_PRODUCTS_LIST(product->amount == amount)
 }

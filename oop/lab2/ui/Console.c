@@ -81,10 +81,10 @@ void Console__print_product(Product* product) {
             Product__get_amount(product));
 }
 
-void Console__print_products(ProductsList* list) {
-    int length = ProductsList__get_length(list);
+void Console__print_products(Vector* products) {
+    int length = Vector__get_length(products);
     for (int i = 0; i < length; i++) {
-        Product* product = ProductsList__get(list, i);
+        Product* product = Vector__get(products, i);
         Console__print_product(product);
     }
 }
@@ -139,10 +139,10 @@ void Console__delete_product(Console* console) {
 }
 
 void Console__show_products(Console* console) {
-    ProductsList* list = ProductService__get_products(console->service);
+    Vector* products = ProductService__get_products(console->service);
     printf("Products:\n");
-    Console__print_products(list);
-    ProductsList__destroy(list);
+    Console__print_products(products);
+    Vector__destroy(products);
 }
 
 void Console__ask_sort_option(Console* console) {
@@ -164,11 +164,11 @@ void Console__ask_sort_option(Console* console) {
     Console__ask_number_ranged("Sort order: ", &value, 1, 1, 2);
     order = value - 1;
 
-    ProductsList* list = ProductService__get_sorted_products(console->service,
+    Vector* products = ProductService__get_sorted_products(console->service,
             type, order);
     printf("Sorted products:\n");
-    Console__print_products(list);
-    ProductsList__destroy(list);
+    Console__print_products(products);
+    Vector__destroy(products);
 }
 
 void Console__ask_filter_option(Console* console) {
@@ -184,25 +184,25 @@ void Console__ask_filter_option(Console* console) {
 
     Console__ask_number_ranged("Filter by: ", &option, 1, 1, 3);
 
-    ProductsList* list;
+    Vector* products;
     switch (option) {
     case 1:
         Console__ask_str("Brand: ", brand, 1);
-        list = ProductService__get_products_by_brand(console->service, brand);
+        products = ProductService__get_products_by_brand(console->service, brand);
         break;
     case 2:
         Console__ask_number("Price: ", &price, 1);
-        list = ProductService__get_products_by_price(console->service, price);
+        products = ProductService__get_products_by_price(console->service, price);
         break;
     case 3:
         Console__ask_number("Amount: ", &amount, 1);
-        list = ProductService__get_products_by_amount(console->service, amount);
+        products = ProductService__get_products_by_amount(console->service, amount);
         break;
     }
 
     printf("Filtered products:\n");
-    Console__print_products(list);
-    ProductsList__destroy(list);
+    Console__print_products(products);
+    Vector__destroy(products);
 }
 
 int Console__ask_option(Console* console) {
