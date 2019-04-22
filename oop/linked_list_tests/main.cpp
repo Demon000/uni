@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#include "VectDinNewDelete.h"
-#include "VectDinSmartPointer.h"
-#include "VectorDinamicTemplate.h"
 #include "Pet.h"
 #include <assert.h>
 #include <vector>
@@ -88,10 +85,6 @@ void testAll() {
 }
 
 int main() {
-	testAll<VectDinNewDelete>();
-	testAll<VectDinSmartPointer>();
-
-	testAll<VectDinNewDeleteT<Pet>>();
 
 	_CrtDumpMemoryLeaks();
 	return 0;
