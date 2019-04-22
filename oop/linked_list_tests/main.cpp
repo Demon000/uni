@@ -1,10 +1,8 @@
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
-#include "Pet.h"
+#include <cstdlib>
 #include <assert.h>
 #include <vector>
+
+#include "Pet.h"
 
 /*
   Functie folosit in teste
@@ -86,6 +84,5 @@ void testAll() {
 
 int main() {
 
-	_CrtDumpMemoryLeaks();
 	return 0;
 }
