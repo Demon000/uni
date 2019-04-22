@@ -15,7 +15,7 @@ void TenantRepository::addTenant(const Tenant& tenant) {
     tenants.push_back(tenant);
 }
 
-Tenant TenantRepository::getTenantByNumber(int number) {
+Tenant& TenantRepository::getTenantByNumber(int number) {
     auto it = find_if(tenants.begin(), tenants.end(), [&](const Tenant& t) {
         return t.getNumber() == number;
     });
@@ -27,7 +27,7 @@ Tenant TenantRepository::getTenantByNumber(int number) {
     return *it;
 }
 
-vector<Tenant> TenantRepository::getTenants() {
+vector<Tenant>& TenantRepository::getTenants() {
     return tenants;
 }
 

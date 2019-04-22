@@ -40,14 +40,14 @@ public:
      *
      * @return The tenant, if found.
      */
-    Tenant getTenant(int) const;
+    Tenant& getTenant(int) const;
 
     /**
      * Get all the tenants.
      *
      * @return The tenants.
      */
-    std::vector<Tenant> getTenants() const;
+    std::vector<Tenant>& getTenants() const;
 
      /**
      * Get the tenants matching a surface.
@@ -84,7 +84,7 @@ public:
      *
      * @return The updated tenant.
      */
-    Tenant updateTenant(int, std::string);
+    Tenant& updateTenant(int, std::string);
 
      /**
      * Remove a tenant.

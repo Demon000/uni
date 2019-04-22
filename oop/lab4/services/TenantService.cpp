@@ -26,11 +26,11 @@ Tenant TenantService::createTenant(int number, const string& name,
     throw TenantExistsException();
 }
 
-Tenant TenantService::getTenant(int number) const {
+Tenant& TenantService::getTenant(int number) const {
     return repository.getTenantByNumber(number);
 }
 
-vector<Tenant> TenantService::getTenants() const {
+vector<Tenant>& TenantService::getTenants() const {
     return repository.getTenants();
 }
 
@@ -59,8 +59,8 @@ vector<Tenant> TenantService::getTenantsSortedBy(TenantSortType by) const {
     return tenants;
 }
 
-Tenant TenantService::updateTenant(int number, string name) {
-    Tenant tenant = repository.getTenantByNumber(number);
+Tenant& TenantService::updateTenant(int number, string name) {
+    Tenant& tenant = repository.getTenantByNumber(number);
     repository.updateTenant(tenant, name);
     return tenant;
 }

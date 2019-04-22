@@ -21,14 +21,14 @@ public:
      *
      * @return The tenant if found.
      */
-    Tenant getTenantByNumber(int);
+    Tenant& getTenantByNumber(int);
 
     /**
      * Get all the tenants.
      *
      * @return The tenants.
      */
-    std::vector<Tenant> getTenants();
+    std::vector<Tenant>& getTenants();
 
      /**
      * Get the tenants matching a surface.
