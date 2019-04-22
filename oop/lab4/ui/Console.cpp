@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <exception>
+#include <limits>
 
 #include "Console.h"
 
@@ -8,6 +9,8 @@ using std::string;
 using std::cin;
 using std::cout;
 using std::exception;
+using std::numeric_limits;
+using std::streamsize;
 
 Console::Console(TenantService& service) : service(service) {}
 
@@ -20,8 +23,20 @@ void Console::addTenants() {
 
 int Console::readInt(const string& message) {
 	int value;
-	cout << message << ": ";
-	cin >> value;
+
+	while (true) {
+		cout << message << ": ";
+		cin >> value;
+
+		if (cin) {
+			break;
+		}
+
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Invalid number." << "\n";
+	}
+
 	return value;
 }
 
