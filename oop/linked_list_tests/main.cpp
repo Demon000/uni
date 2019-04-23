@@ -1,8 +1,10 @@
 #include <cstdlib>
 #include <assert.h>
 #include <vector>
+#include <iostream>
 
 #include "Pet.h"
+#include "List.h"
 
 /*
   Functie folosit in teste
@@ -83,6 +85,8 @@ void testAll() {
 }
 
 int main() {
+	testAll<List<Pet>>();
 
+	std::cout << "Tests passed." << std::endl;
 	return 0;
 }
