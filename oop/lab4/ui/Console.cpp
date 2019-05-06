@@ -266,6 +266,12 @@ int Console::askOption() {
         break;
     }
 
+    if (option != 0) {
+        int numberOfNotifications = service.getNumberOfNotifications();
+        cout << "Number of apartments to be notified: "
+                << numberOfNotifications << "\n";
+    }
+
     return option;
 }
 

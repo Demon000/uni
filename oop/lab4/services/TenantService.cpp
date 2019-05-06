@@ -126,6 +126,11 @@ vector<Tenant> TenantService::getTenantsToNotify() {
     return tenants;
 }
 
+int TenantService::getNumberOfNotifications() {
+    vector<int> numbers = notificationRepository.getNumbers();
+    return numbers.size();
+}
+
 void TenantService::removeNotifications() {
     notificationRepository.removeNumbers();
 }

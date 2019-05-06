@@ -121,6 +121,13 @@ public:
     std::vector<Tenant> getTenantsToNotify();
 
     /**
+     * Get number of apartments in the notification list.
+     *
+     * @return The number of notifications.
+     */
+    int getNumberOfNotifications();
+
+    /**
      * Remove all the tenants that need to be notified.
      */
     void removeNotifications();
