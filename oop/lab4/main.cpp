@@ -4,8 +4,12 @@
 
 int main() {
     TenantRepository repository;
+    NotificationRepository notificationRepository;
+
     TenantService service{repository};
-    Console console{service};
+    NotificationService notificationService{notificationRepository, repository};
+
+    Console console{service, notificationService};
     console.run();
 
     return 0;

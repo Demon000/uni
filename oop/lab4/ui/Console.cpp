@@ -13,7 +13,8 @@ using std::exception;
 using std::numeric_limits;
 using std::streamsize;
 
-Console::Console(TenantService& service) : service(service) {}
+Console::Console(TenantService& service, NotificationService& notificationService) :
+		service(service), notificationService(notificationService) {}
 
 void Console::addTenants() {
     service.createTenant(1,  "Cristi", 20, "studio");
@@ -175,6 +176,34 @@ void Console::sortApartments() {
 	printTenants(tenants, "Sorted tenants");
 }
 
+void Console::addNotifiedApartment() {
+	int number = readInt("Number");
+
+	try {
+		notificationService.addNotification(number);
+	} catch (NumberExistsException&) {
+		cout << "Apartment already added.\n";
+	} catch (TenantMissingException&) {
+		cout << "Tenant does not exist.\n";
+	}
+}
+
+void Console::showNotifiedTenats() {
+	vector<Tenant> tenants = notificationService.getTenantsToNotify();
+	printTenants(tenants, "Tenants to be notified");
+}
+
+void Console::deleteNotifiedApartments() {
+	notificationService.removeNotifications();
+}
+
+void Console::generateNotifiedApartments() {
+	int number = readInt("Number of tenants");
+
+	notificationService.addRandomNotifications(number);
+	showNotifiedTenats();
+}
+
 void Console::goodbye() {
 	cout << "Goodbye!\n";
 }
@@ -188,6 +217,10 @@ int Console::askOption() {
 			"5. Find apartment\n"
 			"6. Show filtered apartments\n"
 			"7. Show sorted apartments\n"
+			"8. Add notified apartment\n"
+			"9. Generate notified apartments\n"
+			"10. Delete all notified apartments\n"
+			"11. Show notified tenants\n"
 			"0. Exit\n";
 
 	int option = readInt("Option");
@@ -213,6 +246,18 @@ int Console::askOption() {
 		break;
 	case 7:
 		sortApartments();
+		break;
+	case 8:
+		addNotifiedApartment();
+		break;
+	case 9:
+		generateNotifiedApartments();
+		break;
+	case 10:
+		deleteNotifiedApartments();
+		break;
+	case 11:
+		showNotifiedTenats();
 		break;
 	case 0:
 		goodbye();
