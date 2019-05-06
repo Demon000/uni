@@ -55,6 +55,12 @@ void Console::printTenant(const Tenant& tenant, const string& message) {
 
 void Console::printTenants(vector<Tenant> tenants, const string& message) {
 	cout << message << ":\n";
+
+	if (!tenants.size()) {
+		cout << "No tenants!\n";
+		return;
+	}
+
 	for(const auto& tenant : tenants) {
 		cout << tenant.toString() << "\n";
 	}
