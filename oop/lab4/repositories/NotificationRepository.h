@@ -27,6 +27,11 @@ public:
     std::vector<int>& getNumbers();
 
     /**
+     * Remove an apartment number from the notification list.
+     */
+    void removeNumber(int);
+
+    /**
      * Remove all the apartment numbers from the notification list.
      */
     void removeNumbers();

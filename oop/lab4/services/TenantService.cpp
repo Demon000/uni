@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <exception>
+#include <random>
+#include <chrono>
 
 #include "TenantService.h"
 
@@ -9,9 +11,13 @@ using std::sort;
 using std::string;
 using std::vector;
 using std::exception;
+using std::chrono::system_clock;
+using std::shuffle;
+using std::default_random_engine;
 
-TenantService::TenantService(TenantRepository& repository) :
-    repository(repository) {}
+TenantService::TenantService(TenantRepository& repository,
+        NotificationRepository& notificationRepository) :
+    repository(repository), notificationRepository(notificationRepository) {}
 
 Tenant TenantService::createTenant(int number, const string& name,
         int surface, const string& type) {
@@ -68,5 +74,58 @@ Tenant& TenantService::updateTenant(int number, string name) {
 Tenant TenantService::removeTenant(int number) {
     Tenant tenant = repository.getTenantByNumber(number);
     repository.removeTenant(tenant);
+
+    try {
+        notificationRepository.removeNumber(number);
+    } catch (exception&) {
+        // ignore
+    }
+
     return tenant;
+}
+
+void TenantService::addNotification(int number) {
+    repository.getTenantByNumber(number);
+
+    try {
+        notificationRepository.getTenantByNumber(number);
+    } catch (exception&) {
+        notificationRepository.addNumber(number);
+        return;
+    }
+
+    throw new NumberExistsException();
+}
+
+void TenantService::addRandomNotifications(int length) {
+    removeNotifications();
+
+    vector<Tenant> tenants = repository.getTenants();
+    auto seed = system_clock::now().time_since_epoch().count();
+    shuffle(tenants.begin(), tenants.end(), default_random_engine(seed));
+
+    for (const Tenant& tenant : tenants) {
+        if (length <= 0) {
+            break;
+        }
+
+        notificationRepository.addNumber(tenant.getNumber());
+        length--;
+    }
+}
+
+vector<Tenant> TenantService::getTenantsToNotify() {
+    vector<int> numbers = notificationRepository.getNumbers();
+    vector<Tenant> tenants;
+
+    for (const int& number : numbers) {
+        Tenant tenant = repository.getTenantByNumber(number);
+        tenants.push_back(tenant);
+    }
+
+    return tenants;
+}
+
+void TenantService::removeNotifications() {
+    notificationRepository.removeNumbers();
 }

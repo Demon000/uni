@@ -13,8 +13,7 @@ using std::exception;
 using std::numeric_limits;
 using std::streamsize;
 
-Console::Console(TenantService& service, NotificationService& notificationService) :
-        service(service), notificationService(notificationService) {}
+Console::Console(TenantService& service) : service(service) {}
 
 void Console::addTenants() {
     service.createTenant(1,  "Cristi", 20, "studio");
@@ -180,7 +179,7 @@ void Console::addNotifiedApartment() {
     int number = readInt("Number");
 
     try {
-        notificationService.addNotification(number);
+        service.addNotification(number);
     } catch (NumberExistsException&) {
         cout << "Apartment already added.\n";
     } catch (TenantMissingException&) {
@@ -189,18 +188,18 @@ void Console::addNotifiedApartment() {
 }
 
 void Console::showNotifiedTenats() {
-    vector<Tenant> tenants = notificationService.getTenantsToNotify();
+    vector<Tenant> tenants = service.getTenantsToNotify();
     printTenants(tenants, "Tenants to be notified");
 }
 
 void Console::deleteNotifiedApartments() {
-    notificationService.removeNotifications();
+    service.removeNotifications();
 }
 
 void Console::generateNotifiedApartments() {
     int number = readInt("Number of tenants");
 
-    notificationService.addRandomNotifications(number);
+    service.addRandomNotifications(number);
     showNotifiedTenats();
 }
 

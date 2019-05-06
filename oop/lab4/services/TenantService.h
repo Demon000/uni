@@ -2,6 +2,7 @@
 
 #include "../entities/Tenant.h"
 #include "../repositories/TenantRepository.h"
+#include "../repositories/NotificationRepository.h"
 
 #ifndef TENANT_SERVICE_H
 #define TENANT_SERVICE_H
@@ -18,8 +19,9 @@ public:
      * Create a service.
      *
      * @param repository The repository to use in the service.
+     * @param notificationRepository The repository to use for notifications in the service.
      */
-    TenantService(TenantRepository&);
+    TenantService(TenantRepository&, NotificationRepository&);
 
     /**
      * Create a tenant.
@@ -95,8 +97,37 @@ public:
      */
     Tenant removeTenant(int);
 
+    /**
+     * Add an apartment number to the notification list.
+     *
+     * @param number The number of the apartment.
+     */
+    void addNotification(int);
+
+    /**
+     * Add multiple number of apartments to the notification list.
+     *
+     * @param number The number of apartments to be added.
+     */
+    void addRandomNotifications(int);
+
+    /**
+     * Get all the tenants that need to be notified.
+     *
+     * @param tenants The tenants.
+     *
+     * @return The tenants that need to be notified.
+     */
+    std::vector<Tenant> getTenantsToNotify();
+
+    /**
+     * Remove all the tenants that need to be notified.
+     */
+    void removeNotifications();
+
 private:
     TenantRepository& repository;
+    NotificationRepository& notificationRepository;
 };
 
 #endif // TENANT_SERVICE_H
