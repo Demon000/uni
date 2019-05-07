@@ -15,14 +15,25 @@ using std::streamsize;
 
 Console::Console(TenantService& service) : service(service) {}
 
-void Console::addTenants() {
-    service.createTenant(1,  "Cristi", 20, "studio");
-    service.createTenant(2, "Gigi", 200, "penthouse");
-    service.createTenant(3, "Marian", 300, "penthouse");
-    service.createTenant(4, "Gabriel", 20, "basement");
+void Console::addTenants() const {
+    try {
+        service.createTenant(1,  "Cristi", 20, "studio");
+    } catch (exception&) {}
+
+    try {
+        service.createTenant(2, "Gigi", 200, "penthouse");
+    } catch (exception&) {}
+
+    try {
+        service.createTenant(3, "Marian", 300, "penthouse");
+    } catch (exception&) {}
+
+    try {
+        service.createTenant(4, "Gabriel", 20, "basement");
+    } catch (exception&) {}
 }
 
-int Console::readInt(const string& message) {
+int Console::readInt(const string& message) const {
     int value;
 
     while (true) {
@@ -41,19 +52,19 @@ int Console::readInt(const string& message) {
     return value;
 }
 
-string Console::readStr(const string& message) {
+string Console::readStr(const string& message) const {
     string value;
     cout << message << ": ";
     cin >> value;
     return value;
 }
 
-void Console::printTenant(const Tenant& tenant, const string& message) {
+void Console::printTenant(const Tenant& tenant, const string& message) const {
     cout << message << ":\n";
     cout << tenant.toString() << "\n";
 }
 
-void Console::printTenants(vector<Tenant> tenants, const string& message) {
+void Console::printTenants(vector<Tenant> tenants, const string& message) const {
     cout << message << ":\n";
 
     if (!tenants.size()) {
@@ -66,7 +77,7 @@ void Console::printTenants(vector<Tenant> tenants, const string& message) {
     }
 }
 
-void Console::addTenant() {
+void Console::addTenant() const {
     int number = readInt("Number");
     string name = readStr("Name");
     int surface = readInt("Surface");
@@ -80,7 +91,7 @@ void Console::addTenant() {
     }
 }
 
-void Console::updateTenant() {
+void Console::updateTenant() const {
     int number = readInt("Number");
     string name = readStr("New name");
 
@@ -92,7 +103,7 @@ void Console::updateTenant() {
     }
 }
 
-void Console::deleteTenant() {
+void Console::deleteTenant() const {
     int number = readInt("Number");
 
     try {
@@ -103,12 +114,12 @@ void Console::deleteTenant() {
     }
 }
 
-void Console::showTenants() {
+void Console::showTenants() const {
     vector<Tenant> tenants = service.getTenants();
     printTenants(tenants, "Tenants");
 }
 
-void Console::findApartment() {
+void Console::findApartment() const {
     int number = readInt("Number");
 
     try {
@@ -119,7 +130,7 @@ void Console::findApartment() {
     }
 }
 
-void Console::filterApartments() {
+void Console::filterApartments() const {
     vector<Tenant> tenants;
     string type;
     int surface;
@@ -147,7 +158,7 @@ void Console::filterApartments() {
     printTenants(tenants, "Filtered tenants");
 }
 
-void Console::sortApartments() {
+void Console::sortApartments() const {
     cout << "Sort types:\n"
             "1. Sort by name\n"
             "2. Sort by surface\n"
@@ -175,7 +186,7 @@ void Console::sortApartments() {
     printTenants(tenants, "Sorted tenants");
 }
 
-void Console::addNotifiedApartment() {
+void Console::addNotifiedApartment() const {
     int number = readInt("Number");
 
     try {
@@ -187,27 +198,27 @@ void Console::addNotifiedApartment() {
     }
 }
 
-void Console::showNotifiedTenats() {
+void Console::showNotifiedTenats() const {
     vector<Tenant> tenants = service.getTenantsToNotify();
     printTenants(tenants, "Tenants to be notified");
 }
 
-void Console::deleteNotifiedApartments() {
+void Console::deleteNotifiedApartments() const {
     service.removeNotifications();
 }
 
-void Console::generateNotifiedApartments() {
+void Console::generateNotifiedApartments() const {
     int number = readInt("Number of tenants");
 
     service.addRandomNotifications(number);
     showNotifiedTenats();
 }
 
-void Console::goodbye() {
+void Console::goodbye() const {
     cout << "Goodbye!\n";
 }
 
-int Console::askOption() {
+int Console::askOption() const {
     cout << "Options:\n"
             "1. Add tenant\n"
             "2. Update tenant\n"
@@ -275,7 +286,7 @@ int Console::askOption() {
     return option;
 }
 
-void Console::run() {
+void Console::run() const {
     addTenants();
 
     int option = -1;

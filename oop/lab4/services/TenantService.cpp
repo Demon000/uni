@@ -20,7 +20,7 @@ TenantService::TenantService(TenantRepository& repository,
     repository(repository), notificationRepository(notificationRepository) {}
 
 Tenant TenantService::createTenant(int number, const string& name,
-        int surface, const string& type) {
+        int surface, const string& type) const {
     try {
         repository.getTenantByNumber(number);
     } catch (exception&) {
@@ -32,11 +32,11 @@ Tenant TenantService::createTenant(int number, const string& name,
     throw TenantExistsException();
 }
 
-Tenant& TenantService::getTenant(int number) const {
+Tenant TenantService::getTenant(int number) const {
     return repository.getTenantByNumber(number);
 }
 
-vector<Tenant>& TenantService::getTenants() const {
+vector<Tenant> TenantService::getTenants() const {
     return repository.getTenants();
 }
 
@@ -65,13 +65,13 @@ vector<Tenant> TenantService::getTenantsSortedBy(TenantSortType by) const {
     return tenants;
 }
 
-Tenant& TenantService::updateTenant(int number, string name) {
-    Tenant& tenant = repository.getTenantByNumber(number);
+Tenant TenantService::updateTenant(int number, string name) const {
+    Tenant tenant = repository.getTenantByNumber(number);
     repository.updateTenant(tenant, name);
     return tenant;
 }
 
-Tenant TenantService::removeTenant(int number) {
+Tenant TenantService::removeTenant(int number) const {
     Tenant tenant = repository.getTenantByNumber(number);
     repository.removeTenant(tenant);
 
@@ -84,11 +84,11 @@ Tenant TenantService::removeTenant(int number) {
     return tenant;
 }
 
-void TenantService::addNotification(int number) {
+void TenantService::addNotification(int number) const {
     repository.getTenantByNumber(number);
 
     try {
-        notificationRepository.getTenantByNumber(number);
+        notificationRepository.numberExists(number);
     } catch (exception&) {
         notificationRepository.addNumber(number);
         return;
@@ -97,7 +97,7 @@ void TenantService::addNotification(int number) {
     throw NumberExistsException();
 }
 
-void TenantService::addRandomNotifications(int length) {
+void TenantService::addRandomNotifications(int length) const {
     removeNotifications();
 
     vector<Tenant> tenants = repository.getTenants();
@@ -114,7 +114,7 @@ void TenantService::addRandomNotifications(int length) {
     }
 }
 
-vector<Tenant> TenantService::getTenantsToNotify() {
+vector<Tenant> TenantService::getTenantsToNotify() const {
     vector<int> numbers = notificationRepository.getNumbers();
     vector<Tenant> tenants;
 
@@ -126,11 +126,11 @@ vector<Tenant> TenantService::getTenantsToNotify() {
     return tenants;
 }
 
-int TenantService::getNumberOfNotifications() {
+int TenantService::getNumberOfNotifications() const {
     vector<int> numbers = notificationRepository.getNumbers();
     return numbers.size();
 }
 
-void TenantService::removeNotifications() {
+void TenantService::removeNotifications() const {
     notificationRepository.removeNumbers();
 }

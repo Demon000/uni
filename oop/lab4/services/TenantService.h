@@ -33,7 +33,7 @@ public:
      *
      * @return The created tenant.
      */
-    Tenant createTenant(int, const std::string&, int, const std::string&);
+    Tenant createTenant(int, const std::string&, int, const std::string&) const;
 
     /**
      * Get a tenant.
@@ -42,14 +42,14 @@ public:
      *
      * @return The tenant, if found.
      */
-    Tenant& getTenant(int) const;
+    Tenant getTenant(int) const;
 
     /**
      * Get all the tenants.
      *
      * @return The tenants.
      */
-    std::vector<Tenant>& getTenants() const;
+    std::vector<Tenant> getTenants() const;
 
      /**
      * Get the tenants matching a surface.
@@ -86,7 +86,7 @@ public:
      *
      * @return The updated tenant.
      */
-    Tenant& updateTenant(int, std::string);
+    Tenant updateTenant(int, std::string) const;
 
      /**
      * Remove a tenant.
@@ -95,21 +95,21 @@ public:
      *
      * @return The removed tenar.
      */
-    Tenant removeTenant(int);
+    Tenant removeTenant(int) const;
 
     /**
      * Add an apartment number to the notification list.
      *
      * @param number The number of the apartment.
      */
-    void addNotification(int);
+    void addNotification(int) const;
 
     /**
      * Add multiple number of apartments to the notification list.
      *
      * @param number The number of apartments to be added.
      */
-    void addRandomNotifications(int);
+    void addRandomNotifications(int) const;
 
     /**
      * Get all the tenants that need to be notified.
@@ -118,19 +118,19 @@ public:
      *
      * @return The tenants that need to be notified.
      */
-    std::vector<Tenant> getTenantsToNotify();
+    std::vector<Tenant> getTenantsToNotify() const;
 
     /**
      * Get number of apartments in the notification list.
      *
      * @return The number of notifications.
      */
-    int getNumberOfNotifications();
+    int getNumberOfNotifications() const;
 
     /**
      * Remove all the tenants that need to be notified.
      */
-    void removeNotifications();
+    void removeNotifications() const;
 
 private:
     TenantRepository& repository;

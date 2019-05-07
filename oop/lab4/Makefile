@@ -44,6 +44,7 @@ main_file = $(output_dir)/main
 test_file = $(output_dir)/test
 gcov_files = *.gcov
 gcov_ignored_files = *.gcda *.gcno
+test_csv_files = ./tenants_test_*.csv ./notifications_test_*.csv
 
 .SILENT: main
 main: $(console_files)
@@ -79,4 +80,4 @@ test: $(test_files)
 
 	mv $(gcov_files) $(gcov_dir)
 
-	rm $(gcov_ignored_files)
+	rm $(gcov_ignored_files) $(test_csv_files)

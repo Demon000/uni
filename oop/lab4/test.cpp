@@ -4,6 +4,7 @@
 
 #include "entities/Tenant.h"
 #include "repositories/TenantRepository.h"
+#include "repositories/NotificationRepository.h"
 #include "services/TenantService.h"
 
 using std::vector;
@@ -24,7 +25,7 @@ void test_tenant() {
 }
 
 void test_tenant_repository() {
-    TenantRepository repository;
+    TenantRepository repository{"tenants_test_tenant_repository.csv"};
     std::vector<Tenant> tenants;
     Tenant retrieved;
 
@@ -89,9 +90,49 @@ void test_tenant_repository() {
     }
 }
 
+void test_notification_repository() {
+    NotificationRepository notificationRepository{"notifications_test_notification_repository.csv"};
+    vector<int> numbers;
+
+    notificationRepository.addNumber(1);
+    notificationRepository.addNumber(2);
+    notificationRepository.addNumber(3);
+
+    try {
+        notificationRepository.numberExists(4);
+        assert(false);
+    } catch (exception&) {
+        assert(true);
+    }
+
+    numbers = notificationRepository.getNumbers();
+    assert(numbers[0] == 1);
+    assert(numbers[1] == 2);
+    assert(numbers[2] == 3);
+
+    notificationRepository.removeNumber(1);
+    try {
+        notificationRepository.numberExists(1);
+        assert(false);
+    } catch (exception&) {
+        assert(true);
+    }
+
+    try {
+        notificationRepository.removeNumber(4);
+        assert(false);
+    } catch (exception&) {
+        assert(true);
+    }
+
+    notificationRepository.removeNumbers();
+    numbers = notificationRepository.getNumbers();
+    assert(numbers.size() == 0);
+}
 void test_tenant_service() {
-    TenantRepository repository;
-    TenantService service{repository};
+    TenantRepository repository{"tenants_test_tenant_service.csv"};
+    NotificationRepository notificationRepository{"notifications_test_tenant_service.csv"};
+    TenantService service{repository, notificationRepository};
     std::vector<Tenant> tenants;
     Tenant retrieved;
 
@@ -154,6 +195,37 @@ void test_tenant_service() {
     retrieved = service.getTenant(1);
     assert(retrieved.getName() == "George");
 
+    service.addNotification(1);
+    service.addNotification(2);
+    service.addNotification(3);
+
+    tenants = service.getTenantsToNotify();
+    assert(tenants[0] == first);
+    assert(tenants[1] == second);
+    assert(tenants[2] == third);
+    assert(service.getNumberOfNotifications() == 3);
+
+    try {
+        service.addNotification(1);
+        assert(false);
+    } catch (exception&) {
+        assert(true);
+    }
+
+    try {
+        service.addNotification(5);
+        assert(false);
+    } catch (exception&) {
+        assert(true);
+    }
+
+    service.addRandomNotifications(3);
+    assert(service.getNumberOfNotifications() == 3);
+
+    service.removeNotifications();
+    assert(service.getNumberOfNotifications() == 0);
+
+    service.addNotification(2);
     service.removeTenant(1);
     try {
         service.getTenant(1);
@@ -166,6 +238,7 @@ void test_tenant_service() {
 int main() {
     test_tenant();
     test_tenant_repository();
+    test_notification_repository();
     test_tenant_service();
 
     return 0;
