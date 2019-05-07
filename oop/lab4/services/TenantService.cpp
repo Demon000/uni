@@ -4,6 +4,7 @@
 #include <exception>
 #include <random>
 #include <chrono>
+#include <memory>
 
 #include "TenantService.h"
 
@@ -14,18 +15,46 @@ using std::exception;
 using std::chrono::system_clock;
 using std::shuffle;
 using std::default_random_engine;
+using std::unique_ptr;
+using std::move;
+
+
+
+UndoAction::UndoAction(const Tenant& tenant) : tenant{tenant} {}
+UndoCreateAction::UndoCreateAction(const Tenant& tenant) : UndoAction(tenant) {}
+UndoUpdateAction::UndoUpdateAction(const Tenant& tenant) : UndoAction(tenant) {}
+UndoDeleteAction::UndoDeleteAction(const Tenant& tenant) : UndoAction(tenant) {}
+
+void UndoCreateAction::doUndo(TenantService& service) {
+    service.removeTenant(tenant.getNumber(), true);
+}
+
+void UndoUpdateAction::doUndo(TenantService& service) {
+    service.updateTenant(tenant.getNumber(), tenant.getName(), true);
+}
+
+void UndoDeleteAction::doUndo(TenantService& service) {
+    service.createTenant(tenant.getNumber(), tenant.getName(),
+            tenant.getSurface(), tenant.getType(), true);
+}
 
 TenantService::TenantService(TenantRepository& repository,
         NotificationRepository& notificationRepository) :
     repository(repository), notificationRepository(notificationRepository) {}
 
 Tenant TenantService::createTenant(int number, const string& name,
-        int surface, const string& type) const {
+        int surface, const string& type, bool skip) {
     try {
         repository.getTenantByNumber(number);
     } catch (exception&) {
         const Tenant tenant{number, name, surface, type};
+        if (!skip) {
+            unique_ptr<UndoAction> action(new UndoCreateAction{tenant});
+            undoActions.push_back(move(action));
+        }
+
         repository.addTenant(tenant);
+
         return tenant;
     }
 
@@ -65,14 +94,25 @@ vector<Tenant> TenantService::getTenantsSortedBy(TenantSortType by) const {
     return tenants;
 }
 
-Tenant TenantService::updateTenant(int number, string name) const {
+Tenant TenantService::updateTenant(int number, string name, bool skip) {
     Tenant tenant = repository.getTenantByNumber(number);
+    if (!skip) {
+        unique_ptr<UndoAction> action{new UndoUpdateAction{tenant}};
+        undoActions.push_back(move(action));
+    }
+
     repository.updateTenant(tenant, name);
+
     return tenant;
 }
 
-Tenant TenantService::removeTenant(int number) const {
+Tenant TenantService::removeTenant(int number, bool skip) {
     Tenant tenant = repository.getTenantByNumber(number);
+    if (!skip) {
+        unique_ptr<UndoAction> action{new UndoDeleteAction{tenant}};
+        undoActions.push_back(move(action));
+    }
+
     repository.removeTenant(tenant);
 
     try {
@@ -133,4 +173,15 @@ int TenantService::getNumberOfNotifications() const {
 
 void TenantService::removeNotifications() const {
     notificationRepository.removeNumbers();
+}
+
+void TenantService::undo() {
+    if (!undoActions.size()) {
+        throw NoUndoActions();
+    }
+
+    unique_ptr<UndoAction> action = move(undoActions.back());
+    undoActions.pop_back();
+
+    action->doUndo(*this);
 }

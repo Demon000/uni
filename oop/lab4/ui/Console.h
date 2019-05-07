@@ -12,16 +12,16 @@
 class Console {
 public:
     Console(TenantService&);
-    void run() const;
+    void run();
 
 private:
     int readInt(const std::string&) const;
     std::string readStr(const std::string&) const;
     void printTenant(const Tenant&, const std::string&) const;
     void printTenants(std::vector<Tenant>, const std::string&) const;
-    void addTenant() const;
-    void updateTenant() const;
-    void deleteTenant() const;
+    void addTenant();
+    void updateTenant();
+    void deleteTenant();
     void showTenants() const;
     void findApartment() const;
     void filterApartments() const;
@@ -30,9 +30,10 @@ private:
     void showNotifiedTenats() const;
     void deleteNotifiedApartments() const;
     void generateNotifiedApartments() const;
+    void undo();
     void goodbye() const;
-    void addTenants() const;
-    int askOption() const;
+    void addTenants();
+    int askOption();
 
     TenantService& service;
 };

@@ -15,21 +15,21 @@ using std::streamsize;
 
 Console::Console(TenantService& service) : service(service) {}
 
-void Console::addTenants() const {
+void Console::addTenants() {
     try {
-        service.createTenant(1,  "Cristi", 20, "studio");
+        service.createTenant(1,  "Cristi", 20, "studio", true);
     } catch (exception&) {}
 
     try {
-        service.createTenant(2, "Gigi", 200, "penthouse");
+        service.createTenant(2, "Gigi", 200, "penthouse", true);
     } catch (exception&) {}
 
     try {
-        service.createTenant(3, "Marian", 300, "penthouse");
+        service.createTenant(3, "Marian", 300, "penthouse", true);
     } catch (exception&) {}
 
     try {
-        service.createTenant(4, "Gabriel", 20, "basement");
+        service.createTenant(4, "Gabriel", 20, "basement", true);
     } catch (exception&) {}
 }
 
@@ -77,7 +77,7 @@ void Console::printTenants(vector<Tenant> tenants, const string& message) const 
     }
 }
 
-void Console::addTenant() const {
+void Console::addTenant() {
     int number = readInt("Number");
     string name = readStr("Name");
     int surface = readInt("Surface");
@@ -91,7 +91,7 @@ void Console::addTenant() const {
     }
 }
 
-void Console::updateTenant() const {
+void Console::updateTenant() {
     int number = readInt("Number");
     string name = readStr("New name");
 
@@ -103,7 +103,7 @@ void Console::updateTenant() const {
     }
 }
 
-void Console::deleteTenant() const {
+void Console::deleteTenant() {
     int number = readInt("Number");
 
     try {
@@ -214,11 +214,19 @@ void Console::generateNotifiedApartments() const {
     showNotifiedTenats();
 }
 
+void Console::undo() {
+    try {
+        service.undo();
+    } catch (exception&) {
+        cout << "Nothing left to undo!\n";
+    }
+}
+
 void Console::goodbye() const {
     cout << "Goodbye!\n";
 }
 
-int Console::askOption() const {
+int Console::askOption() {
     cout << "Options:\n"
             "1. Add tenant\n"
             "2. Update tenant\n"
@@ -231,6 +239,7 @@ int Console::askOption() const {
             "9. Generate notified apartments\n"
             "10. Delete all notified apartments\n"
             "11. Show notified tenants\n"
+            "12. Undo the last action\n"
             "0. Exit\n";
 
     int option = readInt("Option");
@@ -269,6 +278,9 @@ int Console::askOption() const {
     case 11:
         showNotifiedTenats();
         break;
+    case 12:
+        undo();
+        break;
     case 0:
         goodbye();
         break;
@@ -286,7 +298,7 @@ int Console::askOption() const {
     return option;
 }
 
-void Console::run() const {
+void Console::run() {
     addTenants();
 
     int option = -1;

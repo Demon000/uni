@@ -1,4 +1,7 @@
 #include <vector>
+#include <string>
+#include <memory>
+#include <exception>
 
 #include "../entities/Tenant.h"
 #include "../repositories/TenantRepository.h"
@@ -11,6 +14,37 @@ enum TenantSortType {
     SortByName,
     SortBySurface,
     SortByTypeAndSurface,
+};
+
+class TenantService;
+
+class NoUndoActions : public std::exception {};
+
+class UndoAction {
+public:
+    UndoAction(const Tenant&);
+    virtual void doUndo(TenantService&) = 0;
+
+protected:
+    Tenant tenant;
+};
+
+class UndoCreateAction : public UndoAction {
+public:
+    UndoCreateAction(const Tenant&);
+    void doUndo(TenantService&) override;
+};
+
+class UndoUpdateAction : public UndoAction {
+public:
+    UndoUpdateAction(const Tenant&);
+    void doUndo(TenantService&) override;
+};
+
+class UndoDeleteAction : public UndoAction {
+public:
+    UndoDeleteAction(const Tenant&);
+    void doUndo(TenantService&) override;
 };
 
 class TenantService {
@@ -33,7 +67,7 @@ public:
      *
      * @return The created tenant.
      */
-    Tenant createTenant(int, const std::string&, int, const std::string&) const;
+    Tenant createTenant(int, const std::string&, int, const std::string&, bool skip=false);
 
     /**
      * Get a tenant.
@@ -86,7 +120,7 @@ public:
      *
      * @return The updated tenant.
      */
-    Tenant updateTenant(int, std::string) const;
+    Tenant updateTenant(int, std::string, bool skip=false);
 
      /**
      * Remove a tenant.
@@ -95,7 +129,7 @@ public:
      *
      * @return The removed tenar.
      */
-    Tenant removeTenant(int) const;
+    Tenant removeTenant(int, bool skip=false);
 
     /**
      * Add an apartment number to the notification list.
@@ -132,7 +166,13 @@ public:
      */
     void removeNotifications() const;
 
+    /**
+     * Undo the last action.
+     */
+    void undo();
+
 private:
+    std::vector<std::unique_ptr<UndoAction>> undoActions;
     TenantRepository& repository;
     NotificationRepository& notificationRepository;
 };
