@@ -18,8 +18,15 @@ using std::stringstream;
 
 TenantRepository::TenantRepository(const string& path) : path(path) {}
 
-vector<Tenant> TenantRepository::readTenants() {
-    vector<Tenant> tenants;
+string& rtrim(string& str, const string& chars = "\t\n\v\f\r ")
+{
+    str.erase(str.find_last_not_of(chars) + 1);
+    return str;
+}
+
+void TenantRepository::readTenants() {
+    tenants.clear();
+
     ifstream in(path);
 
     int number;
@@ -27,32 +34,28 @@ vector<Tenant> TenantRepository::readTenants() {
     int surface;
     string type;
 
-    if (!in) {
-        writeTenants(tenants);
-    }
+    vector<string> words;
+    string word, line;
 
-    string part;
+   while(getline(in, line)) {
+        std::stringstream ss(line);
+        while(getline(ss, word, ',')) {
+             words.push_back(word);
+        }
+   }
 
-    while (getline(in, part, ',')) {
-        number = stoi(part);
-
-        getline(in, part, ',');
-        name = part;
-
-        getline(in, part, ',');
-        surface = stoi(part);
-
-        getline(in, part);
-        type = part;
+    for (auto it = words.begin(); it < words.end(); it += 4) {
+        number = stoi(it[0]);
+        name = it[1];
+        surface = stoi(it[2]);
+        type = it[3];
 
         Tenant tenant{number, name, surface, type};
         tenants.push_back(tenant);
     }
-
-    return tenants;
 }
 
-void TenantRepository::writeTenants(const vector<Tenant>& tenants) const {
+void TenantRepository::writeTenants() const {
     ofstream out(path);
 
     for (const Tenant& tenant : tenants) {
@@ -64,39 +67,39 @@ void TenantRepository::writeTenants(const vector<Tenant>& tenants) const {
 }
 
 void TenantRepository::addTenant(const Tenant& tenant) {
-    tenants = readTenants();
+    readTenants();
     BaseRepository::addTenant(tenant);
-    writeTenants(tenants);
+    writeTenants();
 }
 
 Tenant TenantRepository::getTenantByNumber(int number) {
-    tenants = readTenants();
+    readTenants();
     return BaseRepository::getTenantByNumber(number);
 }
 
 vector<Tenant> TenantRepository::getTenants() {
-    tenants = readTenants();
+    readTenants();
     return BaseRepository::getTenants();
 }
 
 vector<Tenant> TenantRepository::getTenantsBySurface(int surface) {
-    tenants = readTenants();
+    readTenants();
     return BaseRepository::getTenantsBySurface(surface);
 }
 
 vector<Tenant> TenantRepository::getTenantsByType(const string& type) {
-    tenants = readTenants();
+    readTenants();
     return BaseRepository::getTenantsByType(type);
 }
 
 void TenantRepository::updateTenant(Tenant& tenant, const string& name) {
-    tenants = readTenants();
+    readTenants();
     BaseRepository::updateTenant(tenant, name);
-    writeTenants(tenants);
+    writeTenants();
 }
 
 void TenantRepository::removeTenant(const Tenant& tenant) {
-    tenants = readTenants();
+    readTenants();
     BaseRepository::removeTenant(tenant);
-    writeTenants(tenants);
+    writeTenants();
 }

@@ -16,7 +16,7 @@ public:
      *
      * @param tenant The tenant to be added.
      */
-    void addTenant(const Tenant&);
+    void addTenant(const Tenant&) override;
 
     /**
      * Get a tenant by the apartment number.
@@ -25,14 +25,14 @@ public:
      *
      * @return The tenant if found.
      */
-    Tenant getTenantByNumber(int);
+    Tenant getTenantByNumber(int) override;
 
     /**
      * Get all the tenants.
      *
      * @return The tenants.
      */
-    std::vector<Tenant> getTenants();
+    std::vector<Tenant> getTenants() override;
 
      /**
      * Get the tenants matching a surface.
@@ -41,7 +41,7 @@ public:
      *
      * @return The tenants matching the given surface.
      */
-    std::vector<Tenant> getTenantsBySurface(int);
+    std::vector<Tenant> getTenantsBySurface(int) override;
 
      /**
      * Get the tenants matching a type.
@@ -50,7 +50,7 @@ public:
      *
      * @return The tenants matching the given type.
      */
-    std::vector<Tenant> getTenantsByType(const std::string&);
+    std::vector<Tenant> getTenantsByType(const std::string&) override;
 
      /**
      * Update the name of a tenant.
@@ -58,14 +58,14 @@ public:
      * @param tenant The tenant to update.
      * @param name The new name of the tenant.
      */
-    void updateTenant(Tenant&, const std::string&);
+    void updateTenant(Tenant&, const std::string&) override;
 
      /**
      * Remove a tenant.
      *
      * @param tenant The tenant to remove.
      */
-    void removeTenant(const Tenant&);
+    void removeTenant(const Tenant&) override;
 
 private:
     /**
@@ -73,14 +73,14 @@ private:
      *
      * @return The numbers read.
      */
-    std::vector<Tenant> readTenants();
+    void readTenants();
 
     /**
      * Write numbers to the storage file.
      *
      * @param numbers The numbers to write.
      */
-    void writeTenants(const std::vector<Tenant>&) const;
+    void writeTenants() const;
 
     std::string path;
 };

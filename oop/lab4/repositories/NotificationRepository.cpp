@@ -19,8 +19,10 @@ vector<int> NotificationRepository::readNumbers() const {
 
     int number;
 
-    if (!in) {
+    if (!in.good()) {
+        in.close();
         writeNumbers(numbers);
+        return numbers;
     }
 
     while (in >> number) {

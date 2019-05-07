@@ -2,6 +2,7 @@
 #include <string>
 #include <memory>
 #include <exception>
+#include <unordered_map>
 
 #include "../entities/Tenant.h"
 #include "../repositories/BaseRepository.h"
@@ -111,6 +112,13 @@ public:
      * @return The sorted tenants.
      */
     std::vector<Tenant> getTenantsSortedBy(TenantSortType) const;
+
+     /**
+     * Get size report of the apartments.
+     *
+     * @return The size report.
+     */
+    std::unordered_map<int, int> getSizeReport() const;
 
      /**
      * Update a tenant.

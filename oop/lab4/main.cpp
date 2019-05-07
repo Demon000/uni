@@ -3,8 +3,7 @@
 #include "ui/Console.h"
 
 int main() {
-    //TenantRepository repository{"tenants.csv"};
-    ExceptionRepository repository{0.5};
+    TenantRepository repository{"tenants.csv"};
     NotificationRepository notificationRepository{"notifications.csv"};
 
     TenantService service{repository, notificationRepository};

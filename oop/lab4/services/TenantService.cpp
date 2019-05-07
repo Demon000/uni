@@ -17,8 +17,7 @@ using std::shuffle;
 using std::default_random_engine;
 using std::unique_ptr;
 using std::move;
-
-
+using std::unordered_map;
 
 UndoAction::UndoAction(const Tenant& tenant) : tenant{tenant} {}
 UndoCreateAction::UndoCreateAction(const Tenant& tenant) : UndoAction(tenant) {}
@@ -46,7 +45,7 @@ Tenant TenantService::createTenant(int number, const string& name,
         int surface, const string& type, bool skip) {
     try {
         repository.getTenantByNumber(number);
-    } catch (exception&) {
+    } catch (TenantMissingException&) {
         const Tenant tenant{number, name, surface, type};
         if (!skip) {
             unique_ptr<UndoAction> action(new UndoCreateAction{tenant});
@@ -92,6 +91,18 @@ vector<Tenant> TenantService::getTenantsSortedBy(TenantSortType by) const {
     });
 
     return tenants;
+}
+
+unordered_map<int, int> TenantService::getSizeReport() const {
+    unordered_map<int, int> sizeReport;
+
+    vector<Tenant> tenants = repository.getTenants();
+    for (const Tenant& tenant : tenants) {
+        int surface = tenant.getSurface();
+        sizeReport[surface]++;
+    }
+
+    return sizeReport;
 }
 
 Tenant TenantService::updateTenant(int number, string name, bool skip) {
