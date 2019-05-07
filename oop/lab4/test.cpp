@@ -235,11 +235,57 @@ void test_tenant_service() {
     }
 }
 
+void test_tenant_service_undo() {
+    TenantRepository repository{"tenants_test_tenant_service_undo.csv"};
+    NotificationRepository notificationRepository{"notifications_test_tenant_service_undo.csv"};
+    TenantService service{repository, notificationRepository};
+    std::vector<Tenant> tenants;
+    Tenant retrieved;
+
+    const Tenant first = service.createTenant(1,  "Cristi", 20, "studio");
+    const Tenant second = service.createTenant(2, "Gigi", 200, "penthouse");
+    const Tenant third = service.createTenant(3, "Marian", 300, "penthouse");
+    const Tenant forth = service.createTenant(4, "Gabriel", 20, "basement");
+
+    tenants = service.getTenants();
+    assert(tenants.size() == 4);
+
+    service.undo();
+    tenants = service.getTenants();
+    assert(tenants.size() == 3);
+
+    service.updateTenant(3, "NotMarian");
+    retrieved = service.getTenant(3);
+    assert(retrieved.getName() == "NotMarian");
+
+    service.undo();
+    retrieved = service.getTenant(3);
+    assert(retrieved.getName() == "Marian");
+
+    service.removeTenant(3);
+    tenants = service.getTenants();
+    assert(tenants.size() == 2);
+
+    service.undo();
+    tenants = service.getTenants();
+    assert(tenants.size() == 3);
+
+    try {
+        while (true) {
+            service.undo();
+        }
+        assert(false);
+    } catch (exception&) {
+        assert(true);
+    }
+}
+
 int main() {
     test_tenant();
     test_tenant_repository();
     test_notification_repository();
     test_tenant_service();
+    test_tenant_service_undo();
 
     return 0;
 }
