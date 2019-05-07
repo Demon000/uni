@@ -94,7 +94,7 @@ void TenantService::addNotification(int number) {
         return;
     }
 
-    throw new NumberExistsException();
+    throw NumberExistsException();
 }
 
 void TenantService::addRandomNotifications(int length) {
