@@ -38,7 +38,7 @@ void UndoDeleteAction::doUndo(TenantService& service) {
             tenant.getSurface(), tenant.getType(), true);
 }
 
-TenantService::TenantService(TenantRepository& repository,
+TenantService::TenantService(BaseRepository& repository,
         NotificationRepository& notificationRepository) :
     repository(repository), notificationRepository(notificationRepository) {}
 

@@ -86,6 +86,8 @@ void Console::addTenant() {
     try {
         const Tenant& tenant = service.createTenant(number, name, surface, type);
         printTenant(tenant, "Added tenant");
+    } catch (ExceptionChance&) {
+        cout << "Tenant addition failed by chance.\n";
     } catch (exception&) {
         cout << "Tenant already exists.\n";
     }

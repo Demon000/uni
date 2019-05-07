@@ -2,11 +2,12 @@
 #include <string>
 
 #include "../entities/Tenant.h"
+#include "../repositories/BaseRepository.h"
 
 #ifndef TENANT_REPOSITORY_H
 #define TENANT_REPOSITORY_H
 
-class TenantRepository {
+class TenantRepository : public BaseRepository {
 public:
     TenantRepository(const std::string&);
 
@@ -15,7 +16,7 @@ public:
      *
      * @param tenant The tenant to be added.
      */
-    void addTenant(const Tenant&) const;
+    void addTenant(const Tenant&);
 
     /**
      * Get a tenant by the apartment number.
@@ -24,14 +25,14 @@ public:
      *
      * @return The tenant if found.
      */
-    Tenant getTenantByNumber(int) const;
+    Tenant getTenantByNumber(int);
 
     /**
      * Get all the tenants.
      *
      * @return The tenants.
      */
-    std::vector<Tenant> getTenants() const;
+    std::vector<Tenant> getTenants();
 
      /**
      * Get the tenants matching a surface.
@@ -40,7 +41,7 @@ public:
      *
      * @return The tenants matching the given surface.
      */
-    std::vector<Tenant> getTenantsBySurface(int) const;
+    std::vector<Tenant> getTenantsBySurface(int);
 
      /**
      * Get the tenants matching a type.
@@ -49,7 +50,7 @@ public:
      *
      * @return The tenants matching the given type.
      */
-    std::vector<Tenant> getTenantsByType(const std::string&) const;
+    std::vector<Tenant> getTenantsByType(const std::string&);
 
      /**
      * Update the name of a tenant.
@@ -57,14 +58,14 @@ public:
      * @param tenant The tenant to update.
      * @param name The new name of the tenant.
      */
-    void updateTenant(Tenant&, const std::string&) const;
+    void updateTenant(Tenant&, const std::string&);
 
      /**
      * Remove a tenant.
      *
      * @param tenant The tenant to remove.
      */
-    void removeTenant(const Tenant&) const;
+    void removeTenant(const Tenant&);
 
 private:
     /**
@@ -72,7 +73,7 @@ private:
      *
      * @return The numbers read.
      */
-    std::vector<Tenant> readTenants() const;
+    std::vector<Tenant> readTenants();
 
     /**
      * Write numbers to the storage file.

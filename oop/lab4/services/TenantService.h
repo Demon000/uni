@@ -4,7 +4,7 @@
 #include <exception>
 
 #include "../entities/Tenant.h"
-#include "../repositories/TenantRepository.h"
+#include "../repositories/BaseRepository.h"
 #include "../repositories/NotificationRepository.h"
 
 #ifndef TENANT_SERVICE_H
@@ -55,7 +55,7 @@ public:
      * @param repository The repository to use in the service.
      * @param notificationRepository The repository to use for notifications in the service.
      */
-    TenantService(TenantRepository&, NotificationRepository&);
+    TenantService(BaseRepository&, NotificationRepository&);
 
     /**
      * Create a tenant.
@@ -173,7 +173,7 @@ public:
 
 private:
     std::vector<std::unique_ptr<UndoAction>> undoActions;
-    TenantRepository& repository;
+    BaseRepository& repository;
     NotificationRepository& notificationRepository;
 };
 

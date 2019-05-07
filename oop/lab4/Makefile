@@ -1,11 +1,15 @@
 program_cppfiles = \
 		entities/Tenant.cpp \
+		repositories/BaseRepository.cpp \
+		repositories/ExceptionRepository.cpp \
 		repositories/TenantRepository.cpp \
 		repositories/NotificationRepository.cpp \
 		services/TenantService.cpp
 
 program_hfiles = \
 		entities/Tenant.h \
+		repositories/BaseRepository.h \
+		repositories/ExceptionRepository.h \
 		repositories/TenantRepository.h \
 		repositories/NotificationRepository.h \
 		services/TenantService.h

@@ -16,11 +16,9 @@ using std::ifstream;
 using std::ofstream;
 using std::stringstream;
 
-TenantRepository::TenantRepository(const string& path) : path(path) {
-    readTenants();
-}
+TenantRepository::TenantRepository(const string& path) : path(path) {}
 
-vector<Tenant> TenantRepository::readTenants() const {
+vector<Tenant> TenantRepository::readTenants() {
     vector<Tenant> tenants;
     ifstream in(path);
 
@@ -65,69 +63,40 @@ void TenantRepository::writeTenants(const vector<Tenant>& tenants) const {
     }
 }
 
-void TenantRepository::addTenant(const Tenant& tenant) const {
-    vector<Tenant> tenants = readTenants();
-    tenants.push_back(tenant);
+void TenantRepository::addTenant(const Tenant& tenant) {
+    tenants = readTenants();
+    BaseRepository::addTenant(tenant);
     writeTenants(tenants);
 }
 
-Tenant TenantRepository::getTenantByNumber(int number) const {
-    vector<Tenant> tenants = readTenants();
-    auto it = find_if(tenants.begin(), tenants.end(), [&](const Tenant& t) {
-        return t.getNumber() == number;
-    });
-
-    if (it == tenants.end()) {
-        throw TenantMissingException();
-    }
-
-    return *it;
+Tenant TenantRepository::getTenantByNumber(int number) {
+    tenants = readTenants();
+    return BaseRepository::getTenantByNumber(number);
 }
 
-vector<Tenant> TenantRepository::getTenants() const {
-    vector<Tenant> tenants = readTenants();
-    return tenants;
+vector<Tenant> TenantRepository::getTenants() {
+    tenants = readTenants();
+    return BaseRepository::getTenants();
 }
 
-vector<Tenant> TenantRepository::getTenantsBySurface(int surface) const {
-    vector<Tenant> tenants = readTenants();
-    vector<Tenant> filtered;
-    copy_if(tenants.begin(), tenants.end(), back_inserter(filtered), [&](const Tenant& t) {
-        return t.getSurface() == surface;
-    });
-
-    return filtered;
+vector<Tenant> TenantRepository::getTenantsBySurface(int surface) {
+    tenants = readTenants();
+    return BaseRepository::getTenantsBySurface(surface);
 }
 
-vector<Tenant> TenantRepository::getTenantsByType(const string& type) const {
-    vector<Tenant> tenants = readTenants();
-    vector<Tenant> filtered;
-    copy_if(tenants.begin(), tenants.end(), back_inserter(filtered), [&](const Tenant& t) {
-        return t.getType() == type;
-    });
-
-    return filtered;
+vector<Tenant> TenantRepository::getTenantsByType(const string& type) {
+    tenants = readTenants();
+    return BaseRepository::getTenantsByType(type);
 }
 
-void TenantRepository::updateTenant(Tenant& tenant, const string& name) const {
-    vector<Tenant> tenants = readTenants();
-    auto it = find(tenants.begin(), tenants.end(), tenant);
-    if (it == tenants.end()) {
-        throw TenantMissingException();
-    }
-
-    it->setName(name);
-    tenant.setName(name);
+void TenantRepository::updateTenant(Tenant& tenant, const string& name) {
+    tenants = readTenants();
+    BaseRepository::updateTenant(tenant, name);
     writeTenants(tenants);
 }
 
-void TenantRepository::removeTenant(const Tenant& tenant) const {
-    vector<Tenant> tenants = readTenants();
-    auto it = find(tenants.begin(), tenants.end(), tenant);
-    if (it == tenants.end()) {
-        throw TenantMissingException();
-    }
-
-    tenants.erase(it);
+void TenantRepository::removeTenant(const Tenant& tenant) {
+    tenants = readTenants();
+    BaseRepository::removeTenant(tenant);
     writeTenants(tenants);
 }

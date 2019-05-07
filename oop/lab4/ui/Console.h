@@ -3,6 +3,7 @@
 
 #include "../entities/Tenant.h"
 #include "../repositories/TenantRepository.h"
+#include "../repositories/ExceptionRepository.h"
 #include "../repositories/NotificationRepository.h"
 #include "../services/TenantService.h"
 
