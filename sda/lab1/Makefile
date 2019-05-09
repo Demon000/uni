@@ -20,29 +20,20 @@ test_files = \
 		$(test_cppfiles) \
 		$(test_hfiles)
 
+output_dir = ./bin
+test_file = $(output_dir)/test
+
 .SILENT: test
 test: $(test_files)
+	-mkdir $(output_dir)
+
 	g++ \
 		-std=c++11 \
 		-Wall -Wextra \
-		--coverage \
-		-o test \
-		-g $(test_cppfiles)
+		-g $(test_cppfiles) \
+		-o $(test_file)
 
 	valgrind \
 		--leak-check=full \
 		--track-origins=yes \
-		./test
-
-	gcov \
-		-r \
-		-o . \
-		$(program_cppfiles)
-
-	rm -rf gcov
-	mkdir gcov
-	mv *.gcov gcov
-
-	rm test \
-		*.gcda \
-		*.gcno
+		$(test_file)

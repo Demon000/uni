@@ -27,7 +27,6 @@ test: $(test_files)
 	g++ \
 		-std=c++11 \
 		-Wall -Wextra \
-		--coverage \
 		-g $(test_cppfiles) \
 		-o $(test_file)
 
