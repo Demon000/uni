@@ -21,7 +21,7 @@ program_files = \
 console_cppfiles = \
 		$(program_cppfiles) \
 		ui/Console.cpp \
-		main.cpp
+		main_console.cpp
 
 console_hfiles = \
 		$(program_files) \
