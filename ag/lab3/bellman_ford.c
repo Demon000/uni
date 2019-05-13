@@ -100,6 +100,7 @@ int main(int argc, char** argv) {
         Node* node = nodes[i];
         printf("%d ", node->distance);
     }
+    printf("\n");
 
     for (int i = 0; i < no_nodes; i++) {
         Node__destroy(nodes[i]);
