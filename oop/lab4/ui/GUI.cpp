@@ -8,7 +8,7 @@ GUI::GUI(TenantService& service) : service(service) {
     setLayout(mainLayout);
 
     table = new QTableWidget();
-    table->setColumnCount(4);
+    table->setColumnCount(5);
     mainLayout->addWidget(table);
 
     table->setSortingEnabled(true);
@@ -16,7 +16,7 @@ GUI::GUI(TenantService& service) : service(service) {
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     table->verticalHeader()->hide();
-    table->setHorizontalHeaderLabels(QStringList{"Number", "Name", "Surface", "Type"});
+    table->setHorizontalHeaderLabels(QStringList{"Number", "Name", "Surface", "Type", "Same surface"});
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     QWidget* filterWidget = new QWidget();
@@ -193,6 +193,8 @@ void GUI::showUpdateTenantWindow(int selected) {
 }
 
 void GUI::showTenants(std::vector<Tenant> tenants) {
+    std::unordered_map<int, int> surfaceReport = service.getSurfaceReport();
+
     int rows = tenants.size();
     table->setRowCount(rows);
 
@@ -225,6 +227,11 @@ void GUI::showTenants(std::vector<Tenant> tenants) {
         item = new QTableWidgetItem(text);
         item->setBackground(background);
         table->setItem(row, 3, item);
+
+        text = QString::number(surfaceReport[tenant.getSurface()]);
+        item = new QTableWidgetItem(text);
+        item->setBackground(background);
+        table->setItem(row, 4, item);
 
         row++;
     }
