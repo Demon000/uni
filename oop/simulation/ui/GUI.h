@@ -1,7 +1,6 @@
 #include <vector>
 
-#include <QWidget>
-#include <QListWidget>
+#include <QtWidgets>
 
 #include "../entities/Program.h"
 #include "../repositories/ProgramRepository.h"

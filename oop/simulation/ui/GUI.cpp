@@ -1,16 +1,6 @@
 #include <vector>
 #include <string>
 
-#include <QDebug>
-#include <QMessageLogger>
-#include <QString>
-#include <QListWidget>
-#include <QListWidgetItem>
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QPushButton>
-
 #include "GUI.h"
 
 GUI::GUI(ProgramService& service) : service{service} {
