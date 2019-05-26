@@ -19,6 +19,21 @@ GUI::GUI(TenantService& service) : service(service) {
     table->setHorizontalHeaderLabels(QStringList{"Number", "Name", "Surface", "Type"});
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+    QWidget* filterWidget = new QWidget();
+    QHBoxLayout* filterLayout = new QHBoxLayout();
+    filterWidget->setLayout(filterLayout);
+    mainLayout->addWidget(filterWidget);
+
+    QLabel* filterLabel = new QLabel("Filter");
+    filterLayout->addWidget(filterLabel);
+
+    QLineEdit* filterInput = new QLineEdit();
+    filterInput->setClearButtonEnabled(true);
+    filterLayout->addWidget(filterInput);
+    connect(filterInput, &QLineEdit::textEdited, [&](QString text) {
+        showFilteredTenants(text.toStdString());
+    });
+
     QWidget* buttonsWidget = new QWidget();
     QHBoxLayout* buttonsLayout = new QHBoxLayout();
     buttonsWidget->setLayout(buttonsLayout);
@@ -177,11 +192,14 @@ void GUI::showUpdateTenantWindow(int selected) {
     window->show();
 }
 
-void GUI::refreshTenants() {
-    std::vector<Tenant> tenants = service.getTenants();
-
+void GUI::showTenants(std::vector<Tenant> tenants) {
     int rows = tenants.size();
     table->setRowCount(rows);
+
+    QBrush background;
+    if (rows < 5) {
+        background = Qt::red;
+    }
 
     int row = 0;
     for (const Tenant& tenant : tenants) {
@@ -190,20 +208,35 @@ void GUI::refreshTenants() {
 
         text = QString::number(tenant.getNumber());
         item = new QTableWidgetItem(text);
+        item->setBackground(background);
         table->setItem(row, 0, item);
 
         text = QString::fromStdString(tenant.getName());
         item = new QTableWidgetItem(text);
+        item->setBackground(background);
         table->setItem(row, 1, item);
 
         text = QString::number(tenant.getSurface());
         item = new QTableWidgetItem(text);
+        item->setBackground(background);
         table->setItem(row, 2, item);
 
         text = QString::fromStdString(tenant.getType());
         item = new QTableWidgetItem(text);
+        item->setBackground(background);
         table->setItem(row, 3, item);
 
         row++;
     }
+}
+
+void GUI::refreshTenants() {
+    std::vector<Tenant> tenants = service.getTenants();
+    showTenants(tenants);
+
+}
+
+void GUI::showFilteredTenants(std::string text) {
+    std::vector<Tenant> tenants = service.getFilteredTenants(text);
+    showTenants(tenants);
 }

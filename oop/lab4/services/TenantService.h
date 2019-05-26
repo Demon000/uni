@@ -86,6 +86,13 @@ public:
      */
     std::vector<Tenant> getTenants() const;
 
+    /**
+     * Get tenants matching the a string.
+     *
+     * @return The matching tenants.
+     */
+    std::vector<Tenant> getFilteredTenants(const std::string&) const;
+
      /**
      * Get the tenants matching a surface.
      *

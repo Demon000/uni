@@ -18,6 +18,7 @@ using std::default_random_engine;
 using std::unique_ptr;
 using std::move;
 using std::unordered_map;
+using std::to_string;
 
 UndoAction::UndoAction(const Tenant& tenant) : tenant{tenant} {}
 UndoCreateAction::UndoCreateAction(const Tenant& tenant) : UndoAction(tenant) {}
@@ -66,6 +67,39 @@ Tenant TenantService::getTenant(int number) const {
 
 vector<Tenant> TenantService::getTenants() const {
     return repository.getTenants();
+}
+
+vector<Tenant> TenantService::getFilteredTenants(const string& text) const {
+    vector<Tenant> tenants = repository.getTenants();
+    vector<Tenant> filtered;
+
+    for (const Tenant& tenant : tenants) {
+        string number = to_string(tenant.getNumber());
+        if (number.find(text) != string::npos) {
+            filtered.push_back(tenant);
+            continue;
+        }
+
+        string name = tenant.getName();
+        if (name.find(text) != string::npos) {
+            filtered.push_back(tenant);
+            continue;
+        }
+
+        string surface = to_string(tenant.getSurface());
+        if (surface.find(text) != string::npos) {
+            filtered.push_back(tenant);
+            continue;
+        }
+
+        string type = tenant.getType();
+        if (type.find(text) != string::npos) {
+            filtered.push_back(tenant);
+            continue;
+        }
+    }
+
+    return filtered;
 }
 
 vector<Tenant> TenantService::getTenantsBySurface(int surface) const {

@@ -19,6 +19,8 @@ public:
 
 private:
     void showErrorMessage(std::string);
+    void showTenants(std::vector<Tenant>);
+    void showFilteredTenants(std::string);
     void refreshTenants();
     int getSelectedTenantNumber();
     void showAddTenantWindow();
