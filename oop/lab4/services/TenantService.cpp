@@ -127,16 +127,16 @@ vector<Tenant> TenantService::getTenantsSortedBy(TenantSortType by) const {
     return tenants;
 }
 
-unordered_map<int, int> TenantService::getSizeReport() const {
-    unordered_map<int, int> sizeReport;
+unordered_map<int, int> TenantService::getSurfaceReport() const {
+    unordered_map<int, int> surfaceReport;
 
     vector<Tenant> tenants = repository.getTenants();
     for (const Tenant& tenant : tenants) {
         int surface = tenant.getSurface();
-        sizeReport[surface]++;
+        surfaceReport[surface]++;
     }
 
-    return sizeReport;
+    return surfaceReport;
 }
 
 Tenant TenantService::updateTenant(int number, string name, bool skip) {

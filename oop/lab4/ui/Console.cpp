@@ -226,10 +226,10 @@ void Console::undo() {
     }
 }
 
-void Console::showSizeReport() const {
-    unordered_map<int, int> sizeReport = service.getSizeReport();
+void Console::showSurfaceReport() const {
+    unordered_map<int, int> surfaceReport = service.getSurfaceReport();
 
-    for (auto& it: sizeReport) {
+    for (auto& it: surfaceReport) {
         cout << it.second << " apartments have a surface of " << it.first << "mp.\n";
     }
 }
@@ -252,7 +252,7 @@ int Console::askOption() {
             "10. Delete all notified apartments\n"
             "11. Show notified tenants\n"
             "12. Undo the last action\n"
-            "13. Show size report\n"
+            "13. Show surface report\n"
             "0. Exit\n";
 
     int option = readInt("Option");
@@ -295,7 +295,7 @@ int Console::askOption() {
         undo();
         break;
     case 13:
-        showSizeReport();
+        showSurfaceReport();
         break;
     case 0:
         goodbye();

@@ -32,7 +32,7 @@ private:
     void deleteNotifiedApartments() const;
     void generateNotifiedApartments() const;
     void undo();
-    void showSizeReport() const;
+    void showSurfaceReport() const;
     void goodbye() const;
     void addTenants();
     int askOption();

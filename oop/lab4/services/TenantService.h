@@ -121,11 +121,11 @@ public:
     std::vector<Tenant> getTenantsSortedBy(TenantSortType) const;
 
      /**
-     * Get size report of the apartments.
+     * Get surface report of the apartments.
      *
-     * @return The size report.
+     * @return The surface report.
      */
-    std::unordered_map<int, int> getSizeReport() const;
+    std::unordered_map<int, int> getSurfaceReport() const;
 
      /**
      * Update a tenant.
