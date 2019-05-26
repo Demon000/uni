@@ -31,6 +31,59 @@ console_files = \
 		$(console_cppfiles) \
 		$(console_hfiles)
 
+output_dir = ./bin
+
+main_file = $(output_dir)/main
+
+.SILENT: main
+main: $(console_files)
+	-mkdir $(output_dir)
+
+	g++ \
+		-std=c++11 \
+		-Wall -Wextra \
+		-g $(console_cppfiles) \
+		-o $(main_file)
+
+gui_cppfiles = \
+		$(program_cppfiles) \
+		ui/GUI.cpp \
+		main_gui.cpp
+
+gui_hfiles = \
+		$(program_files) \
+		ui/GUI.h
+
+gui_files = \
+		$(gui_cppfiles) \
+		$(gui_hfiles)
+
+
+gui_file = $(output_dir)/gui
+pro_file = gui.pro
+pro_makefile = Makefile.pro
+
+.SILENT: gui
+gui: $(gui_files)
+	-mkdir $(output_dir)
+
+	echo "SOURCES = $(gui_cppfiles)" >> $(pro_file)
+	echo "HEADERS = $(gui_hfiles)" >> $(pro_file)
+	echo "DESTDIR = $(output_dir)/" >> $(pro_file)
+	echo "OBJECTS_DIR = $(output_dir)/" >> $(pro_file)
+	echo "QT += widgets" >> $(pro_file)
+
+	qmake \
+		$(pro_file) \
+		-o $(pro_makefile)
+
+	make -f $(pro_makefile)
+
+	$(gui_file)
+
+	-rm $(pro_file)
+	-rm $(pro_makefile)
+
 test_cppfiles = \
 		$(program_cppfiles) \
 		test.cpp
@@ -42,23 +95,11 @@ test_files = \
 		$(test_cppfiles) \
 		$(test_hfiles)
 
-output_dir = ./bin
 gcov_dir = ./gcov
-main_file = $(output_dir)/main
 test_file = $(output_dir)/test
 gcov_files = *.gcov
 gcov_ignored_files = *.gcda *.gcno
 test_csv_files = ./tenants_test_*.csv ./notifications_test_*.csv
-
-.SILENT: main
-main: $(console_files)
-	-mkdir $(output_dir)
-
-	g++ \
-		-std=c++11 \
-		-Wall -Wextra \
-		-g $(console_cppfiles) \
-		-o $(main_file)
 
 .SILENT: test
 test: $(test_files)
