@@ -18,12 +18,6 @@ using std::stringstream;
 
 TenantRepository::TenantRepository(const string& path) : path(path) {}
 
-string& rtrim(string& str, const string& chars = "\t\n\v\f\r ")
-{
-    str.erase(str.find_last_not_of(chars) + 1);
-    return str;
-}
-
 void TenantRepository::readTenants() {
     tenants.clear();
 

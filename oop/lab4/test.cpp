@@ -1,5 +1,6 @@
 #include <cassert>
 #include <exception>
+#include <unordered_map>
 
 #include "entities/Tenant.h"
 #include "repositories/TenantRepository.h"
@@ -8,6 +9,7 @@
 
 using std::vector;
 using std::exception;
+using std::unordered_map;
 
 void test_tenant() {
     Tenant tenant{1,  "Cristi", 1, "studio"};
@@ -139,6 +141,20 @@ void test_tenant_service() {
     const Tenant second = service.createTenant(2, "Gigi", 200, "penthouse");
     const Tenant third = service.createTenant(3, "Marian", 300, "penthouse");
     const Tenant forth = service.createTenant(4, "Gabriel", 20, "basement");
+
+    unordered_map<int, int> surfaceReport = service.getSurfaceReport();
+    assert(surfaceReport[20] == 2);
+    assert(surfaceReport[200] == 1);
+    assert(surfaceReport[300] == 1);
+
+    tenants = service.getFilteredTenants("1");
+    assert(tenants.size() == 1);
+    tenants = service.getFilteredTenants("Cristi");
+    assert(tenants.size() == 1);
+    tenants = service.getFilteredTenants("20");
+    assert(tenants.size() == 3);
+    tenants = service.getFilteredTenants("studio");
+    assert(tenants.size() == 1);
 
     try {
         service.createTenant(1,  "", 0, "");
