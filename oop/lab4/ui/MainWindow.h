@@ -20,9 +20,12 @@ private:
     void showTenants(std::vector<Tenant>);
     void showFilteredTenants(std::string);
     void refreshTenants();
+
     int getSelectedTenantNumber();
     void showAddTenantWindow();
     void showUpdateTenantWindow(int);
+    void removeTenant(int);
+    void undoAction();
 
     ObservableTenantService& service;
     QTableWidget* table;

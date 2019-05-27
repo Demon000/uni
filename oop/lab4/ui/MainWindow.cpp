@@ -48,10 +48,6 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     buttonsLayout->addWidget(updateTenantButton);
     connect(updateTenantButton, &QPushButton::clicked, [&]() {
         int selected = getSelectedTenantNumber();
-        if (selected == -1) {
-            return;
-        }
-
         showUpdateTenantWindow(selected);
     });
 
@@ -59,25 +55,13 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     buttonsLayout->addWidget(removeTenantButton);
     connect(removeTenantButton, &QPushButton::clicked, [&]() {
         int selected = getSelectedTenantNumber();
-        if (selected == -1) {
-            return;
-        }
-
-        try {
-            service.removeTenant(selected);
-        } catch (TenantMissingException&) {
-            showErrorMessage("Tenant does not exist.");
-        }
+        removeTenant(selected);
     });
 
     QPushButton* undoButton = new QPushButton("Undo");
     buttonsLayout->addWidget(undoButton);
     connect(undoButton, &QPushButton::clicked, [&]() {
-        try {
-            service.undo();
-        } catch (NoUndoActions&) {
-            showErrorMessage("No undo actions left.");
-        }
+        undoAction();
     });
 
     service.onChanged([&]() {
@@ -106,8 +90,33 @@ void MainWindow::showAddTenantWindow() {
 }
 
 void MainWindow::showUpdateTenantWindow(int selected) {
+    if (selected == -1) {
+        return;
+    }
+
     UpdateTenantWindow* updateTenantWindow = new UpdateTenantWindow(service, selected);
     updateTenantWindow->show();
+}
+
+void MainWindow::removeTenant(int selected) {
+    if (selected == -1) {
+        return;
+    }
+
+    try {
+        service.removeTenant(selected);
+    } catch (TenantMissingException&) {
+        showErrorMessage("Tenant does not exist.");
+    }
+}
+
+void MainWindow::undoAction() {
+    try {
+        service.undo();
+    } catch (NoUndoActions&) {
+        showErrorMessage("No undo actions left.");
+    }
+
 }
 
 void MainWindow::showTenants(std::vector<Tenant> tenants) {
