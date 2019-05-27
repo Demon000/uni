@@ -3,7 +3,7 @@
 
 #include "GUI.h"
 
-GUI::GUI(TenantService& service) : service(service) {
+GUI::GUI(ObservableTenantService& service) : service(service) {
     QVBoxLayout* mainLayout = new QVBoxLayout();
     setLayout(mainLayout);
 
@@ -66,7 +66,6 @@ GUI::GUI(TenantService& service) : service(service) {
 
         try {
             service.removeTenant(selected);
-            refreshTenants();
         } catch (TenantMissingException&) {
             showErrorMessage("Tenant does not exist.");
         }
@@ -77,12 +76,14 @@ GUI::GUI(TenantService& service) : service(service) {
     connect(undoButton, &QPushButton::clicked, [&]() {
         try {
             service.undo();
-            refreshTenants();
         } catch (NoUndoActions&) {
             showErrorMessage("No undo actions left.");
         }
     });
 
+    service.onChanged([&]() {
+        refreshTenants();
+    });
     refreshTenants();
 }
 
@@ -153,7 +154,6 @@ void GUI::showAddTenantWindow() {
 
         try {
             service.createTenant(number, name, surface, type);
-            refreshTenants();
         } catch (TenantExistsException&) {
             showErrorMessage("Tenant already exists.");
         }
@@ -183,7 +183,6 @@ void GUI::showUpdateTenantWindow(int selected) {
 
         try {
             service.updateTenant(selected, name);
-            refreshTenants();
         } catch (TenantMissingException&) {
             showErrorMessage("Tenant does not exist.");
         }

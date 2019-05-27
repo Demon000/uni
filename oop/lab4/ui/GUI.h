@@ -7,14 +7,14 @@
 #include "../repositories/TenantRepository.h"
 #include "../repositories/ExceptionRepository.h"
 #include "../repositories/NotificationRepository.h"
-#include "../services/TenantService.h"
+#include "../services/ObservableTenantService.h"
 
 #ifndef GUI_H
 #define GUI_H
 
 class GUI : public QWidget {
 public:
-    GUI(TenantService&);
+    GUI(ObservableTenantService&);
     void run();
 
 private:
@@ -26,7 +26,7 @@ private:
     void showAddTenantWindow();
     void showUpdateTenantWindow(int);
 
-    TenantService& service;
+    ObservableTenantService& service;
     QTableWidget* table;
 };
 
