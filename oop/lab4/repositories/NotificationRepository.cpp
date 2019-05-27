@@ -13,26 +13,24 @@ NotificationRepository::NotificationRepository(const string& path) : path(path) 
     readNumbers();
 }
 
-vector<int> NotificationRepository::readNumbers() const {
-    vector<int> numbers;
+void NotificationRepository::readNumbers() {
+    numbers.clear();
+
     ifstream in(path);
 
     int number;
 
     if (!in.good()) {
         in.close();
-        writeNumbers(numbers);
-        return numbers;
+        writeNumbers();
     }
 
     while (in >> number) {
         numbers.push_back(number);
     }
-
-    return numbers;
 }
 
-void NotificationRepository::writeNumbers(const vector<int>& numbers) const {
+void NotificationRepository::writeNumbers() const {
     ofstream out(path);
 
     for (const int& number : numbers) {
@@ -40,38 +38,44 @@ void NotificationRepository::writeNumbers(const vector<int>& numbers) const {
     }
 }
 
-void NotificationRepository::addNumber(int number) const {
-    vector<int> numbers = readNumbers();
+void NotificationRepository::addNumber(int number) {
+    readNumbers();
+
     numbers.push_back(number);
-    writeNumbers(numbers);
+
+    writeNumbers();
 }
 
-void NotificationRepository::numberExists(int number) const {
-    vector<int> numbers = readNumbers();
+void NotificationRepository::numberExists(int number) {
+    readNumbers();
+
     auto it = find(numbers.begin(), numbers.end(), number);
     if (it == numbers.end()) {
         throw NumberMissingException();
     }
 }
 
-vector<int> NotificationRepository::getNumbers() const {
-    vector<int> numbers = readNumbers();
+vector<int> NotificationRepository::getNumbers() {
+    readNumbers();
+
     return numbers;
 }
 
-void NotificationRepository::removeNumber(int number) const {
-    vector<int> numbers = readNumbers();
+void NotificationRepository::removeNumber(int number) {
+    readNumbers();
+
     auto it = find(numbers.begin(), numbers.end(), number);
     if (it == numbers.end()) {
         throw NumberMissingException();
     }
 
     numbers.erase(it);
-    writeNumbers(numbers);
+
+    writeNumbers();
 }
 
-void NotificationRepository::removeNumbers() const {
-    vector<int> numbers = readNumbers();
+void NotificationRepository::removeNumbers() {
     numbers.clear();
-    writeNumbers(numbers);
+
+    writeNumbers();
 }

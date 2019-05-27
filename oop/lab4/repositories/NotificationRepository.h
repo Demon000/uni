@@ -13,31 +13,31 @@ public:
      *
      * @param number The apartment number.
      */
-    void addNumber(int) const;
+    void addNumber(int);
 
     /**
      * Check if an apartment number is already on the notification list.
      *
      * @param number The apartment number to check.
      */
-    void numberExists(int) const;
+    void numberExists(int);
 
     /**
      * Get all the apartment numbers to be notified.
      *
      * @return The apartments numbers to be notified.
      */
-    std::vector<int> getNumbers() const;
+    std::vector<int> getNumbers();
 
     /**
      * Remove an apartment number from the notification list.
      */
-    void removeNumber(int) const;
+    void removeNumber(int);
 
     /**
      * Remove all the apartment numbers from the notification list.
      */
-    void removeNumbers() const;
+    void removeNumbers();
 
 private:
     /**
@@ -45,15 +45,16 @@ private:
      *
      * @return The numbers read.
      */
-    std::vector<int> readNumbers() const;
+    void readNumbers();
 
     /**
      * Write numbers to the storage file.
      *
      * @param numbers The numbers to write.
      */
-    void writeNumbers(const std::vector<int>&) const;
+    void writeNumbers() const;
 
+    std::vector<int> numbers;
     std::string path;
 };
 
