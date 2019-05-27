@@ -47,12 +47,16 @@ main: $(console_files)
 
 gui_cppfiles = \
 		$(program_cppfiles) \
-		ui/GUI.cpp \
+		ui/CommonWindow.cpp \
+		ui/MainWindow.cpp \
+		ui/AddTenantWindow.cpp \
 		main_gui.cpp
 
 gui_hfiles = \
 		$(program_files) \
-		ui/GUI.h
+		ui/CommonWindow.h \
+		ui/MainWindow.h \
+		ui/AddTenantWindow.h
 
 gui_files = \
 		$(gui_cppfiles) \

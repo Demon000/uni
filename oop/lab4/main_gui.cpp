@@ -1,6 +1,6 @@
 #include "repositories/TenantRepository.h"
 #include "services/ObservableTenantService.h"
-#include "ui/GUI.h"
+#include "ui/MainWindow.h"
 
 #include <QApplication>
 
@@ -12,8 +12,8 @@ int main(int argc, char **argv) {
 
     QApplication app(argc, argv);
 
-    GUI gui{service};
-    gui.show();
+    MainWindow mainWindow{service};
+    mainWindow.show();
 
     return app.exec();
 }

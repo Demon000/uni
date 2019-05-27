@@ -5,20 +5,18 @@
 
 #include "../entities/Tenant.h"
 #include "../repositories/TenantRepository.h"
-#include "../repositories/ExceptionRepository.h"
 #include "../repositories/NotificationRepository.h"
 #include "../services/ObservableTenantService.h"
+#include "../ui/CommonWindow.h"
 
-#ifndef GUI_H
-#define GUI_H
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
 
-class GUI : public QWidget {
+class MainWindow : public QWidget, public CommonWindow {
 public:
-    GUI(ObservableTenantService&);
-    void run();
+    MainWindow(ObservableTenantService&);
 
 private:
-    void showErrorMessage(std::string);
     void showTenants(std::vector<Tenant>);
     void showFilteredTenants(std::string);
     void refreshTenants();
@@ -30,4 +28,4 @@ private:
     QTableWidget* table;
 };
 
-#endif // GUI_H
+#endif // MAIN_WINDOW_H

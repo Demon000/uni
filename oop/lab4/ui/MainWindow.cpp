@@ -1,9 +1,7 @@
-#include <string>
-#include <iostream>
+#include "MainWindow.h"
+#include "AddTenantWindow.h"
 
-#include "GUI.h"
-
-GUI::GUI(ObservableTenantService& service) : service(service) {
+MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     QVBoxLayout* mainLayout = new QVBoxLayout();
     setLayout(mainLayout);
 
@@ -87,12 +85,7 @@ GUI::GUI(ObservableTenantService& service) : service(service) {
     refreshTenants();
 }
 
-void GUI::showErrorMessage(std::string message) {
-    QErrorMessage* dialog = new QErrorMessage();
-    dialog->showMessage(QString::fromStdString(message));
-}
-
-int GUI::getSelectedTenantNumber() {
+int MainWindow::getSelectedTenantNumber() {
     QList<QTableWidgetItem*> items = table->selectedItems();
 
     for (QTableWidgetItem* item : items) {
@@ -106,63 +99,12 @@ int GUI::getSelectedTenantNumber() {
     return -1;
 }
 
-void GUI::showAddTenantWindow() {
-    QWidget* window = new QWidget();
-    QVBoxLayout* layout = new QVBoxLayout();
-    window->setLayout(layout);
-
-    QWidget* fieldsWidget = new QWidget();
-    QFormLayout* fieldsLayout = new QFormLayout();
-    fieldsWidget->setLayout(fieldsLayout);
-    layout->addWidget(fieldsWidget);
-
-    QLabel* numberLabel = new QLabel(QString("Number"));
-    QSpinBox* numberInput = new QSpinBox();
-    numberInput->setMinimum(1);
-    fieldsLayout->addRow(numberLabel, numberInput);
-
-    QLabel* nameLabel = new QLabel(QString("Name"));
-    QLineEdit* nameInput = new QLineEdit();
-    fieldsLayout->addRow(nameLabel, nameInput);
-
-    QLabel* surfaceLabel = new QLabel(QString("Surface"));
-    QSpinBox* surfaceInput = new QSpinBox();
-    surfaceInput->setMinimum(1);
-    fieldsLayout->addRow(surfaceLabel, surfaceInput);
-
-    QLabel* typeLabel = new QLabel(QString("Type"));
-    QLineEdit* typeInput = new QLineEdit();
-    fieldsLayout->addRow(typeLabel, typeInput);
-
-    QPushButton* addButton = new QPushButton("Add");
-    layout->addWidget(addButton);
-    connect(addButton, &QPushButton::clicked, [=]() {
-        int number = numberInput->value();
-        std::string name = nameInput->text().toStdString();
-        int surface = surfaceInput->value();
-        std::string type = typeInput->text().toStdString();
-
-        if (!name.length()) {
-            showErrorMessage("Tenant name cannot be empty.");
-            return;
-        }
-
-        if (!type.length()) {
-            showErrorMessage("Apartment type cannot be empty.");
-            return;
-        }
-
-        try {
-            service.createTenant(number, name, surface, type);
-        } catch (TenantExistsException&) {
-            showErrorMessage("Tenant already exists.");
-        }
-    });
-
-    window->show();
+void MainWindow::showAddTenantWindow() {
+    AddTenantWindow* addTenantWindow = new AddTenantWindow(service);
+    addTenantWindow->show();
 }
 
-void GUI::showUpdateTenantWindow(int selected) {
+void MainWindow::showUpdateTenantWindow(int selected) {
     QWidget* window = new QWidget();
     QVBoxLayout* layout = new QVBoxLayout();
     window->setLayout(layout);
@@ -191,7 +133,7 @@ void GUI::showUpdateTenantWindow(int selected) {
     window->show();
 }
 
-void GUI::showTenants(std::vector<Tenant> tenants) {
+void MainWindow::showTenants(std::vector<Tenant> tenants) {
     std::unordered_map<int, int> surfaceReport = service.getSurfaceReport();
 
     int rows = tenants.size();
@@ -236,13 +178,13 @@ void GUI::showTenants(std::vector<Tenant> tenants) {
     }
 }
 
-void GUI::refreshTenants() {
+void MainWindow::refreshTenants() {
     std::vector<Tenant> tenants = service.getTenants();
     showTenants(tenants);
 
 }
 
-void GUI::showFilteredTenants(std::string text) {
+void MainWindow::showFilteredTenants(std::string text) {
     std::vector<Tenant> tenants = service.getFilteredTenants(text);
     showTenants(tenants);
 }
