@@ -107,7 +107,7 @@ int GUI::getSelectedTenantNumber() {
 }
 
 void GUI::showAddTenantWindow() {
-    QDialog* window = new QDialog();
+    QWidget* window = new QWidget();
     QVBoxLayout* layout = new QVBoxLayout();
     window->setLayout(layout);
 
@@ -163,7 +163,7 @@ void GUI::showAddTenantWindow() {
 }
 
 void GUI::showUpdateTenantWindow(int selected) {
-    QDialog* window = new QDialog();
+    QWidget* window = new QWidget();
     QVBoxLayout* layout = new QVBoxLayout();
     window->setLayout(layout);
 
