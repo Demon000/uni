@@ -12,7 +12,7 @@
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H
 
-class MainWindow : public QWidget, public CommonWindow {
+class MainWindow : public QWidget, public CommonWindow, public Observer {
 public:
     MainWindow(ObservableTenantService&);
 
@@ -26,6 +26,8 @@ private:
     void showUpdateTenantWindow(int);
     void removeTenant(int);
     void undoAction();
+
+    void receive(ObserveEvent) override;
 
     ObservableTenantService& service;
     QTableWidget* table;

@@ -1,3 +1,4 @@
+#include "../observe/Observe.h"
 #include "TenantService.h"
 
 #include <functional>
@@ -7,7 +8,7 @@
 
 typedef std::function<void()> listenerType;
 
-class ObservableTenantService : public TenantService {
+class ObservableTenantService : public TenantService, public Observable {
 public:
     ObservableTenantService(BaseRepository& repository,
             NotificationRepository& notificationRepository)
@@ -18,50 +19,40 @@ public:
     Tenant createTenant(int number, const std::string& name,
             int surface, const std::string& type, bool skip=false) {
         Tenant tenant = TenantService::createTenant(number, name, surface, type, skip);
-        emitChanged();
+        notify(ObserveEvent::CHANGE);
         return tenant;
     }
 
     Tenant updateTenant(int number, std::string name, bool skip=false) {
         Tenant tenant = TenantService::updateTenant(number, name, skip);
-        emitChanged();
+        notify(ObserveEvent::CHANGE);
         return tenant;
     }
 
     Tenant removeTenant(int number, bool skip=false) {
         Tenant tenant = TenantService::removeTenant(number, skip);
-        emitChanged();
+        notify(ObserveEvent::CHANGE);
         return tenant;
     }
 
     void addNotification(int number) const {
         TenantService::addNotification(number);
-        emitChanged();
+        notify(ObserveEvent::CHANGE);
     }
 
     void addRandomNotifications(int length) const {
         TenantService::addRandomNotifications(length);
-        emitChanged();
+        notify(ObserveEvent::CHANGE);
     }
 
     void removeNotifications() const {
         TenantService::removeNotifications();
-        emitChanged();
+        notify(ObserveEvent::CHANGE);
     }
 
     void undo() {
         TenantService::undo();
-        emitChanged();
-    }
-
-    void emitChanged() const {
-        for (const listenerType& listener : listeners) {
-            listener();
-        }
-    }
-
-    void onChanged(const listenerType& listener) {
-        listeners.push_back(listener);
+        notify(ObserveEvent::CHANGE);
     }
 
 private:

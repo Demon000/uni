@@ -55,6 +55,8 @@ gui_cppfiles = \
 
 gui_hfiles = \
 		$(program_files) \
+		observe/Observe.h \
+		services/ObservableTenantService.h \
 		ui/CommonWindow.h \
 		ui/MainWindow.h \
 		ui/AddTenantWindow.h \

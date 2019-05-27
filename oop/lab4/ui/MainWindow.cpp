@@ -64,10 +64,18 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
         undoAction();
     });
 
-    service.onChanged([&]() {
-        refreshTenants();
-    });
     refreshTenants();
+    service.subscribe(this);
+}
+
+void MainWindow::receive(ObserveEvent event) {
+    switch (event) {
+    case ObserveEvent::CHANGE:
+        refreshTenants();
+        break;
+    default:
+        break;
+    }
 }
 
 int MainWindow::getSelectedTenantNumber() {
