@@ -50,13 +50,15 @@ gui_cppfiles = \
 		ui/CommonWindow.cpp \
 		ui/MainWindow.cpp \
 		ui/AddTenantWindow.cpp \
+		ui/UpdateTenantWindow.cpp \
 		main_gui.cpp
 
 gui_hfiles = \
 		$(program_files) \
 		ui/CommonWindow.h \
 		ui/MainWindow.h \
-		ui/AddTenantWindow.h
+		ui/AddTenantWindow.h \
+		ui/UpdateTenantWindow.h
 
 gui_files = \
 		$(gui_cppfiles) \

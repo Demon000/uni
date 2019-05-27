@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "AddTenantWindow.h"
+#include "UpdateTenantWindow.h"
 
 MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     QVBoxLayout* mainLayout = new QVBoxLayout();
@@ -105,32 +106,8 @@ void MainWindow::showAddTenantWindow() {
 }
 
 void MainWindow::showUpdateTenantWindow(int selected) {
-    QWidget* window = new QWidget();
-    QVBoxLayout* layout = new QVBoxLayout();
-    window->setLayout(layout);
-
-    QWidget* fieldsWidget = new QWidget();
-    QFormLayout* fieldsLayout = new QFormLayout();
-    fieldsWidget->setLayout(fieldsLayout);
-
-    QLabel* nameLabel = new QLabel(QString("Name"));
-    QLineEdit* nameInput = new QLineEdit();
-    fieldsLayout->addRow(nameLabel, nameInput);
-    layout->addWidget(fieldsWidget);
-
-    QPushButton* updateButton = new QPushButton("Update");
-    layout->addWidget(updateButton);
-    connect(updateButton, &QPushButton::clicked, [=]() {
-        std::string name = nameInput->text().toStdString();
-
-        try {
-            service.updateTenant(selected, name);
-        } catch (TenantMissingException&) {
-            showErrorMessage("Tenant does not exist.");
-        }
-    });
-
-    window->show();
+    UpdateTenantWindow* updateTenantWindow = new UpdateTenantWindow(service, selected);
+    updateTenantWindow->show();
 }
 
 void MainWindow::showTenants(std::vector<Tenant> tenants) {
