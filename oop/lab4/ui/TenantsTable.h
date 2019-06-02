@@ -14,7 +14,6 @@ public:
     TenantsTable(ObservableTenantService& service) : service{service} {
         setColumnCount(5);
 
-        setSortingEnabled(true);
         setEditTriggers(QAbstractItemView::NoEditTriggers);
         setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -50,6 +49,8 @@ public:
             background = Qt::red;
         }
 
+        setSortingEnabled(false);
+
         int row = 0;
         for (const Tenant& tenant : tenants) {
             QTableWidgetItem* item;
@@ -82,6 +83,8 @@ public:
 
             row++;
         }
+
+        setSortingEnabled(true);
     }
 
 private:
