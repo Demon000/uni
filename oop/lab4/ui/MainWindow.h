@@ -7,7 +7,9 @@
 #include "../repositories/TenantRepository.h"
 #include "../repositories/NotificationRepository.h"
 #include "../services/ObservableTenantService.h"
-#include "../ui/CommonWindow.h"
+
+#include "CommonWindow.h"
+#include "TenantsTable.h"
 
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H
@@ -17,8 +19,6 @@ public:
     MainWindow(ObservableTenantService&);
 
 private:
-    void showTenants(std::vector<Tenant>);
-    void showFilteredTenants(std::string);
     void refreshTenants();
 
     int getSelectedTenantNumber();
@@ -30,7 +30,8 @@ private:
     void receive(ObserveEvent) override;
 
     ObservableTenantService& service;
-    QTableWidget* table;
+    TenantsTable* table;
+    QLineEdit* filterInput;
 };
 
 #endif // MAIN_WINDOW_H

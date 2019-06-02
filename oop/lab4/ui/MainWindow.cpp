@@ -6,17 +6,8 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     QVBoxLayout* mainLayout = new QVBoxLayout();
     setLayout(mainLayout);
 
-    table = new QTableWidget();
-    table->setColumnCount(5);
+    table = new TenantsTable(service);
     mainLayout->addWidget(table);
-
-    table->setSortingEnabled(true);
-    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->setSelectionBehavior(QAbstractItemView::SelectRows);
-
-    table->verticalHeader()->hide();
-    table->setHorizontalHeaderLabels(QStringList{"Number", "Name", "Surface", "Type", "Same surface"});
-    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     QWidget* filterWidget = new QWidget();
     QHBoxLayout* filterLayout = new QHBoxLayout();
@@ -26,11 +17,11 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     QLabel* filterLabel = new QLabel("Filter");
     filterLayout->addWidget(filterLabel);
 
-    QLineEdit* filterInput = new QLineEdit();
+    filterInput = new QLineEdit();
     filterInput->setClearButtonEnabled(true);
     filterLayout->addWidget(filterInput);
-    connect(filterInput, &QLineEdit::textEdited, [&](QString text) {
-        showFilteredTenants(text.toStdString());
+    connect(filterInput, &QLineEdit::textEdited, [&]() {
+        refreshTenants();
     });
 
     QWidget* buttonsWidget = new QWidget();
@@ -47,14 +38,14 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     QPushButton* updateTenantButton = new QPushButton("Update tenant");
     buttonsLayout->addWidget(updateTenantButton);
     connect(updateTenantButton, &QPushButton::clicked, [&]() {
-        int selected = getSelectedTenantNumber();
+        int selected = table->selectedTenantNumber();
         showUpdateTenantWindow(selected);
     });
 
     QPushButton* removeTenantButton = new QPushButton("Remove tenant");
     buttonsLayout->addWidget(removeTenantButton);
     connect(removeTenantButton, &QPushButton::clicked, [&]() {
-        int selected = getSelectedTenantNumber();
+        int selected = table->selectedTenantNumber();
         removeTenant(selected);
     });
 
@@ -76,20 +67,6 @@ void MainWindow::receive(ObserveEvent event) {
     default:
         break;
     }
-}
-
-int MainWindow::getSelectedTenantNumber() {
-    QList<QTableWidgetItem*> items = table->selectedItems();
-
-    for (QTableWidgetItem* item : items) {
-        if (item->column() == 0) {
-            QString text = item->text();
-            int number = text.toInt();
-            return number;
-        }
-    }
-
-    return -1;
 }
 
 void MainWindow::showAddTenantWindow() {
@@ -127,58 +104,16 @@ void MainWindow::undoAction() {
 
 }
 
-void MainWindow::showTenants(std::vector<Tenant> tenants) {
-    std::unordered_map<int, int> surfaceReport = service.getSurfaceReport();
-
-    int rows = tenants.size();
-    table->setRowCount(rows);
-
-    QBrush background;
-    if (rows < 5) {
-        background = Qt::red;
-    }
-
-    int row = 0;
-    for (const Tenant& tenant : tenants) {
-        QTableWidgetItem* item;
-        QString text;
-
-        item = new QTableWidgetItem();
-        item->setData(Qt::DisplayRole, tenant.getNumber());
-        item->setBackground(background);
-        table->setItem(row, 0, item);
-
-        text = QString::fromStdString(tenant.getName());
-        item = new QTableWidgetItem(text);
-        item->setBackground(background);
-        table->setItem(row, 1, item);
-
-        item = new QTableWidgetItem();
-        item->setData(Qt::DisplayRole, tenant.getSurface());
-        item->setBackground(background);
-        table->setItem(row, 2, item);
-
-        text = QString::fromStdString(tenant.getType());
-        item = new QTableWidgetItem(text);
-        item->setBackground(background);
-        table->setItem(row, 3, item);
-
-        text = QString::number(surfaceReport[tenant.getSurface()]);
-        item = new QTableWidgetItem(text);
-        item->setBackground(background);
-        table->setItem(row, 4, item);
-
-        row++;
-    }
-}
-
 void MainWindow::refreshTenants() {
-    std::vector<Tenant> tenants = service.getTenants();
-    showTenants(tenants);
+    QString qs = filterInput->text();
+    std::string text = qs.toStdString();
 
-}
+    std::vector<Tenant> tenants;
+    if (text.length()) {
+        tenants = service.getFilteredTenants(text);
+    } else {
+        tenants = service.getTenants();
+    }
 
-void MainWindow::showFilteredTenants(std::string text) {
-    std::vector<Tenant> tenants = service.getFilteredTenants(text);
-    showTenants(tenants);
+    table->showTenants(tenants);
 }

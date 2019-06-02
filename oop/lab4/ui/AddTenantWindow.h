@@ -5,7 +5,8 @@
 
 #include "../entities/Tenant.h"
 #include "../services/ObservableTenantService.h"
-#include "../ui/CommonWindow.h"
+
+#include "CommonWindow.h"
 
 #ifndef ADD_TENANT_WINDOW_H
 #define ADD_TENANT_WINDOW_H
