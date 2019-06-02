@@ -10,7 +10,7 @@ UpdateTenantWindow::UpdateTenantWindow(ObservableTenantService& service,
     fieldsWidget->setLayout(fieldsLayout);
 
     QLabel* nameLabel = new QLabel(QString("Name"));
-    QLineEdit* nameInput = new QLineEdit();
+    nameInput = new QLineEdit();
     fieldsLayout->addRow(nameLabel, nameInput);
     layout->addWidget(fieldsWidget);
 
