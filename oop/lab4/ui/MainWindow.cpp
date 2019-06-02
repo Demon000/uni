@@ -6,7 +6,7 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     QVBoxLayout* mainLayout = new QVBoxLayout();
     setLayout(mainLayout);
 
-    table = new TenantsTable(service);
+    table = new TenantsTable();
     mainLayout->addWidget(table);
 
     QWidget* filterWidget = new QWidget();
