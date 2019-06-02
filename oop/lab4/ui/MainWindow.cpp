@@ -20,9 +20,8 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     filterInput = new QLineEdit();
     filterInput->setClearButtonEnabled(true);
     filterLayout->addWidget(filterInput);
-    connect(filterInput, &QLineEdit::textEdited, [&]() {
-        refreshTenants();
-    });
+    connect(filterInput, &QLineEdit::textEdited,
+            this, &MainWindow::refreshTenants);
 
     QWidget* buttonsWidget = new QWidget();
     QHBoxLayout* buttonsLayout = new QHBoxLayout();
@@ -31,29 +30,24 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
 
     QPushButton* addTenantButton = new QPushButton("Add tenant");
     buttonsLayout->addWidget(addTenantButton);
-    connect(addTenantButton, &QPushButton::clicked, [&]() {
-        showAddTenantWindow();
-    });
+    connect(addTenantButton, &QPushButton::clicked,
+            this, &MainWindow::showAddTenantWindow);
 
     QPushButton* updateTenantButton = new QPushButton("Update tenant");
     buttonsLayout->addWidget(updateTenantButton);
-    connect(updateTenantButton, &QPushButton::clicked, [&]() {
-        int selected = table->selectedTenantNumber();
-        showUpdateTenantWindow(selected);
-    });
+    connect(updateTenantButton, &QPushButton::clicked,
+            this, &MainWindow::showUpdateTenantWindow);
 
     QPushButton* removeTenantButton = new QPushButton("Remove tenant");
     buttonsLayout->addWidget(removeTenantButton);
-    connect(removeTenantButton, &QPushButton::clicked, [&]() {
-        int selected = table->selectedTenantNumber();
-        removeTenant(selected);
-    });
+    connect(removeTenantButton, &QPushButton::clicked,
+            this, &MainWindow::removeTenant);
+
 
     QPushButton* undoButton = new QPushButton("Undo");
     buttonsLayout->addWidget(undoButton);
-    connect(undoButton, &QPushButton::clicked, [&]() {
-        undoAction();
-    });
+    connect(undoButton, &QPushButton::clicked,
+            this, &MainWindow::undoAction);
 
     refreshTenants();
     service.subscribe(this);
@@ -74,7 +68,8 @@ void MainWindow::showAddTenantWindow() {
     addTenantWindow->show();
 }
 
-void MainWindow::showUpdateTenantWindow(int selected) {
+void MainWindow::showUpdateTenantWindow() {
+    int selected = table->selectedTenantNumber();
     if (selected == -1) {
         return;
     }
@@ -83,7 +78,8 @@ void MainWindow::showUpdateTenantWindow(int selected) {
     updateTenantWindow->show();
 }
 
-void MainWindow::removeTenant(int selected) {
+void MainWindow::removeTenant() {
+    int selected = table->selectedTenantNumber();
     if (selected == -1) {
         return;
     }

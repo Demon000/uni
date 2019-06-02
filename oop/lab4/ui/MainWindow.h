@@ -23,8 +23,8 @@ private:
 
     int getSelectedTenantNumber();
     void showAddTenantWindow();
-    void showUpdateTenantWindow(int);
-    void removeTenant(int);
+    void showUpdateTenantWindow();
+    void removeTenant();
     void undoAction();
 
     void receive(ObserveEvent) override;
