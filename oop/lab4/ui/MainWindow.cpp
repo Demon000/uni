@@ -143,8 +143,8 @@ void MainWindow::showTenants(std::vector<Tenant> tenants) {
         QTableWidgetItem* item;
         QString text;
 
-        text = QString::number(tenant.getNumber());
-        item = new QTableWidgetItem(text);
+        item = new QTableWidgetItem();
+        item->setData(Qt::DisplayRole, tenant.getNumber());
         item->setBackground(background);
         table->setItem(row, 0, item);
 
@@ -153,8 +153,8 @@ void MainWindow::showTenants(std::vector<Tenant> tenants) {
         item->setBackground(background);
         table->setItem(row, 1, item);
 
-        text = QString::number(tenant.getSurface());
-        item = new QTableWidgetItem(text);
+        item = new QTableWidgetItem();
+        item->setData(Qt::DisplayRole, tenant.getSurface());
         item->setBackground(background);
         table->setItem(row, 2, item);
 
