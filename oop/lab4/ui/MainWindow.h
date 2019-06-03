@@ -31,6 +31,7 @@ private:
     void showApartmentNotificationsWindow();
     void showVisualNotificationsWindow();
     void removeTenant();
+    void notifyTenant();
     void undoAction();
 
     void receive(ObserveEvent) override;

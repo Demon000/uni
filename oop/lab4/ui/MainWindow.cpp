@@ -41,6 +41,16 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     connect(removeTenantButton, &QPushButton::clicked,
             this, &MainWindow::removeTenant);
 
+    QPushButton* notifyTenantButton = new QPushButton("Notify tenant");
+    buttonsLayout->addWidget(notifyTenantButton);
+    connect(notifyTenantButton, &QPushButton::clicked,
+            this, &MainWindow::notifyTenant);
+
+    QPushButton* undoButton = new QPushButton("Undo");
+    buttonsLayout->addWidget(undoButton);
+    connect(undoButton, &QPushButton::clicked,
+            this, &MainWindow::undoAction);
+
     QWidget* notificationsWidget = new QWidget();
     QHBoxLayout* notificationsLayout = new QHBoxLayout();
     notificationsWidget->setLayout(notificationsLayout);
@@ -51,10 +61,6 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     connect(notificationsButton, &QPushButton::clicked,
             this, &MainWindow::showApartmentNotificationsWindow);
 
-    QPushButton* undoButton = new QPushButton("Undo");
-    buttonsLayout->addWidget(undoButton);
-    connect(undoButton, &QPushButton::clicked,
-            this, &MainWindow::undoAction);
 
     refreshTenants();
     service.subscribe(this);
@@ -99,7 +105,20 @@ void MainWindow::removeTenant() {
     try {
         service.removeTenant(selected);
     } catch (TenantMissingException&) {
-        showErrorMessage("Tenant does not exist.");
+        // ignore
+    }
+}
+
+void MainWindow::notifyTenant() {
+    int selected = table->selectedTenantNumber();
+    if (selected == -1) {
+        return;
+    }
+
+    try {
+        service.addNotification(selected);
+    } catch (NumberExistsException&) {
+        // ignore
     }
 }
 
