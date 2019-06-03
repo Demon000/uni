@@ -3,16 +3,16 @@
 #include "UpdateTenantWindow.h"
 
 MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
-    QVBoxLayout* mainLayout = new QVBoxLayout();
-    setLayout(mainLayout);
+    QVBoxLayout* layout = new QVBoxLayout();
+    setLayout(layout);
 
     table = new TenantsTable();
-    mainLayout->addWidget(table);
+    layout->addWidget(table);
 
     QWidget* filterWidget = new QWidget();
     QHBoxLayout* filterLayout = new QHBoxLayout();
     filterWidget->setLayout(filterLayout);
-    mainLayout->addWidget(filterWidget);
+    layout->addWidget(filterWidget);
 
     QLabel* filterLabel = new QLabel("Filter");
     filterLayout->addWidget(filterLabel);
@@ -26,7 +26,7 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     QWidget* buttonsWidget = new QWidget();
     QHBoxLayout* buttonsLayout = new QHBoxLayout();
     buttonsWidget->setLayout(buttonsLayout);
-    mainLayout->addWidget(buttonsWidget);
+    layout->addWidget(buttonsWidget);
 
     QPushButton* addTenantButton = new QPushButton("Add tenant");
     buttonsLayout->addWidget(addTenantButton);
