@@ -1,6 +1,4 @@
 #include "MainWindow.h"
-#include "AddTenantWindow.h"
-#include "UpdateTenantWindow.h"
 
 MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     QVBoxLayout* layout = new QVBoxLayout();

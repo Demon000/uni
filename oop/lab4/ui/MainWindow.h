@@ -7,10 +7,13 @@
 #include "../repositories/TenantRepository.h"
 #include "../repositories/NotificationRepository.h"
 #include "../services/ObservableTenantService.h"
+#include "../observe/Observe.h"
 
 #include "CommonWindow.h"
-#include "NotificationsWindow.h"
 #include "TenantsTable.h"
+#include "AddTenantWindow.h"
+#include "UpdateTenantWindow.h"
+#include "NotificationsWindow.h"
 
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H
