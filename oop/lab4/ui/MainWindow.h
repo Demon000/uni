@@ -14,6 +14,7 @@
 #include "AddTenantWindow.h"
 #include "UpdateTenantWindow.h"
 #include "NotificationsWindow.h"
+#include "VisualWindow.h"
 
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H

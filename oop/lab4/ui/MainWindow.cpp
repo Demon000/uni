@@ -61,6 +61,10 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     connect(notificationsButton, &QPushButton::clicked,
             this, &MainWindow::showApartmentNotificationsWindow);
 
+    QPushButton* visualButton = new QPushButton("Visual notifications");
+    notificationsLayout->addWidget(visualButton);
+    connect(visualButton, &QPushButton::clicked,
+            this, &MainWindow::showVisualNotificationsWindow);
 
     refreshTenants();
     service.subscribe(this);
@@ -94,6 +98,11 @@ void MainWindow::showUpdateTenantWindow() {
 void MainWindow::showApartmentNotificationsWindow() {
     NotificationsWindow* notificationsWindow = new NotificationsWindow(service);
     notificationsWindow->show();
+}
+
+void MainWindow::showVisualNotificationsWindow() {
+    VisualWindow* visualWindow = new VisualWindow(service);
+    visualWindow->show();
 }
 
 void MainWindow::removeTenant() {
