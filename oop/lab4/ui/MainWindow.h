@@ -9,6 +9,7 @@
 #include "../services/ObservableTenantService.h"
 
 #include "CommonWindow.h"
+#include "NotificationsWindow.h"
 #include "TenantsTable.h"
 
 #ifndef MAIN_WINDOW_H
@@ -24,6 +25,8 @@ private:
     int getSelectedTenantNumber();
     void showAddTenantWindow();
     void showUpdateTenantWindow();
+    void showApartmentNotificationsWindow();
+    void showVisualNotificationsWindow();
     void removeTenant();
     void undoAction();
 

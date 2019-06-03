@@ -43,6 +43,15 @@ MainWindow::MainWindow(ObservableTenantService& service) : service(service) {
     connect(removeTenantButton, &QPushButton::clicked,
             this, &MainWindow::removeTenant);
 
+    QWidget* notificationsWidget = new QWidget();
+    QHBoxLayout* notificationsLayout = new QHBoxLayout();
+    notificationsWidget->setLayout(notificationsLayout);
+    layout->addWidget(notificationsWidget);
+
+    QPushButton* notificationsButton = new QPushButton("Notifications");
+    notificationsLayout->addWidget(notificationsButton);
+    connect(notificationsButton, &QPushButton::clicked,
+            this, &MainWindow::showApartmentNotificationsWindow);
 
     QPushButton* undoButton = new QPushButton("Undo");
     buttonsLayout->addWidget(undoButton);
@@ -76,6 +85,11 @@ void MainWindow::showUpdateTenantWindow() {
 
     UpdateTenantWindow* updateTenantWindow = new UpdateTenantWindow(service, selected);
     updateTenantWindow->show();
+}
+
+void MainWindow::showApartmentNotificationsWindow() {
+    NotificationsWindow* notificationsWindow = new NotificationsWindow(service);
+    notificationsWindow->show();
 }
 
 void MainWindow::removeTenant() {

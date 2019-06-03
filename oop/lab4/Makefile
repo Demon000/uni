@@ -51,6 +51,7 @@ gui_cppfiles = \
 		ui/MainWindow.cpp \
 		ui/AddTenantWindow.cpp \
 		ui/UpdateTenantWindow.cpp \
+		ui/NotificationsWindow.cpp \
 		main_gui.cpp
 
 gui_hfiles = \
@@ -61,7 +62,8 @@ gui_hfiles = \
 		ui/CommonWindow.h \
 		ui/MainWindow.h \
 		ui/AddTenantWindow.h \
-		ui/UpdateTenantWindow.h
+		ui/UpdateTenantWindow.h \
+		ui/NotificationsWindow.h
 
 gui_files = \
 		$(gui_cppfiles) \
