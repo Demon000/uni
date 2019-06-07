@@ -33,7 +33,7 @@ test: $(test_files)
 		-g $(test_cppfiles) \
 		-o $(test_file)
 
-	valgrind \
-		--leak-check=full \
-		--track-origins=yes \
-		$(test_file)
+# 	valgrind \
+# 		--leak-check=full \
+# 		--track-origins=yes \
+# 		$(test_file)

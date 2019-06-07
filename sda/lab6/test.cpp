@@ -1,4 +1,5 @@
 #include <cassert>
+#include <iostream>
 
 #include "Colectie.h"
 #include "TestScurt.h"
@@ -6,6 +7,6 @@
 
 int main() {
     testAll();
-    //testAllExtins();
+    testAllExtins();
     return 0;
 }
