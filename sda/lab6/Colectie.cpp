@@ -209,6 +209,53 @@ bool Colectie::sterge(TElem element) {
     return remove(element);
 }
 
+/*
+ stergeMultiple(colectie(i/o), nr(i), element(i), sterse(o))
+     precond: colectie apartine Colectie, din care se sterge
+              nr de tip intreg, numarul de element care trebuie sterse
+              element de tip TElem, elementul care trebuie sters
+     postcond:
+              sterse de tip intreg, numarul de elemente care au putut fi sterse
+
+    cat timp numarul de elemente care trebuie sterse nu a ajuns la 0
+    incercam sa stergem elementul dat
+    si incremental numarul de elemente sterse
+    returnam numarul de elemente sterse
+
+    subalgoritm sterge(colectie, nr, element)
+        pozitie <- @hash(element)
+
+        cat timp adevarat
+            daca colectie.elemente[pozitie] = element ^ !colectie.sters[pozitie] atunci
+                colectie.sters[pozitie] <- adevarat
+                sfarsit cat timp
+
+            daca !colectie.pozitie_urmatoare[pozitie]
+                sterge <- fals
+
+            pozitie <- colectie.pozitie_urmatoare[pozitie]
+
+        sfarsit cat timp
+
+        colectie.total <- colectie.total - 1
+        sterge <- adevarat
+    sfarsit subalgoritm
+
+    subalgoritm stergeMultiple(colectie, nr, element)
+        sterse <- 0
+
+        cat timp nr != 0
+            sters = colectie.sterge(element)
+            daca sters = adevarat
+                sterse <- sterse + 1
+
+            nr <- nr - 1
+        sfarsit cat timp
+
+        stergeMultiple <- sterse
+    sfarsit subalgoritm
+*/
+
 int Colectie::stergeMultiple(int nr, TElem element) {
     int sterse = 0;
     bool sters;
@@ -217,6 +264,8 @@ int Colectie::stergeMultiple(int nr, TElem element) {
         sters = sterge(element);
         if (sters) {
             sterse++;
+        } else {
+            break;
         }
 
         nr--;

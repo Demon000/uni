@@ -325,6 +325,6 @@ void testAllExtins() {
 	std::cout << "testSterge" << std::endl;
 	testIterator();
 	std::cout << "testIterator" << std::endl;
-	//testQuantity();
+	testQuantity();
 	std::cout << "testQuantity" << std::endl;
 }

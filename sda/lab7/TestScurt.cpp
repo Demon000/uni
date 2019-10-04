@@ -30,12 +30,4 @@ void testAll() { //apelam fiecare functie sa vedem daca exista
 		TElem e = ic.element();
 		ic.urmator();
 	}
-
-	c.adauga(20);
-	c.adauga(20);
-	c.adauga(20);
-	c.adauga(20);
-	c.adauga(20);
-
-	assert(c.stergeMultiple(10, 20) == 5);
 }

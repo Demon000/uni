@@ -1,10 +1,6 @@
 #ifndef COLECTIE_H
 #define COLECTIE_H
 
-#define SIZE_FACTOR 500
-#define MISSING_VALUE 2<<16
-#define MISSING_POSITION 2<<16
-
 typedef int TElem;
 
 class IteratorColectie;
@@ -17,7 +13,6 @@ public:
 
     void adauga(TElem);
     bool sterge(TElem);
-    int stergeMultiple(int, TElem);
     bool cauta(TElem) const;
     int nrAparitii(TElem) const;
     int dim() const;
@@ -28,21 +23,7 @@ public:
     void print() const;
 
 private:
-    TElem* elements;
-    int* nextElements;
-    bool* isDeleted;
-
-    int total;
-    int used;
-    int capacity;
-
-    int firstFree;
-
-    int hash(TElem) const;
-
     void expand();
-    void findFirstFree();
-    void innerAdd(TElem);
     void add(TElem);
     bool exists(TElem) const;
     bool remove(TElem);
