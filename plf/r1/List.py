@@ -13,7 +13,6 @@ class Node:
         return self.__value
 
     def print(self, recurse=False):
-        print(self.__value)
         if recurse and self.get_next_node():
             self.get_next_node().print(recurse)
 
