@@ -8,27 +8,34 @@
 #include <stdio.h>
 #include "client_server_common.h"
 
-int main() {
-	struct sockaddr_in server;
-	uint16_t a, b, suma;
-	int c;
+int init_server(struct sockaddr_in *server) {
+	int server_socket;
+	int rc;
 
-	memset(&server, 0, sizeof(server));
-	server.sin_port = htons(SERVER_PORT);
-	server.sin_family = AF_INET;
-	server.sin_addr.s_addr = inet_addr(SERVER_ADDRESS);
+	memset(server, 0, sizeof(*server));
+	server->sin_port = htons(SERVER_PORT);
+	server->sin_family = AF_INET;
+	server->sin_addr.s_addr = inet_addr(SERVER_ADDRESS);
 
-	c = socket(AF_INET, SOCK_STREAM, 0);
-	if (c < 0) {
+	server_socket = socket(AF_INET, SOCK_STREAM, 0);
+	if (server_socket < 0) {
 		printf("Error creating client socket\n");
-		return 1;
+		return server_socket;
 	}
 
-	if (connect(c, (struct sockaddr *) &server, sizeof(server)) < 0) {
+	rc = connect(server_socket, (struct sockaddr *) server, sizeof(*server));
+	if (rc < 0) {
 		printf("Error connecting to server\n");
-		return 1;
+		return rc;
 	}
 
+	return server_socket;
+}
+
+void on_connected(int server_socket) {
+	printf("Connected successfully\n");
+
+	uint16_t a, b, suma;
 	printf("a = ");
 	scanf("%hu", &a);
 	printf("b = ");
@@ -36,13 +43,24 @@ int main() {
 	a = htons(a);
 	b = htons(b);
 
-	send(c, &a, sizeof(a), 0);
-	send(c, &b, sizeof(b), 0);
-	recv(c, &suma, sizeof(suma), 0);
+	send(server_socket, &a, sizeof(a), 0);
+	send(server_socket, &b, sizeof(b), 0);
+	recv(server_socket, &suma, sizeof(suma), 0);
 
 	suma = ntohs(suma);
 
-	printf("Suma este %hu\n", suma);
+	printf("The sum is %hu\n", suma);
+}
 
-	close(c);
+int main() {
+	struct sockaddr_in server;
+	int server_socket;
+
+	server_socket = init_server(&server);
+	if (server_socket < 0) {
+		return 0;
+	}
+
+	on_connected(server_socket);
+	close(server_socket);
 }
