@@ -1,6 +1,6 @@
 public enum ComplexExpressionType {
     ADDITION,
-    SUBSTRACTION,
+    SUBTRACTION,
     MULTIPLICATION,
     DIVISION;
 
@@ -9,7 +9,7 @@ public enum ComplexExpressionType {
             case "+":
                 return ADDITION;
             case "-":
-                return SUBSTRACTION;
+                return SUBTRACTION;
             case "*":
                 return MULTIPLICATION;
             case "/":

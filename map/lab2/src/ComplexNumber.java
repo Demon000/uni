@@ -1,12 +1,35 @@
 import java.util.regex.*;
 
 public class ComplexNumber {
+    private static boolean DEBUG = false;
     private double real;
     private double imaginary;
 
     public ComplexNumber(double r, double i) {
         real = r;
         imaginary = i;
+    }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        if (real == (long) real) {
+            builder.append((long) real);
+        } else {
+            builder.append(real);
+        }
+
+        if (imaginary > 0) {
+            builder.append("+");
+        }
+
+        if (imaginary == (long) imaginary) {
+            builder.append((long) imaginary);
+        } else {
+            builder.append(imaginary);
+        }
+
+        builder.append("*i");
+        return builder.toString();
     }
 
     public static ComplexNumber add(ComplexNumber first, ComplexNumber second) {
@@ -16,7 +39,7 @@ public class ComplexNumber {
         return new ComplexNumber(r, i);
     }
 
-    public static ComplexNumber substract(ComplexNumber first, ComplexNumber second) {
+    public static ComplexNumber subtract(ComplexNumber first, ComplexNumber second) {
         double r = first.real - second.real;
         double i = first.imaginary - second.imaginary;
 
@@ -56,6 +79,11 @@ public class ComplexNumber {
                 "(?<imaginarySign>\\+|\\-)(?<imaginaryDecimalPart>\\d+)(?<imaginaryFractionalPart>\\.\\d+)?(\\*i)");
         Matcher matcher = pattern.matcher(expression);
 
+        if (DEBUG) {
+            System.out.println(expression);
+            System.out.println(matcher.matches());
+        }
+
         if (!matcher.matches()) {
             throw new Exception("Invalid complex number expression.");
         }
@@ -70,8 +98,10 @@ public class ComplexNumber {
         appendGroups(imaginaryBuilder, matcher, imaginaryGroups);
         double i = Double.parseDouble(imaginaryBuilder.toString());
 
-        System.out.println(r);
-        System.out.println(i);
+        if (DEBUG) {
+            System.out.println(r);
+            System.out.println(i);
+        }
 
         return new ComplexNumber(r, i);
     }

@@ -1,9 +1,9 @@
-public abstract class ComplexExpression {
-    private ComplexExpressionType type;
-    private ComplexNumber[] args;
+import java.util.List;
 
-    public ComplexExpression(ComplexExpressionType t, ComplexNumber[] a) {
-        type = t;
+public abstract class ComplexExpression {
+    protected List<ComplexNumber> args;
+
+    public ComplexExpression(List<ComplexNumber> a) {
         args = a;
     }
 
