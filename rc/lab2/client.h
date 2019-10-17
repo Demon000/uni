@@ -6,9 +6,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
-#include "client_server_common.h"
+#include "common.h"
 
-int init_server(struct sockaddr_in *server) {
+int init_server_connection(struct sockaddr_in *server, connected_callback cb) {
 	int server_socket;
 	int rc;
 
@@ -29,38 +29,7 @@ int init_server(struct sockaddr_in *server) {
 		return rc;
 	}
 
-	return server_socket;
-}
+	cb(server_socket);
 
-void on_connected(int server_socket) {
-	printf("Connected successfully\n");
-
-	uint16_t a, b, suma;
-	printf("a = ");
-	scanf("%hu", &a);
-	printf("b = ");
-	scanf("%hu", &b);
-	a = htons(a);
-	b = htons(b);
-
-	send(server_socket, &a, sizeof(a), 0);
-	send(server_socket, &b, sizeof(b), 0);
-	recv(server_socket, &suma, sizeof(suma), 0);
-
-	suma = ntohs(suma);
-
-	printf("The sum is %hu\n", suma);
-}
-
-int main() {
-	struct sockaddr_in server;
-	int server_socket;
-
-	server_socket = init_server(&server);
-	if (server_socket < 0) {
-		return 0;
-	}
-
-	on_connected(server_socket);
 	close(server_socket);
 }

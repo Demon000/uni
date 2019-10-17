@@ -6,12 +6,15 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
-#include "client_server_common.h"
+#include <stdlib.h>
+#include <signal.h>
+#include "common.h"
 
-typedef void (*client_connected_callback)(int client_socket);
+int server_socket;
 
 int init_server(struct sockaddr_in *server) {
 	int server_socket;
+	int value = 1;
 	int rc;
 
 	memset(server, 0, sizeof(*server));
@@ -25,6 +28,12 @@ int init_server(struct sockaddr_in *server) {
 		return server_socket;
 	}
 
+	rc = setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &value, sizeof(value));
+	if (rc < 0) {
+		printf("Error setting socket reuse option\n");
+		return rc;
+	}
+
 	rc = bind(server_socket, (struct sockaddr *) server, sizeof(*server));
 	if (rc < 0) {
 		printf("Error binding server socket\n");
@@ -36,7 +45,7 @@ int init_server(struct sockaddr_in *server) {
 	return server_socket;
 }
 
-void wait_for_connection(int server_socket, client_connected_callback cb) {
+void wait_for_connection(int server_socket, connected_callback cb) {
 	while (1) {
 		struct sockaddr_in client;
 		int client_socket;
@@ -49,31 +58,4 @@ void wait_for_connection(int server_socket, client_connected_callback cb) {
 		cb(client_socket);
 		close(client_socket);
 	}
-}
-
-void on_client_connected(int client_socket) {
-	printf("A client has connected\n");
-
-	uint16_t a, b, suma;
-	recv(client_socket, &a, sizeof(a), MSG_WAITALL);
-	recv(client_socket, &b, sizeof(b), MSG_WAITALL);
-
-	a = ntohs(a);
-	b = ntohs(b);
-	suma = a + b;
-	suma = htons(suma);
-
-	send(client_socket, &suma, sizeof(suma), 0);
-}
-
-int main() {
-	struct sockaddr_in server;
-	int server_socket;
-
-	server_socket = init_server(&server);
-	if (server_socket < 0) {
-		return 0;
-	}
-
-	wait_for_connection(server_socket, on_client_connected);
 }
