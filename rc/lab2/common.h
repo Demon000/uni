@@ -1,5 +1,11 @@
+#ifndef SERVER_PORT
 #define SERVER_PORT 1234
+#endif
+
+#ifndef SERVER_ADDRESS
 #define SERVER_ADDRESS "127.0.0.1"
+#endif
+
 #define SOCKET_BACKLOG 5
 
 typedef void (*connected_callback)(int socket);
