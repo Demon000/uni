@@ -1,5 +1,4 @@
 #include "client.h"
-#include <inttypes.h>
 
 void on_connected(int server_socket) {
 	uint16_t length;
