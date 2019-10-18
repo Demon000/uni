@@ -55,7 +55,9 @@ void wait_for_connection(int server_socket, connected_callback cb) {
 
 		client_socket = accept(server_socket, (struct sockaddr *) &client, &size);
 
-		cb(client_socket);
-		close(client_socket);
+		if (fork() == 0) {
+			cb(client_socket);
+			close(client_socket);
+		}
 	}
 }
