@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UniversitySemester {
-    private List<DateInterval> intervals = new ArrayList<DateInterval>();
+    private List<DateInterval> intervals = new ArrayList<>();
 
     /**
      * Add an interval to this semester.

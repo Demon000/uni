@@ -10,7 +10,7 @@ public class DateInterval {
      * Create a date interval.
      * @param sd the start of the date interval
      * @param ed the end of the date interval
-     * @throws DateIntervalError
+     * @throws DateIntervalError if the start date is after the end date
      */
     public DateInterval(LocalDate sd, LocalDate ed) throws DateIntervalError {
         startDate = sd;

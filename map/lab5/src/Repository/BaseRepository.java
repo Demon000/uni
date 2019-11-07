@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BaseRepository<ID, E extends BaseEntity<ID>, V extends IValidator<E>> implements IRepository<ID, E> {
-    private Map<ID, E> entities = new HashMap<ID, E>();
+    private Map<ID, E> entities = new HashMap<>();
     private V validator;
 
     public BaseRepository(V validator) {
@@ -32,7 +32,7 @@ public class BaseRepository<ID, E extends BaseEntity<ID>, V extends IValidator<E
     @Override
     public E save(E entity) throws ValidationException {
         if (entity == null) {
-            throw new IllegalArgumentException("Id cannot be null");
+            throw new IllegalArgumentException("Entity cannot be null");
         }
 
         validator.validate(entity);
@@ -52,7 +52,7 @@ public class BaseRepository<ID, E extends BaseEntity<ID>, V extends IValidator<E
     @Override
     public E update(E entity) throws ValidationException {
         if (entity == null) {
-            throw new IllegalArgumentException("Id cannot be null");
+            throw new IllegalArgumentException("Entity cannot be null");
         }
 
         validator.validate(entity);

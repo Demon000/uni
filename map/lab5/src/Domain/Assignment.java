@@ -1,7 +1,5 @@
 package Domain;
 
-import java.util.Objects;
-
 public class Assignment extends BaseEntity<String> {
     private String description;
     private long startWeek;
@@ -13,26 +11,6 @@ public class Assignment extends BaseEntity<String> {
         this.description = description;
         this.startWeek = startWeek;
         this.deadlineWeek = deadlineWeek;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        }
-
-        if (!(other instanceof  Assignment)) {
-            return false;
-        }
-
-        Assignment otherAssignment = (Assignment) other;
-
-        return getId() == otherAssignment.getId();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
     }
 
     public String getDescription() {

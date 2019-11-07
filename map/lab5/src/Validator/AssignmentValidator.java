@@ -5,7 +5,7 @@ import Time.UniversityYear;
 
 import java.time.LocalDate;
 
-public class AssignmentValidator implements IValidator<Assignment> {
+public class AssignmentValidator extends BaseEntityStringValidator<Assignment> {
     private UniversityYear year;
 
     public AssignmentValidator(UniversityYear year) {
@@ -24,12 +24,12 @@ public class AssignmentValidator implements IValidator<Assignment> {
     }
 
     /**
-     * Validate the starting week and the deadline week.
+     * Validate the starting week and the deadline week taking into account the current week.
      * @param startWeek the starting week to be validated
      * @param deadlineWeek the deadline week to be validated
      * @throws ValidationException if the starting week or the deadline week aren't valid
      */
-    public void validateWeeks(long startWeek, long deadlineWeek) throws ValidationException {
+    public void validateWeeksRelative(long startWeek, long deadlineWeek) throws ValidationException {
         LocalDate today = LocalDate.now();
         long todayWeek = year.getWeeksSinceStart(today);
 
@@ -44,7 +44,9 @@ public class AssignmentValidator implements IValidator<Assignment> {
 
     @Override
     public void validate(Assignment assignment) throws ValidationException {
+        super.validate(assignment);
+
         validateDescription(assignment.getDescription());
-        validateWeeks(assignment.getStartWeek(), assignment.getDeadlineWeek());
+        validateWeeksRelative(assignment.getStartWeek(), assignment.getDeadlineWeek());
     }
 }

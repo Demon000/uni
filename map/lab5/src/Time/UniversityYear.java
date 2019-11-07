@@ -18,7 +18,7 @@ public class UniversityYear {
 
     /**
      * Get the number of weeks in this year.
-     * @return
+     * @return the number of weeks in this year
      */
     public long getNumberOfWeeks() {
         return firstSemester.getNumberOfWeeks() + secondSemester.getNumberOfWeeks();

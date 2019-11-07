@@ -2,21 +2,7 @@ package Validator;
 
 import Domain.Student;
 
-public class StudentValidator implements IValidator<Student> {
-    private final String idRegex = "[1-9]+";
-    private final String nameRegex = "[A-Z][a-z -]+";
-    private final String emailRegex = "[a-z]{4}[1-9]{4}@scs.ubbcluj.ro";
-
-    /**
-     * Validate an id.
-     * @param id the id to be validated.
-     * @throws ValidationException if the id isn't valid
-     */
-    public void validateId(String id) throws ValidationException {
-        if (!id.matches(idRegex)) {
-            throw new ValidationException("Given string doesn't look like an id");
-        }
-    }
+public class StudentValidator extends BaseEntityStringValidator<Student> {
 
     /**
      * Validate a name.
@@ -28,6 +14,7 @@ public class StudentValidator implements IValidator<Student> {
             throw new ValidationException("Given string is too short for a name");
         }
 
+        String nameRegex = "[A-Z][a-z]+";
         if (!name.matches(nameRegex)) {
             throw new ValidationException("Given string doesn't look like a name");
         }
@@ -39,6 +26,7 @@ public class StudentValidator implements IValidator<Student> {
      * @throws ValidationException if the email isn't valid
      */
     public void validateEmail(String email) throws ValidationException {
+        String emailRegex = "[a-z]{4}[1-9]{4}@scs.ubbcluj.ro";
         if (!email.matches(emailRegex)) {
             throw new ValidationException(("Given string isn't a valid email address."));
         }
@@ -46,7 +34,8 @@ public class StudentValidator implements IValidator<Student> {
 
     @Override
     public void validate(Student student) throws ValidationException {
-        validateId(student.getId());
+        super.validate(student);
+
         validateName(student.getFirstName());
         validateName(student.getLastName());
         validateEmail(student.getEmail());
