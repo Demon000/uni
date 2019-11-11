@@ -186,12 +186,12 @@ public class CommonService {
     }
 
     /**
-     *
-     * @param assignmentId the id of the assignment at which the student received this grade
-     * @param date the date the student received this grade on, can be null to use today's date
-     * @return the number of weeks that will pass until the given date,
-     * -1 if the date is not inside this year.
-     * @throws CommonServiceException
+     * Get the penalty that will be added for an assignment if it were to be turned in at a specific date.
+     * @param assignmentId the id of the assignment
+     * @param date the date the assignment will be turned in, can be null to use today's date
+     * @return the number of weeks that will pass until the given date
+     * @throws CommonServiceException if an assignment with the given id does not exist
+     * @throws UniversityYearError if the given date is not part of the current semester
      */
     public long getGradePenalty(String assignmentId, LocalDate date) throws CommonServiceException, UniversityYearError {
         Assignment assignment = assignmentRepository.findOne(assignmentId);
@@ -288,6 +288,8 @@ public class CommonService {
 
         if (date != null) {
             grade.setDate(date);
+        } else {
+            date = grade.getDate();
         }
 
         long penalty = getGradePenalty(assignmentId, date);

@@ -52,7 +52,7 @@ public class ConsoleInputUtils {
     }
 
     public static LocalDate readDate() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         String result = readString();
         return LocalDate.parse(result, dateFormatter);
     }

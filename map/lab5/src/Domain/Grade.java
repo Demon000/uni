@@ -45,7 +45,7 @@ public class Grade extends BaseEntity<String> {
     }
 
     public String toString() {
-        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         return String.format("Grade -> id: %s, date: %s, penalty: %d, value: %d", getId(),
                 date.format(dateFormatter), penalty, value);
     }

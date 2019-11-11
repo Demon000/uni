@@ -32,7 +32,7 @@ class ConsoleMenuEntry {
     }
 
     public ConsoleMenuEntry(String index, String description, ConsoleMenuCallable callable) {
-        this(index, description, callable, true);
+        this(index, description, callable, false);
     }
 
     public String getIndex() {
@@ -177,7 +177,7 @@ public class Console {
 
         long penalty = service.getGradePenalty(assignmentId, date);
         if (penalty > 0) {
-            System.out.println(String.format("A penalty of -%d points will be applied to the grade.", penalty));
+            System.out.println(String.format("A penalty of %d points will be applied to the grade.", penalty));
         }
 
         int value = readNatural("Grade: ", "Invalid grade");
@@ -197,10 +197,10 @@ public class Console {
 
         long penalty = service.getGradePenalty(assignmentId, date);
         if (penalty > 0) {
-            System.out.println(String.format("A penalty of -%d points will be applied to the grade.", penalty));
+            System.out.println(String.format("A penalty of %d points will be applied to the grade.", penalty));
         }
 
-        int value = readNatural("New grade: (empty to leave unchanged)");
+        int value = readNatural("New grade: (empty to leave unchanged): ");
 
         Grade grade = service.updateGrade(studentId, assignmentId, date, value);
         System.out.println(String.format("Updated: %s", grade));
@@ -219,7 +219,18 @@ public class Console {
         entries.forEach(System.out::println);
     }
 
+    private void populate() {
+        try {
+            service.addStudent("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro");
+            service.addAssignment("1", "Iteratia 1", 7, 9);
+        } catch (CommonServiceException | ValidationException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void run() {
+        populate();
+
         while (true) {
             printEntries();
             ConsoleMenuEntry entry = readEntry();
