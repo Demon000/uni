@@ -11,16 +11,17 @@ public class StudentValidator extends BaseEntityStringValidator<Student> {
      */
     public void validateName(String name) throws ValidationException {
         if (name == null) {
-            throw new ValidationException("Student name cannot be null");
+            throw new ValidationException("Student must not be null");
         }
 
         if (name.length() < 3) {
-            throw new ValidationException("Given string is too short for a name");
+            throw new ValidationException("Student must be at least 3 characters long");
         }
 
         String nameRegex = "[A-Z][a-z]+";
         if (!name.matches(nameRegex)) {
-            throw new ValidationException("Given string doesn't look like a name");
+            throw new ValidationException("Student name must start with an uppercase letter " +
+                    "followed by multiple lowercase letters");
         }
     }
 

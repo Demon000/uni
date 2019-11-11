@@ -36,4 +36,9 @@ public class Assignment extends BaseEntity<String> {
     public void setDeadlineWeek(long deadlineWeek) {
         this.deadlineWeek = deadlineWeek;
     }
+
+    public String toString() {
+        return String.format("Assignment -> id: %s, description: %s, start week: %d, deadline week: %d",
+                getId(), description, startWeek, deadlineWeek);
+    }
 }

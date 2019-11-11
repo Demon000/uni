@@ -2,6 +2,7 @@ package Validator;
 
 import Domain.Assignment;
 import Time.UniversityYear;
+import Time.UniversityYearError;
 
 import java.time.LocalDate;
 
@@ -19,10 +20,10 @@ public class AssignmentValidator extends BaseEntityStringValidator<Assignment> {
      */
     public void validateDescription(String description) throws ValidationException {
         if (description == null) {
-            throw new ValidationException("Description cannot be null");
+            throw new ValidationException("Description must not be null");
         }
         if (description.length() < 10) {
-            throw new ValidationException("Given string is too short for a description");
+            throw new ValidationException("Description must be at least 10 characters long");
         }
     }
 
@@ -34,21 +35,27 @@ public class AssignmentValidator extends BaseEntityStringValidator<Assignment> {
      */
     public void validateWeeksRelative(long startWeek, long deadlineWeek) throws ValidationException {
         LocalDate today = LocalDate.now();
-        long todayWeek = year.getWeeksSinceStart(today);
+        long todayWeek;
 
-        if (startWeek > deadlineWeek) {
-            throw new ValidationException("Start week is after deadline week");
+        try {
+            todayWeek = year.getWeeksSinceStart(today);
+        } catch (UniversityYearError universityYearError) {
+            throw new ValidationException("Current week must be inside university year");
         }
 
         if (startWeek < todayWeek) {
-            throw new ValidationException("Start week is before current week");
+            throw new ValidationException("Start week must be after current or the same as the current week");
+        }
+
+        if (startWeek > deadlineWeek) {
+            throw new ValidationException("Deadline week must be after or the same as start week");
         }
     }
 
     @Override
     public void validate(Assignment assignment) throws ValidationException {
         if (assignment == null) {
-            throw new ValidationException("Assignment cannot be null");
+            throw new ValidationException("Assignment must not be null");
         }
 
         super.validate(assignment);

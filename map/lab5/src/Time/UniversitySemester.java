@@ -42,29 +42,19 @@ public class UniversitySemester {
     /**
      * Get the number of weeks that will pass until the given date.
      * @param date the date for which to calculate the number of weeks
-     * @return the number of weeks from this semester that will pass until the given date,
-     * -1 if the date is not within this semester
+     * @return the number of weeks from this semester that will pass until the given date
      */
-    public long getWeeksSinceStart(LocalDate date) {
+    public long getWeeksSinceStart(LocalDate date) throws UniversitySemesterError {
         int numberOfWeeks = 0;
         for (DateInterval interval : intervals) {
-            if (interval.isInside(date)) {
+            try {
                 return numberOfWeeks + interval.getWeeksSinceStart(date);
+            } catch (DateIntervalError dateIntervalError) {
+                numberOfWeeks += interval.getNumberOfWeeks();
             }
-
-            numberOfWeeks += interval.getNumberOfWeeks();
         }
 
-        return -1;
-    }
-
-    /**
-     * Find whether if the given date is inside this semester.
-     * @param date the date for which to find
-     * @return whether the date is inside this semester
-     */
-    public boolean isInside(LocalDate date) {
-        return getWeeksSinceStart(date) != -1;
+        throw new UniversitySemesterError("Date is not inside the current semester.");
     }
 
     /**

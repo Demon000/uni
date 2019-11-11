@@ -5,6 +5,7 @@ import Domain.Student;
 import Repository.BaseRepository;
 import Time.UniversitySemester;
 import Time.UniversityYear;
+import Time.UniversityYearError;
 import Validator.*;
 import org.junit.Test;
 
@@ -124,21 +125,29 @@ public class Tests {
         } catch (ValidationException e) {
         }
 
+        LocalDate today = LocalDate.now();
+        long currentWeek = 0;
+        try {
+            currentWeek = year.getWeeksSinceStart(today);
+        } catch (UniversityYearError e) {
+            fail();
+        }
+
         // Test weeks validation
         try {
-            validator.validateWeeksRelative(6, 7);
+            validator.validateWeeksRelative(currentWeek, currentWeek + 1);
         } catch (ValidationException e) {
             fail();
         }
 
         try {
-            validator.validateWeeksRelative(5, 4);
+            validator.validateWeeksRelative(currentWeek + 1, currentWeek);
             fail();
         } catch (ValidationException e) {
         }
 
         try {
-            validator.validateWeeksRelative(4, 5);
+            validator.validateWeeksRelative(currentWeek - 2, currentWeek - 1);
             fail();
         } catch (ValidationException e) {
         }

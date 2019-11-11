@@ -27,27 +27,18 @@ public class UniversityYear {
     /**
      * Get the number of weeks that will pass until the given date.
      * @param date the date for which to calculate the number of weeks
-     * @return the number of weeks that will pass until the given date,
-     * -1 if the date is not inside this year.
+     * @return the number of weeks from the current semester that will pass until the given date
+     * @throws UniversitySemester if the given date is not inside the current year
      */
-    public long getWeeksSinceStart(LocalDate date) {
-        if (firstSemester.isInside(date)) {
+    public long getWeeksSinceStart(LocalDate date) throws UniversityYearError {
+        try {
             return firstSemester.getWeeksSinceStart(date);
-        }
+        } catch (UniversitySemesterError e) {}
 
-        if (secondSemester.isInside(date)) {
+        try {
             return secondSemester.getWeeksSinceStart(date);
-        }
+        } catch (UniversitySemesterError e) {}
 
-        return -1;
-    }
-
-    /**
-     * Find whether the given date is inside this year.
-     * @param date the year for which to find
-     * @return whether the given date is inside this year
-     */
-    public boolean isInside(LocalDate date) {
-        return getWeeksSinceStart(date) != -1;
+        throw new UniversityYearError("Date is not inside the current year.");
     }
 }

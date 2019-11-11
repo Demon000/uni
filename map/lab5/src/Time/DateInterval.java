@@ -35,24 +35,15 @@ public class DateInterval {
      * @return the number of weeks that will pass until the given date,
      * -1 if the date is not inside this date interval.
      */
-    public long getWeeksSinceStart(LocalDate date) {
+    public long getWeeksSinceStart(LocalDate date) throws DateIntervalError {
         if (date.isBefore(startDate)) {
-            return -1;
+            throw new DateIntervalError("Given date cannot be before the start date");
         }
 
         if (date.isAfter(endDate)) {
-            return -1;
+            throw new DateIntervalError("Given date cannot be after the end date");
         }
 
         return Utils.getWeeksBetweenDates(startDate, date);
-    }
-
-    /**
-     * Find whether the given date is inside this date interval.
-     * @param date the date for which to find
-     * @return whether the given date is inside this date interval
-     */
-    public boolean isInside(LocalDate date) {
-        return getWeeksSinceStart(date) != -1;
     }
 }

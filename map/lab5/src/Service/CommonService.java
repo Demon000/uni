@@ -7,6 +7,7 @@ import Repository.AssignmentRepository;
 import Repository.GradeRepository;
 import Repository.StudentRepository;
 import Time.UniversityYear;
+import Time.UniversityYearError;
 import Validator.ValidationException;
 
 import java.time.LocalDate;
@@ -39,26 +40,11 @@ public class CommonService {
             throws CommonServiceException, ValidationException {
         Student student = studentRepository.findOne(id);
         if (student != null) {
-            throw new CommonServiceException(String.format("Student with id %s already exists.", id));
+            throw new CommonServiceException(String.format("Student with id %s already exists", id));
         }
 
         student = new Student(id, firstName, lastName, email);
         studentRepository.save(student);
-        return student;
-    }
-
-    /**
-     * Get a student given its id.
-     * @param id the student id to look for
-     * @return the student
-     * @throws CommonServiceException if a student with the given id already exists
-     */
-    public Student getStudentById(String id) throws CommonServiceException {
-        Student student = studentRepository.findOne(id);
-        if (student == null) {
-            throw new CommonServiceException(String.format("Student with id %s does not exist.", id));
-        }
-
         return student;
     }
 
@@ -84,7 +70,7 @@ public class CommonService {
             throws CommonServiceException, ValidationException {
         Student student = studentRepository.findOne(id);
         if (student == null) {
-            throw new CommonServiceException(String.format("Student with id %s does not exist.", id));
+            throw new CommonServiceException(String.format("Student with id %s does not exist", id));
         }
 
         if (firstName == null || !firstName.isEmpty()) {
@@ -113,7 +99,7 @@ public class CommonService {
     public Student deleteStudent(String id) throws CommonServiceException {
         Student student = studentRepository.findOne(id);
         if (student == null) {
-            throw new CommonServiceException(String.format("Student with id %s does not exist.", id));
+            throw new CommonServiceException(String.format("Student with id %s does not exist", id));
         }
 
         return studentRepository.delete(id);
@@ -133,26 +119,11 @@ public class CommonService {
             throws CommonServiceException, ValidationException {
         Assignment assignment = assignmentRepository.findOne(id);
         if (assignment != null) {
-            throw new CommonServiceException(String.format("Assignment with id %s already exists.", id));
+            throw new CommonServiceException(String.format("Assignment with id %s already exists", id));
         }
 
         assignment = new Assignment(id, description, startWeek, deadlineWeek);
         assignmentRepository.save(assignment);
-        return assignment;
-    }
-
-    /**
-     * Get an assignment by id.
-     * @param id the assignment id
-     * @return the assignment
-     * @throws CommonServiceException if the assignment does not exist
-     */
-    public Assignment getAssignmentById(String id) throws CommonServiceException {
-        Assignment assignment = assignmentRepository.findOne(id);
-        if (assignment == null) {
-            throw new CommonServiceException(String.format("Assignment with id %s does not exist.", id));
-        }
-
         return assignment;
     }
 
@@ -178,7 +149,7 @@ public class CommonService {
             throws CommonServiceException, ValidationException {
         Assignment assignment = assignmentRepository.findOne(id);
         if (assignment == null) {
-            throw new CommonServiceException(String.format("Assignment with id %s does not exist.", id));
+            throw new CommonServiceException(String.format("Assignment with id %s does not exist", id));
         }
 
         if (!description.isEmpty()) {
@@ -207,7 +178,7 @@ public class CommonService {
     public Assignment deleteAssignment(String id) throws CommonServiceException {
         Assignment assignment = assignmentRepository.findOne(id);
         if (assignment == null) {
-            throw new CommonServiceException(String.format("Assignment with id %s does not exist.", id));
+            throw new CommonServiceException(String.format("Assignment with id %s does not exist", id));
         }
 
         assignmentRepository.delete(id);
@@ -215,31 +186,21 @@ public class CommonService {
     }
 
     /**
-     * Add a grade.
-     * @param studentId the id of the student who received this grade
+     *
      * @param assignmentId the id of the assignment at which the student received this grade
-     * @param value the value of the grade
-     * @param date the date the student received this grade on
-     * @return the newly created grade
-     * @throws CommonServiceException if the student or assignment do not exist, or if the grade already exists
-     * @throws ValidationException if the grade is invalid
+     * @param date the date the student received this grade on, can be null to use today's date
+     * @return the number of weeks that will pass until the given date,
+     * -1 if the date is not inside this year.
+     * @throws CommonServiceException
      */
-    public Grade addGrade(String studentId, String assignmentId, int value, LocalDate date)
-            throws CommonServiceException, ValidationException {
-        Student student = studentRepository.findOne(studentId);
-        if (student == null) {
-            throw new CommonServiceException(String.format("Student with id %s does not exist.", studentId));
-        }
-
+    public long getGradePenalty(String assignmentId, LocalDate date) throws CommonServiceException, UniversityYearError {
         Assignment assignment = assignmentRepository.findOne(assignmentId);
         if (assignment == null) {
-            throw new CommonServiceException(String.format("Assignment with id %s does not exist.", assignmentId));
+            throw new CommonServiceException(String.format("Assignment with id %s does not exist", assignmentId));
         }
 
-        String gradeId = studentId + assignmentId;
-        Grade grade = gradeRepository.findOne(gradeId);
-        if (grade != null) {
-            throw new CommonServiceException(String.format("Grade with id %s already exists.", gradeId));
+        if (date == null) {
+            date = LocalDate.now();
         }
 
         long penalty = year.getWeeksSinceStart(date) - assignment.getDeadlineWeek();
@@ -247,39 +208,45 @@ public class CommonService {
             penalty = 0;
         }
 
-        if (date == null) {
-            date = LocalDate.now();
-        }
-
-        grade = new Grade(gradeId, value, penalty, date);
-        gradeRepository.save(grade);
-        return grade;
+        return penalty;
     }
 
     /**
-     * Get a grade by id.
+     * Add a grade.
      * @param studentId the id of the student who received this grade
      * @param assignmentId the id of the assignment at which the student received this grade
-     * @return the grade
-     * @throws CommonServiceException if the student, assignment or grade do not exist
+     * @param date the date the student received this grade on, can be null to use today's date
+     * @param value the value of the grade
+     * @return the newly created grade
+     * @throws CommonServiceException if the student or assignment do not exist, or if the grade already exists
+     * @throws ValidationException if the grade is invalid
      */
-    public Grade getGradeById(String studentId, String assignmentId) throws CommonServiceException {
+    public Grade addGrade(String studentId, String assignmentId, LocalDate date, int value)
+            throws CommonServiceException, ValidationException, UniversityYearError {
         Student student = studentRepository.findOne(studentId);
         if (student == null) {
-            throw new CommonServiceException(String.format("Student with id %s does not exist.", studentId));
+            throw new CommonServiceException(String.format("Student with id %s does not exist", studentId));
         }
 
         Assignment assignment = assignmentRepository.findOne(assignmentId);
         if (assignment == null) {
-            throw new CommonServiceException(String.format("Assignment with id %s does not exist.", assignmentId));
+            throw new CommonServiceException(String.format("Assignment with id %s does not exist", assignmentId));
         }
 
-        String gradeId = studentId + assignmentId;
+        String gradeId = Grade.getCompositeId(studentId, assignmentId);
         Grade grade = gradeRepository.findOne(gradeId);
-        if (grade == null) {
-            throw new CommonServiceException(String.format("Grade with id %s already exists.", gradeId));
+        if (grade != null) {
+            throw new CommonServiceException(String.format("Grade with id %s already exists", gradeId));
         }
 
+        if (date == null) {
+            date = LocalDate.now();
+        }
+
+        long penalty = getGradePenalty(assignmentId, date);
+
+        grade = new Grade(gradeId, date, penalty, value);
+        gradeRepository.save(grade);
         return grade;
     }
 
@@ -301,30 +268,33 @@ public class CommonService {
      * @throws CommonServiceException if the student, assignment or grade do not exist
      * @throws ValidationException if the grade is invalid
      */
-    public Grade updateGrade(String studentId, String assignmentId, int value, LocalDate date)
-            throws CommonServiceException, ValidationException {
+    public Grade updateGrade(String studentId, String assignmentId, LocalDate date, int value)
+            throws CommonServiceException, ValidationException, UniversityYearError {
         Student student = studentRepository.findOne(studentId);
         if (student == null) {
-            throw new CommonServiceException(String.format("Student with id %s does not exist.", studentId));
+            throw new CommonServiceException(String.format("Student with id %s does not exist", studentId));
         }
 
         Assignment assignment = assignmentRepository.findOne(assignmentId);
         if (assignment == null) {
-            throw new CommonServiceException(String.format("Assignment with id %s does not exist.", assignmentId));
+            throw new CommonServiceException(String.format("Assignment with id %s does not exist", assignmentId));
         }
 
-        String gradeId = studentId + assignmentId;
+        String gradeId = Grade.getCompositeId(studentId, assignmentId);
         Grade grade = gradeRepository.findOne(gradeId);
         if (grade == null) {
-            throw new CommonServiceException(String.format("Grade with id %s does not exist.", gradeId));
-        }
-
-        if (value != 0) {
-            grade.setValue(value);
+            throw new CommonServiceException(String.format("Grade with id %s does not exist", gradeId));
         }
 
         if (date != null) {
             grade.setDate(date);
+        }
+
+        long penalty = getGradePenalty(assignmentId, date);
+        grade.setPenalty(penalty);
+
+        if (value != 0) {
+            grade.setValue(value);
         }
 
         gradeRepository.update(grade);
@@ -341,18 +311,18 @@ public class CommonService {
     public Grade deleteGrade(String studentId, String assignmentId) throws CommonServiceException {
         Student student = studentRepository.findOne(studentId);
         if (student == null) {
-            throw new CommonServiceException(String.format("Student with id %s does not exist.", studentId));
+            throw new CommonServiceException(String.format("Student with id %s does not exist", studentId));
         }
 
         Assignment assignment = assignmentRepository.findOne(assignmentId);
         if (assignment == null) {
-            throw new CommonServiceException(String.format("Assignment with id %s does not exist.", assignmentId));
+            throw new CommonServiceException(String.format("Assignment with id %s does not exist", assignmentId));
         }
 
-        String gradeId = studentId + assignmentId;
+        String gradeId = Grade.getCompositeId(studentId, assignmentId);
         Grade grade = gradeRepository.findOne(gradeId);
         if (grade == null) {
-            throw new CommonServiceException(String.format("Grade with id %s does not exist.", gradeId));
+            throw new CommonServiceException(String.format("Grade with id %s does not exist", gradeId));
         }
 
         gradeRepository.delete(gradeId);

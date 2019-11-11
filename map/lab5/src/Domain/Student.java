@@ -36,4 +36,9 @@ public class Student extends BaseEntity<String> {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String toString() {
+        return String.format("Student -> id: %s, name: %s %s, email: %s",
+                getId(), firstName, lastName, email);
+    }
 }

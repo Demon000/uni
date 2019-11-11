@@ -8,12 +8,16 @@ public class Grade extends BaseEntity<String> {
     private int value;
     private long penalty;
 
-    public Grade(String id, int value, long penalty, LocalDate date) {
+    public Grade(String id, LocalDate date, long penalty, int value) {
         setId(id);
 
+        this.date = date;
         this.value = value;
         this.penalty = penalty;
-        this.date = date;
+    }
+
+    public static String getCompositeId(String studentId, String assignmentId) {
+        return studentId + "+" + assignmentId;
     }
 
     public LocalDate getDate() {
@@ -24,6 +28,14 @@ public class Grade extends BaseEntity<String> {
         this.date = date;
     }
 
+    public long getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(long penalty) {
+        this.penalty = penalty;
+    }
+
     public int getValue() {
         return value;
     }
@@ -32,16 +44,9 @@ public class Grade extends BaseEntity<String> {
         this.value = value;
     }
 
-    public long getPenalty() {
-        return penalty;
-    }
-
-    public void setPenalty(int penalty) {
-        this.penalty = penalty;
-    }
-
     public String toString() {
-        final DateTimeFormatter dateFormatter = new DateTimeFormatter.ofPattern("dd/mm/yyyy");
-        return String.format("Grade -> id: %s, date: %s, value: %d", getId(), date.format(dateFormatter), value);
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return String.format("Grade -> id: %s, date: %s, penalty: %d, value: %d", getId(),
+                date.format(dateFormatter), penalty, value);
     }
 }

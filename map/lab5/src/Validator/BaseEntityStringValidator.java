@@ -11,7 +11,7 @@ public class BaseEntityStringValidator<E extends BaseEntity<String>> implements 
     public void validateId(String id) throws ValidationException {
         String idRegex = "([1-9]+)(\\+[1-9]+)?";
         if (!id.matches(idRegex)) {
-            throw new ValidationException("Given string doesn't look like an id");
+            throw new ValidationException("Id must be formed of digits only");
         }
     }
 

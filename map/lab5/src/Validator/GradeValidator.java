@@ -10,11 +10,11 @@ public class GradeValidator extends BaseEntityStringValidator<Grade> {
      */
     public void validateValue(int value) throws ValidationException {
         if (value < 1) {
-            throw new ValidationException("Grade value is smaller than 0.");
+            throw new ValidationException("Grade must be at least 0");
         }
 
         if (value > 10) {
-            throw new ValidationException("Grade value is bigger than 10.");
+            throw new ValidationException("Grade must be at most 10");
         }
     }
 
@@ -25,11 +25,11 @@ public class GradeValidator extends BaseEntityStringValidator<Grade> {
      */
     public void validatePenalty(long penalty) throws ValidationException {
         if (penalty < 0) {
-            throw new ValidationException("Grade penalty is negative.");
+            throw new ValidationException("Grade penalty must be at least 0");
         }
 
         if (penalty > 2) {
-            throw new ValidationException("Grade penalty is bigger than 2.");
+            throw new ValidationException("Grade penalty must be at most 2");
         }
     }
 
