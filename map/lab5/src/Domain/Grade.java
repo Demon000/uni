@@ -1,15 +1,15 @@
 package Domain;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Grade extends BaseEntity<String> {
     private LocalDate date;
     private int value;
-    private int penalty;
+    private long penalty;
 
-    public Grade(Student student, Assignment assignment,
-                 int value, int penalty, LocalDate date) {
-        setId(student.getId() + "+" + assignment.getId());
+    public Grade(String id, int value, long penalty, LocalDate date) {
+        setId(id);
 
         this.value = value;
         this.penalty = penalty;
@@ -32,11 +32,16 @@ public class Grade extends BaseEntity<String> {
         this.value = value;
     }
 
-    public int getPenalty() {
+    public long getPenalty() {
         return penalty;
     }
 
     public void setPenalty(int penalty) {
         this.penalty = penalty;
+    }
+
+    public String toString() {
+        final DateTimeFormatter dateFormatter = new DateTimeFormatter.ofPattern("dd/mm/yyyy");
+        return String.format("Grade -> id: %s, date: %s, value: %d", getId(), date.format(dateFormatter), value);
     }
 }

@@ -10,6 +10,10 @@ public class StudentValidator extends BaseEntityStringValidator<Student> {
      * @throws ValidationException if the name isn't valid
      */
     public void validateName(String name) throws ValidationException {
+        if (name == null) {
+            throw new ValidationException("Student name cannot be null");
+        }
+
         if (name.length() < 3) {
             throw new ValidationException("Given string is too short for a name");
         }

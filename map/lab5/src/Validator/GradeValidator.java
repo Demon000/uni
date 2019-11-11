@@ -23,7 +23,7 @@ public class GradeValidator extends BaseEntityStringValidator<Grade> {
      * @param penalty the penalty to validate
      * @throws ValidationException if the penalty is invalid
      */
-    public void validatePenalty(int penalty) throws ValidationException {
+    public void validatePenalty(long penalty) throws ValidationException {
         if (penalty < 0) {
             throw new ValidationException("Grade penalty is negative.");
         }

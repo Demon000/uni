@@ -18,6 +18,9 @@ public class AssignmentValidator extends BaseEntityStringValidator<Assignment> {
      * @throws ValidationException if the description isn't valid
      */
     public void validateDescription(String description) throws ValidationException {
+        if (description == null) {
+            throw new ValidationException("Description cannot be null");
+        }
         if (description.length() < 10) {
             throw new ValidationException("Given string is too short for a description");
         }
@@ -44,6 +47,10 @@ public class AssignmentValidator extends BaseEntityStringValidator<Assignment> {
 
     @Override
     public void validate(Assignment assignment) throws ValidationException {
+        if (assignment == null) {
+            throw new ValidationException("Assignment cannot be null");
+        }
+
         super.validate(assignment);
 
         validateDescription(assignment.getDescription());
