@@ -36,14 +36,14 @@ public class CommonService {
      * @throws CommonServiceException if a student with the given id already exists
      * @throws ValidationException if the student is invalid
      */
-    public Student addStudent(String id, String firstName, String lastName, String email)
+    public Student addStudent(String id, String firstName, String lastName, String email, String group)
             throws CommonServiceException, ValidationException {
         Student student = studentRepository.findOne(id);
         if (student != null) {
             throw new CommonServiceException(String.format("Student with id %s already exists", id));
         }
 
-        student = new Student(id, firstName, lastName, email);
+        student = new Student(id, firstName, lastName, email, group);
         studentRepository.save(student);
         return student;
     }

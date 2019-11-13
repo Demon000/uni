@@ -113,8 +113,9 @@ public class Console {
         String firstName = readString("First name: ", "Invalid first name");
         String lastName = readString("Last name: ", "Invalid last name");
         String email = readString("Email: ", "Invalid email");
+        String group = readString("Group: ", "Invalid group");
 
-        Student student = service.addStudent(id, firstName, lastName, email);
+        Student student = service.addStudent(id, firstName, lastName, email, group);
         System.out.println(String.format("Added: %s", student));
     }
 
@@ -221,7 +222,7 @@ public class Console {
 
     private void populate() {
         try {
-            service.addStudent("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro");
+            service.addStudent("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro", "227");
             service.addAssignment("1", "Iteratia 1", 7, 9);
         } catch (CommonServiceException | ValidationException e) {
             e.printStackTrace();

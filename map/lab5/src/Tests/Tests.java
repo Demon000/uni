@@ -238,7 +238,7 @@ public class Tests {
         }
 
         // Validate saving a student and null return
-        student = new Student("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro");
+        student = new Student("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro", "227");
         try {
             retrieved = repository.save(student);
             assertNull(retrieved);
@@ -248,7 +248,7 @@ public class Tests {
 
         // Validate saving a new student with same id and old student return
         saved = student;
-        student = new Student("1", "Nimcos", "Tanislav", "tcir2625@scs.ubbcluj.ro");
+        student = new Student("1", "Nimcos", "Tanislav", "tcir2625@scs.ubbcluj.ro", "227");
         try {
             retrieved = repository.save(student);
             assertEquals(saved, retrieved);
@@ -261,7 +261,7 @@ public class Tests {
         assertEquals(retrieved, student);
 
         // Validate updating a non existent student
-        student = new Student("2", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro");
+        student = new Student("2", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro", "227");
         try {
             retrieved = repository.update(student);
             assertEquals(retrieved, student);
@@ -270,7 +270,7 @@ public class Tests {
         }
 
         // Validate updating an existing student
-        student = new Student("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro");
+        student = new Student("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro", "227");
         try {
             retrieved = repository.update(student);
             assertNull(retrieved);
@@ -288,9 +288,9 @@ public class Tests {
 
         // Validate finding all students
         try {
-            repository.save(new Student("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro"));
-            repository.save(new Student("2", "Teodor", "Spiridon", "tsir2425@scs.ubbcluj.ro"));
-            repository.save(new Student("3", "Mihai", "Solcan", "smir2325@scs.ubbcluj.ro"));
+            repository.save(new Student("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro", "227"));
+            repository.save(new Student("2", "Teodor", "Spiridon", "tsir2425@scs.ubbcluj.ro", "227"));
+            repository.save(new Student("3", "Mihai", "Solcan", "smir2325@scs.ubbcluj.ro", "227"));
         } catch (ValidationException e) {
             fail();
         }

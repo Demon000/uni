@@ -11,11 +11,11 @@ public class StudentValidator extends BaseEntityStringValidator<Student> {
      */
     public void validateName(String name) throws ValidationException {
         if (name == null) {
-            throw new ValidationException("Student must not be null");
+            throw new ValidationException("Student name must not be null");
         }
 
         if (name.length() < 3) {
-            throw new ValidationException("Student must be at least 3 characters long");
+            throw new ValidationException("Student name must be at least 3 characters long");
         }
 
         String nameRegex = "[A-Z][a-z]+";
@@ -31,9 +31,29 @@ public class StudentValidator extends BaseEntityStringValidator<Student> {
      * @throws ValidationException if the email isn't valid
      */
     public void validateEmail(String email) throws ValidationException {
+        if (email == null) {
+            throw new ValidationException("Student email must not be null");
+        }
+
         String emailRegex = "[a-z]{4}[1-9]{4}@scs.ubbcluj.ro";
         if (!email.matches(emailRegex)) {
-            throw new ValidationException(("Given string isn't a valid email address."));
+            throw new ValidationException(("Student email must be of format abcd12@scs.ubbcluj.ro"));
+        }
+    }
+
+    /**
+     * Validate a group.
+     * @param group the group name to be validate
+     * @throws ValidationException if the group name isn't valid
+     */
+    public void validateGroup(String group) throws ValidationException {
+        if (group == null) {
+            throw new ValidationException("Student group must not be null");
+        }
+
+        String groupRegex = "22[1-7]";
+        if (!group.matches(groupRegex)) {
+            throw new ValidationException("Student group must be of format 227");
         }
     }
 
@@ -44,5 +64,6 @@ public class StudentValidator extends BaseEntityStringValidator<Student> {
         validateName(student.getFirstName());
         validateName(student.getLastName());
         validateEmail(student.getEmail());
+        validateGroup(student.getGroup());
     }
 }
