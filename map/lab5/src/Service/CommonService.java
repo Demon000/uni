@@ -62,27 +62,32 @@ public class CommonService {
      * @param firstName the new first name of the student, can be null or empty to not update it
      * @param lastName the new last name of the student, can be null or empty to not update it
      * @param email the new email of the student, can be null or empty to not update it
+     * @param group the new group of the student, can be null or empty to not update it
      * @return the updated student
      * @throws CommonServiceException if the student doesn't exist
      * @throws ValidationException if the updated student is invalid
      */
-    public Student updateStudent(String id, String firstName, String lastName, String email)
+    public Student updateStudent(String id, String firstName, String lastName, String email, String group)
             throws CommonServiceException, ValidationException {
         Student student = studentRepository.findOne(id);
         if (student == null) {
             throw new CommonServiceException(String.format("Student with id %s does not exist", id));
         }
 
-        if (firstName == null || !firstName.isEmpty()) {
+        if (firstName != null && !firstName.isEmpty()) {
             student.setFirstName(firstName);
         }
 
-        if (lastName == null || !lastName.isEmpty()) {
+        if (lastName != null && !lastName.isEmpty()) {
             student.setLastName(lastName);
         }
 
-        if (email == null || !email.isEmpty()) {
+        if (email != null && !email.isEmpty()) {
             student.setEmail(email);
+        }
+
+        if (group != null && !group.isEmpty()) {
+            student.setGroup(group);
         }
 
         studentRepository.update(student);
@@ -152,7 +157,7 @@ public class CommonService {
             throw new CommonServiceException(String.format("Assignment with id %s does not exist", id));
         }
 
-        if (!description.isEmpty()) {
+        if (description != null && !description.isEmpty()) {
             assignment.setDescription(description);
         }
 
@@ -217,11 +222,12 @@ public class CommonService {
      * @param assignmentId the id of the assignment at which the student received this grade
      * @param date the date the student received this grade on, can be null to use today's date
      * @param value the value of the grade
+     * @param feedback the feedback of the grade, can be null to use an empty string
      * @return the newly created grade
      * @throws CommonServiceException if the student or assignment do not exist, or if the grade already exists
      * @throws ValidationException if the grade is invalid
      */
-    public Grade addGrade(String studentId, String assignmentId, LocalDate date, int value)
+    public Grade addGrade(String studentId, String assignmentId, LocalDate date, int value, String feedback)
             throws CommonServiceException, ValidationException, UniversityYearError {
         Student student = studentRepository.findOne(studentId);
         if (student == null) {
@@ -245,7 +251,11 @@ public class CommonService {
 
         long penalty = getGradePenalty(assignmentId, date);
 
-        grade = new Grade(gradeId, date, penalty, value);
+        if (feedback == null) {
+            feedback = "";
+        }
+
+        grade = new Grade(gradeId, date, penalty, value, feedback);
         gradeRepository.save(grade);
         return grade;
     }
@@ -263,12 +273,13 @@ public class CommonService {
      * @param studentId the id of the student who received this grade
      * @param assignmentId the id of this assignment at which the student received this grade
      * @param value the new value of this grade, can be 0 to not update it
-     * @param date the new date of this grade, can be null to not update id
+     * @param date the new date of this grade, can be null to not update it
+     * @param feedback the new feedback of this grade, can be null to not update it
      * @return the updated grade
      * @throws CommonServiceException if the student, assignment or grade do not exist
      * @throws ValidationException if the grade is invalid
      */
-    public Grade updateGrade(String studentId, String assignmentId, LocalDate date, int value)
+    public Grade updateGrade(String studentId, String assignmentId, LocalDate date, int value, String feedback)
             throws CommonServiceException, ValidationException, UniversityYearError {
         Student student = studentRepository.findOne(studentId);
         if (student == null) {
@@ -297,6 +308,10 @@ public class CommonService {
 
         if (value != 0) {
             grade.setValue(value);
+        }
+
+        if (feedback != null) {
+            grade.setFeedback(feedback);
         }
 
         gradeRepository.update(grade);

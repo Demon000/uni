@@ -128,8 +128,9 @@ public class Console {
         String firstName = readString("New first name (empty to leave unchanged): ");
         String lastName = readString("New last name (empty to leave unchanged): ");
         String email = readString("New email (empty to leave unchanged): ");
+        String group = readString("New group (empty to leave unchanged): ");
 
-        Student student = service.updateStudent(id, firstName, lastName, email);
+        Student student = service.updateStudent(id, firstName, lastName, email, group);
         System.out.println(String.format("Updated: %s", student));
     }
 
@@ -183,7 +184,9 @@ public class Console {
 
         int value = readNatural("Grade: ", "Invalid grade");
 
-        Grade grade = service.addGrade(studentId, assignmentId, date, value);
+        String feedback = readString("Feedback (can be empty): ");
+
+        Grade grade = service.addGrade(studentId, assignmentId, date, value, feedback);
         System.out.println(String.format("Added: %s", grade));
     }
 
@@ -203,7 +206,9 @@ public class Console {
 
         int value = readNatural("New grade: (empty to leave unchanged): ");
 
-        Grade grade = service.updateGrade(studentId, assignmentId, date, value);
+        String feedback = readString("New feedback (empty to leave unchanged): ");
+
+        Grade grade = service.updateGrade(studentId, assignmentId, date, value, feedback);
         System.out.println(String.format("Updated: %s", grade));
     }
 
