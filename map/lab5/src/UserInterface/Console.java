@@ -120,6 +120,7 @@ public class Console {
     }
 
     private void listStudents() {
+        System.out.println("All students:");
         service.getStudents().forEach(System.out::println);
     }
 
@@ -152,6 +153,7 @@ public class Console {
     }
 
     private void listAssignments() {
+        System.out.println("All assignments:");
         service.getAssignments().forEach(System.out::println);
     }
 
@@ -191,6 +193,7 @@ public class Console {
     }
 
     private void listGrades() {
+        System.out.println("All grades:");
         service.getGrades().forEach(System.out::println);
     }
 
@@ -221,7 +224,7 @@ public class Console {
     }
 
     private void printEntries() {
-        System.out.println("Menu: ");
+        System.out.println("Menu:");
         entries.forEach(System.out::println);
     }
 
