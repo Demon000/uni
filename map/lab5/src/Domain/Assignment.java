@@ -1,6 +1,13 @@
 package Domain;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import static Utils.XMLUtils.*;
+
 public class Assignment extends BaseEntity<String> {
+    public static String TAG_NAME = "assignment";
+
     private String description;
     private long startWeek;
     private long deadlineWeek;
@@ -39,6 +46,26 @@ public class Assignment extends BaseEntity<String> {
 
     public String toString() {
         return String.format("Assignment -> id: %s, description: %s, start week: %d, deadline week: %d",
-                getId(), description, startWeek, deadlineWeek);
+                getId(), getDescription(), getStartWeek(), getDeadlineWeek());
+    }
+
+    public Element toXMLElement(Document document) {
+        Element assignmentElement = document.createElement(TAG_NAME);
+
+        appendChildValue(assignmentElement, "id", getId());
+        appendChildValue(assignmentElement, "description", getDescription());
+        appendChildValue(assignmentElement, "startWeek", String.valueOf(getStartWeek()));
+        appendChildValue(assignmentElement, "deadlineWeek", String.valueOf(getDeadlineWeek()));
+
+        return assignmentElement;
+    }
+
+    public static Assignment createFromXMLElement(Element element) {
+        String id = getChildValue(element, "id");
+        String description = getChildValue(element, "description");
+        long startWeek = Long.parseLong(getChildValue(element, "startWeek"));
+        long deadlineWeek = Long.parseLong(getChildValue(element, "deadlineWeek"));
+
+        return new Assignment(id, description, startWeek, deadlineWeek);
     }
 }

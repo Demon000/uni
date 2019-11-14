@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><root>
+    <assignment>
+        <id>1</id>
+        <description>Iteratia 1</description>
+        <startWeek>7</startWeek>
+        <deadlineWeek>9</deadlineWeek>
+    </assignment>
+</root>

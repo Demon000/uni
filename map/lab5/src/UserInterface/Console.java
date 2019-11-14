@@ -7,12 +7,11 @@ import Service.CommonService;
 import Service.CommonServiceException;
 import Time.UniversityYearError;
 import Validator.ValidationException;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static UserInterface.ConsoleInputUtils.*;
+import static Utils.InputUtils.*;
 
 interface ConsoleMenuCallable {
     void call() throws Exception;
@@ -73,15 +72,17 @@ public class Console {
                 new ConsoleMenuEntry("1", "Add student", this::addStudent),
                 new ConsoleMenuEntry("2", "List students", this::listStudents),
                 new ConsoleMenuEntry("3", "Update student", this::updateStudent),
-                new ConsoleMenuEntry("4", "Delete student", this::deleteStudent),
-                new ConsoleMenuEntry("5", "Add assignment", this::addAssignment),
-                new ConsoleMenuEntry("6", "List assignments", this::listAssignments),
-                new ConsoleMenuEntry("7", "Update assignment", this::updateAssignment),
-                new ConsoleMenuEntry("8", "Delete assignment", this::deleteAssignment),
-                new ConsoleMenuEntry("9", "Add grade", this::addGrade),
-                new ConsoleMenuEntry("10", "List grades", this::listGrades),
-                new ConsoleMenuEntry("11", "Update grade", this:: updateGrade),
-                new ConsoleMenuEntry("12", "Delete grade", this::deleteGrade),
+                new ConsoleMenuEntry("4", "Add student motivated week", this::addStudentMotivatedWeek),
+                new ConsoleMenuEntry("5", "Remove student motivated week", this::removeStudentMotivatedWeek),
+                new ConsoleMenuEntry("6", "Delete student", this::deleteStudent),
+                new ConsoleMenuEntry("7", "Add assignment", this::addAssignment),
+                new ConsoleMenuEntry("8", "List assignments", this::listAssignments),
+                new ConsoleMenuEntry("9", "Update assignment", this::updateAssignment),
+                new ConsoleMenuEntry("10", "Delete assignment", this::deleteAssignment),
+                new ConsoleMenuEntry("11", "Add grade", this::addGrade),
+                new ConsoleMenuEntry("12", "List grades", this::listGrades),
+                new ConsoleMenuEntry("13", "Update grade", this:: updateGrade),
+                new ConsoleMenuEntry("14", "Delete grade", this::deleteGrade),
                 new ConsoleMenuEntry("x", "Exit", this::exit)
         );
     }
@@ -135,7 +136,23 @@ public class Console {
         System.out.println(String.format("Updated: %s", student));
     }
 
-    public void deleteStudent() throws CommonServiceException {
+    private void addStudentMotivatedWeek() throws CommonServiceException, ValidationException {
+        String id = readString("Id: ", "Invalid id");
+        long week = readNatural("Week: ", "Invalid week");
+
+        Student student = service.addStudentMotivatedWeek(id, week);
+        System.out.println(String.format("Updated: %s", student));
+    }
+
+    private void removeStudentMotivatedWeek() throws CommonServiceException, ValidationException {
+        String id = readString("Id: ", "Invalid id");
+        long week = readNatural("Week: ", "Invalid week");
+
+        Student student = service.removeStudentMotivatedWeek(id, week);
+        System.out.println(String.format("Updated: %s", student));
+    }
+
+    private void deleteStudent() throws CommonServiceException {
         String id = readString("Id: ", "Invalid id");
 
         Student student = service.deleteStudent(id);
@@ -174,12 +191,12 @@ public class Console {
         System.out.println(String.format("Deleted: %s", assignment));
     }
 
-    public void addGrade() throws CommonServiceException, ValidationException, UniversityYearError {
+    private void addGrade() throws CommonServiceException, ValidationException, UniversityYearError {
         String studentId = readString("Student id: ", "Invalid student id");
         String assignmentId = readString("Assignment id: ", "Invalid assignment id");
         LocalDate date = readDate("Date (empty to use today's date): ");
 
-        long penalty = service.getGradePenalty(assignmentId, date);
+        long penalty = service.getGradePenalty(studentId, assignmentId, date);
         if (penalty > 0) {
             System.out.println(String.format("A penalty of %d points will be applied to the grade.", penalty));
         }
@@ -197,12 +214,12 @@ public class Console {
         service.getGrades().forEach(System.out::println);
     }
 
-    public void updateGrade() throws CommonServiceException, ValidationException, UniversityYearError {
+    private void updateGrade() throws CommonServiceException, ValidationException, UniversityYearError {
         String studentId = readString("Student id: ", "Invalid student id");
         String assignmentId = readString("Assignment id: ", "Invalid assignment id");
         LocalDate date = readDate("New date (empty to leave unchanged): ");
 
-        long penalty = service.getGradePenalty(assignmentId, date);
+        long penalty = service.getGradePenalty(studentId, assignmentId, date);
         if (penalty > 0) {
             System.out.println(String.format("A penalty of %d points will be applied to the grade.", penalty));
         }
@@ -215,7 +232,7 @@ public class Console {
         System.out.println(String.format("Updated: %s", grade));
     }
 
-    public void deleteGrade() throws CommonServiceException {
+    private void deleteGrade() throws CommonServiceException {
         String studentId = readString("Student id: ", "Invalid student id");
         String assignmentId = readString("Assignment id: ", "Invalid assignment id");
 
@@ -230,10 +247,13 @@ public class Console {
 
     private void populate() {
         try {
-            service.addStudent("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro", "227");
+            Student student = service.addStudent("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro", "227");
+//            student.addMotivatedWeek(1);
+//            student.addMotivatedWeek(14);
+//            student.addMotivatedWeek(3);
             service.addAssignment("1", "Iteratia 1", 7, 9);
         } catch (CommonServiceException | ValidationException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 

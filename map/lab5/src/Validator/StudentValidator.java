@@ -2,8 +2,9 @@ package Validator;
 
 import Domain.Student;
 
-public class StudentValidator extends BaseEntityStringValidator<Student> {
+import java.util.List;
 
+public class StudentValidator extends BaseEntityStringValidator<Student> {
     /**
      * Validate a name.
      * @param name the name to be validated
@@ -42,6 +43,28 @@ public class StudentValidator extends BaseEntityStringValidator<Student> {
     }
 
     /**
+     * Validate motivated weeks list.
+     * @param motivatedWeeks the list of motivated weeks to validate
+     * @throws ValidationException if the weeks contained in the given list are invalid
+     */
+    public void validateMotivatedWeeks(List<Long> motivatedWeeks) throws ValidationException {
+        if (motivatedWeeks == null) {
+            throw new ValidationException("Student motivated weeks must not be null");
+        }
+
+        for (Long w : motivatedWeeks) {
+            long week = w;
+            if (week < 1) {
+                throw new ValidationException("Student motivated week must be at least 1");
+            }
+
+            if (week  > 14) {
+                throw new ValidationException("Student motivated week must be at most 14");
+            }
+        }
+    }
+
+    /**
      * Validate a group.
      * @param group the group name to be validate
      * @throws ValidationException if the group name isn't valid
@@ -65,5 +88,6 @@ public class StudentValidator extends BaseEntityStringValidator<Student> {
         validateName(student.getLastName());
         validateEmail(student.getEmail());
         validateGroup(student.getGroup());
+        validateMotivatedWeeks(student.getMotivatedWeeks());
     }
 }

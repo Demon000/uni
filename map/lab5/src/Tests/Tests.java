@@ -34,7 +34,7 @@ public class Tests {
         try {
             validator.validateId("c123");
             fail();
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
         }
     }
 
@@ -52,13 +52,13 @@ public class Tests {
         try {
             validator.validateName("Co");
             fail();
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
         }
 
         try {
             validator.validateName("F123");
             fail();
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
         }
 
         // Test email validation
@@ -71,7 +71,7 @@ public class Tests {
         try {
             validator.validateName("fail@scs.ubbcluj.ro");
             fail();
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
         }
     }
 
@@ -90,7 +90,6 @@ public class Tests {
                     LocalDate.of(2020, 4, 27), LocalDate.of(2020, 6, 5)
             );
         } catch (Exception e) {
-            fail();
             return null;
         }
 
@@ -110,6 +109,10 @@ public class Tests {
     @Test
     public void testAssignmentValidator() {
         UniversityYear year = createUniversityYear();
+        if (year == null) {
+            fail();
+        }
+
         AssignmentValidator validator = new AssignmentValidator(year);
 
         // Test description validation
@@ -122,7 +125,7 @@ public class Tests {
         try {
             validator.validateDescription("This no.");
             fail();
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
         }
 
         LocalDate today = LocalDate.now();
@@ -143,13 +146,13 @@ public class Tests {
         try {
             validator.validateWeeksRelative(currentWeek + 1, currentWeek);
             fail();
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
         }
 
         try {
             validator.validateWeeksRelative(currentWeek - 2, currentWeek - 1);
             fail();
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
         }
     }
 
@@ -172,13 +175,13 @@ public class Tests {
         try {
             validator.validateValue(0);
             fail();
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
         }
 
         try {
             validator.validateValue(11);
             fail();
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
         }
 
         try {
@@ -196,13 +199,13 @@ public class Tests {
         try {
             validator.validateValue(-1);
             fail();
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
         }
 
         try {
             validator.validateValue(3);
             fail();
-        } catch (ValidationException e) {
+        } catch (ValidationException ignored) {
         }
     }
 
@@ -216,25 +219,25 @@ public class Tests {
         try {
             repository.findOne(null);
             fail();
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
             repository.save(null);
             fail();
-        } catch (IllegalArgumentException | ValidationException e) {
+        } catch (IllegalArgumentException | ValidationException ignored) {
         }
 
         try {
             repository.delete(null);
             fail();
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException ignored) {
         }
 
         try {
             repository.update(null);
             fail();
-        } catch (IllegalArgumentException | ValidationException e) {
+        } catch (IllegalArgumentException | ValidationException ignored) {
         }
 
         // Validate saving a student and null return

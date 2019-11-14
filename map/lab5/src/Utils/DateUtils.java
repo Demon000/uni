@@ -1,4 +1,4 @@
-package Time;
+package Utils;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalField;
@@ -7,7 +7,7 @@ import java.util.Locale;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-public class Utils {
+public class DateUtils {
     private final static TemporalField dayField = WeekFields.of(Locale.getDefault()).dayOfWeek();
 
     public static long getWeeksBetweenDates(LocalDate first, LocalDate second) {

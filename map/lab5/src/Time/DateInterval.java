@@ -1,5 +1,7 @@
 package Time;
 
+import Utils.DateUtils;
+
 import java.time.LocalDate;
 
 public class DateInterval {
@@ -26,7 +28,7 @@ public class DateInterval {
      * @return the number of weeks inside this date interval
      */
     public long getNumberOfWeeks() {
-        return Utils.getWeeksBetweenDates(startDate, endDate);
+        return DateUtils.getWeeksBetweenDates(startDate, endDate);
     }
 
     /**
@@ -44,6 +46,6 @@ public class DateInterval {
             throw new DateIntervalError("Given date cannot be after the end date");
         }
 
-        return Utils.getWeeksBetweenDates(startDate, date);
+        return DateUtils.getWeeksBetweenDates(startDate, date);
     }
 }

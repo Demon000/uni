@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><root>
+    <student>
+        <id>1</id>
+        <firstName>Cosmin</firstName>
+        <lastName>Tanislav</lastName>
+        <email>tcir2625@scs.ubbcluj.ro</email>
+        <group>227</group>
+        <motivatedWeeks/>
+    </student>
+    <student>
+        <id>2</id>
+        <firstName>Christian</firstName>
+        <lastName>Tatoiu</lastName>
+        <email>tcir2628@scs.ubbcluj.ro</email>
+        <group>227</group>
+        <motivatedWeeks/>
+    </student>
+</root>

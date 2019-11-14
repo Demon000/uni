@@ -1,7 +1,5 @@
-import Domain.Assignment;
-import Repository.AssignmentRepository;
-import Repository.GradeRepository;
-import Repository.StudentRepository;
+import Domain.*;
+import Repository.*;
 import Service.CommonService;
 import Tests.Tests;
 import Time.DateIntervalError;
@@ -14,7 +12,6 @@ import Validator.GradeValidator;
 import Validator.StudentValidator;
 
 import java.time.LocalDate;
-import java.util.ConcurrentModificationException;
 
 public class Main {
     private static UniversityYear createUniversityYear() throws UniversitySemesterError, DateIntervalError {
@@ -35,8 +32,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Tests tests = new Tests();
-        tests.testAll();
+        //Tests tests = new Tests();
+        //tests.testAll();
 
         UniversityYear year;
 
@@ -48,13 +45,29 @@ public class Main {
         }
 
         StudentValidator studentValidator = new StudentValidator();
-        StudentRepository studentRepository = new StudentRepository(studentValidator);
+        //BaseRepository<String, Student, StudentValidator> studentRepository =
+        //      new BaseRepository<>(studentValidator);
+        StudentBuilder studentBuilder = new StudentBuilder();
+        BaseRepository<String, Student, StudentValidator> studentRepository =
+                new BaseXMLFileRepository<>("students.xml",
+                studentValidator, studentBuilder);
 
         AssignmentValidator assignmentValidator = new AssignmentValidator(year);
-        AssignmentRepository assignmentRepository = new AssignmentRepository(assignmentValidator);
+        //BaseRepository<String, Assignment, AssignmentValidator> assignmentRepository =
+        //      new BaseRepository<>(assignmentValidator);
+        AssignmentBuilder assignmentBuilder = new AssignmentBuilder();
+        BaseRepository<String, Assignment, AssignmentValidator> assignmentRepository =
+                new BaseXMLFileRepository<>("assignments.xml",
+                assignmentValidator, assignmentBuilder);
+
 
         GradeValidator gradeValidator = new GradeValidator();
-        GradeRepository gradeRepository = new GradeRepository(gradeValidator);
+        //BaseRepository<String, Grade, GradeValidator> gradeRepository =
+        //      new BaseRepository<>(gradeValidator);
+        GradeBuilder gradeBuilder = new GradeBuilder();
+        BaseRepository<String, Grade, GradeValidator> gradeRepository
+                = new BaseXMLFileRepository<>("grades.xml",
+                gradeValidator, gradeBuilder);
 
         CommonService service = new CommonService(studentRepository, assignmentRepository, gradeRepository, year);
         Console console = new Console(service);

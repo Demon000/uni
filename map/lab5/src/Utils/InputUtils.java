@@ -1,10 +1,10 @@
-package UserInterface;
+package Utils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-public class ConsoleInputUtils {
+public class InputUtils {
     public static String readString() {
         Scanner input = new Scanner(System.in);
         return input.nextLine().strip();

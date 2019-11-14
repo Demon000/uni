@@ -50,7 +50,6 @@ public class UniversitySemester {
             try {
                 return numberOfWeeks + interval.getWeeksSinceStart(date);
             } catch (DateIntervalError e) {
-                System.out.println(e);
                 numberOfWeeks += interval.getNumberOfWeeks();
             }
         }
