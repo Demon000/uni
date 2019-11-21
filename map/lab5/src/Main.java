@@ -47,7 +47,7 @@ public class Main {
         StudentValidator studentValidator = new StudentValidator();
         //BaseRepository<String, Student, StudentValidator> studentRepository =
         //      new BaseRepository<>(studentValidator);
-        StudentBuilder studentBuilder = new StudentBuilder();
+        Student.Builder studentBuilder = new Student.Builder();
         BaseRepository<String, Student, StudentValidator> studentRepository =
                 new BaseXMLFileRepository<>("students.xml",
                 studentValidator, studentBuilder);
@@ -55,7 +55,7 @@ public class Main {
         AssignmentValidator assignmentValidator = new AssignmentValidator(year);
         //BaseRepository<String, Assignment, AssignmentValidator> assignmentRepository =
         //      new BaseRepository<>(assignmentValidator);
-        AssignmentBuilder assignmentBuilder = new AssignmentBuilder();
+        Assignment.Builder assignmentBuilder = new Assignment.Builder();
         BaseRepository<String, Assignment, AssignmentValidator> assignmentRepository =
                 new BaseXMLFileRepository<>("assignments.xml",
                 assignmentValidator, assignmentBuilder);
@@ -64,7 +64,7 @@ public class Main {
         GradeValidator gradeValidator = new GradeValidator();
         //BaseRepository<String, Grade, GradeValidator> gradeRepository =
         //      new BaseRepository<>(gradeValidator);
-        GradeBuilder gradeBuilder = new GradeBuilder();
+        Grade.Builder gradeBuilder = new Grade.Builder();
         BaseRepository<String, Grade, GradeValidator> gradeRepository
                 = new BaseXMLFileRepository<>("grades.xml",
                 gradeValidator, gradeBuilder);

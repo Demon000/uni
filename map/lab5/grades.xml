@@ -4,6 +4,7 @@
         <date>14/11/2019</date>
         <value>10</value>
         <penalty>0</penalty>
-        <feedback>Good job</feedback>
+        <professorName>Sergiu</professorName>
+        <feedback/>
     </grade>
 </root>

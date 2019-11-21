@@ -5,14 +5,27 @@
         <lastName>Tanislav</lastName>
         <email>tcir2625@scs.ubbcluj.ro</email>
         <group>227</group>
-        <motivatedWeeks/>
+        <professorName>Sergiu</professorName>
+        <motivatedWeeks>
+            <motivatedWeek>7</motivatedWeek>
+        </motivatedWeeks>
     </student>
     <student>
         <id>2</id>
         <firstName>Christian</firstName>
         <lastName>Tatoiu</lastName>
-        <email>tcir2628@scs.ubbcluj.ro</email>
+        <email>tcir2625@scs.ubbcluj.ro</email>
         <group>227</group>
+        <professorName>Sergiu</professorName>
+        <motivatedWeeks/>
+    </student>
+    <student>
+        <id>3</id>
+        <firstName>Teodor</firstName>
+        <lastName>Spiridon</lastName>
+        <email>stir2626@scs.ubbcluj.ro</email>
+        <group>227</group>
+        <professorName>Sergiu</professorName>
         <motivatedWeeks/>
     </student>
 </root>

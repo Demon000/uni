@@ -67,7 +67,7 @@ public class BaseXMLFileRepository<ID, E extends BaseEntity<ID>, B extends IBuil
         return entities;
     }
 
-    private void writeToFile(Map<ID,E > entities) {
+    private void writeToFile(Map<ID, E> entities) {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder;
         try {

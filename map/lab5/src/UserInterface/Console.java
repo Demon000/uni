@@ -62,36 +62,73 @@ class ConsoleMenuEntry {
 }
 
 public class Console {
-    private final List<ConsoleMenuEntry> entries;
+    private final List<ConsoleMenuEntry> mainEntries;
+    private final List<ConsoleMenuEntry> studentEntries;
+    private final List<ConsoleMenuEntry> assignmentEntries;
+    private final List<ConsoleMenuEntry> gradeEntries;
+    private final List<ConsoleMenuEntry> filterEntries;
     private final CommonService service;
 
     public Console(CommonService service) {
         this.service = service;
 
-        entries = List.of(
+        studentEntries = List.of(
                 new ConsoleMenuEntry("1", "Add student", this::addStudent),
                 new ConsoleMenuEntry("2", "List students", this::listStudents),
                 new ConsoleMenuEntry("3", "Update student", this::updateStudent),
                 new ConsoleMenuEntry("4", "Add student motivated week", this::addStudentMotivatedWeek),
                 new ConsoleMenuEntry("5", "Remove student motivated week", this::removeStudentMotivatedWeek),
                 new ConsoleMenuEntry("6", "Delete student", this::deleteStudent),
-                new ConsoleMenuEntry("7", "Add assignment", this::addAssignment),
-                new ConsoleMenuEntry("8", "List assignments", this::listAssignments),
-                new ConsoleMenuEntry("9", "Update assignment", this::updateAssignment),
-                new ConsoleMenuEntry("10", "Delete assignment", this::deleteAssignment),
-                new ConsoleMenuEntry("11", "Add grade", this::addGrade),
-                new ConsoleMenuEntry("12", "List grades", this::listGrades),
-                new ConsoleMenuEntry("13", "Update grade", this:: updateGrade),
-                new ConsoleMenuEntry("14", "Delete grade", this::deleteGrade),
-                new ConsoleMenuEntry("x", "Exit", this::exit)
+                new ConsoleMenuEntry("x", "Back", this::submenuExit)
+        );
+
+        assignmentEntries = List.of(
+                new ConsoleMenuEntry("1", "Add assignment", this::addAssignment),
+                new ConsoleMenuEntry("2", "List assignments", this::listAssignments),
+                new ConsoleMenuEntry("3", "Update assignment", this::updateAssignment),
+                new ConsoleMenuEntry("4", "Delete assignment", this::deleteAssignment),
+                new ConsoleMenuEntry("x", "Back", this::submenuExit)
+        );
+
+        gradeEntries = List.of(
+                new ConsoleMenuEntry("1", "Add grade", this::addGrade),
+                new ConsoleMenuEntry("2", "List grades", this::listGrades),
+                new ConsoleMenuEntry("3", "Update grade", this:: updateGrade),
+                new ConsoleMenuEntry("4", "Delete grade", this::deleteGrade),
+                new ConsoleMenuEntry("x", "Back", this::submenuExit)
+        );
+
+        filterEntries = List.of(
+                new ConsoleMenuEntry("1", "Show students by group", this::showStudentsByGroup),
+                new ConsoleMenuEntry("2", "Show students with an assignment", this::showStudentsWithAssignment),
+                new ConsoleMenuEntry("3", "Show students with an assignment turned in to a professor", this::showStudentsWithAssignmentProfessor),
+                new ConsoleMenuEntry("4", "Show students with an assignment turned in at a specific week", this::showGradesAtAssignmentAtWeek),
+                new ConsoleMenuEntry("x", "Back", this::submenuExit)
+        );
+
+        mainEntries = List.of(
+                new ConsoleMenuEntry("1", "Students", () -> {
+                    runEntries(studentEntries);
+                }),
+                new ConsoleMenuEntry("2", "Assignments", () -> {
+                    runEntries(assignmentEntries);
+                }),
+                new ConsoleMenuEntry("3", "Grades", () -> {
+                    runEntries(gradeEntries);
+                }),
+                new ConsoleMenuEntry("4", "Filters", () -> {
+                    runEntries(filterEntries);
+                }),
+                new ConsoleMenuEntry("x", "Exit", this::menuExit)
         );
     }
 
-    private void exit() {
+    private void menuExit() {
         System.out.println("Goodbye!");
     }
+    private void submenuExit() {}
 
-    private ConsoleMenuEntry getEntryByIndex(String index) {
+    private ConsoleMenuEntry getEntryByIndex(List<ConsoleMenuEntry> entries, String index) {
         Optional<ConsoleMenuEntry> entry = entries
                 .stream()
                 .filter(e -> index.equals(e.getIndex()))
@@ -104,9 +141,9 @@ public class Console {
         return entry.get();
     }
 
-    private ConsoleMenuEntry readEntry() {
+    private ConsoleMenuEntry readEntry(List<ConsoleMenuEntry> entries) {
         String index = readString("Command: ", "Invalid command");
-        return getEntryByIndex(index);
+        return getEntryByIndex(entries, index);
     }
 
     private void addStudent() throws CommonServiceException, ValidationException {
@@ -115,8 +152,9 @@ public class Console {
         String lastName = readString("Last name: ", "Invalid last name");
         String email = readString("Email: ", "Invalid email");
         String group = readString("Group: ", "Invalid group");
+        String professorName = readString("Professor name: ", "Invalid professor name");
 
-        Student student = service.addStudent(id, firstName, lastName, email, group);
+        Student student = service.addStudent(id, firstName, lastName, email, group, professorName);
         System.out.println(String.format("Added: %s", student));
     }
 
@@ -125,14 +163,15 @@ public class Console {
         service.getStudents().forEach(System.out::println);
     }
 
-    public void updateStudent() throws CommonServiceException, ValidationException {
+    private void updateStudent() throws CommonServiceException, ValidationException {
         String id = readString("Id: ", "Invalid id");
         String firstName = readString("New first name (empty to leave unchanged): ");
         String lastName = readString("New last name (empty to leave unchanged): ");
         String email = readString("New email (empty to leave unchanged): ");
         String group = readString("New group (empty to leave unchanged): ");
+        String professorName = readString("New professor name (empty to leave unchanged): ");
 
-        Student student = service.updateStudent(id, firstName, lastName, email, group);
+        Student student = service.updateStudent(id, firstName, lastName, email, group, professorName);
         System.out.println(String.format("Updated: %s", student));
     }
 
@@ -157,6 +196,25 @@ public class Console {
 
         Student student = service.deleteStudent(id);
         System.out.println(String.format("Deleted: %s", student));
+    }
+
+    private void showStudentsByGroup() {
+        String group = readString("Group: ", "Invalid group");
+        System.out.println("Students with group:");
+        service.getStudentsForGroup(group).forEach(System.out::println);
+    }
+
+    private void showStudentsWithAssignment() {
+        String assignmentId = readString("Assignment id: ", "Invalid assignment id");
+        System.out.println("Students with assignment:");
+        service.getStudentsWithAssignment(assignmentId).forEach(System.out::println);
+    }
+
+    private void showStudentsWithAssignmentProfessor() {
+        String assignmentId = readString("Assignment id: ", "Invalid assignment id");
+        String professorName = readString("Professor name: ", "Invalid professor name");
+        System.out.println("Students with assignment turned in at professor:");
+        service.getStudentsWithAssignmentProfessor(assignmentId, professorName).forEach(System.out::println);
     }
 
     private void addAssignment() throws CommonServiceException, ValidationException {
@@ -203,9 +261,10 @@ public class Console {
 
         int value = readNatural("Grade: ", "Invalid grade");
 
+        String professorName = readString("Professor name: ");
         String feedback = readString("Feedback (can be empty): ");
 
-        Grade grade = service.addGrade(studentId, assignmentId, date, value, feedback);
+        Grade grade = service.addGrade(studentId, assignmentId, date, value, professorName, feedback);
         System.out.println(String.format("Added: %s", grade));
     }
 
@@ -226,9 +285,10 @@ public class Console {
 
         int value = readNatural("New grade: (empty to leave unchanged): ");
 
+        String professorName = readString("New professor name (empty to leave unchanged): ");
         String feedback = readString("New feedback (empty to leave unchanged): ");
 
-        Grade grade = service.updateGrade(studentId, assignmentId, date, value, feedback);
+        Grade grade = service.updateGrade(studentId, assignmentId, date, value, professorName, feedback);
         System.out.println(String.format("Updated: %s", grade));
     }
 
@@ -240,14 +300,17 @@ public class Console {
         System.out.println(String.format("Deleted: %s", grade));
     }
 
-    private void printEntries() {
-        System.out.println("Menu:");
-        entries.forEach(System.out::println);
+    private void showGradesAtAssignmentAtWeek() {
+        String assignmentId = readString("Assignment id: ", "Invalid assignment id");
+        long week = readNatural("Week: ", "Invalid week");
+        System.out.println("Grades for assignment turned it at week:");
+        service.getGradesAtAssignmentInWeek(assignmentId, week).forEach(System.out::println);
     }
 
     private void populate() {
         try {
-            Student student = service.addStudent("1", "Cosmin", "Tanislav", "tcir2625@scs.ubbcluj.ro", "227");
+            Student student = service.addStudent("1", "Cosmin", "Tanislav",
+                    "tcir2625@scs.ubbcluj.ro", "227", "Sergiu");
 //            student.addMotivatedWeek(1);
 //            student.addMotivatedWeek(14);
 //            student.addMotivatedWeek(3);
@@ -257,12 +320,15 @@ public class Console {
         }
     }
 
-    public void run() {
-        populate();
+    private void printEntries(List<ConsoleMenuEntry> entries) {
+        System.out.println("Menu:");
+        entries.forEach(System.out::println);
+    }
 
+    public void runEntries(List<ConsoleMenuEntry> entries) {
         while (true) {
-            printEntries();
-            ConsoleMenuEntry entry = readEntry();
+            printEntries(entries);
+            ConsoleMenuEntry entry = readEntry(entries);
 
             if (entry == null) {
                 System.out.println("Invalid command");
@@ -275,5 +341,10 @@ public class Console {
 
             entry.call();
         }
+    }
+
+    public void run() {
+        populate();
+        runEntries(mainEntries);
     }
 }

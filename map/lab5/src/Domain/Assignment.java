@@ -68,4 +68,11 @@ public class Assignment extends BaseEntity<String> {
 
         return new Assignment(id, description, startWeek, deadlineWeek);
     }
+
+    public static class Builder implements IBuilder<String, Assignment> {
+        @Override
+        public Assignment buildFromXML(Element element) {
+            return Assignment.createFromXMLElement(element);
+        }
+    }
 }

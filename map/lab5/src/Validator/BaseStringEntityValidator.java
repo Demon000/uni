@@ -2,7 +2,7 @@ package Validator;
 
 import Domain.BaseEntity;
 
-public class BaseEntityStringValidator<E extends BaseEntity<String>> implements IValidator<E> {
+public class BaseStringEntityValidator<E extends BaseEntity<String>> implements IValidator<E> {
     /**
      * Validate an id.
      * @param id the id to be validated.

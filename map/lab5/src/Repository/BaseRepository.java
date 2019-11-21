@@ -8,11 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BaseRepository<ID, E extends BaseEntity<ID>, V extends IValidator<E>> implements IRepository<ID, E> {
-    protected Map<ID, E> entities;
+    protected Map<ID, E> entities = new HashMap<>();
     private V validator;
 
     public BaseRepository(V validator) {
-        entities = new HashMap<>();
         this.validator = validator;
     }
 

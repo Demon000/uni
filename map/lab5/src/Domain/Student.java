@@ -17,19 +17,21 @@ public class Student extends BaseEntity<String> {
     private String lastName;
     private String email;
     private String group;
+    private String professorName;
 
-    public Student(String id,  String firstName, String lastName, String email, String group, List<Long> motivatedWeeks) {
+    public Student(String id, String firstName, String lastName, String email, String group, String professorName, List<Long> motivatedWeeks) {
         setId(id);
 
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.group = group;
+        this.professorName = professorName;
         this.motivatedWeeks = motivatedWeeks;
     }
 
-    public Student(String id, String firstName, String lastName, String email, String group) {
-        this(id, firstName, lastName, email, group, new ArrayList<>());
+    public Student(String id, String firstName, String lastName, String email, String group, String professorName) {
+        this(id, firstName, lastName, email, group, professorName, new ArrayList<>());
     }
 
     public String getFirstName() {
@@ -64,6 +66,14 @@ public class Student extends BaseEntity<String> {
         this.group = group;
     }
 
+    public String getProfessorName() {
+        return professorName;
+    }
+
+    public void setProfessorName(String professorName) {
+        this.professorName = professorName;
+    }
+
     public List<Long> getMotivatedWeeks() {
         return motivatedWeeks;
     }
@@ -78,9 +88,9 @@ public class Student extends BaseEntity<String> {
         motivatedWeeks.add(week);
     }
 
-    public boolean removeMotivatedWeek(long w) {
+    public void removeMotivatedWeek(long w) {
         Long week = w;
-        return motivatedWeeks.remove(week);
+        motivatedWeeks.remove(week);
     }
 
     @Override
@@ -96,8 +106,8 @@ public class Student extends BaseEntity<String> {
             motivatedWeeksString = "none";
         }
 
-        return String.format("Student -> id: %s, name: %s %s, email: %s, group: %s,\n\tmotivated weeks: %s",
-                getId(), getFirstName(), getLastName(), getEmail(), getGroup(), motivatedWeeksString);
+        return String.format("Student -> id: %s, name: %s %s, email: %s, group: %s, professor name: %s, \n\tmotivated weeks: %s",
+                getId(), getFirstName(), getLastName(), getEmail(), getGroup(), getProfessorName(), motivatedWeeksString);
     }
 
     public Element toXMLElement(Document document) {
@@ -108,6 +118,7 @@ public class Student extends BaseEntity<String> {
         appendChildValue(studentElement, "lastName", getLastName());
         appendChildValue(studentElement, "email", getEmail());
         appendChildValue(studentElement, "group", getGroup());
+        appendChildValue(studentElement, "professorName", getProfessorName());
 
         List<String> motivatedWeekStrings = motivatedWeeks
                 .stream()
@@ -126,14 +137,20 @@ public class Student extends BaseEntity<String> {
         String lastName = getChildValue(element, "lastName");
         String email = getChildValue(element, "email");
         String group = getChildValue(element, "group");
+        String professorName = getChildValue(element, "professorName");
 
-        List<String> motivatedWeekStrings = getListChildrenValues(element, "motivatedWeeks",
-                "motivatedWeek");
-
-        List<Long> motivatedWeeks = motivatedWeekStrings.stream()
+        List<Long> motivatedWeeks = getListChildrenValues(element, "motivatedWeeks", "motivatedWeek")
+                .stream()
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
 
-        return new Student(id, firstName, lastName, email, group, motivatedWeeks);
+        return new Student(id, firstName, lastName, email, group, professorName, motivatedWeeks);
+    }
+
+    public static class Builder implements IBuilder<String, Student> {
+        @Override
+        public Student buildFromXML(Element element) {
+            return Student.createFromXMLElement(element);
+        }
     }
 }

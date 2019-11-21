@@ -13,6 +13,10 @@ import Validator.ValidationException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class CommonService {
     private BaseRepository<String, Student, StudentValidator> studentRepository;
@@ -40,14 +44,14 @@ public class CommonService {
      * @throws CommonServiceException if a student with the given id already exists
      * @throws ValidationException if the student is invalid
      */
-    public Student addStudent(String id, String firstName, String lastName, String email, String group)
+    public Student addStudent(String id, String firstName, String lastName, String email, String group, String professorName)
             throws CommonServiceException, ValidationException {
         Student student = studentRepository.findOne(id);
         if (student != null) {
             throw new CommonServiceException(String.format("Student with id %s already exists", id));
         }
 
-        student = new Student(id, firstName, lastName, email, group);
+        student = new Student(id, firstName, lastName, email, group, professorName);
         studentRepository.save(student);
         return student;
     }
@@ -105,11 +109,13 @@ public class CommonService {
      * @param lastName the new last name of the student, can be null or empty to not update it
      * @param email the new email of the student, can be null or empty to not update it
      * @param group the new group of the student, can be null or empty to not update it
+     * @param professorName the new professor name of the student, can be null or empty to not update it
      * @return the updated student
      * @throws CommonServiceException if the student doesn't exist
      * @throws ValidationException if the updated student is invalid
      */
-    public Student updateStudent(String id, String firstName, String lastName, String email, String group)
+    public Student updateStudent(String id, String firstName, String lastName, String email, String group,
+                                 String professorName)
             throws CommonServiceException, ValidationException {
         Student student = studentRepository.findOne(id);
         if (student == null) {
@@ -130,6 +136,10 @@ public class CommonService {
 
         if (group != null && !group.isEmpty()) {
             student.setGroup(group);
+        }
+
+        if (professorName != null && !professorName.isEmpty()) {
+            student.setProfessorName(professorName);
         }
 
         studentRepository.update(student);
@@ -289,12 +299,14 @@ public class CommonService {
      * @param assignmentId the id of the assignment at which the student received this grade
      * @param date the date the student received this grade on, can be null to use today's date
      * @param value the value of the grade
+     * @param professorName the name of the professor that added the grade
      * @param feedback the feedback of the grade, can be null to use an empty string
      * @return the newly created grade
      * @throws CommonServiceException if the student or assignment do not exist, or if the grade already exists
      * @throws ValidationException if the grade is invalid
      */
-    public Grade addGrade(String studentId, String assignmentId, LocalDate date, int value, String feedback)
+    public Grade addGrade(String studentId, String assignmentId, LocalDate date, int value,
+                          String professorName, String feedback)
             throws CommonServiceException, ValidationException, UniversityYearError {
         Student student = studentRepository.findOne(studentId);
         if (student == null) {
@@ -306,7 +318,7 @@ public class CommonService {
             throw new CommonServiceException(String.format("Assignment with id %s does not exist", assignmentId));
         }
 
-        String gradeId = Grade.getCompositeId(studentId, assignmentId);
+        String gradeId = Grade.createCompositeId(studentId, assignmentId);
         Grade grade = gradeRepository.findOne(gradeId);
         if (grade != null) {
             throw new CommonServiceException(String.format("Grade with id %s already exists", gradeId));
@@ -322,7 +334,7 @@ public class CommonService {
             feedback = "";
         }
 
-        grade = new Grade(gradeId, date, penalty, value, feedback);
+        grade = new Grade(gradeId, date, penalty, value, professorName, feedback);
         gradeRepository.save(grade);
         return grade;
     }
@@ -341,12 +353,14 @@ public class CommonService {
      * @param assignmentId the id of this assignment at which the student received this grade
      * @param value the new value of this grade, can be 0 to not update it
      * @param date the new date of this grade, can be null to not update it
+     * @param professorName the new name of the professor that added the grade, can be null or empty to not update it
      * @param feedback the new feedback of this grade, can be null to not update it
      * @return the updated grade
      * @throws CommonServiceException if the student, assignment or grade do not exist
      * @throws ValidationException if the grade is invalid
      */
-    public Grade updateGrade(String studentId, String assignmentId, LocalDate date, int value, String feedback)
+    public Grade updateGrade(String studentId, String assignmentId, LocalDate date, int value,
+                             String professorName, String feedback)
             throws CommonServiceException, ValidationException, UniversityYearError {
         Student student = studentRepository.findOne(studentId);
         if (student == null) {
@@ -358,7 +372,7 @@ public class CommonService {
             throw new CommonServiceException(String.format("Assignment with id %s does not exist", assignmentId));
         }
 
-        String gradeId = Grade.getCompositeId(studentId, assignmentId);
+        String gradeId = Grade.createCompositeId(studentId, assignmentId);
         Grade grade = gradeRepository.findOne(gradeId);
         if (grade == null) {
             throw new CommonServiceException(String.format("Grade with id %s does not exist", gradeId));
@@ -375,6 +389,10 @@ public class CommonService {
 
         if (value != 0) {
             grade.setValue(value);
+        }
+
+        if (professorName != null && !professorName.isEmpty()) {
+            grade.setProfessorName(professorName);
         }
 
         if (feedback != null) {
@@ -403,7 +421,7 @@ public class CommonService {
             throw new CommonServiceException(String.format("Assignment with id %s does not exist", assignmentId));
         }
 
-        String gradeId = Grade.getCompositeId(studentId, assignmentId);
+        String gradeId = Grade.createCompositeId(studentId, assignmentId);
         Grade grade = gradeRepository.findOne(gradeId);
         if (grade == null) {
             throw new CommonServiceException(String.format("Grade with id %s does not exist", gradeId));
@@ -411,5 +429,47 @@ public class CommonService {
 
         gradeRepository.delete(gradeId);
         return grade;
+    }
+
+
+
+    private <E> Stream<E> iterableToStream(Iterable<E> iterable) {
+        return StreamSupport.stream(iterable.spliterator(), false);
+    }
+
+    public List<Student> getStudentsForGroup(String group) {
+        return iterableToStream(getStudents())
+                .filter(student -> student.getGroup().equals(group))
+                .collect(Collectors.toList());
+    }
+
+    public List<Student> getStudentsWithAssignment(String assignmentId) {
+        return iterableToStream(getGrades())
+                .filter(grade -> grade.getAssignmentId().equals(assignmentId))
+                .map(Grade::getStudentId)
+                .map(studentRepository::findOne)
+                .collect(Collectors.toList());
+    }
+
+    public List<Student> getStudentsWithAssignmentProfessor(String assignmentId, String professorName) {
+        return iterableToStream(getGrades())
+                .filter(grade -> grade.getAssignmentId().equals(assignmentId))
+                .filter(grade -> grade.getProfessorName().equals(professorName))
+                .map(Grade::getStudentId)
+                .map(studentRepository::findOne)
+                .collect(Collectors.toList());
+    }
+
+    public List<Grade> getGradesAtAssignmentInWeek(String assignmentId, long week) {
+        return iterableToStream(getGrades())
+                .filter(grade -> grade.getAssignmentId().equals(assignmentId))
+                .filter(grade -> {
+                    try {
+                        return year.getWeeksSinceStart(grade.getDate()) == week;
+                    } catch (UniversityYearError universityYearError) {
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
     }
 }

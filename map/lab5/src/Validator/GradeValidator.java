@@ -2,7 +2,7 @@ package Validator;
 
 import Domain.Grade;
 
-public class GradeValidator extends BaseEntityStringValidator<Grade> {
+public class GradeValidator extends BaseStringEntityValidator<Grade> {
     /**
      * Validate a grade value.
      * @param value the value to validate
@@ -33,9 +33,25 @@ public class GradeValidator extends BaseEntityStringValidator<Grade> {
         }
     }
 
+    /**
+     * Validate a professor name.
+     * @param professorName the name to be validated
+     * @throws ValidationException if the name isn't valid
+     */
+    public void validateProfessorName(String professorName) throws ValidationException {
+        if (professorName == null) {
+            throw new ValidationException("Professor name must not be null");
+        }
+
+        if (professorName.length() < 3) {
+            throw new ValidationException("Professor name must be at least 3 characters long");
+        }
+    }
+
     @Override
     public void validate(Grade grade) throws ValidationException {
         validateValue(grade.getValue());
         validatePenalty(grade.getPenalty());
+        validateProfessorName(grade.getProfessorName());
     }
 }

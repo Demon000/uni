@@ -6,7 +6,7 @@ import Time.UniversityYearError;
 
 import java.time.LocalDate;
 
-public class AssignmentValidator extends BaseEntityStringValidator<Assignment> {
+public class AssignmentValidator extends BaseStringEntityValidator<Assignment> {
     private UniversityYear year;
 
     public AssignmentValidator(UniversityYear year) {

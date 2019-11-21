@@ -4,7 +4,7 @@ import Domain.Student;
 
 import java.util.List;
 
-public class StudentValidator extends BaseEntityStringValidator<Student> {
+public class StudentValidator extends BaseStringEntityValidator<Student> {
     /**
      * Validate a name.
      * @param name the name to be validated
@@ -38,7 +38,7 @@ public class StudentValidator extends BaseEntityStringValidator<Student> {
 
         String emailRegex = "[a-z]{4}[1-9]{4}@scs.ubbcluj.ro";
         if (!email.matches(emailRegex)) {
-            throw new ValidationException(("Student email must be of format abcd12@scs.ubbcluj.ro"));
+            throw new ValidationException(("Student email must be of format abcd1234@scs.ubbcluj.ro"));
         }
     }
 
@@ -80,6 +80,21 @@ public class StudentValidator extends BaseEntityStringValidator<Student> {
         }
     }
 
+    /**
+     * Validate a professor name.
+     * @param professorName the name to be validated
+     * @throws ValidationException if the name isn't valid
+     */
+    public void validateProfessorName(String professorName) throws ValidationException {
+        if (professorName == null) {
+            throw new ValidationException("Professor name must not be null");
+        }
+
+        if (professorName.length() < 3) {
+            throw new ValidationException("Professor name must be at least 3 characters long");
+        }
+    }
+
     @Override
     public void validate(Student student) throws ValidationException {
         super.validate(student);
@@ -88,6 +103,7 @@ public class StudentValidator extends BaseEntityStringValidator<Student> {
         validateName(student.getLastName());
         validateEmail(student.getEmail());
         validateGroup(student.getGroup());
+        validateProfessorName(student.getProfessorName());
         validateMotivatedWeeks(student.getMotivatedWeeks());
     }
 }
