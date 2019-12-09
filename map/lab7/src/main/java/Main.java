@@ -1,18 +1,17 @@
-import Domain.*;
-import Repository.*;
-import Service.CommonService;
-import Time.DateIntervalError;
-import Time.UniversitySemester;
-import Time.UniversitySemesterError;
-import Time.UniversityYear;
-import UserInterface.Console;
-import Validator.AssignmentValidator;
-import Validator.GradeValidator;
-import Validator.StudentValidator;
+import controller.StudentsController;
+import domain.*;
+import repository.*;
+import service.CommonService;
+import time.DateIntervalError;
+import time.UniversitySemester;
+import time.UniversitySemesterError;
+import time.UniversityYear;
+import validator.AssignmentValidator;
+import validator.GradeValidator;
+import validator.StudentValidator;
 import javafx.application.Application;
-import javafx.scene.Group;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
@@ -39,6 +38,11 @@ public class Main extends Application {
         //Tests tests = new Tests();
         //tests.testAll();
 
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
         UniversityYear year;
 
         try {
@@ -54,7 +58,7 @@ public class Main extends Application {
         Student.Builder studentBuilder = new Student.Builder();
         BaseRepository<String, Student, StudentValidator> studentRepository =
                 new BaseXMLFileRepository<>("students.xml",
-                studentValidator, studentBuilder);
+                        studentValidator, studentBuilder);
 
         AssignmentValidator assignmentValidator = new AssignmentValidator(year);
         //BaseRepository<String, Assignment, AssignmentValidator> assignmentRepository =
@@ -62,7 +66,7 @@ public class Main extends Application {
         Assignment.Builder assignmentBuilder = new Assignment.Builder();
         BaseRepository<String, Assignment, AssignmentValidator> assignmentRepository =
                 new BaseXMLFileRepository<>("assignments.xml",
-                assignmentValidator, assignmentBuilder);
+                        assignmentValidator, assignmentBuilder);
 
 
         GradeValidator gradeValidator = new GradeValidator();
@@ -74,19 +78,15 @@ public class Main extends Application {
                 gradeValidator, gradeBuilder);
 
         CommonService service = new CommonService(studentRepository, assignmentRepository, gradeRepository, year);
-        Console console = new Console(service);
 
-        launch(args);
+        StudentsController studentsController = new StudentsController(service);
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(StudentsController.VIEW_NAME));
+        loader.setController(studentsController);
 
-        console.run();
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        Group root = new Group();
-        Scene scene = new Scene(root, 500, 500, Color.PINK);
-        stage.setTitle("Welcome to JavaFX!");
-        stage.setScene(scene);
-        stage.show();
+        Scene scene = new Scene(loader.load());
+        primaryStage.setScene(scene);
+        primaryStage.setTitle(StudentsController.VIEW_TITLE);
+        primaryStage.show();
     }
 }

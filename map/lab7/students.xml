@@ -4,8 +4,11 @@
         <firstName>Cosmin</firstName>
         <lastName>Tanislav</lastName>
         <email>tcir2625@scs.ubbcluj.ro</email>
-        <group>227</group>
+        <group>226</group>
         <professorName>Sergiu</professorName>
-        <motivatedWeeks/>
+        <motivatedWeeks>
+            <motivatedWeek>10</motivatedWeek>
+            <motivatedWeek>11</motivatedWeek>
+        </motivatedWeeks>
     </student>
 </root>
