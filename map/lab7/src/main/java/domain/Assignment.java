@@ -3,6 +3,7 @@ package domain;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import static utils.StringUtils.matchesAny;
 import static utils.XMLUtils.*;
 
 public class Assignment extends BaseEntity<String> {
@@ -32,6 +33,10 @@ public class Assignment extends BaseEntity<String> {
         return startWeek;
     }
 
+    public String getStartWeekString() {
+        return String.valueOf(getStartWeek());
+    }
+
     public void setStartWeek(long startWeek) {
         this.startWeek = startWeek;
     }
@@ -40,8 +45,16 @@ public class Assignment extends BaseEntity<String> {
         return deadlineWeek;
     }
 
+    public String getDeadlineWeekString() {
+        return String.valueOf(getDeadlineWeek());
+    }
+
     public void setDeadlineWeek(long deadlineWeek) {
         this.deadlineWeek = deadlineWeek;
+    }
+
+    public long getNumberOfWeeks() {
+        return deadlineWeek - startWeek + 1;
     }
 
     public String toString() {
@@ -49,13 +62,18 @@ public class Assignment extends BaseEntity<String> {
                 getId(), getDescription(), getStartWeek(), getDeadlineWeek());
     }
 
+    public boolean matches(String input) {
+        return matchesAny(input, getId(), getDescription(),
+                getStartWeekString(), getDeadlineWeekString());
+    }
+
     public Element toXMLElement(Document document) {
         Element assignmentElement = document.createElement(TAG_NAME);
 
         appendChildValue(assignmentElement, "id", getId());
         appendChildValue(assignmentElement, "description", getDescription());
-        appendChildValue(assignmentElement, "startWeek", String.valueOf(getStartWeek()));
-        appendChildValue(assignmentElement, "deadlineWeek", String.valueOf(getDeadlineWeek()));
+        appendChildValue(assignmentElement, "startWeek", getStartWeekString());
+        appendChildValue(assignmentElement, "deadlineWeek", getDeadlineWeekString());
 
         return assignmentElement;
     }

@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static utils.StringUtils.*;
 import static utils.XMLUtils.*;
 
 public class Student extends BaseEntity<String> {
@@ -31,10 +32,6 @@ public class Student extends BaseEntity<String> {
         this.motivatedWeeks = motivatedWeeks;
     }
 
-    public Student(String id, String firstName, String lastName, String email, String group, String professorName) {
-        this(id, firstName, lastName, email, group, professorName, new ArrayList<>());
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -49,6 +46,10 @@ public class Student extends BaseEntity<String> {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        return String.format("%s %s", getFirstName(), getLastName());
     }
 
     public String getEmail() {
@@ -95,16 +96,17 @@ public class Student extends BaseEntity<String> {
     }
 
     public static List<Long> stringToMotivatedWeeks(String motivatedWeeksString) {
-        return Arrays.stream(motivatedWeeksString.split("\\s*,\\s*"))
-                .map(Long::valueOf)
-                .collect(Collectors.toList());
+        try {
+            return Arrays.stream(motivatedWeeksString.split("\\s*,\\s*"))
+                    .map(Long::valueOf)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+
     }
 
-    public void setMotivatedWeeksString(String motivatedWeeksString) {
-        motivatedWeeks = stringToMotivatedWeeks(motivatedWeeksString);
-    }
-
-    public String getMotivatedWeeksString() {
+    public static String getMotivatedWeeksString(List<Long> motivatedWeeks) {
         String motivatedWeeksString;
 
         if (motivatedWeeks.size() > 0) {
@@ -119,10 +121,19 @@ public class Student extends BaseEntity<String> {
         return motivatedWeeksString;
     }
 
+    public String getMotivatedWeeksString() {
+        return getMotivatedWeeksString(motivatedWeeks);
+    }
+
     @Override
     public String toString() {
         return String.format("Student -> id: %s, name: %s %s, email: %s, group: %s, professor name: %s, \n\tmotivated weeks: %s",
                 getId(), getFirstName(), getLastName(), getEmail(), getGroup(), getProfessorName(), getMotivatedWeeksString());
+    }
+
+    public boolean matches(String input) {
+        return matchesAny(input, getId(), getFirstName(), getLastName(),
+                getEmail(), getGroup(), getProfessorName(), getMotivatedWeeksString());
     }
 
     public Element toXMLElement(Document document) {

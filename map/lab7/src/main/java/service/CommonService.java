@@ -6,18 +6,22 @@ import domain.Student;
 import repository.BaseRepository;
 import time.UniversityYear;
 import time.UniversityYearError;
+import observer.Observable;
 import validator.AssignmentValidator;
 import validator.GradeValidator;
 import validator.StudentValidator;
 import validator.ValidationException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static utils.CollectionUtils.listFromIterable;
 import static utils.CollectionUtils.streamFromIterable;
 
-public class CommonService {
+public class CommonService extends Observable {
     private final BaseRepository<String, Student, StudentValidator> studentRepository;
     private final BaseRepository<String, Assignment, AssignmentValidator> assignmentRepository;
     private final BaseRepository<String, Grade, GradeValidator> gradeRepository;
@@ -39,20 +43,28 @@ public class CommonService {
      * @param firstName the first name of the student
      * @param lastName the last name of the student
      * @param email the email of the student
+     * @param motivatedWeeks the new motivated weeks of the student, can be null to use an empty list
      * @return the newly created student
      * @throws CommonServiceException if a student with the given id already exists
      * @throws ValidationException if the student is invalid
      */
-    public Student addStudent(String id, String firstName, String lastName, String email, String group, String professorName)
+    public Student addStudent(String id, String firstName, String lastName, String email,
+                              String group, String professorName, List<Long> motivatedWeeks)
             throws CommonServiceException, ValidationException {
         Student student = studentRepository.findOne(id);
         if (student != null) {
             throw new CommonServiceException(String.format("Student with id %s already exists", id));
         }
 
-        student = new Student(id, firstName, lastName, email, group, professorName);
+        if (motivatedWeeks == null) {
+            motivatedWeeks = new ArrayList<>();
+        }
+
+        student = new Student(id, firstName, lastName, email, group, professorName, motivatedWeeks);
 
         studentRepository.save(student);
+
+        change("students", null, student);
         
         return student;
     }
@@ -74,7 +86,8 @@ public class CommonService {
         student.addMotivatedWeek(week);
 
         studentRepository.update(student);
-        
+        change("students", student, student);
+
         return student;
     }
 
@@ -95,7 +108,8 @@ public class CommonService {
         student.removeMotivatedWeek(week);
 
         studentRepository.update(student);
-        
+        change("students", student, student);
+
         return student;
     }
 
@@ -153,7 +167,8 @@ public class CommonService {
         }
 
         studentRepository.update(student);
-        
+        change("students", student, student);
+
         return student;
     }
 
@@ -170,7 +185,8 @@ public class CommonService {
         }
 
         studentRepository.delete(id);
-        
+        change("students", student, null);
+
         return student;
     }
 
@@ -194,7 +210,8 @@ public class CommonService {
         assignment = new Assignment(id, description, startWeek, deadlineWeek);
 
         assignmentRepository.save(assignment);
-        
+        change("assignments", null, assignment);
+
         return assignment;
     }
 
@@ -204,6 +221,21 @@ public class CommonService {
      */
     public Iterable<Assignment> getAssignments() {
         return assignmentRepository.findAll();
+    }
+
+    /**
+     * Get an assignment by id.
+     * @param id the id of the assignment
+     * @return the assignment
+     * @throws CommonServiceException if the assignment does not exist
+     */
+    public Assignment getAssignmentById(String id) throws CommonServiceException {
+        Assignment assignment = assignmentRepository.findOne(id);
+        if (assignment == null) {
+            throw new CommonServiceException(String.format("Assignment with id %s does not exist", id));
+        }
+
+        return assignment;
     }
 
     /**
@@ -236,7 +268,8 @@ public class CommonService {
         }
 
         assignmentRepository.update(assignment);
-        
+        change("assignments", assignment, assignment);
+
         return assignment;
     }
 
@@ -253,8 +286,53 @@ public class CommonService {
         }
 
         assignmentRepository.delete(id);
-        
+        change("assignments", assignment, null);
+
         return assignment;
+    }
+
+    /**
+     * Get the motivated weeks which can be used to decrease the penalty of a grade.
+     * @param studentId the id of the student
+     * @param assignmentId the id of the assignment
+     * @param date the date the assignment will be turned in, can be null to use today's date
+     * @return the motivated weeks which can be used to decrease the penalty of a grade
+     * @throws CommonServiceException if the student or assignment do not exist
+     * @throws UniversityYearError if the given date is not part of the current semester
+     */
+    public List<Long> getGradeMotivatedWeeks(String studentId, String assignmentId, LocalDate date) throws CommonServiceException, UniversityYearError {
+        Student student = studentRepository.findOne(studentId);
+        if (student == null) {
+            throw new CommonServiceException(String.format("Student with id %s does not exist", studentId));
+        }
+
+        Assignment assignment = assignmentRepository.findOne(assignmentId);
+        if (assignment == null) {
+            throw new CommonServiceException(String.format("Assignment with id %s does not exist", assignmentId));
+        }
+
+        if (date == null) {
+            date = LocalDate.now();
+        }
+
+        List<Long> usedMotivatedWeeks = new ArrayList<>();
+        long deadlineWeek = assignment.getDeadlineWeek();
+        long currentWeek = year.getWeeksSinceStart(date);
+        long penalty = currentWeek - deadlineWeek;
+
+        List<Long> motivatedWeeks = student.getMotivatedWeeks();
+        for (long motivatedWeek : motivatedWeeks) {
+            if (penalty <= 0) {
+                return usedMotivatedWeeks;
+            }
+
+            if (motivatedWeek >= deadlineWeek && motivatedWeek <= currentWeek) {
+                penalty--;
+                usedMotivatedWeeks.add(motivatedWeek);
+            }
+        }
+
+        return usedMotivatedWeeks;
     }
 
     /**
@@ -262,7 +340,7 @@ public class CommonService {
      * @param studentId the id of the student
      * @param assignmentId the id of the assignment
      * @param date the date the assignment will be turned in, can be null to use today's date
-     * @return the number of weeks that will pass until the given date
+     * @return the penalty that needs to be applied to the current grade
      * @throws CommonServiceException if the student or assignment do not exist
      * @throws UniversityYearError if the given date is not part of the current semester
      */
@@ -281,31 +359,17 @@ public class CommonService {
             date = LocalDate.now();
         }
 
-        long startWeek = assignment.getStartWeek();
         long deadlineWeek = assignment.getDeadlineWeek();
-        long penalty = year.getWeeksSinceStart(date) - deadlineWeek;
+        long currentWeek = year.getWeeksSinceStart(date);
+        long penalty = currentWeek - deadlineWeek;
 
-        if (penalty < 0) {
-            penalty = 0;
+        if (penalty <= 0) {
+            return 0;
         }
 
-        if (penalty > 0) {
-            List<Long> motivatedWeeks = student.getMotivatedWeeks();
+        List<Long> usedMotivatedWeeks = getGradeMotivatedWeeks(studentId, assignmentId, date);
 
-            for (Long w : motivatedWeeks) {
-                long week = w;
-
-                if (week >= startWeek && week <= deadlineWeek) {
-                    penalty--;
-                }
-            }
-        }
-
-        if (penalty < 0) {
-            penalty = 0;
-        }
-
-        return penalty;
+        return penalty - usedMotivatedWeeks.size();
     }
 
     /**
@@ -315,7 +379,7 @@ public class CommonService {
      * @param date the date the student received this grade on, can be null to use today's date
      * @param value the value of the grade
      * @param professorName the name of the professor that added the grade
-     * @param feedback the feedback of the grade, can be null to use an empty string
+     * @param feedback the feedback of the grade, can be null or empty to use "none"
      * @return the newly created grade
      * @throws CommonServiceException if the student or assignment do not exist, or if the grade already exists
      * @throws ValidationException if the grade is invalid
@@ -345,14 +409,15 @@ public class CommonService {
 
         long penalty = getGradePenalty(studentId, assignmentId, date);
 
-        if (feedback == null) {
-            feedback = "";
+        if (feedback == null || feedback.isEmpty()) {
+            feedback = "none";
         }
 
         grade = new Grade(gradeId, date, penalty, value, professorName, feedback);
 
         gradeRepository.save(grade);
-        
+        change("grades", null, grade);
+
         return grade;
     }
 
@@ -364,6 +429,26 @@ public class CommonService {
         return gradeRepository.findAll();
     }
 
+    public Grade getGradeById(String studentId, String assignmentId) throws CommonServiceException {
+        Student student = studentRepository.findOne(studentId);
+        if (student == null) {
+            throw new CommonServiceException(String.format("Student with id %s does not exist", studentId));
+        }
+
+        Assignment assignment = assignmentRepository.findOne(assignmentId);
+        if (assignment == null) {
+            throw new CommonServiceException(String.format("Assignment with id %s does not exist", assignmentId));
+        }
+
+        String gradeId = Grade.createCompositeId(studentId, assignmentId);
+        Grade grade = gradeRepository.findOne(gradeId);
+        if (grade == null) {
+            throw new CommonServiceException(String.format("Grade with id %s does not exist", gradeId));
+        }
+
+        return grade;
+    }
+
     /**
      * Update a grade.
      * @param studentId the id of the student who received this grade
@@ -371,12 +456,12 @@ public class CommonService {
      * @param value the new value of this grade, can be 0 to not update it
      * @param date the new date of this grade, can be null to not update it
      * @param professorName the new name of the professor that added the grade, can be null or empty to not update it
-     * @param feedback the new feedback of this grade, can be null to not update it
+     * @param feedback the new feedback of this grade, can be null or empty to not update it
      * @return the updated grade
      * @throws CommonServiceException if the student, assignment or grade do not exist
      * @throws ValidationException if the grade is invalid
      */
-    public Grade updateGrade(String studentId, String assignmentId, LocalDate date, int value,
+    public Grade updateGrade(String studentId, String assignmentId, LocalDate date, Integer value,
                              String professorName, String feedback)
             throws CommonServiceException, ValidationException, UniversityYearError {
         Student student = studentRepository.findOne(studentId);
@@ -404,7 +489,7 @@ public class CommonService {
         long penalty = getGradePenalty(studentId, assignmentId, date);
         grade.setPenalty(penalty);
 
-        if (value != 0) {
+        if (value != null) {
             grade.setValue(value);
         }
 
@@ -412,12 +497,41 @@ public class CommonService {
             grade.setProfessorName(professorName);
         }
 
-        if (feedback != null) {
+        if (feedback != null && !feedback.isEmpty()) {
             grade.setFeedback(feedback);
         }
 
         gradeRepository.update(grade);
-        
+        change("grades", grade, grade);
+
+        return grade;
+    }
+
+    /**
+     * Set a grade. If the grade exists, it is updated, if it doesn't exist, it's added.
+     * @param studentId the id of the student who received this grade
+     * @param assignmentId the id of the assignment at which the student received this grade
+     * @param date the date the student received this grade on, can be null to use today's date
+     * @param value the value of the grade
+     * @param professorName the name of the professor that added the grade
+     * @param feedback the feedback of the grade, can be null or empty to use "none"
+     * @return the newly created grade
+     */
+    public Grade setGrade(String studentId, String assignmentId, LocalDate date, int value,
+                          String professorName, String feedback)
+            throws UniversityYearError, CommonServiceException, ValidationException {
+        Grade grade = null;
+
+        try {
+            grade = getGradeById(studentId, assignmentId);
+        } catch (CommonServiceException ignored) {}
+
+        if (grade == null) {
+            grade = addGrade(studentId, assignmentId, date, value, professorName, feedback);
+        } else {
+            grade = updateGrade(studentId, assignmentId, date, value, professorName, feedback);
+        }
+
         return grade;
     }
 
@@ -446,7 +560,8 @@ public class CommonService {
         }
 
         gradeRepository.delete(gradeId);
-        
+        change("grades", grade, null);
+
         return grade;
     }
 
@@ -485,4 +600,41 @@ public class CommonService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public List<Grade> getGradesForStudent(String studentId) {
+        return streamFromIterable(getGrades())
+                .filter(grade -> grade.getStudentId().equals(studentId))
+                .collect(Collectors.toList());
+    }
+
+    public double getStudentAverageGrade(String studentId) {
+        Optional<Long> numberOfWeeks = streamFromIterable(getAssignments())
+                .map(Assignment::getNumberOfWeeks)
+                .reduce(Long::sum);
+
+        if (numberOfWeeks.isEmpty()) {
+            return 0;
+        }
+
+        Optional<Long> ponderedSum = getGradesForStudent(studentId).stream()
+                .map(grade -> {
+                    Assignment assignment;
+                    try {
+                        assignment = getAssignmentById(grade.getAssignmentId());
+                    } catch (CommonServiceException e) {
+                        return 0L;
+                    }
+
+                    return (grade.getValue() - grade.getPenalty()) * assignment.getNumberOfWeeks();
+                })
+                .reduce(Long::sum);
+
+        if (ponderedSum.isEmpty()) {
+            return 0;
+        }
+
+        return ponderedSum.get() * 1.0 / numberOfWeeks.get();
+    }
+
+    public 
 }

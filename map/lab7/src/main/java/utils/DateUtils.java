@@ -12,8 +12,8 @@ public class DateUtils {
 
     public static long getWeeksBetweenDates(LocalDate first, LocalDate second) {
         /* Make sure the first date is a Monday and the end date is the next Monday */
-        LocalDate startDate = first.with(dayField, 1);
-        LocalDate exclusiveEndDate = second.with(dayField, 7).plusDays(1);
+        LocalDate startDate = first.with(dayField, 1).minusDays(1);
+        LocalDate exclusiveEndDate = second.with(dayField, 7);
 
         long numberOfDays = DAYS.between(startDate, exclusiveEndDate);
         return numberOfDays / 7;

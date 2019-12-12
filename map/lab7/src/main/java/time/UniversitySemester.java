@@ -54,7 +54,7 @@ public class UniversitySemester {
             }
         }
 
-        throw new UniversitySemesterError("Date is not inside the current semester.");
+        throw new UniversitySemesterError("Date is not inside the current semester");
     }
 
     /**

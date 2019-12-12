@@ -9,6 +9,7 @@ public class CollectionUtils {
     public static <E> Stream<E> streamFromIterable(Iterable<E> iterable) {
         return StreamSupport.stream(iterable.spliterator(), false);
     }
+
     public static <E> List<E> listFromIterable(Iterable<E> iterable) {
         return streamFromIterable(iterable).collect(Collectors.toList());
     }

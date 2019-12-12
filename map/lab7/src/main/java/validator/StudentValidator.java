@@ -6,24 +6,36 @@ import java.util.List;
 
 public class StudentValidator extends BaseStringEntityValidator<Student> {
     /**
+     * Validate an id.
+     * @param id the id to be validated.
+     * @throws ValidationException if the id isn't valid
+     */
+    @Override
+    public void validateId(String id) throws ValidationException {
+        validateSimpleId(id);
+    }
+
+    /**
      * Validate a name.
      * @param name the name to be validated
      * @throws ValidationException if the name isn't valid
      */
     public void validateName(String name) throws ValidationException {
-        if (name == null) {
-            throw new ValidationException("Student name must not be null");
-        }
+        ValidationException exception = new ValidationException();
 
-        if (name.length() < 3) {
-            throw new ValidationException("Student name must be at least 3 characters long");
-        }
+        exception.addExceptionIf(() -> name == null,
+                new ValidationException("Student name must not be null"));
+        exception.throwIfNotEmpty();
+
+        exception.addExceptionIf(() -> name.length() < 3,
+                new ValidationException("Student name must be at least 3 characters long"));
 
         String nameRegex = "[A-Z][a-z]+";
-        if (!name.matches(nameRegex)) {
-            throw new ValidationException("Student name must start with an uppercase letter " +
-                    "followed by multiple lowercase letters");
-        }
+        exception.addExceptionIf(() -> !name.matches(nameRegex),
+                new ValidationException("Student name must start with an uppercase letter " +
+                        "followed by multiple lowercase letters"));
+
+        exception.throwIfNotEmpty();
     }
 
     /**
@@ -32,14 +44,17 @@ public class StudentValidator extends BaseStringEntityValidator<Student> {
      * @throws ValidationException if the email isn't valid
      */
     public void validateEmail(String email) throws ValidationException {
-        if (email == null) {
-            throw new ValidationException("Student email must not be null");
-        }
+        ValidationException exception = new ValidationException();
+
+        exception.addExceptionIf(() -> email == null,
+                new ValidationException("Student email must not be null"));
+        exception.throwIfNotEmpty();
 
         String emailRegex = "[a-z]{4}[1-9]{4}@scs.ubbcluj.ro";
-        if (!email.matches(emailRegex)) {
-            throw new ValidationException(("Student email must be of format abcd1234@scs.ubbcluj.ro"));
-        }
+        exception.addExceptionIf(() -> !email.matches(emailRegex),
+                new ValidationException("Student email must be of format abcd1234@scs.ubbcluj.ro"));
+        
+        exception.throwIfNotEmpty();
     }
 
     /**
@@ -48,20 +63,22 @@ public class StudentValidator extends BaseStringEntityValidator<Student> {
      * @throws ValidationException if the weeks contained in the given list are invalid
      */
     public void validateMotivatedWeeks(List<Long> motivatedWeeks) throws ValidationException {
-        if (motivatedWeeks == null) {
-            throw new ValidationException("Student motivated weeks must not be null");
-        }
+        ValidationException exception = new ValidationException();
+
+        exception.addExceptionIf(() -> motivatedWeeks == null,
+                new ValidationException("Student motivated weeks must not be null"));
+        exception.throwIfNotEmpty();
 
         for (Long w : motivatedWeeks) {
             long week = w;
-            if (week < 1) {
-                throw new ValidationException("Student motivated week must be at least 1");
-            }
+            exception.addExceptionIf(() -> week < 1,
+                    new ValidationException("Student motivated week must be at least 1"));
 
-            if (week  > 14) {
-                throw new ValidationException("Student motivated week must be at most 14");
-            }
+            exception.addExceptionIf(() -> week > 14,
+                    new ValidationException("Student motivated week must be at most 14"));
         }
+
+        exception.throwIfNotEmpty();
     }
 
     /**
@@ -70,14 +87,17 @@ public class StudentValidator extends BaseStringEntityValidator<Student> {
      * @throws ValidationException if the group name isn't valid
      */
     public void validateGroup(String group) throws ValidationException {
-        if (group == null) {
-            throw new ValidationException("Student group must not be null");
-        }
+        ValidationException exception = new ValidationException();
+
+        exception.addExceptionIf(() -> group == null,
+                new ValidationException("Student group must not be null"));
+        exception.throwIfNotEmpty();
 
         String groupRegex = "22[1-7]";
-        if (!group.matches(groupRegex)) {
-            throw new ValidationException("Student group must be of format 227");
-        }
+        exception.addExceptionIf(() -> !group.matches(groupRegex),
+                new ValidationException("Student group must be of format 227"));
+
+        exception.throwIfNotEmpty();
     }
 
     /**
@@ -86,24 +106,34 @@ public class StudentValidator extends BaseStringEntityValidator<Student> {
      * @throws ValidationException if the name isn't valid
      */
     public void validateProfessorName(String professorName) throws ValidationException {
-        if (professorName == null) {
-            throw new ValidationException("Professor name must not be null");
-        }
+        ValidationException exception = new ValidationException();
 
-        if (professorName.length() < 3) {
-            throw new ValidationException("Professor name must be at least 3 characters long");
-        }
+        exception.addExceptionIf(() -> professorName == null,
+                new ValidationException("Professor name must not be null"));
+        exception.throwIfNotEmpty();
+
+        exception.addExceptionIf(() -> professorName.length() < 3,
+                new ValidationException("Professor name must be at least 3 characters long"));
+
+        exception.throwIfNotEmpty();
     }
 
     @Override
     public void validate(Student student) throws ValidationException {
-        super.validate(student);
+        ValidationException exception = new ValidationException();
 
-        validateName(student.getFirstName());
-        validateName(student.getLastName());
-        validateEmail(student.getEmail());
-        validateGroup(student.getGroup());
-        validateProfessorName(student.getProfessorName());
-        validateMotivatedWeeks(student.getMotivatedWeeks());
+        exception.addExceptionIf(() -> student == null,
+                new ValidationException("Student must not be null"));
+        exception.throwIfNotEmpty();
+
+        exception.addExceptionIfThrown(() -> super.validate(student));
+        exception.addExceptionIfThrown(() -> validateName(student.getFirstName()));
+        exception.addExceptionIfThrown(() -> validateName(student.getLastName()));
+        exception.addExceptionIfThrown(() -> validateEmail(student.getEmail()));
+        exception.addExceptionIfThrown(() -> validateGroup(student.getGroup()));
+        exception.addExceptionIfThrown(() -> validateProfessorName(student.getProfessorName()));
+        exception.addExceptionIfThrown(() -> validateMotivatedWeeks(student.getMotivatedWeeks()));
+
+        exception.throwIfNotEmpty();
     }
 }

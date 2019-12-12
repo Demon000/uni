@@ -31,12 +31,12 @@ public abstract class BaseEntity<ID> {
         return getId() == otherEntity.getId();
     }
 
+    public abstract boolean matches(String input);
+
     @Override
     public int hashCode() {
         return Objects.hash(getId());
     }
 
-    public Element toXMLElement(Document document) {
-        return null;
-    }
+    public abstract  Element toXMLElement(Document document);
 }

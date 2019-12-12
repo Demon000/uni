@@ -4,8 +4,6 @@ import domain.Assignment;
 import time.UniversityYear;
 import time.UniversityYearError;
 
-import java.time.LocalDate;
-
 public class AssignmentValidator extends BaseStringEntityValidator<Assignment> {
     private final UniversityYear year;
 
@@ -14,17 +12,30 @@ public class AssignmentValidator extends BaseStringEntityValidator<Assignment> {
     }
 
     /**
+     * Validate an id.
+     * @param id the id to be validated.
+     * @throws ValidationException if the id isn't valid
+     */
+    @Override
+    public void validateId(String id) throws ValidationException {
+        validateSimpleId(id);
+    }
+
+    /**
      * Validate an assignment description.
      * @param description the description to be validated
      * @throws ValidationException if the description isn't valid
      */
     public void validateDescription(String description) throws ValidationException {
-        if (description == null) {
-            throw new ValidationException("Description must not be null");
-        }
-        if (description.length() < 10) {
-            throw new ValidationException("Description must be at least 10 characters long");
-        }
+        ValidationException exception = new ValidationException();
+
+        exception.addExceptionIf(() -> description == null,
+                new ValidationException("Description must not be null"));
+        exception.throwIfNotEmpty();
+
+        exception.addExceptionIf(() -> description.length() < 10,
+                new ValidationException("Description must be at least 10 characters long"));
+        exception.throwIfNotEmpty();
     }
 
     /**
@@ -34,33 +45,54 @@ public class AssignmentValidator extends BaseStringEntityValidator<Assignment> {
      * @throws ValidationException if the starting week or the deadline week aren't valid
      */
     public void validateWeeksRelative(long startWeek, long deadlineWeek) throws ValidationException {
-        LocalDate today = LocalDate.now();
-        long todayWeek;
+        ValidationException exception = new ValidationException();
+        long todayWeek = 0;
 
         try {
-            todayWeek = year.getWeeksSinceStart(today);
+            todayWeek = year.getWeeksSinceStart();
         } catch (UniversityYearError universityYearError) {
-            throw new ValidationException("Current week must be inside university year");
+            exception.addException(new ValidationException("Current week must be inside the university year"));
+        }
+        exception.throwIfNotEmpty();
+
+        try {
+            if (startWeek > year.getNumberOfWeeksInSemester()) {
+                exception.addException(new ValidationException("Start week must be inside the university year"));
+            }
+        } catch (UniversityYearError universityYearError) {
+            exception.addException(new ValidationException("Current week must be inside the university year"));
         }
 
-        if (startWeek < todayWeek) {
-            throw new ValidationException("Start week must be after current or the same as the current week");
+        try {
+            if (deadlineWeek > year.getNumberOfWeeksInSemester()) {
+                exception.addException(new ValidationException("Deadline week must be inside the university year"));
+            }
+        } catch (UniversityYearError universityYearError) {
+            exception.addException(new ValidationException("Current week must be inside the university year"));
         }
 
-        if (startWeek > deadlineWeek) {
-            throw new ValidationException("Deadline week must be after or the same as start week");
-        }
+        long finalTodayWeek = todayWeek;
+        exception.addExceptionIf(() -> startWeek < finalTodayWeek,
+                new ValidationException("Start week must be after current or the same as the current week"));
+
+        exception.addExceptionIf(() -> startWeek > deadlineWeek,
+                new ValidationException("Deadline week must be after or the same as start week"));
+
+        exception.throwIfNotEmpty();
     }
 
     @Override
     public void validate(Assignment assignment) throws ValidationException {
-        if (assignment == null) {
-            throw new ValidationException("Assignment must not be null");
-        }
+        ValidationException exception = new ValidationException();
 
-        super.validate(assignment);
+        exception.addExceptionIf(() -> assignment == null,
+                new ValidationException("Assignment must not be null"));
+        exception.throwIfNotEmpty();
 
-        validateDescription(assignment.getDescription());
-        validateWeeksRelative(assignment.getStartWeek(), assignment.getDeadlineWeek());
+        exception.addExceptionIfThrown(() -> super.validate(assignment));
+        exception.addExceptionIfThrown(() -> validateDescription(assignment.getDescription()));
+        exception.addExceptionIfThrown(() -> validateWeeksRelative(assignment.getStartWeek(), assignment.getDeadlineWeek()));
+
+        exception.throwIfNotEmpty();
     }
 }

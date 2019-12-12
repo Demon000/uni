@@ -6,11 +6,13 @@ import org.w3c.dom.Element;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static utils.StringUtils.matchesAny;
 import static utils.XMLUtils.appendChildValue;
 import static utils.XMLUtils.getChildValue;
 
 public class Grade extends BaseEntity<String> {
     public static final String TAG_NAME = "grade";
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private LocalDate date;
     private long penalty;
@@ -46,6 +48,14 @@ public class Grade extends BaseEntity<String> {
         return date;
     }
 
+    public String getDateString() {
+        return date.format(DATE_FORMATTER);
+    }
+
+    public static LocalDate getDateFromString(String dateString) {
+        return LocalDate.parse(dateString, DATE_FORMATTER);
+    }
+
     public void setDate(LocalDate date) {
         this.date = date;
     }
@@ -54,12 +64,20 @@ public class Grade extends BaseEntity<String> {
         return penalty;
     }
 
+    public String getPenaltyString() {
+        return String.valueOf(getPenalty());
+    }
+
     public void setPenalty(long penalty) {
         this.penalty = penalty;
     }
 
     public int getValue() {
         return value;
+    }
+
+    public String getValueString() {
+        return String.valueOf(getValue());
     }
 
     public void setValue(int value) {
@@ -83,23 +101,20 @@ public class Grade extends BaseEntity<String> {
     }
 
     public String toString() {
-        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-        String feedback = getFeedback();
-
-        if (feedback.isEmpty()) {
-            feedback = "none";
-        }
-
         return String.format("Grade -> id: %s, date: %s, penalty: %d, value: %d, professor name: %s, \n\tfeedback: %s", getId(),
-                date.format(dateFormatter), getPenalty(), getValue(), getProfessorName(), feedback);
+                getDateString(), getPenalty(), getValue(), getProfessorName(), getFeedback());
+    }
+
+    public boolean matches(String input) {
+        return matchesAny(input, getId(), getDateString(), getPenaltyString(),
+                getValueString(), getProfessorName(), getFeedback());
     }
 
     public Element toXMLElement(Document document) {
-        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         Element gradeElement = document.createElement(TAG_NAME);
 
         appendChildValue(gradeElement, "id", getId());
-        appendChildValue(gradeElement, "date", getDate().format(dateFormatter));
+        appendChildValue(gradeElement, "date", getDateString());
         appendChildValue(gradeElement, "value", String.valueOf(getValue()));
         appendChildValue(gradeElement, "penalty", String.valueOf(getPenalty()));
         appendChildValue(gradeElement, "professorName", getProfessorName());
@@ -109,9 +124,8 @@ public class Grade extends BaseEntity<String> {
     }
 
     public static Grade createFromXMLElement(Element element) {
-        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         String id = getChildValue(element, "id");
-        LocalDate date = LocalDate.parse(getChildValue(element,"date"), dateFormatter);
+        LocalDate date = getDateFromString(getChildValue(element,"date"));
         int value = Integer.parseInt(getChildValue(element, "value"));
         long penalty = Long.parseLong(getChildValue(element, "penalty"));
         String professorName = getChildValue(element, "professorName");

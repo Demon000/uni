@@ -17,11 +17,23 @@ public class UniversityYear {
     }
 
     /**
-     * Get the number of weeks in this year.
-     * @return the number of weeks in this year
+     * Get the number of weeks in this semester.
+     * @return the number of weeks in this semester
      */
-    public long getNumberOfWeeks() {
-        return firstSemester.getNumberOfWeeks() + secondSemester.getNumberOfWeeks();
+    public long getNumberOfWeeksInSemester() throws UniversityYearError {
+        LocalDate today = LocalDate.now();
+
+        try {
+            firstSemester.getWeeksSinceStart(today);
+            return firstSemester.getNumberOfWeeks();
+        } catch (UniversitySemesterError e) {}
+
+        try {
+            secondSemester.getWeeksSinceStart(today);
+            return secondSemester.getNumberOfWeeks();
+        } catch (UniversitySemesterError e) {}
+
+        throw new UniversityYearError("Date is not inside the current year");
     }
 
     /**
@@ -35,10 +47,20 @@ public class UniversityYear {
             return firstSemester.getWeeksSinceStart(date);
         } catch (UniversitySemesterError ignored) {}
 
-        try {
-            return secondSemester.getWeeksSinceStart(date);
-        } catch (UniversitySemesterError ignored) {}
+//        try {
+//            return secondSemester.getWeeksSinceStart(date);
+//        } catch (UniversitySemesterError ignored) {}
 
-        throw new UniversityYearError("Date is not inside the current year.");
+        throw new UniversityYearError("Date is not inside the current year");
+    }
+
+    /**
+     * Get the number of weeks that passed until today.
+     * @return the number of weeks from the current semester that passed until today
+     * @throws UniversityYearError if we are not inside the current year
+     */
+    public long getWeeksSinceStart() throws UniversityYearError {
+        LocalDate today = LocalDate.now();
+        return getWeeksSinceStart(today);
     }
 }

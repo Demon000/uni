@@ -1,5 +1,9 @@
+import controller.AssignmentsController;
+import controller.GradesController;
 import controller.StudentsController;
+import controller.WindowsController;
 import domain.*;
+import javafx.stage.Window;
 import repository.*;
 import service.CommonService;
 import time.DateIntervalError;
@@ -79,14 +83,34 @@ public class Main extends Application {
 
         CommonService service = new CommonService(studentRepository, assignmentRepository, gradeRepository, year);
 
-        StudentsController studentsController = new StudentsController(service);
+//        AssignmentsController assignmentsController = new AssignmentsController(service);
+//        FXMLLoader loader = new FXMLLoader();
+//        loader.setLocation(getClass().getResource(AssignmentsController.VIEW_NAME));
+//        loader.setController(assignmentsController);
+//
+//        Scene scene = new Scene(loader.load());
+//        primaryStage.setScene(scene);
+//        primaryStage.setTitle(AssignmentsController.VIEW_TITLE);
+//        primaryStage.show();
+
+//        GradesController gradesController = new GradesController(service, year);
+//        FXMLLoader loader = new FXMLLoader();
+//        loader.setLocation(getClass().getResource(GradesController.VIEW_NAME));
+//        loader.setController(gradesController);
+//
+//        Scene scene = new Scene(loader.load());
+//        primaryStage.setScene(scene);
+//        primaryStage.setTitle(GradesController.VIEW_TITLE);
+//        primaryStage.show();
+
+        WindowsController windowsController = new WindowsController(service, year);
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(StudentsController.VIEW_NAME));
-        loader.setController(studentsController);
+        loader.setLocation(getClass().getResource(WindowsController.VIEW_NAME));
+        loader.setController(windowsController);
 
         Scene scene = new Scene(loader.load());
         primaryStage.setScene(scene);
-        primaryStage.setTitle(StudentsController.VIEW_TITLE);
+        primaryStage.setTitle(WindowsController.VIEW_TITLE);
         primaryStage.show();
     }
 }

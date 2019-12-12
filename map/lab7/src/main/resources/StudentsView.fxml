@@ -26,6 +26,7 @@
          <children>
             <TableView fx:id="table" VBox.vgrow="ALWAYS">
               <columns>
+                  <TableColumn fx:id="idColumn" editable="false" prefWidth="75.0" text="Id" />
                 <TableColumn fx:id="firstNameColumn" editable="false" prefWidth="75.0" text="First name" />
                 <TableColumn fx:id="lastNameColumn" editable="false" prefWidth="75.0" text="Last name" />
                   <TableColumn fx:id="emailColumn" editable="false" prefWidth="75.0" text="Email" />
@@ -40,13 +41,22 @@
             <VBox>
                <children>
                   <Label text="Filter" />
-                  <TextField onAction="#onFilterFieldAction" />
+                  <TextField fx:id="filterField" onAction="#onFilterFieldAction" />
                </children>
             </VBox>
          </children>
       </VBox>
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
          <children>
+            <VBox>
+               <children>
+                  <Label text="Id" />
+                  <TextField fx:id="idField" />
+               </children>
+               <padding>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </padding>
+            </VBox>
             <VBox>
                <children>
                   <Label text="First name" />
@@ -104,9 +114,9 @@
             <Separator opacity="0.0" orientation="VERTICAL" VBox.vgrow="ALWAYS" />
             <ButtonBar prefHeight="40.0" prefWidth="200.0">
               <buttons>
-                <Button fx:id="addButton" mnemonicParsing="false" onAction="#onAddButtonAction" text="Add" />
-                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDeleteButtonAction" text="Delete" />
+                  <Button fx:id="addButton" mnemonicParsing="false" onAction="#onAddButtonAction" text="Add" />
                   <Button fx:id="updateButton" mnemonicParsing="false" onAction="#onUpdateButtonAction" text="Update" />
+                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDeleteButtonAction" text="Delete" />
               </buttons>
             </ButtonBar>
          </children>

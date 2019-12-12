@@ -146,7 +146,7 @@ public class Console {
         String group = readString("Group: ", "Invalid group");
         String professorName = readString("Professor name: ", "Invalid professor name");
 
-        Student student = service.addStudent(id, firstName, lastName, email, group, professorName);
+        Student student = service.addStudent(id, firstName, lastName, email, group, professorName, null);
         System.out.println(String.format("Added: %s", student));
     }
 
@@ -302,7 +302,7 @@ public class Console {
     private void populate() {
         try {
             Student student = service.addStudent("1", "Cosmin", "Tanislav",
-                    "tcir2625@scs.ubbcluj.ro", "227", "Sergiu");
+                    "tcir2625@scs.ubbcluj.ro", "227", "Sergiu", null);
 //            student.addMotivatedWeek(1);
 //            student.addMotivatedWeek(14);
 //            student.addMotivatedWeek(3);

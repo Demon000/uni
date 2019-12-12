@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><root>
+    <assignment>
+        <id>1</id>
+        <description>This is an assignemt</description>
+        <startWeek>11</startWeek>
+        <deadlineWeek>11</deadlineWeek>
+    </assignment>
+    <assignment>
+        <id>3</id>
+        <description>This is a third assignemt</description>
+        <startWeek>12</startWeek>
+        <deadlineWeek>13</deadlineWeek>
+    </assignment>
+</root>

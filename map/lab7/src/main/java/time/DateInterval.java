@@ -3,6 +3,9 @@ package time;
 import utils.DateUtils;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import static utils.DateUtils.getWeeksBetweenDates;
 
 public class DateInterval {
     private final LocalDate startDate;
@@ -28,7 +31,7 @@ public class DateInterval {
      * @return the number of weeks inside this date interval
      */
     public long getNumberOfWeeks() {
-        return DateUtils.getWeeksBetweenDates(startDate, endDate);
+        return getWeeksBetweenDates(startDate, endDate);
     }
 
     /**
@@ -38,14 +41,18 @@ public class DateInterval {
      * -1 if the date is not inside this date interval.
      */
     public long getWeeksSinceStart(LocalDate date) throws DateIntervalError {
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+
         if (date.isBefore(startDate)) {
-            throw new DateIntervalError("Given date cannot be before the start date");
+            throw new DateIntervalError(String.format("Date %s is before the start date %s", dateFormatter.format(date),
+                    dateFormatter.format(startDate)));
         }
 
         if (date.isAfter(endDate)) {
-            throw new DateIntervalError("Given date cannot be after the end date");
+            throw new DateIntervalError(String.format("Date %s is after the end date %s", dateFormatter.format(date),
+                    dateFormatter.format(endDate)));
         }
 
-        return DateUtils.getWeeksBetweenDates(startDate, date);
+        return getWeeksBetweenDates(startDate, date);
     }
 }
