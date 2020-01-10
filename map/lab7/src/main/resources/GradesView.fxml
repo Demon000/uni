@@ -45,6 +45,7 @@
                <children>
                   <Label text="Filter" />
                   <TextField fx:id="studentFilterField" onAction="#onStudentFilterFieldAction" />
+                  <Label underline="true" />
                </children>
             </VBox>
          </children>
@@ -65,6 +66,7 @@
                <children>
                   <Label text="Filter" />
                   <TextField fx:id="assignmentFilterField" onAction="#onAssignmentFilterFieldAction" />
+                  <Label fx:id="lowestAverageAssignmentField" onMouseClicked="#onLowestAverageAssignmentClick" text="Assignment with lowest grade average" underline="true" />
                </children>
             </VBox>
          </children>

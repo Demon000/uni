@@ -22,6 +22,15 @@
         </motivatedWeeks>
     </student>
     <student>
+        <id>23</id>
+        <firstName>Chris</firstName>
+        <lastName>Tatoiu</lastName>
+        <email>tcir2626@scs.ubbcluj.ro</email>
+        <group>227</group>
+        <professorName>Sergiu</professorName>
+        <motivatedWeeks/>
+    </student>
+    <student>
         <id>2</id>
         <firstName>Christian</firstName>
         <lastName>Tatoiu</lastName>
@@ -66,7 +75,6 @@
             <motivatedWeek>11</motivatedWeek>
             <motivatedWeek>12</motivatedWeek>
             <motivatedWeek>13</motivatedWeek>
-            <motivatedWeek>14</motivatedWeek>
         </motivatedWeeks>
     </student>
     <student>

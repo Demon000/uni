@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.util.converter.LocalDateStringConverter;
 import observer.Observer;
 import service.CommonService;
@@ -74,6 +75,9 @@ public class GradesController implements Observer {
 
     @FXML
     private TableColumn<Assignment, String> assignmentDeadlineWeekColumn;
+
+    @FXML
+    private Label lowestAverageAssignmentField;
 
     @FXML
     private TextField assignmentFilterField;
@@ -164,6 +168,12 @@ public class GradesController implements Observer {
 
         loadStudentTableData();
         loadAssignmentTableData();
+    }
+
+    @FXML
+    void onLowestAverageAssignmentClick(MouseEvent event) {
+        Assignment lowestGradeAssignment = service.getLowestAverageGradeAssignment();
+        assignmentFtw.setSelected(lowestGradeAssignment);
     }
 
     private void loadStudentTableData() {

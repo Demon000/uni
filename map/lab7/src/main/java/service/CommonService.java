@@ -13,9 +13,7 @@ import validator.StudentValidator;
 import validator.ValidationException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static utils.CollectionUtils.listFromIterable;
@@ -636,5 +634,39 @@ public class CommonService extends Observable {
         return ponderedSum.get() * 1.0 / numberOfWeeks.get();
     }
 
-    public 
+    public Map<Assignment, Double> getAssignmentsAverageGrades() {
+        Map<Assignment, Integer> assignmentsGradeSum = new HashMap<>();
+        int numberOfStudents = listFromIterable(getStudents()).size();
+
+        getGrades().forEach(grade -> {
+            Assignment assignment;
+            try {
+                assignment = getAssignmentById(grade.getAssignmentId());
+            } catch (CommonServiceException ignored) {
+                return;
+            }
+
+            int currentSum = assignmentsGradeSum.getOrDefault(assignment, 0);
+            currentSum += grade.getValue();
+            assignmentsGradeSum.put(assignment, currentSum);
+        });
+
+        Map<Assignment, Double> assignmentsGradeAverage = new HashMap<>();
+        for (Map.Entry<Assignment, Integer> sum : assignmentsGradeSum.entrySet()) {
+            double average = 0;
+            if (numberOfStudents != 0) {
+                average = sum.getValue() * 1.0 /  numberOfStudents;
+            }
+
+            assignmentsGradeAverage.put(sum.getKey(), average);
+        }
+
+        return assignmentsGradeAverage;
+    }
+
+    public Assignment getLowestAverageGradeAssignment() {
+        Map<Assignment, Double> assignmentsGradeAverage = getAssignmentsAverageGrades();
+        Map.Entry<Assignment, Double> min = Collections.min(assignmentsGradeAverage.entrySet(), Map.Entry.comparingByValue());
+        return min.getKey();
+    }
 }

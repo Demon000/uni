@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><root>
     <grade>
         <id>1+1</id>
-        <date>19/12/2019</date>
-        <value>10</value>
-        <penalty>1</penalty>
+        <date>12/12/2019</date>
+        <value>4</value>
+        <penalty>0</penalty>
         <professorName>Sergiu</professorName>
         <feedback>Example feedback</feedback>
     </grade>
@@ -18,15 +18,15 @@
     <grade>
         <id>5+1</id>
         <date>15/01/2020</date>
-        <value>9</value>
-        <penalty>1</penalty>
+        <value>10</value>
+        <penalty>0</penalty>
         <professorName>Sergiu</professorName>
         <feedback>Feedback bla</feedback>
     </grade>
     <grade>
         <id>5+3</id>
         <date>15/01/2020</date>
-        <value>8</value>
+        <value>10</value>
         <penalty>0</penalty>
         <professorName>Sergiu</professorName>
         <feedback>Haha</feedback>
