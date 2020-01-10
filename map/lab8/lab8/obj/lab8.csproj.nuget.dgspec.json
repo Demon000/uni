@@ -1,0 +1,55 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/demon000/uni/map/lab8/lab8/lab8.csproj": {}
+  },
+  "projects": {
+    "/home/demon000/uni/map/lab8/lab8/lab8.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/demon000/uni/map/lab8/lab8/lab8.csproj",
+        "projectName": "lab8",
+        "projectPath": "/home/demon000/uni/map/lab8/lab8/lab8.csproj",
+        "packagesPath": "/home/demon000/.nuget/packages/",
+        "outputPath": "/home/demon000/uni/map/lab8/lab8/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/demon000/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.2"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.2": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.2": {
+          "dependencies": {
+            "Microsoft.NETCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )",
+              "autoReferenced": true
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    }
+  }
+}

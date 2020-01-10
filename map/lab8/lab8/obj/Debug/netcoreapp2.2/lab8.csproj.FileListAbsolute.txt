@@ -1,0 +1,11 @@
+/home/demon000/uni/map/lab8/lab8/bin/Debug/netcoreapp2.2/lab8.deps.json
+/home/demon000/uni/map/lab8/lab8/bin/Debug/netcoreapp2.2/lab8.runtimeconfig.json
+/home/demon000/uni/map/lab8/lab8/bin/Debug/netcoreapp2.2/lab8.runtimeconfig.dev.json
+/home/demon000/uni/map/lab8/lab8/bin/Debug/netcoreapp2.2/lab8.dll
+/home/demon000/uni/map/lab8/lab8/bin/Debug/netcoreapp2.2/lab8.pdb
+/home/demon000/uni/map/lab8/lab8/obj/Debug/netcoreapp2.2/lab8.csprojAssemblyReference.cache
+/home/demon000/uni/map/lab8/lab8/obj/Debug/netcoreapp2.2/lab8.csproj.CoreCompileInputs.cache
+/home/demon000/uni/map/lab8/lab8/obj/Debug/netcoreapp2.2/lab8.AssemblyInfoInputs.cache
+/home/demon000/uni/map/lab8/lab8/obj/Debug/netcoreapp2.2/lab8.AssemblyInfo.cs
+/home/demon000/uni/map/lab8/lab8/obj/Debug/netcoreapp2.2/lab8.dll
+/home/demon000/uni/map/lab8/lab8/obj/Debug/netcoreapp2.2/lab8.pdb
