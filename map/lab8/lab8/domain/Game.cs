@@ -5,9 +5,9 @@ namespace lab8.domain
     public class Game<TId> : Entity<TId>
         where TId : class
     {
-        public string FirstTeamId { get; }
-        public string SecondTeamId { get; }
-        public DateTime Date { get; }
+        public string FirstTeamId { get; set; }
+        public string SecondTeamId { get; set; }
+        public DateTime Date { get; set; }
 
         public Game() {}
         
@@ -16,6 +16,11 @@ namespace lab8.domain
             FirstTeamId = firstTeamId;
             SecondTeamId = secondTeamId;
             Date = date;
+        }
+        
+        public override string ToString()
+        {
+            return $"Game => First Team Id: {FirstTeamId}, Second Team Id: {SecondTeamId}, Date: {Date}";
         }
     }
 }

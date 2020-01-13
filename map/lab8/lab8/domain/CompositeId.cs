@@ -6,9 +6,25 @@ namespace lab8.domain
     public class CompositeId<TId>
         where TId : class
     {
+        public List<TId> Ids { get; set; }
+
+        public CompositeId()
+        {
+        }
+        
+        public CompositeId(params TId[] ids)
+        {
+            Ids = new List<TId>(ids);
+        }
+        
+        public TId Part(int i)
+        {
+            return Ids[i];
+        }
+
         private bool Equals(CompositeId<TId> other)
         {
-            return _ids == other._ids;
+            return Ids == other.Ids;
         }
 
         public override bool Equals(object other)
@@ -21,23 +37,12 @@ namespace lab8.domain
 
         public override int GetHashCode()
         {
-            return (_ids != null ? _ids.GetHashCode() : 0);
+            return (Ids != null ? Ids.GetHashCode() : 0);
         }
-
-        private readonly List<TId> _ids;
-
-        public CompositeId(params TId[] ids)
-        {
-            _ids = new List<TId>(ids);
-        }
-        public TId Part(int i)
-        {
-            return _ids[i];
-        }
-
+        
         public static bool operator ==(CompositeId<TId> first, CompositeId<TId> second)
         {
-            return second != null && first != null && first._ids.SequenceEqual(second._ids);
+            return second != null && first != null && first.Ids.SequenceEqual(second.Ids);
         }
 
         public static bool operator !=(CompositeId<TId> first, CompositeId<TId> second)

@@ -1,4 +1,3 @@
-using System;
 using System.Xml.Serialization;
 
 namespace lab8.domain
@@ -10,10 +9,15 @@ namespace lab8.domain
 
         public Player() {}
         
-        public Player(TId studentId, TId teamId, string name)
-            : base(studentId, name)
+        public Player(TId playerId, TId teamId, string name)
+            : base(playerId, name)
         {
             TeamId = teamId;
+        }
+
+        public override string ToString()
+        {
+            return $"Player => Id: {Id}, Team Id: {TeamId}, Name: {Name}";
         }
     }
 }

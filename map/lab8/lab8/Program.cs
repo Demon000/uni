@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using lab8.domain;
 using lab8.repository;
+using lab8.service;
+using lab8.ui;
 
 namespace lab8
 {
@@ -121,44 +125,150 @@ namespace lab8
             "Toma",
         };
 
-        static void PopulateTeams(Repository<string, Team<string>> teamRepository)
+        private static readonly int PlayersPerTeam = 15;
+        private static readonly int NumberOfGames = 10;
+        private static readonly int NumberOfTeams = TeamNames.Length;
+
+        private static string GetRandomName(string[] names)
         {
-            teamRepository.Clear();
-            for (var teamId = 0; teamId < TeamNames.Length; teamId++)
-            {
-                teamRepository.Add(new Team<string>(teamId.ToString(), TeamNames[teamId], SchoolNames[teamId]));
-            }
+            var random = new Random();
+            var nameIndex = random.Next(names.Length);
+            return names[nameIndex];
         }
 
-        private static void PopulatePlayers(XmlRepository<string, Player<string>> playerRepository)
+        private static string GetTeamName(int teamIdInt)
         {
-            var rnd = new Random();
-            var playerId = 0;
+            return TeamNames[teamIdInt];
+        }
 
+        private static string GetTeamSchoolName(int teamIdInt)
+        {
+            return SchoolNames[teamIdInt];
+        }
+
+        private static string GetRandomTeamId(string otherTeamId)
+        {
+            var random = new Random();
+            string teamId = null;
+
+            do
+            {
+                teamId = random.Next(NumberOfTeams).ToString();
+
+            } while (teamId == otherTeamId);
+
+            return teamId;
+        }
+
+        private static PlayerActivity<string>.ActivityType GetRandomActivityType()
+        {
+            var random = new Random();
+            var values = Enum.GetValues(typeof(PlayerActivity<string>.ActivityType));
+            return (PlayerActivity<string>.ActivityType) values.GetValue(random.Next(values.Length));
+        }
+
+        private static int GetRandomPoints()
+        {
+            var random = new Random();
+            return random.Next(5);
+        }
+
+        private static DateTime GetRandomDate()
+        {
+            var random = new Random();
+            var start = new DateTime(2018, 1, 1);
+            var range = (DateTime.Today - start).Days;
+            return start.AddDays(random.Next(range));
+        }
+        
+        private static void PopulateTeams(
+            Repository<string, Team<string>> teamRepository,
+            Repository<string, Player<string>> playerRepository)
+        {
+            teamRepository.Clear();
             playerRepository.Clear();
 
-            for (var teamId = 0; teamId < TeamNames.Length; teamId++)
+            for (var teamIdInt = 0; teamIdInt < NumberOfTeams; teamIdInt++)
             {
-                for (var i = 0; i < 15; i++)
+                var teamId = teamIdInt.ToString();
+                var name = GetTeamName(teamIdInt);
+                var schoolName = GetTeamSchoolName(teamIdInt);
+                teamRepository.Add(new Team<string>(teamId, name, schoolName));
+                
+                for (var playerIdInt = teamIdInt * PlayersPerTeam;
+                    playerIdInt < (teamIdInt + 1) * PlayersPerTeam;
+                    playerIdInt++)
                 {
-                    var firstNameIndex = rnd.Next(FirstNames.Length);
-                    var firstName = FirstNames[firstNameIndex];
-                    var lastNameIndex = rnd.Next(LastNames.Length);
-                    var lastName = LastNames[lastNameIndex];
-                    var player = new Player<string>(playerId.ToString(), teamId.ToString(), $"{firstName} {lastName}");
+                    var playerId = playerIdInt.ToString();
+                    var playerName = $"{GetRandomName(FirstNames)} {GetRandomName(LastNames)}";
+                    var player = new Player<string>(playerId, teamIdInt.ToString(), playerName);
                     playerRepository.Add(player);
-                    playerId++;
                 }
             }
         }
-        
+
+        private static void PopulateGames(
+            Repository<string, Game<string>> gameRepository,
+            Repository<string, Player<string>> playerRepository,
+            Repository<CompositeId<string>, PlayerActivity<string>> playerActivityRepository)
+        {
+            gameRepository.Clear();
+            playerActivityRepository.Clear();
+
+            for (var gameId = 0; gameId < NumberOfGames; gameId++)
+            {
+                var firstTeamId = GetRandomTeamId(null);
+                var secondTeamId = GetRandomTeamId(firstTeamId);
+                var date = GetRandomDate();
+                var game = new Game<string>(gameId.ToString(), firstTeamId, secondTeamId, date);
+                gameRepository.Add(game);
+
+                var firstTeamPlayers = playerRepository
+                    .Get()
+                    .Where(p => p.TeamId == firstTeamId)
+                    .ToList();
+
+                var secondTeamPlayers = playerRepository
+                    .Get()
+                    .Where(p => p.TeamId == secondTeamId)
+                    .ToList();
+
+                var players = firstTeamPlayers.Concat(secondTeamPlayers);
+
+                foreach (var player in players)
+                {
+                    var points = 0;
+                    var activityType = GetRandomActivityType();
+                    switch (activityType)
+                    {
+                        case PlayerActivity<string>.ActivityType.Playing:
+                            points = GetRandomPoints();
+                            break;
+                        case PlayerActivity<string>.ActivityType.Reserve:
+                            break;
+                        case PlayerActivity<string>.ActivityType.Unused:
+                            continue;
+                    }
+
+                    var playerActivity = new PlayerActivity<string>(player.Id, game.Id, points, activityType);
+                    playerActivityRepository.Add(playerActivity);
+                }
+            }
+        }
+
         public static void Main(string[] args)
         {
             var teamRepository = new XmlRepository<string, Team<string>>("teams.xml");
             var playerRepository = new XmlRepository<string, Player<string>>("players.xml");
-
-            /*PopulateTeams(teamRepository);
-            PopulatePlayers(playerRepository);*/
+            var gameRepository = new XmlRepository<string, Game<string>>("games.xml");
+            var playerActivityRepository = new XmlRepository<CompositeId<string>, PlayerActivity<string>>("activities.xml");
+            
+            PopulateTeams(teamRepository,playerRepository);
+            PopulateGames(gameRepository, playerRepository, playerActivityRepository);
+            
+            var service = new CommonService(teamRepository, playerRepository, gameRepository, playerActivityRepository);
+            var console = new ProgramConsole(service);
+            console.Run();
         }
     }
 }

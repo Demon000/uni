@@ -29,6 +29,12 @@
           <e p="Repository.cs" t="Include" />
           <e p="XmlRepository.cs" t="Include" />
         </e>
+        <e p="service" t="Include">
+          <e p="CommonService.cs" t="Include" />
+        </e>
+        <e p="ui" t="Include">
+          <e p="ProgramConsole.cs" t="Include" />
+        </e>
       </e>
       <e p="lab8.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />

@@ -3,8 +3,8 @@ namespace lab8.domain
     public class Team<TId> : Entity<TId>
         where TId : class
     {
-        public string Name { get; }
-        public string SchoolName { get; }
+        public string Name { get; set;  }
+        public string SchoolName { get; set; }
 
         public Team() {}
         

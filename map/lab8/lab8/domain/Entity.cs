@@ -1,6 +1,3 @@
-using System;
-using System.Xml.Serialization;
-
 namespace lab8.domain
 {
     public abstract class Entity<TId>

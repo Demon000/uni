@@ -13,7 +13,13 @@ namespace lab8.repository
         
         public virtual TEntity Get(TId id)
         {
-            return Entities.FirstOrDefault(e => e.Id == id);
+            var entity = Entities.FirstOrDefault(e => e.Id.Equals(id));
+            if (entity == null)
+            {
+                throw new Exception($"Entity with id: {id} does not exist");
+            }
+
+            return entity;
         }
 
         public virtual List<TEntity> Get()
@@ -23,10 +29,7 @@ namespace lab8.repository
 
         public virtual void Add(TEntity entity)
         {
-            var other = Entities.FirstOrDefault(e =>
-            {
-                return e.Id.Equals(entity.Id);
-            });
+            var other = Entities.FirstOrDefault(e => e.Id.Equals(entity.Id));
             if (other != null)
             {
                 throw new Exception($"Entity with id: {entity.Id} already exists");
@@ -37,25 +40,23 @@ namespace lab8.repository
 
         public virtual void Update(TEntity entity)
         {
-            var other = Entities.FirstOrDefault(e => e.Id == entity.Id);
-            if (other == null)
+            var index = Entities.FindIndex(e => e.Id.Equals(entity.Id));
+            if (index < 0)
             {
                 throw new Exception($"Entity with id: {entity.Id} does not exist");
             }
-
-            var index = Entities.FindIndex(e => e.Id == entity.Id);
+            
             Entities[index] = entity;
         }
 
         public virtual void Delete(TId id)
         {
-            var other = Entities.Find(e => e.Id == id);
-            if (other == null)
+            var index = Entities.FindIndex(e => e.Id.Equals(id));
+            if (index < 0)
             {
                 throw new Exception($"Entity with id: {id} does not exist");
             }
 
-            var index = Entities.FindIndex(e => e.Id == id);
             Entities.RemoveAt(index);
         }
 

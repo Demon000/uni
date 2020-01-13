@@ -3,8 +3,8 @@ namespace lab8.domain
     public class PlayerActivity<TId> : Entity<CompositeId<TId>>
         where TId : class
     {
-        public int Points { get; }
-        public ActivityType Type { get; }
+        public int Points { get; set;  }
+        public ActivityType Type { get; set; }
 
         public TId PlayerId => Id.Part(0);
 
@@ -13,7 +13,8 @@ namespace lab8.domain
         public enum ActivityType
         {
             Reserve,
-            Playing
+            Playing,
+            Unused
         }
         
         PlayerActivity() {}
