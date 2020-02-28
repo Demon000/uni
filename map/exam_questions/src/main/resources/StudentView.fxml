@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="NEVER" />
+    </rowConstraints>
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0">
+            <children>
+                <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Questions">
+                    <VBox.margin>
+                        <Insets bottom="8.0" />
+                    </VBox.margin>
+                </Label>
+                <TableView fx:id="availableQuestionsTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="availableIdColumn" editable="false" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Id" />
+                        <TableColumn fx:id="availableDescriptionColumn" editable="false" prefWidth="75.0" text="Description" />
+                        <TableColumn fx:id="availablePointsColumn" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Points" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+         <children>
+            <HBox VBox.vgrow="NEVER">
+               <children>
+                  <Label fx:id="questionIdField">
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="questionDescriptionField" />
+               </children>
+               <padding>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </padding>
+            </HBox>
+            <RadioButton fx:id="firstRadioButton" mnemonicParsing="false">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+               <toggleGroup>
+                  <ToggleGroup fx:id="questionChoiceToggleGroup" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="secondRadioButton" mnemonicParsing="false" toggleGroup="$questionChoiceToggleGroup">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="thirdRadioButton" mnemonicParsing="false" toggleGroup="$questionChoiceToggleGroup">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </RadioButton>
+         </children>
+         <padding>
+            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+         </padding>
+        </VBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+         <children>
+            <Label prefHeight="40.0" text="Name">
+               <HBox.margin>
+                  <Insets right="8.0" />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="nameField" prefHeight="40.0">
+               <HBox.margin>
+                  <Insets right="8.0" />
+               </HBox.margin>
+            </TextField>
+            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginButtonPress" prefHeight="40.0" text="Login" />
+         </children>
+         <padding>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </padding>
+      </HBox>
+          <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <buttons>
+            <Button fx:id="answerQuestionButton" mnemonicParsing="false" onAction="#onAnswerQuestionPress" text="Answer question" />
+         </buttons>
+         <padding>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </padding>
+          </ButtonBar>
+    </children>
+    <padding>
+        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+    </padding>
+    <opaqueInsets>
+        <Insets />
+    </opaqueInsets>
+</GridPane>
