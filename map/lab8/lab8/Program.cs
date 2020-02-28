@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using lab8.domain;
 using lab8.repository;
@@ -149,7 +148,7 @@ namespace lab8
         private static string GetRandomTeamId(string otherTeamId)
         {
             var random = new Random();
-            string teamId = null;
+            string teamId;
 
             do
             {
@@ -256,7 +255,7 @@ namespace lab8
             }
         }
 
-        public static void Main(string[] args)
+        public static void Main()
         {
             var teamRepository = new XmlRepository<string, Team<string>>("teams.xml");
             var playerRepository = new XmlRepository<string, Player<string>>("players.xml");
