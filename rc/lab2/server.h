@@ -10,8 +10,6 @@
 #include <signal.h>
 #include "common.h"
 
-int server_socket;
-
 int init_server(struct sockaddr_in *server) {
 	int server_socket;
 	int value = 1;

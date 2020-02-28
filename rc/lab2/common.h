@@ -9,6 +9,7 @@
 #define SOCKET_BACKLOG 5
 
 typedef void (*connected_callback)(int socket);
+typedef void* (*thread_connected_callback)(void *data);
 
 void send_sint(int socket, uint16_t number) {
 	uint16_t network_number = htons(number);
@@ -31,7 +32,7 @@ void send_string(int socket, char *string) {
 	}
 }
 
-char* receive_string(int socket, char *string) {
+void receive_string(int socket, char *string) {
 	uint16_t length;
 
 	length = receive_sint(socket);
@@ -39,6 +40,30 @@ char* receive_string(int socket, char *string) {
 	for (int i = 0; i < length; i++) {
 		recv(socket, &string[i], sizeof(char), MSG_WAITALL);
 	}
+}
 
-	return string;
+void receive_string_line(int socket, char* string) {
+	size_t size = 0;
+
+	while (1) {
+		recv(socket, &string[size], sizeof(char), MSG_WAITALL);
+		if (string[size] == '\n') {
+			size++;
+			break;
+		}
+		size++;
+	}
+
+	string[size] = '\0';
+}
+
+void send_string_line(int socket, char* string) {
+	uint16_t length = strlen(string);
+	char line_terminator = '\n';
+
+	for (int i = 0; i < length; i++) {
+		send(socket, &string[i], sizeof(char), 0);
+	}
+
+	send(socket, &line_terminator, sizeof(char), 0);
 }
