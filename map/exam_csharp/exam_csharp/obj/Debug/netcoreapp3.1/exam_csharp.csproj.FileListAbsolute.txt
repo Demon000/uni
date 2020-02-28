@@ -1,0 +1,11 @@
+/home/demon000/uni/map/exam_csharp/exam_csharp/bin/Debug/netcoreapp3.1/exam_csharp
+/home/demon000/uni/map/exam_csharp/exam_csharp/bin/Debug/netcoreapp3.1/exam_csharp.deps.json
+/home/demon000/uni/map/exam_csharp/exam_csharp/bin/Debug/netcoreapp3.1/exam_csharp.runtimeconfig.json
+/home/demon000/uni/map/exam_csharp/exam_csharp/bin/Debug/netcoreapp3.1/exam_csharp.runtimeconfig.dev.json
+/home/demon000/uni/map/exam_csharp/exam_csharp/bin/Debug/netcoreapp3.1/exam_csharp.dll
+/home/demon000/uni/map/exam_csharp/exam_csharp/bin/Debug/netcoreapp3.1/exam_csharp.pdb
+/home/demon000/uni/map/exam_csharp/exam_csharp/obj/Debug/netcoreapp3.1/exam_csharp.csprojAssemblyReference.cache
+/home/demon000/uni/map/exam_csharp/exam_csharp/obj/Debug/netcoreapp3.1/exam_csharp.AssemblyInfoInputs.cache
+/home/demon000/uni/map/exam_csharp/exam_csharp/obj/Debug/netcoreapp3.1/exam_csharp.AssemblyInfo.cs
+/home/demon000/uni/map/exam_csharp/exam_csharp/obj/Debug/netcoreapp3.1/exam_csharp.dll
+/home/demon000/uni/map/exam_csharp/exam_csharp/obj/Debug/netcoreapp3.1/exam_csharp.pdb
