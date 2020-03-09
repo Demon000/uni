@@ -9,57 +9,69 @@
     <form action="submit.php">
         <table width="100%">
             <tr>
-                <td rowspan="2">
-                    <center>
-                        <a href="https://anaf.ro" target="_blank"><img src="ANAF.jpg" alt="ANAF LOGO" height="50" width="200"></a><br>
-                    </center>
-                </td>
                 <td>
-                    <center>
-                        DECLARATIE<br>
-                        privind veniturile realizate din România
-                    </center>
-                </td>
-                <td rowspan="2">
-                    <center>
-                        <h1>200</h1>
-                    </center>
-                </td>
-            </tr>
-            <tr>
-                <td valign="bottom">
-                    <center>
-                        Anul 2015
-                    </center>
-                </td>
-            </tr>
-        </table>
-        <table width="100%">
-            <tr>
-                <td bgcolor="#c0c0c0">
-                    <input type="checkbox">
-                    <span>Declarație rectificativă</span><br>
+                    <table width="100%">
+                        <tr>
+                            <td rowspan="2">
+                                <center>
+                                    <a href="https://anaf.ro" target="_blank"><img src="ANAF.jpg" alt="ANAF LOGO" height="50" width="200"></a><br>
+                                </center>
+                            </td>
+                            <td>
+                                <center>
+                                    DECLARATIE<br>
+                                    privind veniturile realizate din România
+                                </center>
+                            </td>
+                            <td rowspan="2">
+                                <center>
+                                    <h1>200</h1>
+                                </center>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="bottom">
+                                <center>
+                                    Anul 2015
+                                </center>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <span>Se completează cu X in cazul declarațiilor rectificative</span>
+                    <table width="100%">
+                        <tr>
+                            <td bgcolor="#c0c0c0">
+                                <input type="checkbox">
+                                <span>Declarație rectificativă</span><br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>Se completează cu X in cazul declarațiilor rectificative</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#c0c0c0">
+                                <input type="checkbox">
+                                <span>Venit scutit conform convenției de evitare a dublei impuneri</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td bgcolor="#c0c0c0">
+                                <input type="checkbox">
+                                <span>Opțiune privind regularizarea in România a impozitului pe venit</span>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
             <tr>
-                <td bgcolor="#c0c0c0">
-                    <input type="checkbox">
-                    <span>Venit scutit conform convenției de evitare a dublei impuneri</span>
-                </td>
-            </tr>
-            <tr>
-                <td bgcolor="#c0c0c0">
-                    <input type="checkbox">
-                    <span>Opțiune privind regularizarea in România a impozitului pe venit</span>
-                </td>
+
             </tr>
         </table>
-        <br>
         <table width="100%" border="1">
             <tr>
                 <td bgcolor="#c0c0c0">
@@ -229,13 +241,12 @@
                                 <li><input type="checkbox"> piscicultură</li>
                             </ul>
                             Realizate în perioada<br>
-                            <select>
-                                <option>13.02.2015 - 11.06.2015</option>
-                                <option>12.06.2015 - 31.12.2015</option>
-                            </select>
+                            <input type="radio" id="active_period_first" name="active_period" value="first" checked="checked">
+                            <label for="active_period_first">13.02.2015 - 11.06.2015</label>
+                            <br>
+                            <input type="radio" id="active_period_second" name="active_period" value="second">
+                            <label for="active_period_second">12.06.2015 - 31.12.2015</label>
                         </li>
-                    </ol>
-                    <ol start="2">
                         <li>
                             Determinarea venitului net:<br>
                             <ul>
@@ -252,6 +263,8 @@
                                 <li><input type="checkbox"> modificarea modalității/formei de exercitare a activității</li>
                             </ul>
                         </li>
+                    </ol>
+                    <ol type="A">
                         <li>
                             Obiectul principal de activitate:<br>
                             <input type="text"><br>
