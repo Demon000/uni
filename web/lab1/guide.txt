@@ -1,0 +1,24 @@
+* a - href, target
+* table - border, bgcolor
+* tr - bgcolor
+* th - bgcolor
+* td - rowspan, colspan, bgcolor, valign
+* div - align
+* strong
+* ul
+* ol - start
+* li
+* form
+input - *checked, *type, disabled, *maxlength, readonly, *name, *value, *size, min, max, step
+* select - multiple
+* option - selected
+* textarea - cols, rows
+* img - alt, src, width, height
+* b
+* h1 (… h6)
+* center
+* fieldset
+* legend
+* p
+* br
+* span

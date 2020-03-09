@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ANAF HTML5</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+</head>
+<body>
+<form action="submit.php">
+    <table>
+        <tr>
+            <td rowspan="2">
+                <a href="https://anaf.ro" target="_blank"><img src="ANAF.jpg" alt="ANAF LOGO" height="50" width="200"></a><br>
+            </td>
+            <td>
+                DECLARATIE<br>
+                privind veniturile realizate din România
+            </td>
+            <td rowspan="2">
+                <h1>200</h1>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Anul 2015
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td>
+                <input type="checkbox">
+                <span>Declarație rectificativă</span><br>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>Se completează cu X in cazul declarațiilor rectificative</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="checkbox">
+                <span>Venit scutit conform convenției de evitare a dublei impuneri</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="checkbox">
+                <span>Opțiune privind regularizarea in România a impozitului pe venit</span>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table>
+        <tr>
+            <td>
+                1. DATE DE IDENTIFICARE A CONTRIBUABILULUI
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <fieldset>
+                                <legend>Nume persoana</legend>
+                                <!--                                    <label for="person_last_name">Nume</label>-->
+                                <input id="person_last_name" name="person_last_name" type="text">
+                                <label for="person_father_initial">Inițiala tatălui</label>
+                                <input id="person_father_initial" name="person_father_initial" maxlength="1" size="1" type="text">
+                            </fieldset>
+                        </td>
+                        <td rowspan="2">
+                            <fieldset>
+                                <legend>CNP</legend>
+                                <!--                                    <label for="person_cnp">Cod numeric personal/Număr de identificare personală</label><br>-->
+                                <input id="person_cnp" name="person_cnp" type="text" maxlength="13" size="13">
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <fieldset>
+                                <legend>Preume</legend>
+                                <!--                                    <label for="person_first_name">Prenume</label>-->
+                                <input id="person_first_name" name="person_first_name" type="text">
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <fieldset>
+                                <legend>Adresă 1</legend>
+                                <label for="person_street">Stradă</label>
+                                <input id="person_street" name="person_street" type="text">
+                                <label for="person_street_number">Număr</label>
+                                <input id="person_street_number" name="person_street_number" type="number" min="1" max="99" step="1" maxlength="2" size="2" value="1">
+                            </fieldset>
+                        </td>
+                        <td>
+                            <fieldset>
+                                <legend>Bancă</legend>
+                                <!--                                    <label for="person_bank">Bancă</label>-->
+                                <input id="person_bank" name="person_bank" type="text">
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <fieldset>
+                                <legend>Adresă 2</legend>
+                                <label for="person_building_number">Bloc</label>
+                                <input id="person_building_number" name="person_building_number" type="text" maxlength="2" size="2">
+                                <label for="person_ladder_number">Scară</label>
+                                <input id="person_ladder_number" name="person_ladder_number" type="text" maxlength="2" size="2" value="1">
+                                <label for="person_floor_number">Etaj</label>
+                                <input id="person_floor_number" name="person_floor_number" type="text" maxlength="2" size="2" value="1">
+                                <label for="person_apartment_number">Apartament</label>
+                                <input id="person_apartment_number" name="person_apartment_number" type="text" maxlength="2" size="2" value="1">
+                                <label for="person_county">Județ/Sector</label>
+                                <select id="person_county" name="person_county">
+                                    <option>Alba</option>
+                                    <option>Arad</option>
+                                    <option>Argeș</option>
+                                    <option>Bacău</option>
+                                    <option>Bihor</option>
+                                    <option>Bistrița-Năsăud</option>
+                                    <option>Botoșani</option>
+                                    <option>Brașov</option>
+                                    <option>Brăila</option>
+                                    <option>București</option>
+                                    <option>Buzău</option>
+                                    <option>Caraș-Severin</option>
+                                    <option>Călărași</option>
+                                    <option>Cluj</option>
+                                    <option>Constanța</option>
+                                    <option>Covasna</option>
+                                    <option>Dâmbovița</option>
+                                    <option>Dolj</option>
+                                    <option>Galați</option>
+                                    <option>Giurgiu</option>
+                                    <option>Gorj</option>
+                                    <option>Harghita</option>
+                                    <option>Hunedoara</option>
+                                    <option>Ialomița</option>
+                                    <option>Iași</option>
+                                    <option>Ilfov</option>
+                                    <option>Maramureș</option>
+                                    <option>Mehedinți</option>
+                                    <option>Mureș</option>
+                                    <option>Neamț</option>
+                                    <option>Olt</option>
+                                    <option>Prahova</option>
+                                    <option>Satu</option>
+                                    <option>Sălaj</option>
+                                    <option>Sibiu</option>
+                                    <option>Suceava</option>
+                                    <option>Teleorman</option>
+                                    <option>Timiș</option>
+                                    <option>Tulcea</option>
+                                    <option>Vaslui</option>
+                                    <option>Vâlcea</option>
+                                    <option>Vrancea</option>
+                                </select>
+                            </fieldset>
+                        </td>
+                        <td>
+                            <fieldset>
+                                <legend>IBAN</legend>
+                                <!--                                    <label for="person_bank_number">Cont bancar (IBAN)</label>-->
+                                <input id="person_bank_number" name="person_bank_number" type="text">
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <fieldset>
+                                <legend>Telefon/Fax</legend>
+                                <label for="person_phone">Telefon</label><input id="person_phone" name="person_phone" type="text">
+                                <label for="person_fax">Fax</label><input id="person_fax" name="person_fax" type="text">
+                            </fieldset>
+                        </td>
+                        <td>
+                            <fieldset>
+                                <legend>Email</legend>
+                                <!--                                    <label for="person_email">Email</label>-->
+                                <input id="person_email" name="person_email" type="text">
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                2. DATE PRIVIND VENITURILE REALIZATE, PE SURSE ȘI CATEGORII DE VENIT
+            </td>
+        </tr>
+        <tr>
+            <td>
+                A. DATE PRIVIND ACTIVITATEA DESFĂȘURATĂ
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <ol>
+                    <li>
+                        Categoria de venit:<br>
+                        <ul>
+                            <li><input type="checkbox"> comerciale</li>
+                            <li><input type="checkbox"> profesii libere</li>
+                            <li><input type="checkbox"> drepturi de proprietate intelectuală</li>
+                            <li><input type="checkbox"> cedarea folosinței bunurilor calificată în categoria veniturilor din activități independente</li>
+                            <li><input type="checkbox"> cedarea folosinței bunurilor</li>
+                            <li><input type="checkbox"> operațiuni de vânzare-cumpărare de valută la termen, pe bază de contract</li>
+                            <li><input type="checkbox"> activități agricole</li>
+                            <li><input type="checkbox"> transferul titlurilor de valoare, altele decât părțile sociale și valorile mobiliare în cazul societăților închise</li>
+                            <li><input type="checkbox"> silvicultură</li>
+                            <li><input type="checkbox"> jocuri de noroc</li>
+                            <li><input type="checkbox"> piscicultură</li>
+                        </ul>
+                        Realizate în perioada<br>
+                        <select>
+                            <option>13.02.2015 - 11.06.2015</option>
+                            <option>12.06.2015 - 31.12.2015</option>
+                        </select>
+                    </li>
+                </ol>
+                <ol start="2">
+                    <li>
+                        Determinarea venitului net:<br>
+                        <ul>
+                            <li><input type="checkbox"> sistem real</li>
+                            <li><input type="checkbox"> cote forfetare de cheltuieli</li>
+                            <li><input type="checkbox"> normă de venit</li>
+                        </ul>
+                    </li>
+                    <li>Forma de organizare:<br>
+                        <ul>
+                            <li><input type="checkbox">individual</li>
+                            <li><input type="checkbox"> asociere fără personalitate juridică</li>
+                            <li><input type="checkbox"> entități supuse regimului transparenței fiscale</li>
+                            <li><input type="checkbox"> modificarea modalității/formei de exercitare a activității</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Obiectul principal de activitate:<br>
+                        <input type="text"><br>
+                        Cod CAEN<br>
+                        <input type="text" size="4" maxlength="4"><br>
+                    </li>
+                    <li>
+                        Sediul/Datele de indentificare a bunului pentru care se cedează folosința:<br><input type="text">
+                    </li>
+                    <li>
+                        Documentul de autorizare/Contractul de asociere/Închiriere:<br><input type="text">
+                    </li>
+                    <li>
+                        Data începerii activității:<br><input type="text">
+                    </li>
+                    <li>
+                        Data încetării activității:<br><input type="text">
+                    </li>
+                    <li>
+                        Număr de zile de scutire:<br><input type="text">
+                    </li>
+                    <li>
+                        Organizatorul jocurilor de noroc:<br><input type="text">
+                    </li>
+                    <li>
+                        Codul de identificare fiscală al organizatorului de jocuri de noroc:<br><input type="text">
+                    </li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                B. DATE PRIVIND VENITUL NET ANUAL
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <textarea rows="20" cols="100"></textarea>
+            </td>
+        </tr>
+    </table>
+    <input type="submit" title="Submit">
+</form>
+</body>
+</html>
