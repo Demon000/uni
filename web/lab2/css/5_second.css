@@ -1,0 +1,24 @@
+#container {
+    max-width: 310px;
+
+    border-spacing: 5px;
+    border: 1px solid black;
+
+    background: yellow;
+}
+
+#container .cell {
+    display: table;
+}
+
+#container .cell img,
+#container .cell p {
+    vertical-align: middle;
+    display: table-cell;
+    height: 100%;
+}
+
+#container .cell p {
+    height: 100%;
+    margin: 0;
+}

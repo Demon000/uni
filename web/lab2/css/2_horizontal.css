@@ -1,0 +1,17 @@
+#content {
+    min-height: calc(100vh - 100px - 20px - 60px);
+}
+
+#menu {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+#menu > li {
+    line-height: 20px;
+
+    flex: 1;
+
+    border-right: 1px solid black;
+}

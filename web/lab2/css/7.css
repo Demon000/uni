@@ -1,0 +1,43 @@
+.dialog {
+    list-style-type: none;
+}
+
+.dialog > li {
+    max-width: 150px;
+
+    margin: 30px 30px 30px 70px;
+
+    text-align: center;
+
+    overflow: visible;
+
+    border: 1px solid black;
+    border-image: url("../assets/images/dialog_border.png")
+        71 24 26 59 /
+        71px 24px 26px 59px /
+        5px 10px 10px 35px;
+    min-height: calc(71px + 26px);
+    min-width: calc(24px + 59px);
+}
+
+.dialog > li::before {
+    display: block;
+    position: relative;
+    content: '';
+
+    right: 110px;
+}
+
+.dialog > li.alice::before {
+    margin-bottom: -56px;
+    width: 69px;
+    height: 56px;
+    background: url("../assets/images/face_sprites.png") 0 0;
+}
+
+.dialog > li.bob::before {
+    margin-bottom: -56px;
+    width: 69px;
+    height: 56px;
+    background: url("../assets/images/face_sprites.png") 0 56px;
+}

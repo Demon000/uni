@@ -1,0 +1,7 @@
+#bar {
+    display: table-row;
+}
+
+#bar > * {
+    display: table-cell;
+}

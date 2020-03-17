@@ -1,0 +1,30 @@
+#bar > * {
+    width: 84px;
+    height: 84px;
+
+    background-image: url("../assets/images/sprites.png");
+}
+
+#bar > * {
+    background-position-y: 84px;
+}
+
+#bar > *:hover {
+    background-position-y: 0;
+}
+
+#bar > .facebook {
+    background-position-x: calc(84px * 0);
+}
+
+#bar > .gplus {
+    background-position-x: calc(84px * -3);
+}
+
+#bar > .skype {
+    background-position-x: calc(84px * -7);
+}
+
+#bar > .twitter {
+    background-position-x: calc(84px * -8);
+}

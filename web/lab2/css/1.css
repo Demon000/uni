@@ -1,0 +1,38 @@
+.container,
+.controls {
+    margin: 8px;
+}
+
+.container {
+    display: table;
+    justify-content: center;
+
+    width: 400px;
+    max-width: 100%;
+
+    border: 1px solid black;
+}
+
+.wrapper {
+    display: table-row;
+}
+
+.left,
+.right {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+
+    width: 200px;
+    max-width: 50%;
+}
+
+.left p,
+.right img {
+
+}
+
+.right img {
+    max-width: 100%;
+    object-fit: contain;
+}

@@ -1,0 +1,15 @@
+#middle {
+    display: flex;
+}
+
+#content {
+    flex-grow: 1;
+
+    min-height: calc(100vh - 100px - 60px);
+}
+
+#menu > li {
+    width: 130px;
+
+    border-bottom: 1px solid black;
+}
