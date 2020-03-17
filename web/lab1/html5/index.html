@@ -35,6 +35,17 @@
                 <table>
                     <tr>
                         <td>
+                            <input type="checkbox" disabled checked>
+                            <span>Declarație privind veniturile realizate din România</span><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" readonly value="Anul 2015">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <input type="checkbox">
                             <span>Declarație rectificativă</span><br>
                         </td>
@@ -103,7 +114,7 @@
                                 <label for="person_street">Stradă</label>
                                 <input id="person_street" name="person_street" type="text">
                                 <label for="person_street_number">Număr</label>
-                                <input id="person_street_number" name="person_street_number" type="number" min="1" max="99" step="1" maxlength="2" size="2" value="1">
+                                <input id="person_street_number" name="person_street_number" type="number" min="1" max="99" step="1" value="1">
                             </fieldset>
                         </td>
                         <td>
@@ -243,6 +254,8 @@
                             <li><input type="checkbox"> normă de venit</li>
                         </ul>
                     </li>
+                </ol>
+                <ol start="4">
                     <li>Forma de organizare:<br>
                         <ul>
                             <li><input type="checkbox">individual</li>
