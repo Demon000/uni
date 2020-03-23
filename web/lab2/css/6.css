@@ -1,3 +1,41 @@
-input[type=text].boxed {
+.input-group {
+    padding: 8px;
+}
 
+input.boxed {
+    font-family: monospace;
+    font-size: 24px;
+    letter-spacing: 10px;
+    /* half of letter spacing to center letter in box */
+    /*text-indent: 5px;*/
+    box-sizing: content-box;
+
+    background-image: url("../assets/images/square.png");
+    /* width of cell background is 1 character + letter spacing */
+    background-size: calc(1ch + 10px) 24px;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+
+    border: 2px solid black;
+    overflow: hidden;
+    position: relative;
+}
+input.boxed:focus {
+    outline: none;
+}
+
+#cnp {
+    /* width of cell background is 1 character + letter spacing */
+    /* there are 13 cells */
+    /* 5px is added to compensate for the text indentation,
+       which will otherwise cause the input field to scroll on
+       the last value
+     */
+    width: calc(13 * (1ch + 10px));
+}
+
+#nume,
+#prenume {
+    width: calc(20 * (1ch + 10px));
 }
