@@ -1,90 +1,176 @@
+import controller.LoginController;
 import domain.Arbiter;
 import domain.Participant;
-import domain.RaceType;
-import org.apache.logging.log4j.LogManager;
-import repository.DatabaseError;
-import repository.DatabaseRepository;
+import domain.ParticipantScore;
+import domain.ScoreType;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import repository.*;
+import service.Service;
 import utils.ConfigManager;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
-public class Main {
-    public static void printParticipants(List<Participant> participants) {
-        System.out.println();
-        System.out.println("START PRINT PARTICIPANTS");
-        participants.forEach(System.out::println);
-        System.out.println("END PRINT PARTICIPANTS");
-        System.out.println();
+public class Main extends Application {
+    private static ConfigManager configManager = new ConfigManager();
+    private static Connection connection;
+    private static IParticipantRepository participantRepository;
+    private static IArbiterRepository arbiterRepository;
+    private static IScoreRepository scoreRepository;
+    private static Service service;
+
+    public static void tryAddParticipant(IParticipantRepository repository, Participant participant) {
+        try {
+            repository.add(participant);
+        } catch (RepositoryError ignored) {
+        }
     }
 
-    public static void printParticipant(Participant participant) {
-        System.out.println("PARTICIPANT: " + participant);
-        System.out.println();
+    public static void tryAddArbiter(IArbiterRepository repository, Arbiter arbiter) {
+        try {
+            repository.add(arbiter);
+        } catch (RepositoryError ignored) {
+        }
     }
 
-    public static void printArbiters(List<Arbiter> arbiters) {
-        System.out.println();
-        System.out.println("START PRINT ARBITERS");
-        arbiters.forEach(System.out::println);
-        System.out.println("END PRINT ARBITERS");
-        System.out.println();
+    public static void trySetScore(IScoreRepository repository, int participantId, int arbiterId, int score) {
+        try {
+            repository.setScore(participantId, arbiterId, score);
+        } catch (RepositoryError ignored) {
+        }
     }
 
-    public static void printArbiter(Arbiter arbiter) {
-        System.out.println("ARBITER: " + arbiter);
-        System.out.println();
+    public static void tryPrintArbiterByNameAndPassword(IArbiterRepository repository, String name, String password) {
+        try {
+            Arbiter arbiter = repository.findByNameAndPassword("Cosmin Tanislav", "passwordcosmin");
+            System.out.println(arbiter);
+        } catch (RepositoryError ignored) {
+        }
     }
 
-    public static void main(String[] args) {
-        ConfigManager configManager = new ConfigManager();
+    public static void tryPrintTotalScoreSortedByName(IScoreRepository repository) {
+        try {
+            List<ParticipantScore> scores = repository.findScoresSortedByName();
+            System.out.println("Total scores sorted by name");
+            scores.forEach(System.out::println);
+            System.out.println();
+        } catch (RepositoryError ignored) {
+        }
+    }
 
-        Connection connection;
+    public static void tryPrintScoresForTypeSortedDescending(IScoreRepository repository, ScoreType type) {
+        try {
+            List<ParticipantScore> scores = repository.findScoresForTypeSortedDescending(type);
+            System.out.println(String.format("Scores for %s sorted descending", type.toString().toLowerCase()));
+            scores.forEach(System.out::println);
+            System.out.println();
+        } catch (RepositoryError ignored) {
+        }
+    }
+
+    public static void createConnection() {
         try {
             connection = DriverManager.getConnection(configManager.getValue("database_url"));
         } catch (SQLException e) {
             e.printStackTrace();
-            return;
+            System.exit(-1);
         }
+    }
 
+    public static void destroyConnection() {
         try {
-            DatabaseRepository<Participant> repository =
-                    new DatabaseRepository<>(Participant.class, connection);
-            Participant participant = new Participant("Christian Tatoiu");
-
-            printParticipants(repository.find());
-
-            repository.add(participant);
-            printParticipants(repository.find());
-
-            Participant found = repository.findById(new Participant("Christian Tatoiu"));
-            printParticipant(found);
-
-            repository.delete(participant);
-            printParticipants(repository.find());
-        } catch (DatabaseError databaseError) {
-            databaseError.printStackTrace();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(-1);
         }
+    }
 
+    public static void createParticipantRepository() {
         try {
-            DatabaseRepository<Arbiter> repository =
-                    new DatabaseRepository<>(Arbiter.class, connection);
-            Arbiter arbiter = new Arbiter("Teodor Spiridon", RaceType.CYCLING.ordinal());
-
-            printArbiters(repository.find());
-
-            repository.add(arbiter);
-            printArbiters(repository.find());
-
-            Arbiter found = repository.findById(new Arbiter("Teodor Spiridon"));
-            printArbiter(found);
-
-            repository.delete(arbiter);
-            printArbiters(repository.find());
-        } catch (DatabaseError databaseError) {
-            databaseError.printStackTrace();
+            participantRepository = new ParticipantRepository(connection);
+        } catch (RepositoryError e) {
+            e.printStackTrace();
+            System.exit(-1);
         }
+    }
+
+    public static void createArbiterRepository() {
+        try {
+            arbiterRepository = new ArbiterRepository(connection);
+        } catch (RepositoryError e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    public static void createScoreRepository() {
+        try {
+            scoreRepository = new ScoreRepository(connection);
+        } catch (RepositoryError e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    public static void createService() {
+        service = new Service(participantRepository, arbiterRepository, scoreRepository);
+    }
+
+    public static void main(String[] args) {
+        createConnection();
+        createParticipantRepository();
+        createArbiterRepository();
+        createScoreRepository();
+        createService();
+
+        tryAddParticipant(participantRepository, new Participant("Christian Tatoiu"));
+        tryAddParticipant(participantRepository, new Participant("Radu Stefanescu"));
+        tryAddParticipant(participantRepository, new Participant("Nicu Serte"));
+        tryAddParticipant(participantRepository, new Participant("Alexandra Suciu"));
+        tryAddParticipant(participantRepository, new Participant("Silvia Suciu"));
+        tryAddParticipant(participantRepository, new Participant("Adrian Sopterean"));
+
+        tryAddArbiter(arbiterRepository, new Arbiter("Cosmin Tanislav", "passwordcosmin", ScoreType.CYCLING));
+        tryAddArbiter(arbiterRepository, new Arbiter("Mihai Solcan", "passwordsolcan", ScoreType.RUNNING));
+        tryAddArbiter(arbiterRepository, new Arbiter("Teodor Spiridon", "passwordrunning", ScoreType.SWIMMING));
+//        tryPrintArbiterByNameAndPassword(arbiterRepository, "Cosmin Tanislav", "passwordcosmin");
+
+        trySetScore(scoreRepository, 1, 1, 20);
+        trySetScore(scoreRepository, 1, 2, 20);
+        trySetScore(scoreRepository, 1, 3, 10);
+        trySetScore(scoreRepository, 2, 1, 10);
+        trySetScore(scoreRepository, 2, 2, 10);
+        trySetScore(scoreRepository, 2, 3, 10);
+        trySetScore(scoreRepository, 3, 1, 10);
+        trySetScore(scoreRepository, 3, 2, 5);
+        trySetScore(scoreRepository, 3, 3, 5);
+        tryPrintTotalScoreSortedByName(scoreRepository);
+        tryPrintScoresForTypeSortedDescending(scoreRepository, ScoreType.CYCLING);
+        tryPrintScoresForTypeSortedDescending(scoreRepository, ScoreType.RUNNING);
+        tryPrintScoresForTypeSortedDescending(scoreRepository, ScoreType.SWIMMING);
+
+        launch(args);
+
+        destroyConnection();
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws IOException {
+        LoginController windowsController = new LoginController(service);
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(LoginController.VIEW_NAME));
+        loader.setController(windowsController);
+
+        Scene scene = new Scene(loader.load());
+        primaryStage.setScene(scene);
+        primaryStage.setTitle(LoginController.VIEW_TITLE);
+        primaryStage.show();
     }
 }

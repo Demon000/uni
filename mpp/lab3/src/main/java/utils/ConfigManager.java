@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfigManager {
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
 
     public ConfigManager() {
         try (InputStream inputStream = ConfigManager.class.getResourceAsStream("/config.properties")) {

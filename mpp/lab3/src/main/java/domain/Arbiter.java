@@ -1,43 +1,48 @@
 package domain;
 
-import repository.DatabaseField;
-import repository.DatabaseTable;
-
-@DatabaseTable(name="Arbiters")
 public class Arbiter {
-    @DatabaseField(name="ArbiterName", type="nvarchar(255)", primaryKey=true, notNull=true)
-    private String name;
+    private int id = 0;
+    private final String name;
+    private final String password;
+    private final ScoreType type;
 
-    @DatabaseField(name="ArbiterType", type="integer", notNull=true)
-    private int type;
-
-    public Arbiter() {}
-
-    public Arbiter(String name, int type) {
+    public Arbiter(String name, String password, ScoreType type) {
         this.name = name;
+        this.password = password;
         this.type = type;
     }
 
-    public  Arbiter(String name) {
-        this.name = name;
+    public Arbiter(int id, String name, String password, ScoreType type) {
+        this(name, password, type);
+
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getType() {
-        return type;
+    public String getPassword() {
+        return password;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public ScoreType getType() {
+        return type;
     }
 
     @Override
     public String toString() {
         return "Arbiter{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", type=" + type +
                 '}';
     }

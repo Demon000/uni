@@ -1,11 +1,11 @@
 package repository;
 
 public class RepositoryError extends Exception {
-    public RepositoryError(String message) {
+    RepositoryError(String message) {
         super(message);
     }
 
-    public RepositoryError(Throwable cause) {
-        super(cause);
+    public RepositoryError(Exception ex) {
+        super(ex);
     }
 }

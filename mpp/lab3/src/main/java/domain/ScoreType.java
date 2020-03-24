@@ -1,7 +1,8 @@
 package domain;
 
-public enum RaceType {
+public enum ScoreType {
     CYCLING,
     RUNNING,
     SWIMMING,
+    TOTAL
 }

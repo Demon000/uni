@@ -1,18 +1,25 @@
 package domain;
 
-import repository.DatabaseField;
-import repository.DatabaseTable;
-
-@DatabaseTable(name="Participants")
 public class Participant {
-
-    @DatabaseField(name="ParticipantName", type="nvarchar(255)", primaryKey=true, notNull=true)
-    private String name;
-
-    public Participant() {}
+    private int id = 0;
+    private final String name;
 
     public Participant(String name) {
         this.name = name;
+    }
+
+    public Participant(int id, String name) {
+        this(name);
+
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -22,7 +29,8 @@ public class Participant {
     @Override
     public String toString() {
         return "Participant{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }
