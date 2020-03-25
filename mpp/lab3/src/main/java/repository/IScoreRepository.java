@@ -1,14 +1,14 @@
 package repository;
 
-import domain.ParticipantScore;
+import domain.Score;
 import domain.ScoreType;
 
 import java.util.List;
 
 public interface IScoreRepository {
-    void addScore(int participantId, int arbiterId, int score) throws RepositoryError;
-    void updateScore(int participantId, int arbiterId, int score) throws RepositoryError;
-    void setScore(int participantId, int arbiterId, int score) throws RepositoryError;
-    List<ParticipantScore> findScoresForTypeSortedDescending(ScoreType type) throws RepositoryError;
-    List<ParticipantScore> findScoresSortedByName() throws RepositoryError;
+    void addScore(int participantId, ScoreType type, int score) throws RepositoryError;
+    void updateScore(int participantId, ScoreType type, int score) throws RepositoryError;
+    void setScore(int participantId, ScoreType type, int score) throws RepositoryError;
+    List<Score> findScoresForTypeSortedDescending(ScoreType type) throws RepositoryError;
+    List<Score> findScoresSortedByName() throws RepositoryError;
 }

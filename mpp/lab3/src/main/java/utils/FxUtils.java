@@ -4,6 +4,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 
+import java.util.concurrent.Callable;
+import java.util.function.Predicate;
+
 public class FxUtils {
     public static Alert createErrorAlert(String message) {
         Alert alert = new Alert(AlertType.ERROR, message, ButtonType.OK);
@@ -24,7 +27,7 @@ public class FxUtils {
     }
 
     public static <E> void addTableDeselect(TableView<E> table) {
-        table.setRowFactory(tableView2 -> {
+        table.setRowFactory(tableView -> {
             final TableRow<E> row = new TableRow<>();
 
             row.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
@@ -33,6 +36,19 @@ public class FxUtils {
                     table.getSelectionModel().clearSelection();
                     event.consume();
                 }
+            });
+
+            return row;
+        });
+    }
+
+    public static <E> void addTableUnselectable(TableView<E> table) {
+        table.setRowFactory(tableView -> {
+            final TableRow<E> row = new TableRow<>();
+
+            row.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                table.getSelectionModel().clearSelection();
+                event.consume();
             });
 
             return row;

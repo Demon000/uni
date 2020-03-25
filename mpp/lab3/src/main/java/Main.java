@@ -1,7 +1,7 @@
 import controller.LoginController;
 import domain.Arbiter;
 import domain.Participant;
-import domain.ParticipantScore;
+import domain.Score;
 import domain.ScoreType;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -39,9 +39,9 @@ public class Main extends Application {
         }
     }
 
-    public static void trySetScore(IScoreRepository repository, int participantId, int arbiterId, int score) {
+    public static void trySetScore(IScoreRepository repository, int participantId, ScoreType type, int score) {
         try {
-            repository.setScore(participantId, arbiterId, score);
+            repository.setScore(participantId, type, score);
         } catch (RepositoryError ignored) {
         }
     }
@@ -56,7 +56,7 @@ public class Main extends Application {
 
     public static void tryPrintTotalScoreSortedByName(IScoreRepository repository) {
         try {
-            List<ParticipantScore> scores = repository.findScoresSortedByName();
+            List<Score> scores = repository.findScoresSortedByName();
             System.out.println("Total scores sorted by name");
             scores.forEach(System.out::println);
             System.out.println();
@@ -66,7 +66,7 @@ public class Main extends Application {
 
     public static void tryPrintScoresForTypeSortedDescending(IScoreRepository repository, ScoreType type) {
         try {
-            List<ParticipantScore> scores = repository.findScoresForTypeSortedDescending(type);
+            List<Score> scores = repository.findScoresForTypeSortedDescending(type);
             System.out.println(String.format("Scores for %s sorted descending", type.toString().toLowerCase()));
             scores.forEach(System.out::println);
             System.out.println();
@@ -142,15 +142,15 @@ public class Main extends Application {
         tryAddArbiter(arbiterRepository, new Arbiter("Teodor Spiridon", "passwordrunning", ScoreType.SWIMMING));
 //        tryPrintArbiterByNameAndPassword(arbiterRepository, "Cosmin Tanislav", "passwordcosmin");
 
-        trySetScore(scoreRepository, 1, 1, 20);
-        trySetScore(scoreRepository, 1, 2, 20);
-        trySetScore(scoreRepository, 1, 3, 10);
-        trySetScore(scoreRepository, 2, 1, 10);
-        trySetScore(scoreRepository, 2, 2, 10);
-        trySetScore(scoreRepository, 2, 3, 10);
-        trySetScore(scoreRepository, 3, 1, 10);
-        trySetScore(scoreRepository, 3, 2, 5);
-        trySetScore(scoreRepository, 3, 3, 5);
+        trySetScore(scoreRepository, 1, ScoreType.CYCLING, 20);
+        trySetScore(scoreRepository, 1, ScoreType.RUNNING, 20);
+        trySetScore(scoreRepository, 1, ScoreType.SWIMMING, 10);
+        trySetScore(scoreRepository, 2, ScoreType.CYCLING, 10);
+        trySetScore(scoreRepository, 2, ScoreType.RUNNING, 10);
+        trySetScore(scoreRepository, 2, ScoreType.SWIMMING, 10);
+        trySetScore(scoreRepository, 3, ScoreType.CYCLING, 10);
+        trySetScore(scoreRepository, 3, ScoreType.RUNNING, 5);
+        trySetScore(scoreRepository, 3, ScoreType.SWIMMING, 5);
         tryPrintTotalScoreSortedByName(scoreRepository);
         tryPrintScoresForTypeSortedDescending(scoreRepository, ScoreType.CYCLING);
         tryPrintScoresForTypeSortedDescending(scoreRepository, ScoreType.RUNNING);

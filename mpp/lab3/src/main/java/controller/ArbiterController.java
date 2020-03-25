@@ -1,22 +1,23 @@
 package controller;
 
 import domain.Arbiter;
-import domain.Participant;
-import domain.ParticipantScore;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
+import domain.Score;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import observer.Observer;
 import repository.RepositoryError;
 import service.Service;
+import utils.StringUtils;
 
+import java.util.Collection;
 import java.util.List;
 
 import static utils.FxUtils.*;
 
-public class ArbiterController {
+public class ArbiterController implements Observer {
     public static final String VIEW_NAME = "/ArbiterView.fxml";
     public static final String VIEW_TITLE = "Arbiter";
 
@@ -24,22 +25,25 @@ public class ArbiterController {
     private Arbiter arbiter;
 
     @FXML
-    private TableView<ParticipantScore> participantTotalScoreTable;
+    private TableView<Score> participantsTable;
 
     @FXML
-    private TableColumn<ParticipantScore, String> participantTotalScoreNameColumn;
+    private TableColumn<Score, String> participantsNameColumn;
 
     @FXML
-    private TableColumn<ParticipantScore, Integer> participantTotalScoreColumn;
+    private TableColumn<Score, Integer> participantsTypeScoreColumn;
 
     @FXML
-    private TableView<ParticipantScore> participantTypeScoreTable;
+    private TableColumn<Score, Integer> participantsTotalScoreColumn;
 
     @FXML
-    private TableColumn<ParticipantScore, String> participantTypeScoreNameColumn;
+    private TableView<Score> rankingTable;
 
     @FXML
-    private TableColumn<ParticipantScore, Integer> participantTypeScoreColumn;
+    private TableColumn<Score, String> rankingNameColumn;
+
+    @FXML
+    private TableColumn<Score, Integer> rankingScoreColumn;
 
     @FXML
     private TextField pointsField;
@@ -67,120 +71,170 @@ public class ArbiterController {
         this.arbiterTypeField.setText(arbiter.getType().toString().toLowerCase());
 
         addFieldNumber(pointsField);
+        addTableDeselect(participantsTable);
+        addTableUnselectable(rankingTable);
+        setRankingsTableVisibility(false);
 
-        participantTotalScoreNameColumn.setCellValueFactory(scoreCellDataFeatures -> {
-            ParticipantScore score = scoreCellDataFeatures.getValue();
+        participantsTypeScoreColumn.setText(String.format("%s score",
+                StringUtils.toTitleCase(arbiter.getType().toString())));
+        participantsNameColumn.setCellValueFactory(scoreCellDataFeatures -> {
+            Score score = scoreCellDataFeatures.getValue();
             return new ReadOnlyStringWrapper(score.getParticipant().getName());
         });
-        participantTotalScoreColumn.setCellValueFactory(scoreCellDataFeatures -> {
-            ParticipantScore score = scoreCellDataFeatures.getValue();
-            return new ReadOnlyObjectWrapper<>(score.getTotalScore());
-        });
-
-        participantTypeScoreNameColumn.setCellValueFactory(scoreCellDataFeatures -> {
-            ParticipantScore score = scoreCellDataFeatures.getValue();
-            return new ReadOnlyStringWrapper(score.getParticipant().getName());
-        });
-        participantTypeScoreColumn.setCellValueFactory(scoreCellDataFeatures -> {
-            ParticipantScore score = scoreCellDataFeatures.getValue();
+        participantsTypeScoreColumn.setCellValueFactory(scoreCellDataFeatures -> {
+            Score score = scoreCellDataFeatures.getValue();
             return new ReadOnlyObjectWrapper<>(score.getScore(arbiter.getType()));
         });
+        participantsTotalScoreColumn.setCellValueFactory(scoreCellDataFeatures -> {
+            Score score = scoreCellDataFeatures.getValue();
+            return new ReadOnlyObjectWrapper<>(score.getTotalScore());
+        });
+        participantsTable.getSortOrder().add(participantsNameColumn);
+        participantsTable.sort();
 
-        participantTypeScoreTable.setSelectionModel(null);
+        rankingNameColumn.setCellValueFactory(scoreCellDataFeatures -> {
+            Score score = scoreCellDataFeatures.getValue();
+            return new ReadOnlyStringWrapper(score.getParticipant().getName());
+        });
 
-        participantTotalScoreTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        rankingScoreColumn.setSortType(TableColumn.SortType.DESCENDING);
+        rankingScoreColumn.setCellValueFactory(scoreCellDataFeatures -> {
+            Score score = scoreCellDataFeatures.getValue();
+            return new ReadOnlyObjectWrapper<>(score.getScore(arbiter.getType()));
+        });
+        rankingTable.getSortOrder().add(rankingScoreColumn);
+        rankingTable.sort();
+
+        participantsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             onSelectionChanged();
         });
 
-        setRankingsTableVisibility(false);
-        addTableDeselect(participantTotalScoreTable);
-
         loadTablesData();
+
+        service.addObserver(this);
     }
 
-    public ParticipantScore getSelected() {
-        return participantTotalScoreTable.getSelectionModel().getSelectedItem();
+    public Score getSelected() {
+        return participantsTable.getSelectionModel().getSelectedItem();
     }
 
-    public void setSelected(ParticipantScore newSelected) {
-        participantTotalScoreTable.getItems().forEach(element -> {
-            if (element.getParticipant().getId() == newSelected.getParticipant().getId()) {
-                participantTotalScoreTable.getSelectionModel().select(element);
+    public Score findScoreInTable(TableView<Score> table, Score score) {
+        Collection<Score> scores = table.getItems();
+        for (Score s : scores) {
+            if (s.getParticipant().getId() == score.getParticipant().getId()) {
+                return s;
             }
-        });
+        }
+
+        return null;
+    }
+
+    public void setSelected(Score newSelected) {
+        Score scoreItem = findScoreInTable(participantsTable, newSelected);
+        participantsTable.getSelectionModel().select(scoreItem);
+    }
+
+    public void updateParticipantsScore(Score score) {
+        Score scoreItem = findScoreInTable(participantsTable, score);
+        if (scoreItem != null) {
+            scoreItem.setScores(score.getScores());
+        }
+
+        participantsTable.refresh();
+    }
+
+    public void updateRankingScore(Score score) {
+        Score scoreItem = findScoreInTable(rankingTable, score);
+
+        boolean isZeroScore = score.getScore(arbiter.getType()) == 0;
+        boolean isNullItem = scoreItem == null;
+        if (isZeroScore && !isNullItem) {
+            rankingTable.getItems().remove(scoreItem);
+        } else if (!isZeroScore && !isNullItem) {
+            scoreItem.setScores(score.getScores());
+        } else if (!isZeroScore) {
+            rankingTable.getItems().add(score);
+        }
+
+        rankingTable.refresh();
+        rankingTable.sort();
+    }
+
+    public void updateScore(Score score) {
+        updateParticipantsScore(score);
+        updateRankingScore(score);
     }
 
     public void setRankingsTableVisibility(boolean visible) {
-        if (visible) {
-            loadTypeScoreTableData();
-        }
-        participantTypeScoreTable.setManaged(visible);
-        participantTypeScoreTable.setVisible(visible);
+        rankingTable.setManaged(visible);
+        rankingTable.setVisible(visible);
     }
 
     void onSelectionChanged() {
-        ParticipantScore selected = getSelected();
-        if (selected != null) {
-            setButton.setDisable(false);
-            pointsField.setText(String.valueOf(selected.getScore(arbiter.getType())));
-        } else {
+        Score selected = getSelected();
+        if (selected == null) {
             setButton.setDisable(true);
             pointsField.setText("");
+        } else {
+            setButton.setDisable(false);
+            pointsField.setText(String.valueOf(selected.getScore(arbiter.getType())));
         }
     }
 
-    private void loadTotalScoreTableData() {
-        ParticipantScore lastSelected = getSelected();
-
-        List<ParticipantScore> scores;
+    private void loadParticipantsTableData() {
+        List<Score> scores;
         try {
             scores = service.getScores();
         } catch (RepositoryError e) {
-            e.printStackTrace();
+            showErrorAlert(e.getMessage());
             return;
         }
 
-        participantTotalScoreTable.getItems().setAll(scores);
-
-        if (lastSelected != null) {
-            setSelected(lastSelected);
-        }
+        participantsTable.getItems().setAll(scores);
     }
 
-    private void loadTypeScoreTableData() {
-        List<ParticipantScore> scores;
+    private void loadRankingTableData() {
+        List<Score> scores;
         try {
             scores = service.getScoresForType(arbiter.getType());
         } catch (RepositoryError e) {
-            e.printStackTrace();
+            showErrorAlert(e.getMessage());
             return;
         }
 
-        participantTypeScoreTable.getItems().setAll(scores);
+        rankingTable.getItems().setAll(scores);
     }
 
     private void loadTablesData() {
-        loadTotalScoreTableData();
-        if (showRankingsButton.isSelected()) {
-            loadTypeScoreTableData();
-        }
+        loadParticipantsTableData();
+        loadRankingTableData();
     }
 
     @FXML
     void onSetButtonAction(ActionEvent event) {
-        ParticipantScore selected = getSelected();
+        Score selected = getSelected();
         try {
-            service.setScore(selected.getParticipant(), arbiter, Integer.parseInt(pointsField.getText()));
+            selected.setScore(arbiter.getType(), Integer.parseInt(pointsField.getText()));
+            service.setScore(selected, arbiter);
         } catch (RepositoryError e) {
-            e.printStackTrace();
-            return;
+            showErrorAlert(e.getMessage());
         }
-
-        loadTablesData();
     }
 
     @FXML
     void onShowRankingsButtonAction(ActionEvent event) {
         setRankingsTableVisibility(showRankingsButton.isSelected());
+    }
+
+    @Override
+    public void onChange(String key, Object oldValue, Object newValue) {
+        switch (key) {
+        case Service.SCORE_SET_CHANGE:
+                Score score = (Score) newValue;
+                updateScore(score);
+            break;
+        default:
+            break;
+        }
     }
 }

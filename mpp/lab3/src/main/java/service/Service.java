@@ -2,8 +2,9 @@ package service;
 
 import domain.Arbiter;
 import domain.Participant;
-import domain.ParticipantScore;
+import domain.Score;
 import domain.ScoreType;
+import observer.Observable;
 import repository.IArbiterRepository;
 import repository.IParticipantRepository;
 import repository.IScoreRepository;
@@ -11,7 +12,9 @@ import repository.RepositoryError;
 
 import java.util.List;
 
-public class Service {
+public class Service extends Observable {
+    public static final String SCORE_SET_CHANGE = "score_set_change";
+
     private final IParticipantRepository participantRepository;
     private final IArbiterRepository arbiterRepository;
     private final IScoreRepository scoreRepository;
@@ -26,15 +29,16 @@ public class Service {
         return arbiterRepository.findByNameAndPassword(name, password);
     }
 
-    public void setScore(Participant participant, Arbiter arbiter, int score) throws RepositoryError {
-        scoreRepository.setScore(participant.getId(), arbiter.getId(), score);
+    public void setScore(Score score, Arbiter arbiter) throws RepositoryError {
+        scoreRepository.setScore(score.getParticipant().getId(), arbiter.getType(), score.getScore(arbiter.getType()));
+        change(SCORE_SET_CHANGE, null, score);
     }
 
-    public List<ParticipantScore> getScoresForType(ScoreType type) throws RepositoryError {
+    public List<Score> getScoresForType(ScoreType type) throws RepositoryError {
         return scoreRepository.findScoresForTypeSortedDescending(type);
     }
 
-    public List<ParticipantScore> getScores() throws RepositoryError {
+    public List<Score> getScores() throws RepositoryError {
         return scoreRepository.findScoresSortedByName();
     }
 }

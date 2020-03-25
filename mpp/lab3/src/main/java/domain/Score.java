@@ -3,12 +3,11 @@ package domain;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ParticipantScore {
+public class Score {
     private final Participant participant;
-    private final Map<ScoreType, Integer> scores = new HashMap<>();
+    private Map<ScoreType, Integer> scores = new HashMap<>();
 
-
-    public ParticipantScore(Participant participant) {
+    public Score(Participant participant) {
         this.participant = participant;
     }
 
@@ -22,6 +21,14 @@ public class ParticipantScore {
 
     public void setScore(ScoreType type, int score) {
         scores.put(type, score);
+    }
+
+    public void setScores(Map<ScoreType, Integer> scores) {
+        this.scores = scores;
+    }
+
+    public Map<ScoreType, Integer> getScores() {
+        return scores;
     }
 
     public int getTotalScore() {

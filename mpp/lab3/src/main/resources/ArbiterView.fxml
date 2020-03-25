@@ -23,19 +23,20 @@
       <RowConstraints vgrow="NEVER" />
     </rowConstraints>
     <children>
-          <TableView fx:id="participantTotalScoreTable">
+          <TableView fx:id="participantsTable">
               <columns>
-                  <TableColumn fx:id="participantTotalScoreNameColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="-1.0" text="Name" />
-                  <TableColumn fx:id="participantTotalScoreColumn" editable="false" maxWidth="-1.0" minWidth="100.0" prefWidth="100.0" text="Total Score" />
+                  <TableColumn fx:id="participantsNameColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="-1.0" text="Name" />
+            <TableColumn fx:id="participantsTypeScoreColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="Type score" />
+                  <TableColumn fx:id="participantsTotalScoreColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="Total score" />
               </columns>
-              <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-              </columnResizePolicy>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
           </TableView>
-      <TableView fx:id="participantTypeScoreTable" GridPane.columnIndex="1">
+      <TableView fx:id="rankingTable" GridPane.columnIndex="1">
         <columns>
-          <TableColumn fx:id="participantTypeScoreNameColumn" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="-1.0" text="Name" />
-          <TableColumn fx:id="participantTypeScoreColumn" maxWidth="-1.0" minWidth="100.0" prefWidth="100.0" text="Score" />
+          <TableColumn fx:id="rankingNameColumn" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="-1.0" text="Name" />
+          <TableColumn fx:id="rankingScoreColumn" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="Score" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

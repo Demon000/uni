@@ -38,19 +38,12 @@ public class LoginController {
     @FXML
     private Button loginButton;
 
-    private void handleLogin(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.ENTER)) {
-            loginButton.fire();
-        }
+    private void closeLoginWindow() {
+        Stage loginWindow = (Stage) loginButton.getScene().getWindow();
+        loginWindow.close();
     }
 
-    @FXML
-    public void initialize() {
-        passwordField.setOnKeyPressed(this::handleLogin);
-    }
-
-    @FXML
-    void onLoginButtonAction(ActionEvent event) {
+    private void openArbiterWindow() {
         Arbiter arbiter;
         try {
             arbiter = service.loginArbiter(nameField.getText(), passwordField.getText());
@@ -69,12 +62,30 @@ public class LoginController {
         try {
             scene = new Scene(loader.load());
         } catch (IOException e) {
-            e.printStackTrace();
+            showErrorAlert(e.getMessage());
             return;
         }
 
         stage.setScene(scene);
         stage.setTitle(ArbiterController.VIEW_TITLE);
         stage.show();
+
+        closeLoginWindow();
+    }
+
+    @FXML
+    public void initialize() {
+        passwordField.setOnKeyPressed(this::onPasswordFieldKeyPressed);
+    }
+
+    private void onPasswordFieldKeyPressed(KeyEvent keyEvent) {
+        if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+            openArbiterWindow();
+        }
+    }
+
+    @FXML
+    void onLoginButtonAction(ActionEvent event) {
+        openArbiterWindow();
     }
 }

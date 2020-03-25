@@ -1,7 +1,7 @@
 package repository;
 
 import domain.Participant;
-import domain.ParticipantScore;
+import domain.Score;
 import domain.ScoreType;
 
 import java.sql.*;
@@ -23,11 +23,10 @@ public class ScoreRepository extends DatabaseRepository
         String command =
                 "create table Scores(" +
                     "ParticipantId integer not null, " +
-                    "ArbiterId integer not null, " +
-                    "Value integer not null, " +
-                    "primary key(ParticipantId, ArbiterId), " +
-                    "foreign key(ParticipantId) references Participants(ParticipantId), " +
-                    "foreign key(ArbiterId) references Arbiters(ArbiterId)" +
+                    "ScoreType integer not null, " +
+                    "ScoreValue integer not null, " +
+                    "primary key(ParticipantId, ScoreType), " +
+                    "foreign key(ParticipantId) references Participants(ParticipantId)" +
                 ");";
 
         try {
@@ -44,12 +43,12 @@ public class ScoreRepository extends DatabaseRepository
     }
 
     @Override
-    public void addScore(int participantId, int arbiterId, int score) throws RepositoryError {
+    public void addScore(int participantId, ScoreType type, int score) throws RepositoryError {
         String command =
                 "insert into Scores (" +
                     "ParticipantId, " +
-                    "ArbiterId, " +
-                    "Value" +
+                    "ScoreType, " +
+                    "ScoreValue" +
                 ") values (" +
                     "?, " +
                     "?, " +
@@ -59,7 +58,7 @@ public class ScoreRepository extends DatabaseRepository
         try {
             PreparedStatement statement = connection.prepareStatement(command);
             statement.setInt(1, participantId);
-            statement.setInt(2, arbiterId);
+            statement.setInt(2, type.ordinal());
             statement.setInt(3, score);
             statement.executeUpdate();
             logger.info("Added score");
@@ -73,20 +72,20 @@ public class ScoreRepository extends DatabaseRepository
     }
 
     @Override
-    public void updateScore(int participantId, int arbiterId, int score) throws RepositoryError {
+    public void updateScore(int participantId, ScoreType type, int score) throws RepositoryError {
         String command =
                 "update Scores set " +
-                    "Value=? " +
+                    "ScoreValue=? " +
                 "where " +
                     "ParticipantId=? and " +
-                    "ArbiterId=?" +
+                    "ScoreType=?" +
                 ";";
 
         try {
             PreparedStatement statement = connection.prepareStatement(command);
             statement.setInt(1, score);
             statement.setInt(2, participantId);
-            statement.setInt(3, arbiterId);
+            statement.setInt(3, type.ordinal());
             statement.executeUpdate();
             logger.info("Updated score");
             logger.info(command);
@@ -99,28 +98,27 @@ public class ScoreRepository extends DatabaseRepository
     }
 
     @Override
-    public void setScore(int participantId, int arbiterId, int score) throws RepositoryError {
+    public void setScore(int participantId, ScoreType type, int score) throws RepositoryError {
         try {
-            addScore(participantId, arbiterId, score);
+            addScore(participantId, type, score);
             return;
         } catch (RepositoryError ignored) {
         }
 
-        updateScore(participantId, arbiterId, score);
+        updateScore(participantId, type, score);
     }
 
     @Override
-    public List<ParticipantScore> findScoresSortedByName() throws RepositoryError {
+    public List<Score> findScoresSortedByName() throws RepositoryError {
         String command =
                 "select " +
                     "P.ParticipantId, " +
                     "P.ParticipantName, " +
-                    "sum(case when A.ArbiterType=? then S.Value else 0 end), " +
-                    "sum(case when A.ArbiterType=? then S.Value else 0 end), " +
-                    "sum(case when A.ArbiterType=? then S.Value else 0 end) " +
+                    "sum(case when S.ScoreType=? then S.ScoreValue else 0 end), " +
+                    "sum(case when S.ScoreType=? then S.ScoreValue else 0 end), " +
+                    "sum(case when S.ScoreType=? then S.ScoreValue else 0 end) " +
                 "from Participants P " +
                 "left outer join Scores S on S.ParticipantId=P.ParticipantId " +
-                "left outer join Arbiters A on A.ArbiterId=S.ArbiterId " +
                 "group by P.ParticipantId, P.ParticipantName " +
                 "order by P.ParticipantName " +
                 ";";
@@ -131,14 +129,14 @@ public class ScoreRepository extends DatabaseRepository
             statement.setInt(2, ScoreType.RUNNING.ordinal());
             statement.setInt(3, ScoreType.SWIMMING.ordinal());
             ResultSet results = statement.executeQuery();
-            List<ParticipantScore> scores = new ArrayList<>();
+            List<Score> scores = new ArrayList<>();
 
             while (results.next()) {
                 int id = results.getInt(1);
                 String name = results.getString(2);
 
                 Participant participant = new Participant(id, name);
-                ParticipantScore score = new ParticipantScore(participant);
+                Score score = new Score(participant);
 
                 score.setScore(ScoreType.CYCLING, results.getInt(3));
                 score.setScore(ScoreType.RUNNING, results.getInt(4));
@@ -159,31 +157,30 @@ public class ScoreRepository extends DatabaseRepository
     }
 
     @Override
-    public List<ParticipantScore> findScoresForTypeSortedDescending(ScoreType type) throws RepositoryError {
+    public List<Score> findScoresForTypeSortedDescending(ScoreType type) throws RepositoryError {
         String command =
                 "select " +
                     "P.ParticipantId, " +
                     "P.ParticipantName, " +
-                    "S.Value " +
+                    "S.ScoreValue " +
                 "from Scores S " +
                 "inner join Participants P on S.ParticipantId=P.ParticipantId " +
-                "inner join Arbiters A on S.ArbiterId = A.ArbiterId " +
-                "where A.ArbiterType=?" +
-                "order by S.Value desc " +
+                "where S.ScoreType=? and S.ScoreValue is not 0 " +
+                "order by S.ScoreValue desc " +
                 ";";
 
         try {
             PreparedStatement statement = connection.prepareStatement(command);
             statement.setInt(1, type.ordinal());
             ResultSet results = statement.executeQuery();
-            List<ParticipantScore> scores = new ArrayList<>();
+            List<Score> scores = new ArrayList<>();
 
             while (results.next()) {
                 int id = results.getInt(1);
                 String name = results.getString(2);
 
                 Participant participant = new Participant(id, name);
-                ParticipantScore score = new ParticipantScore(participant);
+                Score score = new Score(participant);
 
                 score.setScore(type, results.getInt(3));
 
