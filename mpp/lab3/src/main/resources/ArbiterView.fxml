@@ -45,19 +45,27 @@
           <VBox GridPane.columnSpan="2" GridPane.rowIndex="1">
               <children>
                   <Label text="Points" />
-            <HBox>
+            <HBox spacing="8.0">
                <children>
                         <TextField fx:id="pointsField" HBox.hgrow="ALWAYS">
                      <HBox.margin>
-                        <Insets right="4.0" />
+                        <Insets />
                      </HBox.margin>
                   </TextField>
                         <Button fx:id="setButton" disable="true" mnemonicParsing="false" onAction="#onSetButtonAction" text="Set">
                      <HBox.margin>
-                        <Insets left="4.0" right="4.0" />
+                        <Insets />
                      </HBox.margin>
                   </Button>
-                  <ToggleButton fx:id="showRankingsButton" mnemonicParsing="false" onAction="#onShowRankingsButtonAction" text="Show rankings »" />
+                  <Button mnemonicParsing="false" onAction="#onRefreshButtonAction" text="Refresh">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+                  <ToggleButton fx:id="showRankingsButton" mnemonicParsing="false" onAction="#onShowRankingsButtonAction" text="Show rankings »">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin></ToggleButton>
                </children>
             </HBox>
             <HBox>

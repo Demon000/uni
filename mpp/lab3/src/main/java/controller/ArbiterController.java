@@ -114,6 +114,11 @@ public class ArbiterController implements Observer {
         service.addObserver(this);
     }
 
+    public void setRankingsTableVisibility(boolean visible) {
+        rankingTable.setManaged(visible);
+        rankingTable.setVisible(visible);
+    }
+
     public Score getSelected() {
         return participantsTable.getSelectionModel().getSelectedItem();
     }
@@ -129,12 +134,7 @@ public class ArbiterController implements Observer {
         return null;
     }
 
-    public void setSelected(Score newSelected) {
-        Score scoreItem = findScoreInTable(participantsTable, newSelected);
-        participantsTable.getSelectionModel().select(scoreItem);
-    }
-
-    public void updateParticipantsScore(Score score) {
+    public void setParticipantsScore(Score score) {
         Score scoreItem = findScoreInTable(participantsTable, score);
         if (scoreItem != null) {
             scoreItem.setScores(score.getScores());
@@ -143,7 +143,7 @@ public class ArbiterController implements Observer {
         participantsTable.refresh();
     }
 
-    public void updateRankingScore(Score score) {
+    public void setRankingScore(Score score) {
         Score scoreItem = findScoreInTable(rankingTable, score);
 
         boolean isZeroScore = score.getScore(arbiter.getType()) == 0;
@@ -156,29 +156,13 @@ public class ArbiterController implements Observer {
             rankingTable.getItems().add(score);
         }
 
-        rankingTable.refresh();
+        participantsTable.refresh();
         rankingTable.sort();
     }
 
-    public void updateScore(Score score) {
-        updateParticipantsScore(score);
-        updateRankingScore(score);
-    }
-
-    public void setRankingsTableVisibility(boolean visible) {
-        rankingTable.setManaged(visible);
-        rankingTable.setVisible(visible);
-    }
-
-    void onSelectionChanged() {
-        Score selected = getSelected();
-        if (selected == null) {
-            setButton.setDisable(true);
-            pointsField.setText("");
-        } else {
-            setButton.setDisable(false);
-            pointsField.setText(String.valueOf(selected.getScore(arbiter.getType())));
-        }
+    public void setScore(Score score) {
+        setParticipantsScore(score);
+        setRankingScore(score);
     }
 
     private void loadParticipantsTableData() {
@@ -210,6 +194,17 @@ public class ArbiterController implements Observer {
         loadRankingTableData();
     }
 
+    void onSelectionChanged() {
+        Score selected = getSelected();
+        if (selected == null) {
+            setButton.setDisable(true);
+            pointsField.setText("");
+        } else {
+            setButton.setDisable(false);
+            pointsField.setText(String.valueOf(selected.getScore(arbiter.getType())));
+        }
+    }
+
     @FXML
     void onSetButtonAction(ActionEvent event) {
         Score selected = getSelected();
@@ -222,6 +217,11 @@ public class ArbiterController implements Observer {
     }
 
     @FXML
+    void onRefreshButtonAction(ActionEvent event) {
+        loadTablesData();
+    }
+
+    @FXML
     void onShowRankingsButtonAction(ActionEvent event) {
         setRankingsTableVisibility(showRankingsButton.isSelected());
     }
@@ -231,7 +231,7 @@ public class ArbiterController implements Observer {
         switch (key) {
         case Service.SCORE_SET_CHANGE:
                 Score score = (Score) newValue;
-                updateScore(score);
+                setScore(score);
             break;
         default:
             break;
