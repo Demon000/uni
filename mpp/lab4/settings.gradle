@@ -1,0 +1,4 @@
+rootProject.name = 'lab4'
+include ':common'
+include ':server'
+include ':client'
