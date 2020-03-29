@@ -13,20 +13,20 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ObjectHandler {
-    protected final String SENDER_THREAD_NAME = "ObjectHandlerSender";
-    protected final String RECEIVER_THREAD_NAME = "ObjectHandlerReceiver";
-    protected final String SENDER_THREAD_NAME_FORMAT = SENDER_THREAD_NAME + " - %s";
-    protected final String RECEIVER_THREAD_NAME_FORMAT = RECEIVER_THREAD_NAME + " - %s";
-    protected final Logger logger = LogManager.getLogger();
+    private final String SENDER_THREAD_NAME = "ObjectHandlerSender";
+    private final String RECEIVER_THREAD_NAME = "ObjectHandlerReceiver";
+    private final String SENDER_THREAD_NAME_FORMAT = SENDER_THREAD_NAME + " - %s";
+    private final String RECEIVER_THREAD_NAME_FORMAT = RECEIVER_THREAD_NAME + " - %s";
+    private final Logger logger = LogManager.getLogger();
 
     protected final List<ObjectReceiver> receivers = new ArrayList<>();
 
     private final BlockingQueue<Object> outboundObjects = new LinkedBlockingQueue<>();
     private final ObjectOutputStream outputStream;
-    protected final Thread sender;
+    private final Thread sender;
 
     private final ObjectInputStream inputStream;
-    protected final Thread receiver;
+    private final Thread receiver;
 
     private final Socket socket;
 
