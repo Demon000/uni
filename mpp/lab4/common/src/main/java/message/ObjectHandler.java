@@ -1,5 +1,8 @@
 package message;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,14 +13,20 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ObjectHandler {
+    protected final String SENDER_THREAD_NAME = "ObjectHandlerSender";
+    protected final String RECEIVER_THREAD_NAME = "ObjectHandlerReceiver";
+    protected final String SENDER_THREAD_NAME_FORMAT = SENDER_THREAD_NAME + " - %s";
+    protected final String RECEIVER_THREAD_NAME_FORMAT = RECEIVER_THREAD_NAME + " - %s";
+    protected final Logger logger = LogManager.getLogger();
+
     protected final List<ObjectReceiver> receivers = new ArrayList<>();
 
     private final BlockingQueue<Object> outboundObjects = new LinkedBlockingQueue<>();
     private final ObjectOutputStream outputStream;
-    private final Thread sender;
+    protected final Thread sender;
 
     private final ObjectInputStream inputStream;
-    private final Thread receiver;
+    protected final Thread receiver;
 
     private final Socket socket;
 
@@ -27,46 +36,54 @@ public class ObjectHandler {
         this.inputStream = new ObjectInputStream(socket.getInputStream());
 
         this.sender = new Thread(() -> {
-            System.out.println("Sender: tarted running sender thread");
+            logger.info("started running sender thread");
             while (!Thread.interrupted()) {
                 Object object;
                 try {
-                    System.out.println("Sender: waiting for object to be sent");
+                    logger.info("waiting for object to be sent");
                     object = outboundObjects.take();
-                    System.out.println("Sender: found object to be sent");
+                    logger.info("found object to be sent");
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.error("thread interrupted");
                     return;
                 }
 
                 try {
-                    System.out.println(String.format("Sender: sending object %s", object));
+                    logger.debug("sending object {}", object);
                     ObjectHandler.this.outputStream.writeObject(object);
-                    System.out.println("Sender: sent object");
+                    logger.info("sent object");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("socket closed");
                     return;
                 }
             }
-        }, "ObjectHandlerSender");
+        }, SENDER_THREAD_NAME);
 
         this.receiver = new Thread(() -> {
-            System.out.println("Receiver: started running receiver thread");
+            logger.info("started running receiver thread");
             while (!Thread.interrupted()) {
                 Object object;
                 try {
-                    System.out.println("Receiver: waiting for object to be received");
+                    logger.info("waiting for object to be received");
                     object = ObjectHandler.this.inputStream.readObject();
-                    System.out.println("Receiver: found object to be received");
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                    logger.info("found object to be received");
+                } catch (IOException e) {
+                    logger.error("socket closed");
+                    return;
+                } catch (ClassNotFoundException e) {
+                    logger.error("thread was interrupted");
                     return;
                 }
 
-                System.out.println("Receiver: calling receive handlers");
+                logger.info("calling receive handlers");
                 ObjectHandler.this.objectReceived(object);
             }
-        }, "ObjectHandlerReceiver");
+        }, RECEIVER_THREAD_NAME);
+    }
+
+    public void setThreadNames(String id) {
+        sender.setName(String.format(SENDER_THREAD_NAME_FORMAT, id));
+        receiver.setName(String.format(RECEIVER_THREAD_NAME_FORMAT, id));
     }
 
     public void start() {

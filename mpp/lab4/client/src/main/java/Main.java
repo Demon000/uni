@@ -12,15 +12,36 @@ public class Main extends Application {
     public static Configuration configuration = new Configuration(Main.class);
     public static String serverAddress = configuration.getValue("server_address", "127.0.0.1");
     public static Integer serverPort = configuration.getIntegerValue("server_port", 8080);
+    public static ClientMessageHandler messageHandler;
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    public void createMessageHandler() {
+        try {
+            messageHandler = ClientMessageHandler.createForAddress(serverAddress, serverPort);
+        } catch (IOException e) {
+            System.exit(-1);
+        }
+    }
+
+    public void startMessageHandler() {
+        messageHandler.start();
+    }
+
+    public void stopMessageHandler() {
+        try {
+            messageHandler.stop();
+        } catch (IOException e) {
+            System.exit(-1);
+        }
+    }
+
     @Override
     public void start(Stage primaryStage) throws IOException {
-        ClientMessageHandler messageHandler = ClientMessageHandler.createForAddress(serverAddress, serverPort);
-        messageHandler.start();
+        createMessageHandler();
+        startMessageHandler();
 
         LoginController windowsController = new LoginController(messageHandler);
         FXMLLoader loader = new FXMLLoader();
@@ -31,5 +52,10 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle(LoginController.VIEW_TITLE);
         primaryStage.show();
+    }
+
+    @Override
+    public void stop(){
+        stopMessageHandler();
     }
 }

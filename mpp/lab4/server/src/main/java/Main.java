@@ -165,6 +165,13 @@ public class Main {
 //        tryPrintScoresForTypeSortedDescending(scoreRepository, ScoreType.RUNNING);
 //        tryPrintScoresForTypeSortedDescending(scoreRepository, ScoreType.SWIMMING);
 
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                server.stop();
+            } catch (IOException ignored) {
+            }
+        }));
+
         startServer();
     }
 }

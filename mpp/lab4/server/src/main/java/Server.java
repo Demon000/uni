@@ -4,6 +4,8 @@ import message.LoginData;
 import message.ScoreSetData;
 import message.ServerMessageHandler;
 import message.ServerMessageReceiver;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import repository.RepositoryError;
 import service.Service;
 
@@ -14,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server implements ServerMessageReceiver {
+    protected final Logger logger = LogManager.getLogger();
+
     private final List<ServerMessageHandler> messageHandlers = new ArrayList<>();
     private Thread clientConnectionThread;
     private Service service;
@@ -24,12 +28,12 @@ public class Server implements ServerMessageReceiver {
         this.serverSocket = new ServerSocket(port);
 
         this.clientConnectionThread = new Thread(() -> {
-            System.out.println("Connection: started running connection thread");
+            logger.info("started running connection thread");
             while (!Thread.interrupted()) {
                 try {
-                    System.out.println("Connection: waiting for client connection");
+                    logger.info("waiting for client connection");
                     Socket clientSocket = serverSocket.accept();
-                    System.out.println("Connection: client connected!");
+                    logger.info("client connected");
                     ServerMessageHandler messageHandler = new ServerMessageHandler(clientSocket);
                     synchronized (messageHandlers) {
                         messageHandlers.add(messageHandler);
@@ -37,6 +41,7 @@ public class Server implements ServerMessageReceiver {
                     messageHandler.addReceiver(this);
                     messageHandler.start();
                 } catch (IOException e) {
+                    logger.error("thread interrupted");
                     return;
                 }
             }
@@ -66,7 +71,7 @@ public class Server implements ServerMessageReceiver {
             Arbiter arbiter = service.loginArbiter(data.getName(), data.getPassword());
             messageHandler.respondLogin(arbiter);
         } catch (RepositoryError e) {
-            messageHandler.respondLoginError(e.getMessage());
+            messageHandler.respondLoginError(e.getCause().getMessage());
         }
     }
 
@@ -76,7 +81,7 @@ public class Server implements ServerMessageReceiver {
             List<Score> scores = service.getScores();
             messageHandler.respondParticipantScores(scores);
         } catch (RepositoryError e) {
-            messageHandler.respondParticipantScoresError(e.getMessage());
+            messageHandler.respondParticipantScoresError(e.getCause().getMessage());
         }
     }
 
@@ -86,7 +91,7 @@ public class Server implements ServerMessageReceiver {
             List<Score> scores = service.getScoresForType(messageHandler.getArbiter().getType());
             messageHandler.respondRankingScores(scores);
         } catch (RepositoryError e) {
-            messageHandler.respondRankingScoresError(e.getMessage());
+            messageHandler.respondRankingScoresError(e.getCause().getMessage());
         }
     }
 
@@ -97,7 +102,7 @@ public class Server implements ServerMessageReceiver {
                     messageHandler.getArbiter().getType(), data.getValue());
             broadcastScoreSet(score);
         } catch (RepositoryError e) {
-            messageHandler.respondSetScoreError(e.getMessage());
+            messageHandler.respondSetScoreError(e.getCause().getMessage());
         }
     }
 }

@@ -61,6 +61,7 @@ public class ServerMessageHandler extends MessageHandler {
 
     public void respondLogin(Arbiter arbiter) {
         this.arbiter = arbiter;
+        setThreadNames(String.valueOf(arbiter.getId()));
         send(MessageType.LOGIN_RESPONSE, arbiter);
     }
 
