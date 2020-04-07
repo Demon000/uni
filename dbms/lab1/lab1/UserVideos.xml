@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <Connection string="Server=DESKTOP-6A450E7;Database=Youtube;Integrated Security=true" />
+  <MasterTable name="Users" primaryKey="UserId" />
+  <DetailTable name="Videos" primaryKey="VideoId" foreignKey="UserId" />
+  <Insert commandText="
+    insert into Videos (
+      UserId,
+      Title,
+      UploadTime,
+      [Description]
+    ) values (
+      @UserId,
+      @Title,
+      GetDate(),
+      @Description
+    );
+  " />
+  <Update commandText="
+    update Videos set
+      Title = @Title,
+      [Description] = @Description
+    where
+      VideoId = @VideoId;
+  " />
+  <Delete commandText="
+    delete from Videos
+    where
+      VideoId=@VideoId;
+  " />
+</root>

@@ -13,7 +13,9 @@ namespace lab1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            // var configuration = MasterDetailConfiguration.ReadFromFile("UserVideos.xml");
+            var configuration = MasterDetailConfiguration.ReadFromFile("VideoVotes.xml");
+            Application.Run(new Form1(configuration));
         }
     }
 }

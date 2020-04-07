@@ -29,75 +29,75 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dataGridViewUsers = new System.Windows.Forms.DataGridView();
-            this.dataGridViewVideos = new System.Windows.Forms.DataGridView();
-            this.addVideoButton = new System.Windows.Forms.Button();
-            this.updateVideoButton = new System.Windows.Forms.Button();
-            this.deleteVideoButton = new System.Windows.Forms.Button();
+            this.dataGridViewMaster = new System.Windows.Forms.DataGridView();
+            this.dataGridViewDetail = new System.Windows.Forms.DataGridView();
+            this.addDetailButton = new System.Windows.Forms.Button();
+            this.updateDetailButton = new System.Windows.Forms.Button();
+            this.deleteDetailButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize) (this.dataGridViewUsers)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize) (this.dataGridViewVideos)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dataGridViewMaster)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dataGridViewDetail)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataGridViewUsers
+            // dataGridViewMaster
             // 
-            this.dataGridViewUsers.ColumnHeadersHeightSizeMode =
+            this.dataGridViewMaster.ColumnHeadersHeightSizeMode =
                 System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewUsers.Location = new System.Drawing.Point(10, 29);
-            this.dataGridViewUsers.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.dataGridViewUsers.MultiSelect = false;
-            this.dataGridViewUsers.Name = "dataGridViewUsers";
-            this.dataGridViewUsers.RowTemplate.Height = 24;
-            this.dataGridViewUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewUsers.Size = new System.Drawing.Size(518, 611);
-            this.dataGridViewUsers.TabIndex = 0;
+            this.dataGridViewMaster.Location = new System.Drawing.Point(10, 29);
+            this.dataGridViewMaster.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.dataGridViewMaster.MultiSelect = false;
+            this.dataGridViewMaster.Name = "dataGridViewMaster";
+            this.dataGridViewMaster.RowTemplate.Height = 24;
+            this.dataGridViewMaster.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewMaster.Size = new System.Drawing.Size(518, 612);
+            this.dataGridViewMaster.TabIndex = 0;
             // 
-            // dataGridViewVideos
+            // dataGridViewDetail
             // 
-            this.dataGridViewVideos.ColumnHeadersHeightSizeMode =
+            this.dataGridViewDetail.ColumnHeadersHeightSizeMode =
                 System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewVideos.Location = new System.Drawing.Point(532, 29);
-            this.dataGridViewVideos.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.dataGridViewVideos.MultiSelect = false;
-            this.dataGridViewVideos.Name = "dataGridViewVideos";
-            this.dataGridViewVideos.RowTemplate.Height = 24;
-            this.dataGridViewVideos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewVideos.Size = new System.Drawing.Size(720, 611);
-            this.dataGridViewVideos.TabIndex = 1;
+            this.dataGridViewDetail.Location = new System.Drawing.Point(532, 29);
+            this.dataGridViewDetail.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.dataGridViewDetail.MultiSelect = false;
+            this.dataGridViewDetail.Name = "dataGridViewDetail";
+            this.dataGridViewDetail.RowTemplate.Height = 24;
+            this.dataGridViewDetail.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewDetail.Size = new System.Drawing.Size(720, 612);
+            this.dataGridViewDetail.TabIndex = 1;
             // 
-            // addVideoButton
+            // addDetailButton
             // 
-            this.addVideoButton.Location = new System.Drawing.Point(882, 642);
-            this.addVideoButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.addVideoButton.Name = "addVideoButton";
-            this.addVideoButton.Size = new System.Drawing.Size(131, 29);
-            this.addVideoButton.TabIndex = 2;
-            this.addVideoButton.Text = "Add video";
-            this.addVideoButton.UseVisualStyleBackColor = true;
-            this.addVideoButton.Click += new System.EventHandler(this.button1_Click);
+            this.addDetailButton.Location = new System.Drawing.Point(882, 642);
+            this.addDetailButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.addDetailButton.Name = "addDetailButton";
+            this.addDetailButton.Size = new System.Drawing.Size(131, 29);
+            this.addDetailButton.TabIndex = 2;
+            this.addDetailButton.Text = "Add detail";
+            this.addDetailButton.UseVisualStyleBackColor = true;
+            this.addDetailButton.Click += new System.EventHandler(this.button1_Click);
             // 
-            // updateVideoButton
+            // updateDetailButton
             // 
-            this.updateVideoButton.Location = new System.Drawing.Point(1017, 642);
-            this.updateVideoButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.updateVideoButton.Name = "updateVideoButton";
-            this.updateVideoButton.Size = new System.Drawing.Size(125, 29);
-            this.updateVideoButton.TabIndex = 3;
-            this.updateVideoButton.Text = "Update video";
-            this.updateVideoButton.UseVisualStyleBackColor = true;
-            this.updateVideoButton.Click += new System.EventHandler(this.button2_Click);
+            this.updateDetailButton.Location = new System.Drawing.Point(1017, 642);
+            this.updateDetailButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.updateDetailButton.Name = "updateDetailButton";
+            this.updateDetailButton.Size = new System.Drawing.Size(125, 29);
+            this.updateDetailButton.TabIndex = 3;
+            this.updateDetailButton.Text = "Update detail";
+            this.updateDetailButton.UseVisualStyleBackColor = true;
+            this.updateDetailButton.Click += new System.EventHandler(this.button2_Click);
             // 
-            // deleteVideoButton
+            // deleteDetailButton
             // 
-            this.deleteVideoButton.Location = new System.Drawing.Point(1146, 642);
-            this.deleteVideoButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
-            this.deleteVideoButton.Name = "deleteVideoButton";
-            this.deleteVideoButton.Size = new System.Drawing.Size(106, 29);
-            this.deleteVideoButton.TabIndex = 4;
-            this.deleteVideoButton.Text = "Delete video";
-            this.deleteVideoButton.UseVisualStyleBackColor = true;
-            this.deleteVideoButton.Click += new System.EventHandler(this.button3_Click);
+            this.deleteDetailButton.Location = new System.Drawing.Point(1146, 642);
+            this.deleteDetailButton.Margin = new System.Windows.Forms.Padding(2, 1, 2, 1);
+            this.deleteDetailButton.Name = "deleteDetailButton";
+            this.deleteDetailButton.Size = new System.Drawing.Size(106, 29);
+            this.deleteDetailButton.TabIndex = 4;
+            this.deleteDetailButton.Text = "Delete detail";
+            this.deleteDetailButton.UseVisualStyleBackColor = true;
+            this.deleteDetailButton.Click += new System.EventHandler(this.button3_Click);
             // 
             // label1
             // 
@@ -106,7 +106,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(71, 16);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Users";
+            this.label1.Text = "Master";
             // 
             // label2
             // 
@@ -115,7 +115,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(62, 16);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Videos";
+            this.label2.Text = "Detail";
             // 
             // Form1
             // 
@@ -124,17 +124,17 @@
             this.ClientSize = new System.Drawing.Size(1263, 681);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.deleteVideoButton);
-            this.Controls.Add(this.updateVideoButton);
-            this.Controls.Add(this.addVideoButton);
-            this.Controls.Add(this.dataGridViewVideos);
-            this.Controls.Add(this.dataGridViewUsers);
+            this.Controls.Add(this.deleteDetailButton);
+            this.Controls.Add(this.updateDetailButton);
+            this.Controls.Add(this.addDetailButton);
+            this.Controls.Add(this.dataGridViewDetail);
+            this.Controls.Add(this.dataGridViewMaster);
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "Form1";
-            this.Text = "User Videos";
+            this.Text = "Master Detail";
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize) (this.dataGridViewUsers)).EndInit();
-            ((System.ComponentModel.ISupportInitialize) (this.dataGridViewVideos)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dataGridViewMaster)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dataGridViewDetail)).EndInit();
             this.ResumeLayout(false);
         }
 
@@ -142,10 +142,10 @@
 
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView dataGridViewVideos;
-        private System.Windows.Forms.DataGridView dataGridViewUsers;
-        private System.Windows.Forms.Button addVideoButton;
-        private System.Windows.Forms.Button updateVideoButton;
-        private System.Windows.Forms.Button deleteVideoButton;
+        private System.Windows.Forms.Button deleteDetailButton;
+        private System.Windows.Forms.Button updateDetailButton;
+        private System.Windows.Forms.Button addDetailButton;
+        private System.Windows.Forms.DataGridView dataGridViewMaster;
+        private System.Windows.Forms.DataGridView dataGridViewDetail;
     }
 }

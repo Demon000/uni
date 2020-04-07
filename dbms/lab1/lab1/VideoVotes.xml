@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <Connection string="Server=DESKTOP-6A450E7;Database=Youtube;Integrated Security=true" />
+  <MasterTable name="Videos" primaryKey="VideoId" />
+  <DetailTable name="VideoComments" primaryKey="CommentId" foreignKey="VideoId" />
+  <Insert commandText="
+    insert into VideoComments(UserId, VideoId, [Description], CreateTime) values
+      (@UserId, @VideoId, @Description, GetDate());
+  " />
+  <Update commandText="
+	update VideoComments
+	set [Description]=@Description
+	where CommentId=@CommentId;
+  " />
+  <Delete commandText="
+	delete from VideoComments
+	where CommentId = @CommentId;
+  " />
+</root>
