@@ -1,10 +1,7 @@
 import networkx as nx
 
 
-NODES_START = 1
-
-
-class Graph:
+class CommunitiesGraph:
     def __init__(self, data):
         self.data = data
         self.start_index = min(list(self.data.nodes))
@@ -35,4 +32,4 @@ class Graph:
     @staticmethod
     def from_path(file_path):
         data = nx.read_gml(file_path, label='id')
-        return Graph(data)
+        return CommunitiesGraph(data)
