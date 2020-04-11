@@ -1,0 +1,37 @@
+#registration-form {
+    width: calc(256px + 128px);
+    padding: 16px;
+}
+
+#registration-form .input-group {
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+#registration-form .input-group input {
+    width: 256px;
+}
+
+#registration-form .input-group input.invalid {
+    border: 1px solid red;
+}
+
+#registration-form [id^="registration-form-validity-"] {
+    display: none;
+}
+
+#registration-form [id^="registration-form-validity-"].visible {
+    display: block;
+}
+
+#registration-form-submit {
+    margin-top: 8px;
+}
+
+/*
+#registration-form input:invalid {
+    border: 1px solid red;
+}
+ */

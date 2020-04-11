@@ -1,0 +1,21 @@
+.list-wrapper {
+    padding: 16px;
+    display: inline-block;
+}
+
+.list-wrapper > label,
+.list-wrapper > select {
+    display: block;
+    width: 100%;
+}
+
+.list-wrapper > label {
+    text-align: center;
+    padding: 8px;
+}
+
+.list-wrapper > select {
+    width: 256px;
+    height: 512px;
+    overflow-y: auto;
+}

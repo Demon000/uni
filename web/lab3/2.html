@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS 2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/2.css">
+</head>
+<body>
+<form id="registration-form">
+    <div class="input-group">
+        <label for="registration-form-name">Name</label>
+        <input id="registration-form-name" type="text" required>
+    </div>
+    <div class="input-group">
+        <label for="registration-form-birth-date">Birth date</label>
+        <input id="registration-form-birth-date" type="date" required>
+    </div>
+    <div class="input-group">
+        <label for="registration-form-age">Age</label>
+        <input id="registration-form-age" type="number" required max="">
+    </div>
+    <div class="input-group">
+        <label for="registration-form-email">Email</label>
+        <input id="registration-form-email" type="email" required>
+    </div>
+    <input id="registration-form-submit" type="button" value="Submit">
+    <p id="registration-form-validity-success">The data is correct</p>
+    <p id="registration-form-validity-fail">
+        The field(s)
+        <span id="registration-form-fail-fields"></span>
+        are invalid
+    </p>
+</form>
+<script src="js/2.js"></script>
+</body>
+</html>

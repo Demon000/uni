@@ -1,0 +1,16 @@
+/* Box sizing */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+/* Fill page viewport height */
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+}

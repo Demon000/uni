@@ -1,0 +1,64 @@
+.memory-game-table {
+    display: table;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.memory-game-table  .memory-game-row {
+    display: table-row;
+}
+
+.memory-game-table .memory-game-cell {
+    display: table-cell;
+
+    text-align: center;
+    cursor: pointer;
+
+    border: 1px solid black;
+    position: relative;
+}
+
+.memory-game-table .memory-game-cell > * {
+    visibility: hidden;
+}
+
+.memory-game-table .memory-game-cell.visible > *,
+.memory-game-table .memory-game-cell.selected > *,
+.memory-game-table .memory-game-cell.solved > * {
+    visibility: visible;
+}
+
+.memory-game-table.images .memory-game-cell {
+    width: 128px;
+    height: 128px;
+}
+
+.memory-game-table.images .memory-game-cell > img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+.memory-game-table.numbers .memory-game-cell {
+    width: 64px;
+    height: 64px;
+}
+
+.memory-game-table.numbers .memory-game-cell.selected {
+    outline: black inset 2px;
+}
+
+.memory-game-table.numbers .memory-game-cell.solved {
+    background: black;
+    color: white;
+}
+
+.memory-game-table.numbers .memory-game-cell > p {
+    padding: 0;
+    margin: 0;
+
+    font-size: 32px;
+}
