@@ -6,6 +6,28 @@ class SortableTableType {
     constructor(value) {
         this.value = value;
     }
+
+    rotate() {
+        switch (this) {
+            case SortableTableType.VERTICAL:
+                return SortableTableType.HORIZONTAL;
+            case SortableTableType.HORIZONTAL:
+                return SortableTableType.VERTICAL;
+            default:
+                throw new Error("Invalid table type");
+        }
+    }
+}
+
+class SortableTableElementCell {
+    constructor(element, index) {
+        this.element = element;
+        this.index = index;
+    }
+
+    get data() {
+        return this.element.innerText;
+    }
 }
 
 class SortableTableElement {
@@ -13,46 +35,41 @@ class SortableTableElement {
         this.cells = [];
     }
 
-    getCell(index) {
+    get length() {
+        return this.cells.length;
+    }
+
+    addCellElement(cellElement) {
+        this.cells.push(new SortableTableElementCell(cellElement, this.cells.length));
+    }
+
+    addCellElements(cellElements) {
+        for (const cellElement of cellElements) {
+            this.addCellElement(cellElement);
+        }
+    }
+
+    getCellByIndex(index) {
         if (index < 0 || index > this.cells.length) {
             throw new Error("Invalid cell index");
         }
 
-        return this.cells[index];
+        return this.cells.find(c => c.index === index);
     }
 
-    getCellIndex(cell) {
-        if (!cell) {
-            throw new Error("Invalid cell value");
+    getCellByElement(element) {
+        if (!element) {
+            throw new Error("Invalid cell element");
         }
 
-        return this.cells.findIndex(c => c === cell);
+        return this.cells.find(c => c.element === element);
     }
 
-    getIndexData(index) {
-        return this.getCell(index).innerText;
-    }
-
-    getLength() {
-        return this.cells.length;
-    }
-
-    addCell(cell) {
-        this.cells.push(cell);
-    }
-
-    addCells(cells) {
-        for (const cell of cells) {
-            this.addCell(cell);
-        }
-    }
-
-    buildRow() {
+    buildRowElement() {
         const rowElement = document.createElement("tr");
         for (const cell of this.cells) {
-            rowElement.appendChild(cell);
+            rowElement.appendChild(cell.element);
         }
-
         return rowElement;
     }
 }
@@ -68,7 +85,7 @@ class SortableHeaderCellStatus {
         this.isSortable = isSortable;
     }
 
-    getNext() {
+    get next() {
         switch (this) {
             case SortableHeaderCellStatus.UNSORTED:
                 return SortableHeaderCellStatus.ASCENDING;
@@ -80,83 +97,94 @@ class SortableHeaderCellStatus {
     }
 }
 
+class SortableTableHeaderCell extends SortableTableElementCell {
+    constructor(element, index) {
+        super(element, index);
+
+        this.element.addEventListener("click", () => {
+            this.toggleSortStatus();
+        });
+
+        this.sortStatus = SortableHeaderCellStatus.UNSORTED;
+        this.sortFn = this.defaultSortFn;
+        this.sortStatusListener = () => {};
+    }
+
+    setSortStatus(newStatus, report=true) {
+        const oldStatus = this.sortStatus;
+        this.element.classList.remove(oldStatus.className);
+        this.element.classList.add(newStatus.className);
+        this.sortStatus = newStatus;
+        if (report) {
+            this.sortStatusListener(this, newStatus);
+        }
+    }
+
+    defaultSortFn(firstData, secondData) {
+        if (firstData < secondData) {
+            return -1;
+        }
+
+        if (secondData < firstData) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    toggleSortStatus(report) {
+        const newStatus = this.sortStatus.next;
+        this.setSortStatus(newStatus, report);
+    }
+
+    resetSortStatus(report) {
+        this.setSortStatus(SortableHeaderCellStatus.UNSORTED, report);
+    }
+}
+
 class SortableTableHeader extends SortableTableElement {
     constructor() {
         super();
 
-        this.sortFunctions = [];
-        this.sortStatus = [];
-        this.listener = null;
+        this.sortStatusListener = () => {};
     }
 
-    addCell(cell) {
-        super.addCell(cell);
-        cell.addEventListener("click", () => {
-            this.onCellClick(cell);
-        });
-        this.sortFunctions.push(null);
-        this.sortStatus.push(SortableHeaderCellStatus.UNSORTED);
+    addCellElement(cellElement) {
+        const cell = new SortableTableHeaderCell(cellElement, this.cells.length);
+        cell.sortStatusListener = this.onCellSortStatusChange.bind(this);
+        this.cells.push(cell);
     }
 
-    getCellSortFunction(cell) {
-        const index = this.getCellIndex(cell);
-        return this.sortFunctions[index];
-    }
-
-    setCellSortFunction(cell, fn) {
-        const index = this.getCellIndex(cell);
-        this.sortFunctions[index] = fn;
-    }
-
-    getCellSortStatus(cell) {
-        const index = this.getCellIndex(cell);
-        return this.sortStatus[index];
-    }
-
-    setCellSortStatus(cell, newStatus) {
-        const index = this.getCellIndex(cell);
-        const oldStatus = this.sortStatus[index];
-        cell.classList.remove(oldStatus.className);
-        cell.classList.add(newStatus.className);
-
-        this.sortStatus[index] = newStatus;
-    }
-
-    getSortableCell() {
-        return this.cells.find(c => {
-            const status = this.getCellSortStatus(c);
-            return status.isSortable;
-        });
-    }
-
-    resetCellSortStatus(cell) {
-        this.setCellSortStatus(cell, SortableHeaderCellStatus.UNSORTED);
-    }
-
-    resetCellsSortStatus() {
-        for (const cell of this.cells) {
-            this.resetCellSortStatus(cell);
+    onCellSortStatusChange(cell) {
+        if (cell.sortStatus !== SortableHeaderCellStatus.UNSORTED) {
+            for (const c of this.cells) {
+                if (c !== cell) {
+                    c.resetSortStatus(false)
+                }
+            }
         }
+        this.sortStatusListener(cell);
     }
 
-    toggleCellSortStatus(cell) {
-        const oldStatus = this.getCellSortStatus(cell);
-        const newStatus = oldStatus.getNext();
-        this.resetCellsSortStatus();
-        this.setCellSortStatus(cell, newStatus);
-        this.listener();
-    }
-
-    onCellClick(cell) {
-        this.toggleCellSortStatus(cell);
-    }
-
-    setListener(listener) {
-        this.listener = listener;
+    get sortableCell() {
+        return this.cells.find(c => c.sortStatus.isSortable);
     }
 }
 
 class SortableTable {
+    constructor(tableElement) {
+        this.tableElement = tableElement;
+        this.type = SortableTableType.UNKNOWN;
+
+        this.elements = [];
+        this.header = null;
+        this.extractElements();
+
+        this.header.sortStatusListener = () => {
+            this.refreshElements();
+        };
+    }
+
     extractElements() {
         const rowElements = this.tableElement.querySelectorAll("tr");
 
@@ -191,21 +219,20 @@ class SortableTable {
                     }
                 }
 
-                this.header.addCell(headerElements[0]);
+                this.header.addCellElement(headerElements[0]);
                 dataElements.forEach((cellElement, index) => {
-                    this.elements[index].addCell(cellElement);
+                    this.elements[index].addCellElement(cellElement);
                 });
             } else if (type === SortableTableType.HORIZONTAL) {
                 let element;
                 if (isFirstRow) {
-                    element = new SortableTableHeader();
-                    this.header = element;
+                    this.header = element = new SortableTableHeader();
                 } else {
                     element = new SortableTableElement();
                     this.elements.push(element);
                 }
 
-                element.addCells(cellElements);
+                element.addCellElements(cellElements);
             }
 
             this.type = type;
@@ -219,92 +246,60 @@ class SortableTable {
     }
 
     populateTable(elements) {
+        this.emptyTable();
+
         if (this.type === SortableTableType.VERTICAL) {
-            for (let i = 0; i < this.header.getLength(); i++) {
+            for (let index = 0; index < this.header.length; index++) {
                 const rowElement = document.createElement("tr");
-                rowElement.appendChild(this.header.getCell(i));
+                rowElement.appendChild(this.header.getCellByIndex(index).element);
                 for (const element of elements) {
-                    rowElement.appendChild(element.getCell(i));
+                    rowElement.appendChild(element.getCellByIndex(index).element);
                 }
                 this.tableElement.appendChild(rowElement);
             }
         } else if (this.type === SortableTableType.HORIZONTAL) {
-            const headerRowElement = this.header.buildRow();
-            this.tableElement.appendChild(headerRowElement);
-
+            this.tableElement.appendChild(this.header.buildRowElement());
             for (const element of elements) {
-                const rowElement = element.buildRow();
-                this.tableElement.appendChild(rowElement);
+                this.tableElement.appendChild(element.buildRowElement());
             }
         }
     }
 
-    sortElementsByCell(elements, cell) {
+    getElementsSortedByCell(cell) {
+        const elements = this.elements.slice();
+
         if (!cell) {
-            return;
+            return elements
         }
 
-        const index = this.header.getCellIndex(cell);
-        const fn = this.header.getCellSortFunction(cell);
-        if (fn) {
-            elements.sort((first, second) => {
-                return fn(first.getIndexData(index), second.getIndexData(index));
-            });
-        } else {
-            elements.sort((first, second) => {
-                const firstData = first.getIndexData(index).toString();
-                const secondData = second.getIndexData(index).toString();
-                if (firstData < secondData) {
-                    return -1;
-                }
+        elements.sort((firstElement, secondElement) => {
+            return cell.sortFn(firstElement.getCellByIndex(cell.index).data,
+                    secondElement.getCellByIndex(cell.index).data);
+        });
 
-                if (secondData < firstData) {
-                    return 1;
-                }
-
-                return 0;
-            });
+        if (cell.sortStatus === SortableHeaderCellStatus.DESCENDING) {
+            elements.reverse();
         }
 
-        const status = this.header.getCellSortStatus(cell);
-        if (status === SortableHeaderCellStatus.DESCENDING) {
-            return elements.reverse();
-        }
+        return elements;
     }
 
     refreshElements() {
-        const elements = this.elements.slice();
-        const sortableCell = this.header.getSortableCell();
-        this.sortElementsByCell(elements, sortableCell);
-        this.emptyTable();
-        this.populateTable(elements);
+        const sortedElements = this.getElementsSortedByCell(this.header.sortableCell);
+        this.populateTable(sortedElements);
     }
 
     rotateTable() {
-        if (this.type === SortableTableType.VERTICAL) {
-            this.type = SortableTableType.HORIZONTAL;
-        } else if (this.type === SortableTableType.HORIZONTAL) {
-            this.type = SortableTableType.VERTICAL
-        }
-
+        this.type = this.type.rotate();
         this.refreshElements();
     }
 
-    setCellSortFunction(cell, fn) {
-        this.header.setCellSortFunction(cell, fn);
-    }
+    setCellSortFunction(cellElement, fn) {
+        const cell = this.header.getCellByElement(cellElement);
+        if (!cell) {
+            throw new Error("Cell element is not part of the table header");
+        }
 
-    onCellSortStatusChanged() {
-        this.refreshElements()
-    }
-
-    constructor(tableElement) {
-        this.tableElement = tableElement;
-        this.type = SortableTableType.UNKNOWN;
-
-        this.elements = [];
-        this.header = null;
-        this.extractElements();
-        this.header.setListener(this.onCellSortStatusChanged.bind(this));
+        cell.sortFn = fn;
     }
 }

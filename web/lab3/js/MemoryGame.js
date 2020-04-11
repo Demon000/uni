@@ -84,7 +84,6 @@ class MemoryGameCell {
     }
 
     setState(state) {
-        console.log(state, this.state)
         if (state === this.state) {
             return;
         }
