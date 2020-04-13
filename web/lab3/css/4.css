@@ -1,27 +1,10 @@
-table {
+#fruits-table {
     border-collapse: collapse;
 }
 
-table td,
-table th {
+#fruits-table td,
+#fruits-table th {
     padding: 32px;
 
     border: 1px solid black;
-}
-
-table th {
-    user-select: none;
-}
-
-table th.sort-ascending::after,
-table th.sort-descending::after {
-    position: relative;
-}
-
-table th.sort-ascending::after {
-    content: "▲";
-}
-
-table th.sort-descending::after {
-    content: "▼";
 }

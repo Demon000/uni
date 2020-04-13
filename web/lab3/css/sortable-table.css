@@ -1,0 +1,16 @@
+.sortable-table th {
+    user-select: none;
+}
+
+.sortable-table th.sort-ascending::after,
+.sortable-table th.sort-descending::after {
+    position: relative;
+}
+
+.sortable-table th.sort-ascending::after {
+    content: "▲";
+}
+
+.sortable-table th.sort-descending::after {
+    content: "▼";
+}

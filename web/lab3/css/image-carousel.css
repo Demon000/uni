@@ -1,0 +1,71 @@
+.carousel {
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+}
+
+.carousel > * {
+    width: 100%;
+    height: 100%;
+
+    z-index: 99;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: none;
+}
+
+.carousel .prev,
+.carousel .current,
+.carousel .next {
+    display: block;
+}
+
+.carousel .prev {
+    left: -100%;
+}
+
+.carousel .current {
+    left: 0;
+}
+
+.carousel .next {
+    left: 100%;
+}
+
+.carousel .next-to-current {
+    animation: 200ms slide-next-to-current;
+}
+
+.carousel .current-to-prev {
+    animation: 200ms slide-current-to-prev;
+}
+
+.carousel .prev-to-current {
+    animation: 200ms slide-prev-to-current;
+}
+
+.carousel .current-to-next {
+    animation: 200ms slide-current-to-next;
+}
+
+@keyframes slide-next-to-current {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes slide-current-to-prev {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes slide-prev-to-current {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes slide-current-to-next {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
