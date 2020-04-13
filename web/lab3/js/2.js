@@ -47,6 +47,7 @@ function concatInputElementNames(names) {
 (function() {
     const registrationForm = document.querySelector("#registration-form");
     const submitButton = document.querySelector("#registration-form-submit");
+    const nameInput = document.querySelector("#registration-form-name");
     const birthDateInput = document.querySelector("#registration-form-birth-date");
     const ageInput = document.querySelector("#registration-form-age");
     const validitySuccessElement = document.querySelector("#registration-form-validity-success");
@@ -62,6 +63,14 @@ function concatInputElementNames(names) {
             if (calculateAge(birthDate) !== age) {
                 invalidInputElements.push(ageInput);
                 setInputElementValidity(ageInput, false);
+            }
+        }
+
+        if  (!invalidInputElements.includes(nameInput)) {
+            const name = nameInput.value;
+            if (!/^[A-Za-z -]+$/.test(name)) {
+                invalidInputElements.push(nameInput);
+                setInputElementValidity(nameInput, false);
             }
         }
 
