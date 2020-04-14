@@ -3,13 +3,15 @@ package message;
 import domain.Arbiter;
 import domain.Score;
 import service.IService;
-import utils.ServiceError;
+import service.IServiceObserver;
+import service.ServiceError;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.util.List;
 
-public class ServerMessageHandler extends MessageHandler {
+public class ServerMessageHandler extends MessageHandler implements IServiceObserver {
     private final IService service;
     private Arbiter arbiter;
 
@@ -17,6 +19,7 @@ public class ServerMessageHandler extends MessageHandler {
         super(socket);
 
         this.service = service;
+        this.service.addObserver(this);
     }
 
     @Override
@@ -44,8 +47,8 @@ public class ServerMessageHandler extends MessageHandler {
             Arbiter arbiter = service.loginArbiter(data.getName(), data.getPassword());
             this.arbiter = arbiter;
             send(MessageType.LOGIN_RESPONSE, arbiter);
-        } catch (ServiceError e) {
-            send(MessageType.LOGIN_REQUEST_ERROR, e.getCause().getMessage());
+        } catch (ServiceError | RemoteException e) {
+            send(MessageType.LOGIN_REQUEST_ERROR, e.getMessage());
         }
     }
 
@@ -53,8 +56,8 @@ public class ServerMessageHandler extends MessageHandler {
         try {
             List<Score> scores = service.getScores();
             send(MessageType.PARTICIPANT_SCORES_RESPONSE, scores);
-        } catch (ServiceError e) {
-            send(MessageType.PARTICIPANT_SCORES_REQUEST_ERROR, e.getCause().getMessage());
+        } catch (ServiceError | RemoteException e) {
+            send(MessageType.PARTICIPANT_SCORES_REQUEST_ERROR, e.getMessage());
         }
     }
 
@@ -62,8 +65,8 @@ public class ServerMessageHandler extends MessageHandler {
         try {
             List<Score> scores = service.getScoresForType(arbiter.getType());
             send(MessageType.RANKING_SCORES_RESPONSE, scores);
-        } catch (ServiceError e) {
-            send(MessageType.RANKING_SCORES_REQUEST_ERROR, e.getCause().getMessage());
+        } catch (ServiceError | RemoteException e) {
+            send(MessageType.RANKING_SCORES_REQUEST_ERROR, e.getMessage());
         }
     }
 
@@ -71,8 +74,8 @@ public class ServerMessageHandler extends MessageHandler {
         try {
             Score score = service.setScoreValue(data.getParticipantId(), arbiter.getType(), data.getValue());
             send(MessageType.SET_SCORE_RESPONSE, score);
-        } catch (ServiceError e) {
-            send(MessageType.SET_SCORE_REQUEST_ERROR, e.getCause().getMessage());
+        } catch (ServiceError | RemoteException e) {
+            send(MessageType.SET_SCORE_REQUEST_ERROR, e.getMessage());
         }
     }
 

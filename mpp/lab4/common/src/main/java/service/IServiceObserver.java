@@ -2,6 +2,9 @@ package service;
 
 import domain.Score;
 
-public interface IServiceObserver {
-    void onSetScore(Score score);
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface IServiceObserver extends Remote {
+    void onSetScore(Score score) throws ServiceError, RemoteException;
 }

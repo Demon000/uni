@@ -7,7 +7,6 @@ import repository.IArbiterRepository;
 import repository.IParticipantRepository;
 import repository.IScoreRepository;
 import repository.RepositoryError;
-import utils.ServiceError;
 
 import java.util.List;
 

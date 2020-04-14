@@ -3,10 +3,14 @@ import domain.Participant;
 import domain.Score;
 import domain.ScoreType;
 import repository.*;
+import server.IServer;
+import server.ObjectServer;
+import server.RemoteServer;
 import service.Service;
 import utils.Configuration;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,7 +23,7 @@ public class Main {
     private static IArbiterRepository arbiterRepository;
     private static IScoreRepository scoreRepository;
     private static Service service;
-    private static Server server;
+    private static IServer server;
 
     public static void tryAddParticipant(IParticipantRepository repository, Participant participant) {
         try {
@@ -120,15 +124,17 @@ public class Main {
     }
 
     public static void createServer() {
-        try {
-            server = new Server(service, configuration.getIntegerValue("server_port", 8080));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        server = new ObjectServer();
+        server = new RemoteServer();
     }
 
     public static void startServer() {
-        server.start();
+        try {
+            server.start(service, configuration.getIntegerValue("server_port", 0));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package utils;
+package service;
 
 public class ServiceError extends Exception {
     public ServiceError(String message) {
@@ -6,6 +6,6 @@ public class ServiceError extends Exception {
     }
 
     public ServiceError(Exception ex) {
-        super(ex);
+        super(ex.getMessage());
     }
 }

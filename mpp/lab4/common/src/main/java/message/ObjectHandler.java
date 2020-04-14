@@ -81,7 +81,7 @@ public abstract class ObjectHandler {
                     logger.error("socket closed");
                     return;
                 } catch (ClassNotFoundException e) {
-                    logger.error("thread was interrupted");
+                    logger.error("thread interrupted");
                     return;
                 }
 

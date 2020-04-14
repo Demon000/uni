@@ -4,7 +4,6 @@ import domain.Arbiter;
 import domain.Score;
 import domain.ScoreType;
 import message.*;
-import utils.ServiceError;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +29,6 @@ public class ClientMessageService extends BaseService implements IObjectReceiver
         switch (message.type) {
             case SET_SCORE_BROADCAST:
                 Score score = (Score) message.data;
-                System.out.println(score);
                 observerSetScore(score);
                 break;
             default:

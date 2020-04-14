@@ -1,7 +1,6 @@
 package controller;
 
 import domain.Arbiter;
-import domain.Score;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,9 +13,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import service.IService;
-import utils.ServiceError;
+import service.ServiceError;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -61,7 +61,7 @@ public class LoginController {
             try {
                 Arbiter arbiter = service.loginArbiter(nameField.getText(), passwordField.getText());
                 Platform.runLater(() -> openArbiterWindow(arbiter));
-            } catch (ServiceError e) {
+            } catch (ServiceError | RemoteException e) {
                 Platform.runLater(() -> showErrorAlert(e));
             }
         });

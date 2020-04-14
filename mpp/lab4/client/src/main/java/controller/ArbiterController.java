@@ -10,9 +10,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import service.IService;
 import service.IServiceObserver;
-import utils.ServiceError;
+import service.ServiceError;
 import utils.StringUtils;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -67,6 +69,8 @@ public class ArbiterController implements IServiceObserver {
     public ArbiterController(IService service, Arbiter arbiter) {
         this.service = service;
         this.arbiter = arbiter;
+
+
     }
 
     @FXML
@@ -114,7 +118,12 @@ public class ArbiterController implements IServiceObserver {
 
         getTableData();
 
-        service.addObserver(this);
+        try {
+            IServiceObserver observer = (IServiceObserver) UnicastRemoteObject.exportObject(this, 0);
+            service.addObserver(observer);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void stop() {
@@ -177,7 +186,7 @@ public class ArbiterController implements IServiceObserver {
             try {
                 List<Score> scores = service.getScores();
                 Platform.runLater(() -> setParticipantsTableData(scores));
-            } catch (ServiceError e) {
+            } catch (ServiceError | RemoteException e) {
                 Platform.runLater(() -> showErrorAlert(e));
             }
         });
@@ -188,7 +197,7 @@ public class ArbiterController implements IServiceObserver {
             try {
                 List<Score> scores = service.getScoresForType(arbiter.getType());
                 Platform.runLater(() -> setRankingTableData(scores));
-            } catch (ServiceError e) {
+            } catch (ServiceError | RemoteException e) {
                 Platform.runLater(() -> showErrorAlert(e));
             }
         });
@@ -224,7 +233,7 @@ public class ArbiterController implements IServiceObserver {
             try {
                 service.setScoreValue(getSelected().getParticipant().getId(),
                         arbiter.getType(), Integer.parseInt(pointsField.getText()));
-            } catch (ServiceError e) {
+            } catch (ServiceError | RemoteException e) {
                 Platform.runLater(() -> showErrorAlert(e));
             }
         });
