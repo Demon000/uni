@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Main {
-    private static Configuration configuration = new Configuration(Main.class);
+    private static final Configuration configuration = new Configuration(Main.class);
     private static Connection connection;
     private static IParticipantRepository participantRepository;
     private static IArbiterRepository arbiterRepository;

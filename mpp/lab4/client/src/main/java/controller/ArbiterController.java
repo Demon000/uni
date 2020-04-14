@@ -8,20 +8,25 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import message.*;
+import service.IService;
+import service.IServiceObserver;
+import utils.ServiceError;
 import utils.StringUtils;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static utils.FxUtils.*;
 
-public class ArbiterController implements ClientMessageReceiver {
+public class ArbiterController implements IServiceObserver {
     public static final String VIEW_NAME = "/ArbiterView.fxml";
     public static final String VIEW_TITLE = "Arbiter";
 
-    private final ClientMessageHandler messageHandler;
-    private Arbiter arbiter;
+    ExecutorService executor = Executors.newFixedThreadPool(10);
+    private final IService service;
+    private final Arbiter arbiter;
 
     @FXML
     private TableView<Score> participantsTable;
@@ -59,8 +64,8 @@ public class ArbiterController implements ClientMessageReceiver {
     @FXML
     private Label arbiterTypeField;
 
-    public ArbiterController(ClientMessageHandler messageHandler, Arbiter arbiter) {
-        this.messageHandler = messageHandler;
+    public ArbiterController(IService service, Arbiter arbiter) {
+        this.service = service;
         this.arbiter = arbiter;
     }
 
@@ -107,9 +112,13 @@ public class ArbiterController implements ClientMessageReceiver {
         participantsTable.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldSelection, newSelection) -> onSelectionChanged());
 
-        requestTableData();
+        getTableData();
 
-        messageHandler.addReceiver(this);
+        service.addObserver(this);
+    }
+
+    public void stop() {
+        executor.shutdownNow();
     }
 
     public void setRankingsTableVisibility(boolean visible) {
@@ -163,17 +172,31 @@ public class ArbiterController implements ClientMessageReceiver {
         setRankingScore(score);
     }
 
-    private void requestParticipantsTableData() {
-        messageHandler.requestParticipantScores();
+    private void getParticipantsTableData() {
+        executor.execute(() -> {
+            try {
+                List<Score> scores = service.getScores();
+                Platform.runLater(() -> setParticipantsTableData(scores));
+            } catch (ServiceError e) {
+                Platform.runLater(() -> showErrorAlert(e));
+            }
+        });
     }
 
-    private void requestRankingTableData() {
-        messageHandler.requestRankingScores();
+    private void getRankingTableData() {
+        executor.execute(() -> {
+            try {
+                List<Score> scores = service.getScoresForType(arbiter.getType());
+                Platform.runLater(() -> setRankingTableData(scores));
+            } catch (ServiceError e) {
+                Platform.runLater(() -> showErrorAlert(e));
+            }
+        });
     }
 
-    private void requestTableData() {
-        requestParticipantsTableData();
-        requestRankingTableData();
+    private void getTableData() {
+        getParticipantsTableData();
+        getRankingTableData();
     }
 
     private void setParticipantsTableData(List<Score> scores) {
@@ -197,13 +220,19 @@ public class ArbiterController implements ClientMessageReceiver {
 
     @FXML
     void onSetButtonAction(ActionEvent event) {
-        messageHandler.requestSetScore(new ScoreSetData(getSelected().getParticipant().getId(),
-                Integer.parseInt(pointsField.getText())));
+        executor.execute(() -> {
+            try {
+                service.setScoreValue(getSelected().getParticipant().getId(),
+                        arbiter.getType(), Integer.parseInt(pointsField.getText()));
+            } catch (ServiceError e) {
+                Platform.runLater(() -> showErrorAlert(e));
+            }
+        });
     }
 
     @FXML
     void onRefreshButtonAction(ActionEvent event) {
-        requestTableData();
+        getTableData();
     }
 
     @FXML
@@ -212,32 +241,7 @@ public class ArbiterController implements ClientMessageReceiver {
     }
 
     @Override
-    public void onParticipantScoresRequestError(String error) {
-        Platform.runLater(() -> showErrorAlert(error));
-    }
-
-    @Override
-    public void onParticipantScoresResponse(List<Score> scores) {
-        Platform.runLater(() -> setParticipantsTableData(scores));
-    }
-
-    @Override
-    public void onRankingScoresRequestError(String error) {
-        Platform.runLater(() -> showErrorAlert(error));
-    }
-
-    @Override
-    public void onRankingScoresResponse(List<Score> scores) {
-        Platform.runLater(() -> setRankingTableData(scores));
-    }
-
-    @Override
-    public void onSetScoreRequestError(String error) {
-        Platform.runLater(() -> showErrorAlert(error));
-    }
-
-    @Override
-    public void onSetScoreBroadcast(Score score) {
+    public void onSetScore(Score score) {
         Platform.runLater(() -> setScore(score));
     }
 }

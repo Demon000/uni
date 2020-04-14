@@ -7,26 +7,21 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ObjectHandler {
+public abstract class ObjectHandler {
     private final String SENDER_THREAD_NAME = "ObjectHandlerSender";
     private final String RECEIVER_THREAD_NAME = "ObjectHandlerReceiver";
-    private final String SENDER_THREAD_NAME_FORMAT = SENDER_THREAD_NAME + " - %s";
-    private final String RECEIVER_THREAD_NAME_FORMAT = RECEIVER_THREAD_NAME + " - %s";
     private final Logger logger = LogManager.getLogger();
-
-    protected final List<ObjectReceiver> receivers = new ArrayList<>();
 
     private final BlockingQueue<Object> outboundObjects = new LinkedBlockingQueue<>();
     private final ObjectOutputStream outputStream;
-    private final Thread sender;
+    private Sender senderThread;
 
     private final ObjectInputStream inputStream;
-    private final Thread receiver;
+    private Receiver receiverThread;
+    private IObjectReceiver receiver = null;
 
     private final Socket socket;
 
@@ -34,8 +29,15 @@ public class ObjectHandler {
         this.socket = socket;
         this.outputStream = new ObjectOutputStream(socket.getOutputStream());
         this.inputStream = new ObjectInputStream(socket.getInputStream());
+    }
 
-        this.sender = new Thread(() -> {
+    protected class Sender extends Thread {
+        Sender() {
+            super(SENDER_THREAD_NAME);
+        }
+
+        @Override
+        public void run() {
             logger.info("started running sender thread");
             while (!Thread.interrupted()) {
                 Object object;
@@ -50,22 +52,30 @@ public class ObjectHandler {
 
                 try {
                     logger.debug("sending object {}", object);
-                    ObjectHandler.this.outputStream.writeObject(object);
+                    outputStream.writeObject(object);
+                    outputStream.flush();
                     logger.info("sent object");
                 } catch (IOException e) {
                     logger.error("socket closed");
                     return;
                 }
             }
-        }, SENDER_THREAD_NAME);
+        }
+    }
 
-        this.receiver = new Thread(() -> {
+    protected class Receiver extends Thread {
+        Receiver() {
+            super(RECEIVER_THREAD_NAME);
+        }
+
+        @Override
+        public void run() {
             logger.info("started running receiver thread");
             while (!Thread.interrupted()) {
                 Object object;
                 try {
                     logger.info("waiting for object to be received");
-                    object = ObjectHandler.this.inputStream.readObject();
+                    object = inputStream.readObject();
                     logger.info("found object to be received");
                 } catch (IOException e) {
                     logger.error("socket closed");
@@ -76,40 +86,50 @@ public class ObjectHandler {
                 }
 
                 logger.info("calling receive handlers");
-                ObjectHandler.this.objectReceived(object);
+                onReceive(object);
             }
-        }, RECEIVER_THREAD_NAME);
+        }
     }
 
-    public void setThreadNames(String id) {
-        sender.setName(String.format(SENDER_THREAD_NAME_FORMAT, id));
-        receiver.setName(String.format(RECEIVER_THREAD_NAME_FORMAT, id));
+    protected void onReceive(Object object) {
+        if (receiver != null) {
+            receiver.onReceive(object);
+        }
+    }
+
+    public void setReceiver(IObjectReceiver receiver) {
+        this.receiver = receiver;
     }
 
     public void start() {
-        sender.start();
-        receiver.start();
+        if (senderThread == null) {
+            senderThread = new Sender();
+            senderThread.start();
+        }
+
+        if (receiverThread == null) {
+            receiverThread = new Receiver();
+            receiverThread.start();
+        }
     }
 
     public void stop() throws IOException {
-        this.receiver.interrupt();
-        this.sender.interrupt();
-        this.socket.close();
+        if (receiverThread != null) {
+            receiverThread.interrupt();
+            receiverThread = null;
+        }
+
+        if (senderThread != null) {
+            senderThread.interrupt();
+            senderThread = null;
+        }
+
+        if (!socket.isClosed()) {
+            socket.close();
+        }
     }
 
-    protected void addReceiver(ObjectReceiver receiver) {
-        receivers.add(receiver);
-    }
-
-    protected void removeReceiver(ObjectReceiver receiver) {
-        receivers.remove(receiver);
-    }
-
-    protected void objectReceived(Object object) {
-        receivers.forEach(receiver -> receiver.onReceive(object));
-    }
-
-    protected void send(Object object) {
+    public void send(Object object) {
         outboundObjects.add(object);
     }
 }

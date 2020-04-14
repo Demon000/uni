@@ -16,6 +16,16 @@ public class FxUtils {
         alert.showAndWait();
     }
 
+    public static void showErrorAlert(Exception e) {
+        String message;
+        if (e.getCause() != null) {
+            message = e.getCause().getMessage();
+        } else {
+            message = e.getMessage();
+        }
+        showErrorAlert(message);
+    }
+
     public static void addFieldNumber(TextField field) {
         field.textProperty().addListener((obs, oldValue, newValue) -> {
             String cleanValue = newValue.replaceAll("[^\\d]", "");

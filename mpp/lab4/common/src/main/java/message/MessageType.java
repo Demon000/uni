@@ -15,5 +15,6 @@ public enum MessageType {
 
     SET_SCORE_REQUEST,
     SET_SCORE_REQUEST_ERROR,
+    SET_SCORE_RESPONSE,
     SET_SCORE_BROADCAST,
 }

@@ -3,8 +3,8 @@ package message;
 import java.io.Serializable;
 
 public class Message implements Serializable {
-    public MessageType type;
-    public Object data;
+    public final MessageType type;
+    public final Object data;
 
     public Message(MessageType type, Object data) {
         this.type = type;
@@ -13,9 +13,6 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return "Message{" +
-                "type=" + type +
-                ", data=" + data +
-                '}';
+        return String.format("Message => type: %s, data: %s", type, data);
     }
 }

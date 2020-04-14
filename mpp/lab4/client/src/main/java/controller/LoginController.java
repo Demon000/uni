@@ -1,6 +1,7 @@
 package controller;
 
 import domain.Arbiter;
+import domain.Score;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,17 +13,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import message.*;
+import service.IService;
+import utils.ServiceError;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static utils.FxUtils.showErrorAlert;
 
-public class LoginController implements ClientMessageReceiver {
+public class LoginController {
     public static final String VIEW_NAME = "/LoginView.fxml";
     public static final String VIEW_TITLE = "Login";
 
-    private final ClientMessageHandler messageHandler;
+    ExecutorService executor = Executors.newFixedThreadPool(10);
+    private final IService service;
 
     @FXML
     private TextField nameField;
@@ -33,31 +38,40 @@ public class LoginController implements ClientMessageReceiver {
     @FXML
     private Button loginButton;
 
-    public LoginController(ClientMessageHandler messageHandler) {
-        this.messageHandler = messageHandler;
+    public LoginController(IService service) {
+        this.service = service;
     }
 
     @FXML
     public void initialize() {
         passwordField.setOnKeyPressed(this::onPasswordFieldKeyPressed);
-        messageHandler.addReceiver(this);
+    }
+
+    public void stop() {
+        executor.shutdownNow();
     }
 
     private void closeLoginWindow() {
         Stage loginWindow = (Stage) loginButton.getScene().getWindow();
         loginWindow.close();
-        messageHandler.removeReceiver(this);
     }
 
-    private void requestArbiterLogin() {
-        messageHandler.requestLogin(new LoginData(nameField.getText(), passwordField.getText()));
+    private void loginArbiter() {
+        executor.execute(() -> {
+            try {
+                Arbiter arbiter = service.loginArbiter(nameField.getText(), passwordField.getText());
+                Platform.runLater(() -> openArbiterWindow(arbiter));
+            } catch (ServiceError e) {
+                Platform.runLater(() -> showErrorAlert(e));
+            }
+        });
     }
 
     private void openArbiterWindow(Arbiter arbiter) {
-        ArbiterController assignmentsController = new ArbiterController(messageHandler, arbiter);
+        ArbiterController arbiterController = new ArbiterController(service, arbiter);
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(ArbiterController.VIEW_NAME));
-        loader.setController(assignmentsController);
+        loader.setController(arbiterController);
 
         Scene scene;
         Stage stage = new Stage();
@@ -71,28 +85,19 @@ public class LoginController implements ClientMessageReceiver {
         stage.setScene(scene);
         stage.setTitle(ArbiterController.VIEW_TITLE);
         stage.show();
+        stage.setOnCloseRequest((event) -> arbiterController.stop());
 
         closeLoginWindow();
     }
 
     private void onPasswordFieldKeyPressed(KeyEvent keyEvent) {
         if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-            requestArbiterLogin();
+            loginArbiter();
         }
     }
 
     @FXML
     void onLoginButtonAction(ActionEvent event) {
-        requestArbiterLogin();
-    }
-
-    @Override
-    public void onLoginRequestError(String error) {
-        Platform.runLater(() -> showErrorAlert(error));
-    }
-
-    @Override
-    public void onLoginResponse(Arbiter arbiter) {
-        Platform.runLater(() -> openArbiterWindow(arbiter));
+        loginArbiter();
     }
 }

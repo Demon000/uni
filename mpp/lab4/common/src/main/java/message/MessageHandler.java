@@ -3,9 +3,14 @@ package message;
 import java.io.IOException;
 import java.net.Socket;
 
-public abstract class MessageHandler extends ObjectHandler {
-    protected MessageHandler(Socket socket) throws IOException {
+public class MessageHandler extends ObjectHandler {
+    public MessageHandler(Socket socket) throws IOException {
         super(socket);
+    }
+
+    public static MessageHandler createForAddress(String serverAddress, Integer serverPort) throws IOException {
+        Socket socket = new Socket(serverAddress, serverPort);
+        return new MessageHandler(socket);
     }
 
     public void send(Message message) {
