@@ -9,7 +9,11 @@ import static utils.XMLUtils.*;
 public class Assignment extends BaseEntity<String> {
     public static final String TAG_NAME = "assignment";
 
+
+    @DatabaseField("Description", "nvarchar(255)")
     private String description;
+
+
     private long startWeek;
     private long deadlineWeek;
 

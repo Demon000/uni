@@ -5,7 +5,9 @@ import org.w3c.dom.Element;
 
 import java.util.Objects;
 
+@DatabaseTableName("BaseEntity")
 public abstract class BaseEntity<ID> {
+    @DatabasePrimaryKey("Id", "integer")
     private ID id;
 
     public ID getId() {
