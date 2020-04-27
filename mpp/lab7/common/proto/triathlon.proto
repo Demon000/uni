@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "grpc.triathlon";
+option java_outer_classname = "TriathlonProto";
+
+package triathlon;
+
+message ParticipantProto {
+    int32 id = 1;
+    string name = 2;
+}
+
+message ArbiterProto {
+    int32 id = 1;
+    string name = 2;
+    ScoreTypeProto type = 3;
+}
+
+message ScoreProto {
+    ParticipantProto participant = 1;
+    map<int32 /* ScoreType */, int32> scores = 2;
+}
+
+enum ScoreTypeProto {
+    CYCLING = 0;
+    RUNNING = 1;
+    SWIMMING = 2;
+}
+
+enum ErrorNumber {
+    INVALID_LOGIN = 0;
+    BEARER_MISSING = 1;
+    BEARER_INVALID = 2;
+    BEARER_NOT_AUTHORIZED = 3;
+    CONNECTION_ERROR = 100;
+}
+
+message ArbiterLoginRequest {
+    string name = 1;
+    string password = 2;
+}
+
+message ArbiterLoginResponse {
+    oneof error_no_or_arbiter {
+        ErrorNumber error_no = 1;
+        ArbiterProto arbiter = 2;
+    }
+}
+
+message ScoresRequest {}
+
+message ScoreResponse {
+    oneof error_no_or_score {
+        ErrorNumber error_no = 1;
+        ScoreProto score = 2;
+    }
+}
+
+message SetScoreRequest {
+    int32 participant_id = 1;
+    int32 value = 2;
+}
+
+message SubscribeSetScoreRequest {}
+message UnsubscribeSetScoreRequest {}
+message UnsubscribeSetScoreResponse {}
+
+service TriathlonService {
+    rpc LoginArbiter(ArbiterLoginRequest) returns (ArbiterLoginResponse);
+    rpc GetScores(ScoresRequest) returns (stream ScoreResponse);
+    rpc GetRankings(ScoresRequest) returns (stream ScoreResponse);
+    rpc SetScoreValue(SetScoreRequest) returns (ScoreResponse);
+    rpc SubscribeSetScore(SubscribeSetScoreRequest) returns (stream ScoreResponse);
+    rpc UnsubscribeSetScore(UnsubscribeSetScoreRequest) returns (UnsubscribeSetScoreResponse);
+}
