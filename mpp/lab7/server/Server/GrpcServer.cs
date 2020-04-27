@@ -13,8 +13,6 @@ namespace server.Server
 {
     public class GrpcServer : TriathlonService.TriathlonServiceBase, IServiceObserver
     {
-        private static readonly ILog Log = LogManager.GetLogger("GrpcServer");
-
         private readonly Service.Service _service;
         private readonly Auth _auth;
 
