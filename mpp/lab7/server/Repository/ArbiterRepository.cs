@@ -107,10 +107,8 @@ namespace server.Repository
                 Log.Error(command.CommandText);
                 throw new RepositoryError("Failed to retrieve arbiter id");
             }
-            else
-            {
-                arbiter.Id = reader.GetInt32(0);
-            }
+
+            arbiter.Id = reader.GetInt32(0);
 
             Log.Info("Retrieved arbiter id");
             Log.Info(command.CommandText);
