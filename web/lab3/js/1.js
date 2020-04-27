@@ -1,16 +1,12 @@
 function linkMovableSelect(firstSelect, secondSelect) {
-    firstSelect.dblclick(event => {
-        if (event.target === event.currentTarget) {
+    firstSelect.addEventListener("dblclick", event => {
+        const element = event.target;
+        if (element.tagName.toLowerCase() !== "option") {
             return;
         }
 
-        const element = $(event.target);
-        if (element.prop("tagName").toLowerCase() !== "option") {
-            return;
-        }
-
-        element.prop("selected", false);
-        secondSelect.append(element);
+        element.selected = false;
+        secondSelect.appendChild(element);
     });
 }
 
@@ -20,8 +16,8 @@ function linkSwappableSelects(firstSelect, secondSelect) {
 }
 
 (function() {
-    const animalsSelect = $("#animals-list");
-    const favoriteAnimalsSelect = $("#favorite-animals-list");
+    const animalsSelect = document.querySelector("#animals-list");
+    const favoriteAnimalsSelect = document.querySelector("#favorite-animals-list");
 
     linkSwappableSelects(animalsSelect, favoriteAnimalsSelect);
 })();

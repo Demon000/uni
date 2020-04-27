@@ -35,11 +35,11 @@ class CarouselElement {
         }
 
         if (newState.className) {
-            this.element.addClass(newState.className);
+            this.element.classList.add(newState.className);
         }
 
         if (oldState.className) {
-            this.element.removeClass(oldState.className);
+            this.element.classList.remove(oldState.className);
         }
 
         this.state = newState;
@@ -52,11 +52,11 @@ class CarouselElement {
         }
 
         if (newTransition.className) {
-            this.element.addClass(newTransition.className);
+            this.element.classList.add(newTransition.className);
         }
 
         if (oldTransition.className) {
-            this.element.removeClass(oldTransition.className);
+            this.element.classList.remove(oldTransition.className);
         }
 
         this.transition = newTransition;
@@ -70,11 +70,10 @@ class Carousel {
         this.elements = [];
         this.index = null;
 
-        containerElement.children().each((_, _element) => {
-            const element = $(_element);
+        for (const element of containerElement.children) {
             const carouselElement = new CarouselElement(element);
             this.elements.push(carouselElement);
-        });
+        }
 
         this.set(0);
     }

@@ -1,12 +1,12 @@
 function findLabelForInput(input) {
-    return $(`label[for="${input.attr("id")}"]`);
+    return document.querySelector(`label[for="${input.id}"]`);
 }
 
 function getInputElementNames(inputs) {
     const names = [];
     for (const input of inputs) {
         const label = findLabelForInput(input);
-        names.push(label.text());
+        names.push(label.textContent);
     }
 
     return names;
@@ -19,20 +19,23 @@ function calculateAge(birthday) {
 }
 
 function setInputElementValidity(inputElement, isValid) {
-    inputElement.toggleClass("invalid", !isValid);
+    if (isValid) {
+        inputElement.classList.remove("invalid");
+    } else {
+        inputElement.classList.add("invalid");
+    }
 }
 
 function updateInputElementsValidity(form) {
-    const inputElements = form.find("input");
+    const inputElements = form.querySelectorAll("input");
     const invalidInputElements = [];
-    inputElements.each((_, _inputElement) => {
-        const inputElement = $(_inputElement);
-        const isValid = _inputElement.validity.valid;
+    for (const inputElement of inputElements) {
+        const isValid = inputElement.validity.valid;
         setInputElementValidity(inputElement, isValid);
         if (!isValid) {
             invalidInputElements.push(inputElement);
         }
-    });
+    }
 
     return invalidInputElements;
 }
@@ -42,21 +45,21 @@ function concatInputElementNames(names) {
 }
 
 (function() {
-    const registrationForm = $("#registration-form");
-    const submitButton = $("#registration-form-submit");
-    const nameInput = $("#registration-form-name");
-    const birthDateInput = $("#registration-form-birth-date");
-    const ageInput = $("#registration-form-age");
-    const validitySuccessElement = $("#registration-form-validity-success");
-    const validityFailElement = $("#registration-form-validity-fail");
-    const validityFailFieldsElement = $("#registration-form-fail-fields");
+    const registrationForm = document.querySelector("#registration-form");
+    const submitButton = document.querySelector("#registration-form-submit");
+    const nameInput = document.querySelector("#registration-form-name");
+    const birthDateInput = document.querySelector("#registration-form-birth-date");
+    const ageInput = document.querySelector("#registration-form-age");
+    const validitySuccessElement = document.querySelector("#registration-form-validity-success");
+    const validityFailElement = document.querySelector("#registration-form-validity-fail");
+    const validityFailFieldsElement = document.querySelector("#registration-form-fail-fields");
 
-    submitButton.click(() => {
+    submitButton.addEventListener("click", () => {
         const invalidInputElements = updateInputElementsValidity(registrationForm);
 
         if (!invalidInputElements.includes(ageInput)) {
-            const birthDate = new Date(birthDateInput.val());
-            const age = +ageInput.val();
+            const birthDate = new Date(birthDateInput.value);
+            const age = +ageInput.value;
             if (calculateAge(birthDate) !== age) {
                 invalidInputElements.push(ageInput);
                 setInputElementValidity(ageInput, false);
@@ -64,20 +67,21 @@ function concatInputElementNames(names) {
         }
 
         if  (!invalidInputElements.includes(nameInput)) {
-            const name = nameInput.val();
+            const name = nameInput.value;
             if (!/^[A-Za-z -]+$/.test(name)) {
                 invalidInputElements.push(nameInput);
                 setInputElementValidity(nameInput, false);
             }
         }
 
-        const isAllValid = invalidInputElements.length === 0;
-        validitySuccessElement.toggleClass("visible", isAllValid);
-        validityFailElement.toggleClass("visible",!isAllValid);
-        if (!isAllValid) {
+        if (invalidInputElements.length === 0) {
+            validitySuccessElement.classList.add("visible");
+            validityFailElement.classList.remove("visible");
+        } else {
+            validitySuccessElement.classList.remove("visible");
+            validityFailElement.classList.add("visible");
             const names = getInputElementNames(invalidInputElements);
-            console.log(names);
-            validityFailFieldsElement.text(concatInputElementNames(names));
+            validityFailFieldsElement.innerHTML = concatInputElementNames(names);
         }
     });
 })();

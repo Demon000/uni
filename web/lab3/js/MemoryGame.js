@@ -12,8 +12,9 @@ class MemoryGameType {
 
 class MemoryGameCell {
     createElement() {
-        const element = $('<td class="memory-game-cell"></td>');
-        element.click(() => {
+        const element = document.createElement("td");
+        element.classList.add("memory-game-cell");
+        element.addEventListener("click", () => {
             this.onClick(this);
         });
         return element;
@@ -23,12 +24,14 @@ class MemoryGameCell {
         let dataElement;
 
         if (this.type === MemoryGameType.NUMBERS) {
-            dataElement = $(`<p>${data}</p>`);
+            dataElement = document.createElement("p");
+            dataElement.innerHTML = data;
         } else if (this.type === MemoryGameType.IMAGES) {
-            dataElement = $(`<img src="${data}" alt="cell"/>`);
+            dataElement = document.createElement("img");
+            dataElement.src = data;
         }
 
-        dataElement.addClass("memory-game-cell-data");
+        dataElement.classList.add("memory-game-cell-data");
 
         return dataElement;
     }
@@ -39,13 +42,13 @@ class MemoryGameCell {
         this.onClick = options.onClick;
 
         this.element = this.createElement(parentElement);
-        parentElement.append(this.element);
+        parentElement.appendChild(this.element);
     }
 
     attachData(data) {
         this.data = data;
         this.dataElement = this.createDataElement(data);
-        this.element.append(this.dataElement);
+        this.element.appendChild(this.dataElement);
     }
 
     detachData() {
@@ -53,13 +56,17 @@ class MemoryGameCell {
             return;
         }
 
-        this.dataElement.remove();
+        this.element.removeChild(this.dataElement);
         this.dataElement = null;
         this.data = null;
     }
 
     setClass(name, enabled) {
-        this.element.toggleClass(name, enabled)
+        if (enabled) {
+            this.element.classList.add(name);
+        } else {
+            this.element.classList.remove(name);
+        }
     }
 
     setClassForState(state, enabled) {
@@ -90,17 +97,20 @@ class MemoryGameCell {
 
 class MemoryGame {
     createTableElement() {
-        const tableElement = $('<table class="memory-game-table"></table>');
+        const tableElement = document.createElement("table");
+        tableElement.classList.add("memory-game-table");
         if (this.type === MemoryGameType.IMAGES) {
-            tableElement.addClass("images");
+            tableElement.classList.add("images");
         } else if (this.type === MemoryGameType.NUMBERS) {
-            tableElement.addClass("numbers");
+            tableElement.classList.add("numbers");
         }
         return tableElement;
     }
 
     createRowElement() {
-        return $('<tr class="memory-game-row"></tr>');
+        const rowElement = document.createElement("tr");
+        rowElement.classList.add("memory-game-row");
+        return rowElement;
     }
 
     extractRandom(arr) {
@@ -139,7 +149,7 @@ class MemoryGame {
 
         for (let row = 0; row < this.rows; row++) {
             const rowElement = this.createRowElement();
-            tableElement.append(rowElement);
+            tableElement.appendChild(rowElement);
 
             for (let column = 0; column < this.cols; column++) {
                 const cell = new MemoryGameCell(rowElement, {
@@ -150,7 +160,7 @@ class MemoryGame {
             }
         }
 
-        this.element.append(tableElement)
+        this.element.appendChild(tableElement)
     }
 
     setCellsState(cells, state) {
