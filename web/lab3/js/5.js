@@ -1,18 +1,18 @@
 (function() {
-    const landscapesCarouselElement = document.querySelector("#landscapes-carousel");
+    const landscapesCarouselElement = $("#landscapes-carousel");
     const landscapesCarousel = new Carousel(landscapesCarouselElement, {
         pauseTime: 3000,
     });
 
     landscapesCarousel.play();
 
-    const landscapesCarouselNext = document.querySelector("#landscapes-carousel-next");
-    landscapesCarouselNext.addEventListener("click", () => {
+    const landscapesCarouselNext = $("#landscapes-carousel-next");
+    landscapesCarouselNext.click(() => {
         landscapesCarousel.next();
     });
 
-    const landscapesCarouselPrev = document.querySelector("#landscapes-carousel-prev");
-    landscapesCarouselPrev.addEventListener("click", () => {
+    const landscapesCarouselPrev = $("#landscapes-carousel-prev");
+    landscapesCarouselPrev.click(() => {
         landscapesCarousel.prev();
     });
 })();

@@ -1,6 +1,6 @@
 (function() {
-    const gameContainer = document.querySelector("#game-container");
-    const gameStartButton = document.querySelector("#game-start");
+    const gameContainer = $("#game-container");
+    const gameStartButton = $("#game-start");
     const memoryGame = new MemoryGame({
         element: gameContainer,
         data: [
@@ -19,5 +19,5 @@
         rows: 3,
         cols: 4,
     });
-    gameStartButton.addEventListener("click", () => memoryGame.start());
+    gameStartButton.click(() => memoryGame.start());
 })();

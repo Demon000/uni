@@ -26,7 +26,7 @@ class SortableTableElementCell {
     }
 
     get data() {
-        return this.element.innerText;
+        return this.element.text();
     }
 }
 
@@ -44,9 +44,10 @@ class SortableTableElement {
     }
 
     addCellElements(cellElements) {
-        for (const cellElement of cellElements) {
+        cellElements.each((_, _cellElement) => {
+            const cellElement = $(_cellElement);
             this.addCellElement(cellElement);
-        }
+        });
     }
 
     getCellByIndex(index) {
@@ -54,7 +55,9 @@ class SortableTableElement {
             throw new Error("Invalid cell index");
         }
 
-        return this.cells.find(c => c.index === index);
+        return this.cells.find(c => {
+            return c.index === index;
+        });
     }
 
     getCellByElement(element) {
@@ -62,13 +65,13 @@ class SortableTableElement {
             throw new Error("Invalid cell element");
         }
 
-        return this.cells.find(c => c.element === element);
+        return this.cells.find(c => c.element.is(element));
     }
 
     buildRowElement() {
-        const rowElement = document.createElement("tr");
+        const rowElement = $("<tr></tr>");
         for (const cell of this.cells) {
-            rowElement.appendChild(cell.element);
+            rowElement.append(cell.element);
         }
         return rowElement;
     }
@@ -101,7 +104,7 @@ class SortableTableHeaderCell extends SortableTableElementCell {
     constructor(element, index) {
         super(element, index);
 
-        this.element.addEventListener("click", () => {
+        element.click(() => {
             this.toggleSortStatus();
         });
 
@@ -112,8 +115,8 @@ class SortableTableHeaderCell extends SortableTableElementCell {
 
     setSortStatus(newStatus, report=true) {
         const oldStatus = this.sortStatus;
-        this.element.classList.remove(oldStatus.className);
-        this.element.classList.add(newStatus.className);
+        this.element.removeClass(oldStatus.className);
+        this.element.addClass(newStatus.className);
         this.sortStatus = newStatus;
         if (report) {
             this.sortStatusListener(this, newStatus);
@@ -186,20 +189,20 @@ class SortableTable {
     }
 
     extractElements() {
-        const rowElements = this.tableElement.querySelectorAll("tr");
-
-        for (const rowElement of rowElements) {
-            const cellElements = rowElement.querySelectorAll("th, td");
-            const dataElements = rowElement.querySelectorAll("td");
-            const headerElements = rowElement.querySelectorAll("th");
+        const rowElements = this.tableElement.find("tr");
+        rowElements.each((_, _rowElement) => {
+            const rowElement = $(_rowElement);
+            const cellElements = rowElement.find("th, td");
+            const dataElements = rowElement.find("td");
+            const headerElements = rowElement.find("th");
             const isFirstRow = this.type === SortableTableType.UNKNOWN;
             let type = SortableTableType.UNKNOWN;
 
             if (headerElements.length === 1 && headerElements[0] === cellElements[0] &&
-                dataElements.length !== 0) {
+                    dataElements.length !== 0) {
                 type = SortableTableType.VERTICAL;
             } else if ((isFirstRow && headerElements.length > 0 && dataElements.length === 0) ||
-                (!isFirstRow && headerElements.length === 0 && dataElements.length > 0)) {
+                    (!isFirstRow && headerElements.length === 0 && dataElements.length > 0)) {
                 type = SortableTableType.HORIZONTAL;
             }
 
@@ -214,14 +217,16 @@ class SortableTable {
             if (type === SortableTableType.VERTICAL) {
                 if (isFirstRow) {
                     this.header = new SortableTableHeader();
-                    for (const cellElement of dataElements) {
+                    dataElements.each((_, __) => {
                         this.elements.push(new SortableTableElement());
-                    }
+                    });
                 }
 
-                this.header.addCellElement(headerElements[0]);
-                dataElements.forEach((cellElement, index) => {
-                    this.elements[index].addCellElement(cellElement);
+                const headerElement = $(headerElements[0]);
+                this.header.addCellElement(headerElement);
+                dataElements.each((cellIndex, _cellElement) => {
+                    const cellElement = $(_cellElement);
+                    this.elements[cellIndex].addCellElement(cellElement);
                 });
             } else if (type === SortableTableType.HORIZONTAL) {
                 let element;
@@ -236,13 +241,11 @@ class SortableTable {
             }
 
             this.type = type;
-        }
+        });
     }
 
     emptyTable() {
-        while (this.tableElement.firstChild) {
-            this.tableElement.removeChild(this.tableElement.firstChild);
-        }
+        this.tableElement.children().detach();
     }
 
     populateTable(elements) {
@@ -250,17 +253,17 @@ class SortableTable {
 
         if (this.type === SortableTableType.VERTICAL) {
             for (let index = 0; index < this.header.length; index++) {
-                const rowElement = document.createElement("tr");
-                rowElement.appendChild(this.header.getCellByIndex(index).element);
+                const rowElement = $("<tr></tr>");
+                rowElement.append(this.header.getCellByIndex(index).element);
                 for (const element of elements) {
-                    rowElement.appendChild(element.getCellByIndex(index).element);
+                    rowElement.append(element.getCellByIndex(index).element);
                 }
-                this.tableElement.appendChild(rowElement);
+                this.tableElement.append(rowElement);
             }
         } else if (this.type === SortableTableType.HORIZONTAL) {
-            this.tableElement.appendChild(this.header.buildRowElement());
+            this.tableElement.append(this.header.buildRowElement());
             for (const element of elements) {
-                this.tableElement.appendChild(element.buildRowElement());
+                this.tableElement.append(element.buildRowElement());
             }
         }
     }
