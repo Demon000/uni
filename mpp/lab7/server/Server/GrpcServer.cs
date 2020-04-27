@@ -108,6 +108,11 @@ namespace server.Server
                 return Task.FromResult(new ScoreResponse {ErrorNo = e.ErrorNumber});
             }
 
+            if (client.IsSubscribed)
+            {
+                return Task.FromResult(new ScoreResponse {ErrorNo = ErrorNumber.AlreadySubscribed});
+            }
+
             client.SubscribeSetScore();
             
             while (client.GetPushedScore(out var score, context.CancellationToken))
