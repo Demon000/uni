@@ -7,7 +7,7 @@ namespace server.Server
 {
     public class GrpcClient
     {
-        private static ILog _log;
+        private readonly ILog _log;
 
         public Arbiter Arbiter { get; }
 
