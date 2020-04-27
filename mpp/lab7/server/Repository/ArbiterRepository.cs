@@ -38,7 +38,6 @@ namespace server.Repository
             {
                 Log.Error("Failed to create table", e);
                 Log.Error(command.CommandText);
-                Log.Error(e);
                 throw new RepositoryError("Failed to create table", e);
             }
             
@@ -71,7 +70,6 @@ namespace server.Repository
             {
                 Log.Error("Failed to add arbiter", e);
                 Log.Error(command.CommandText);
-                Log.Error(e);
                 throw new RepositoryError("Failed to add arbiter", e);
             }
             
@@ -98,9 +96,8 @@ namespace server.Repository
             }
             catch (DbException e)
             {
-                Log.Error("Failed to retrieve arbiter id");
+                Log.Error("Failed to retrieve arbiter id", e);
                 Log.Error(command.CommandText);
-                Log.Error(e);
                 throw new RepositoryError("Failed to retrieve arbiter id", e);
             }
 
@@ -141,7 +138,7 @@ namespace server.Repository
             }
             catch (DbException e)
             {
-                Log.Error("Failed to retrieve arbiter by name and password");
+                Log.Error("Failed to retrieve arbiter by name and password", e);
                 Log.Error(command.CommandText);
                 throw new RepositoryError("Failed to retrieve arbiter by name and password", e);
             }
@@ -159,7 +156,6 @@ namespace server.Repository
             var id = reader.GetInt32(0);
             var type = (ScoreType)reader.GetInt32(1);
             return new Arbiter(id, name, password, type);
-
         }
     }
 }

@@ -32,9 +32,8 @@ namespace server.Repository
             }
             catch (DbException e)
             {
-                Logger.Error("Failed to create table");
+                Logger.Error("Failed to create table", e);
                 Logger.Error(command.CommandText);
-                Logger.Error(e);
                 throw new RepositoryError("Failed to create table", e);
             }
             
@@ -59,9 +58,8 @@ namespace server.Repository
             }
             catch (DbException e)
             {
-                Logger.Error("Failed to add participant");
+                Logger.Error("Failed to add participant", e);
                 Logger.Error(command.CommandText);
-                Logger.Error(e);
                 throw new RepositoryError("Failed to add participant", e);
             }
 
@@ -86,9 +84,8 @@ namespace server.Repository
             }
             catch (DbException e)
             {
-                Logger.Error("Failed to retrieve participant id");
+                Logger.Error("Failed to retrieve participant id", e);
                 Logger.Error(command.CommandText);
-                Logger.Error(e);
                 throw new RepositoryError("Failed to retrieve participant id", e);
             }
 

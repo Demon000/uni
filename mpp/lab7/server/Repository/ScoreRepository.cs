@@ -38,7 +38,6 @@ namespace server.Repository
             {
                 Logger.Error("Failed to create table", e);
                 Logger.Error(command.CommandText);
-                Logger.Error(e);
                 throw new RepositoryError("Failed to create table", e);
 
             }
@@ -72,7 +71,6 @@ namespace server.Repository
             {
                 Logger.Error("Failed to add score", e);
                 Logger.Error(command.CommandText);
-                Logger.Error(e);
                 throw new RepositoryError("Failed to add score", e);
             }
             
@@ -105,7 +103,6 @@ namespace server.Repository
             {
                 Logger.Error("Failed to find scores by type", e);
                 Logger.Error(command.CommandText);
-                Logger.Error(e);
                 throw new RepositoryError("Failed to find scores by type", e);
             }
 
@@ -157,7 +154,6 @@ namespace server.Repository
             {
                 Logger.Error("Failed to find scores", e);
                 Logger.Error(command.CommandText);
-                Logger.Error(e);
                 throw new RepositoryError("Failed to find scores", e);
             }
             
@@ -208,9 +204,8 @@ namespace server.Repository
             }
             catch (DbException e)
             {
-                Logger.Error("Failed to retrieve total score by id");
+                Logger.Error("Failed to retrieve total score by id", e);
                 Logger.Error(command.CommandText);
-                Logger.Error(e);
                 throw new RepositoryError("Failed to retrieve total score by id", e);
             }
             
@@ -268,9 +263,8 @@ namespace server.Repository
             }
             catch (DbException e)
             {
-                Logger.Error("Failed to update score");
+                Logger.Error("Failed to update score", e);
                 Logger.Error(command.CommandText);
-                Logger.Error(e);
                 throw new RepositoryError("Failed to update score", e);
             }
             
