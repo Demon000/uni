@@ -57,7 +57,7 @@ create table VideoComments(
 	CreateTime date not null,
 );
 
-/*
+
 create table VideoCommentVotes(
 	UserId int not null,
 	CommentId int,
@@ -67,7 +67,7 @@ create table VideoCommentVotes(
 
 	Vote bit not null,
 );
-*/
+
 
 create table PlaylistSortOrderLookup(
 	SortOrderId int primary key not null,
@@ -75,7 +75,7 @@ create table PlaylistSortOrderLookup(
 );
 
 create table Playlists(
-	PlaylistsId int primary key not null identity(1, 1),
+	PlaylistId int primary key not null identity(1, 1),
 	UserId int foreign key references Users(UserId) not null,
 
 	Title nvarchar(MAX) not null,
@@ -83,18 +83,18 @@ create table Playlists(
 );
 
 create table PlaylistVideos(
-	PlaylistsId int not null,
+	PlaylistId int not null,
 	VideoId int not null,
-	primary key(PlaylistsId, VideoId),
-	foreign key(PlaylistsId) references Playlists(PlaylistsId),
+	primary key(PlaylistId, VideoId),
+	foreign key(PlaylistId) references Playlists(PlaylistId),
 	foreign key(VideoId) references Videos(VideoId),
 
 
 	AddTime date not null,
 );
 
-/*
-create table VideReportTypeLookup(
+
+create table VideoReportTypeLookup(
 	VideoReportsTypeId int primary key,
 	VideoReportsTypeName nvarchar(MAX) not null,
 );
@@ -110,7 +110,7 @@ create table VideoReports(
 
 	ReportTime date not null,
 	[Description] nvarchar(MAX) not null, /* Avoid Description keyword usage */
-	VideoReportsTypeId int foreign key references VideReportTypeLookup(VideoReportsTypeId),
+	VideoReportsTypeId int foreign key references VideoReportTypeLookup(VideoReportsTypeId),
 	VideoReportStatusLookup int foreign key references VideoReportStatusLookup(VideoReportsStatusId),
 );
-*/
+
