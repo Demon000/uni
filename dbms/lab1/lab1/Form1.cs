@@ -58,8 +58,6 @@ namespace lab1
                     dataGridViewDetail.RowHeadersVisible = false;
                     dataGridViewDetail.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                     dataGridViewDetail.BackgroundColor = Color.White;
-                    
-                    // _detailAdapter.DeleteCommand = new SqlCommand(_configuration.DetailDeleteCommandString);
                 }
             }
             catch (Exception err)
@@ -85,7 +83,6 @@ namespace lab1
                         return;
                     }
 
-                    var detailId = selectedDetail.Cells[_configuration.DetailPrimaryKey].Value;
                     deleteCommand.AddRowValues(selectedDetail);
                     var deletedRowCount = deleteCommand.ExecuteNonQuery();
                     if (deletedRowCount == 0) return;
@@ -152,7 +149,6 @@ namespace lab1
                     }
 
                     insertCommand.AddRowValues(selectedDetail);
-
                     var insertRowCount = insertCommand.ExecuteNonQuery();
                     if (insertRowCount == 0) return;
                     
