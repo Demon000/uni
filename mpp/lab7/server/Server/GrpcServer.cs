@@ -13,6 +13,7 @@ namespace server.Server
 {
     public class GrpcServer : TriathlonService.TriathlonServiceBase, IServiceObserver
     {
+        private static readonly ILog Log = LogManager.GetLogger("GrpcServer");
         private readonly Service.Service _service;
         private readonly Auth _auth;
 
@@ -22,9 +23,43 @@ namespace server.Server
             _auth = auth;
         }
 
+        public override Task<PingResponse> Ping(PingRequest request, ServerCallContext context)
+        {
+            bool loggedIn;
+            bool subscribed;
+            try
+            {
+                var client = _auth.GetClient(context);
+                loggedIn = true;
+                subscribed = client.IsSubscribed;
+            }
+            catch
+            {
+                loggedIn = false;
+                subscribed = false;
+            }
+
+            return Task.FromResult(new PingResponse {LoggedIn = loggedIn, Subscribed = subscribed});
+        }
+
         public override Task<ArbiterLoginResponse> LoginArbiter(ArbiterLoginRequest request,
             ServerCallContext context)
         {
+            /*
+             * Logout old client if possible.
+             */
+            try
+            {
+                _auth.RemoveClient(context);
+            }
+            catch
+            {
+                // ignored
+            }
+
+            /*
+             * Retrieve the arbiter matching this name and password.
+             */
             Arbiter arbiter;
             try
             {
@@ -34,9 +69,29 @@ namespace server.Server
             {
                 return Task.FromResult(new ArbiterLoginResponse {ErrorNo = ErrorNumber.InvalidLogin});
             }
-            
+
+            /*
+             * Create client for the logged in arbiter.
+             */
             _auth.CreateClient(context, arbiter);
             return Task.FromResult(new ArbiterLoginResponse {Arbiter = arbiter.ToProto()});
+        }
+
+        public override Task<ArbiterLogoutResponse> Logout(ArbiterLogoutRequest request, ServerCallContext context)
+        {
+            /*
+             * Logout old client if possible.
+             */
+            try
+            {
+                _auth.RemoveClient(context);
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return Task.FromResult(new ArbiterLogoutResponse());
         }
 
         public override async Task GetScores(ScoresRequest request, IServerStreamWriter<ScoreResponse> responseStream,

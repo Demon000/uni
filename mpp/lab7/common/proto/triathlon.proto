@@ -34,6 +34,7 @@ enum ErrorNumber {
     BEARER_INVALID = 2;
     BEARER_NOT_AUTHORIZED = 3;
     ALREADY_SUBSCRIBED = 4;
+    ALREADY_LOGGED_IN = 5;
     CONNECTION_ERROR = 100;
 }
 
@@ -48,6 +49,9 @@ message ArbiterLoginResponse {
         ArbiterProto arbiter = 2;
     }
 }
+
+message ArbiterLogoutRequest {}
+message ArbiterLogoutResponse {}
 
 message ScoresRequest {}
 
@@ -66,9 +70,16 @@ message SetScoreRequest {
 message SubscribeSetScoreRequest {}
 message UnsubscribeSetScoreRequest {}
 message UnsubscribeSetScoreResponse {}
+message PingRequest {}
+message PingResponse {
+    bool logged_in = 1;
+    bool subscribed = 2;
+}
 
 service TriathlonService {
+    rpc Ping(PingRequest) returns (PingResponse);
     rpc LoginArbiter(ArbiterLoginRequest) returns (ArbiterLoginResponse);
+    rpc Logout(ArbiterLogoutRequest) returns (ArbiterLogoutResponse);
     rpc GetScores(ScoresRequest) returns (stream ScoreResponse);
     rpc GetRankings(ScoresRequest) returns (stream ScoreResponse);
     rpc SetScoreValue(SetScoreRequest) returns (ScoreResponse);

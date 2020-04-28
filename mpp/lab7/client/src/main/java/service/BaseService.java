@@ -17,6 +17,10 @@ public abstract class BaseService implements IService {
         observers.forEach(observer -> observer.onConnectionStatusChange(status));
     }
 
+    void observersLoginStatusChange(boolean loggedIn) {
+        observers.forEach(observer -> observer.onLoginStatusChange(loggedIn));
+    }
+
     public void addObserver(IServiceObserver observer) {
         observers.add(observer);
         if (observers.size() == 1) {

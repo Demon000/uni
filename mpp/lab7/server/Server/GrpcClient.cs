@@ -23,14 +23,22 @@ namespace server.Server
 
         public void SubscribeSetScore()
         {
-            if (IsSubscribed) return;
+            if (IsSubscribed)
+            {
+                _log.Info("Client is already subscribed to set score events");
+                return;
+            }
             _log.Info("Subscribed to set score events");
             _scores = new BlockingCollection<Score>();
         }
 
         public void UnsubscribeSetScore()
         {
-            if (!IsSubscribed) return;
+            if (!IsSubscribed)
+            {
+                _log.Info("Client is already unsubscribed to set score events");
+                return;
+            }
             _log.Info("Unsubscribed from set score events");
             _scores.CompleteAdding();
         }
@@ -48,7 +56,7 @@ namespace server.Server
             if (!IsSubscribed || token.IsCancellationRequested)
             {
                 _log.Info("Wait for set score events cancelled");
-                return true;
+                return false;
             }
 
             if (took) return true;

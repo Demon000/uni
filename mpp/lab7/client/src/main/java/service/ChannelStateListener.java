@@ -8,7 +8,7 @@ public class ChannelStateListener {
     private ManagedChannel channel;
 
     public interface StateListener {
-        void onStateChanged(ConnectivityState status);
+        void onStateChanged(ConnectivityState oldState, ConnectivityState newState);
     }
 
     public ChannelStateListener(StateListener listener) {
@@ -27,7 +27,7 @@ public class ChannelStateListener {
             ConnectivityState newState = channel.getState(false);
             if (currentState != newState) {
                 System.out.println(currentState + " -> " + newState);
-                listener.onStateChanged(newState);
+                listener.onStateChanged(currentState, newState);
             }
 
             restart();

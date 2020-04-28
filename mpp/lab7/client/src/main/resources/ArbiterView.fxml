@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane hgap="8.0" prefHeight="720.0" prefWidth="1280.0" vgap="8.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane hgap="8.0" prefHeight="720.0" prefWidth="1280.0" vgap="8.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
       <ColumnConstraints />
@@ -101,6 +102,7 @@
       <HBox fx:id="connectionBox" alignment="CENTER_RIGHT" GridPane.columnSpan="2" GridPane.rowIndex="2">
          <children>
             <Label text="Connection lost!" textAlignment="CENTER" textFill="RED" />
+            <Hyperlink onAction="#onRetryButtonAction" text="Retry?" />
          </children>
       </HBox>
     </children>

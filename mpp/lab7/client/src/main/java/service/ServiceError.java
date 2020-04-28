@@ -22,6 +22,10 @@ public class ServiceError extends Exception {
                 return "Bearer invalid";
             case BEARER_NOT_AUTHORIZED:
                 return "Bearer not authorized";
+            case ALREADY_SUBSCRIBED:
+                return "Client already subscribed";
+            case ALREADY_LOGGED_IN:
+                return "Client already logged in";
             case CONNECTION_ERROR:
                 return "Connection error";
             case UNRECOGNIZED:

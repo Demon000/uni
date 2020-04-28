@@ -11,16 +11,17 @@ import utils.GrpcHeaderCopy;
 
 import java.util.*;
 
-public class GrpcService extends BaseService {
+public class GrpcService extends BaseService implements ChannelStateListener.StateListener {
     private final String serverAddress;
     private final Integer serverPort;
 
     private final GrpcHeaderCopy authorizationHeaderCopy = new GrpcHeaderCopy("authorization");
-    private ChannelStateListener listener = new ChannelStateListener(this::onConnectivityStateChange);
-    private OnSetScoreObserver onSetScoreObserver;
+    private final ChannelStateListener listener = new ChannelStateListener(this);
+    private OnSetScoreObserver onSetScoreObserver = new OnSetScoreObserver();
     private TriathlonServiceBlockingStub blockingStub;
     private TriathlonServiceStub asyncStub;
     private ManagedChannel channel;
+    private Arbiter arbiter;
 
     public GrpcService(String serverAddress, Integer serverPort) {
         this.serverAddress = serverAddress;
@@ -70,24 +71,24 @@ public class GrpcService extends BaseService {
         return getConnectionStatus(channel.getState(false));
     }
 
-    private void onConnectivityStateChange(ConnectivityState state) {
-        observersConnectionStatusChange(getConnectionStatus(state));
+    @Override
+    public void onStateChanged(ConnectivityState oldState, ConnectivityState newState) {
+        if (oldState == ConnectivityState.TRANSIENT_FAILURE && newState == ConnectivityState.READY) {
+            ping();
+        }
+
+        observersConnectionStatusChange(getConnectionStatus(newState));
     }
 
     public void subscribeSetScore() {
-        if (isStarted() && onSetScoreObserver == null && observers.size() != 0) {
-            onSetScoreObserver = new OnSetScoreObserver();
+        if (isStarted()) {
             asyncStub.subscribeSetScore(SubscribeSetScoreRequest.newBuilder().build(), onSetScoreObserver);
         }
     }
 
     public void unsubscribeSetScore() {
-        if (isStarted() && onSetScoreObserver != null && observers.size() == 0) {
-            try {
-                blockingStub.unsubscribeSetScore(UnsubscribeSetScoreRequest.newBuilder().build());
-            } catch (StatusRuntimeException ignored) {
-            }
-            onSetScoreObserver = null;
+        if (isStarted()) {
+            blockingStub.unsubscribeSetScore(UnsubscribeSetScoreRequest.newBuilder().build());
         }
     }
 
@@ -119,6 +120,66 @@ public class GrpcService extends BaseService {
     }
 
     @Override
+    public Arbiter getLoggedInArbiter() {
+        return arbiter;
+    }
+
+    @Override
+    public boolean ping() {
+        PingResponse response;
+        try {
+            response = blockingStub.ping(PingRequest.newBuilder().build());
+        } catch (StatusRuntimeException e) {
+            return false;
+        }
+
+        if (!response.getLoggedIn()) {
+            handleLogout();
+        }
+
+        return response.getLoggedIn();
+    }
+
+    public void handleLogin(Arbiter arbiter) {
+        Arbiter oldArbiter = this.arbiter;
+        this.arbiter = arbiter;
+
+        if (oldArbiter != null) {
+            return;
+        }
+
+        observersLoginStatusChange(true);
+    }
+
+    public void handleLogout(boolean requested) {
+        if (arbiter == null) {
+            return;
+        }
+
+        arbiter = null;
+        if (!requested) {
+            observersLoginStatusChange(false);
+        }
+    }
+
+    public void handleLogout() {
+        handleLogout(false);
+    }
+
+    public boolean handleLogout(ErrorNumber errorNumber) {
+        switch (errorNumber) {
+            case INVALID_LOGIN:
+            case BEARER_MISSING:
+            case BEARER_INVALID:
+            case BEARER_NOT_AUTHORIZED:
+                handleLogout();
+                return true;
+        }
+
+        return false;
+    }
+
+    @Override
     public Arbiter loginArbiter(String name, String password) throws ServiceError {
         ArbiterLoginResponse response;
         try {
@@ -134,15 +195,36 @@ public class GrpcService extends BaseService {
             throw new ServiceError(response.getErrorNo());
         }
 
-        return Arbiter.fromProto(response.getArbiter());
+        Arbiter arbiter = Arbiter.fromProto(response.getArbiter());
+        handleLogin(arbiter);
+
+        subscribeSetScore();
+
+        return arbiter;
+    }
+
+    @Override
+    public void logout() {
+        if (!isStarted()) {
+            return;
+        }
+
+        try {
+            blockingStub.logout(ArbiterLogoutRequest.newBuilder().build());
+        } catch (StatusRuntimeException ignored) {}
+
+        handleLogout(true);
     }
 
     public List<Score> getScores(Iterator<ScoreResponse> responses) throws ServiceError {
         List<Score> scores = new ArrayList<>();
         while (responses.hasNext()) {
             ScoreResponse response = responses.next();
+
             if (!response.hasScore()) {
-                throw new ServiceError(response.getErrorNo());
+                if (!handleLogout(response.getErrorNo())) {
+                    throw new ServiceError(response.getErrorNo());
+                }
             }
 
             scores.add(Score.fromProto(response.getScore()));
@@ -185,7 +267,9 @@ public class GrpcService extends BaseService {
         }
 
         if (!response.hasScore()) {
-            throw new ServiceError(response.getErrorNo());
+            if (!handleLogout(response.getErrorNo())) {
+                throw new ServiceError(response.getErrorNo());
+            }
         }
 
         return Score.fromProto(response.getScore());

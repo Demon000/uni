@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Grpc.Core;
+using log4net;
 using Microsoft.IdentityModel.Tokens;
 using server.Domain;
 using Triathlon;
@@ -86,7 +87,7 @@ namespace server.Server
                 new Metadata.Entry(AuthorizationHeaderKey, $"{AuthorizationHeaderPrefix}{tokenString}"),
             });
         }
-        
+
         public GrpcClient GetClient(ServerCallContext context)
         {
             var tokenString = GetTokenString(context);
@@ -131,6 +132,27 @@ namespace server.Server
                 _clients.Add(tokenString, client);
             }
             SetTokenString(context, tokenString);
+        }
+
+        public void RemoveClient(ServerCallContext context)
+        {
+            var tokenString = GetTokenString(context);
+            if (tokenString == null)
+            {
+                throw new GrpcError(ErrorNumber.BearerMissing);
+            }
+            
+            lock (_clients)
+            {
+                if (!_clients.ContainsKey(tokenString))
+                {
+                    throw new GrpcError(ErrorNumber.BearerNotAuthorized);
+                }
+
+                var client = _clients[tokenString];
+                client.UnsubscribeSetScore();
+                _clients.Remove(tokenString);
+            }
         }
 
         public IEnumerable<GrpcClient> GetClients()

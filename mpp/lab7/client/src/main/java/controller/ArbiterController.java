@@ -27,13 +27,19 @@ import java.util.concurrent.Executors;
 
 import static utils.FxUtils.*;
 
-public class ArbiterController implements IServiceObserver {
-    public static final String VIEW_NAME = "/ArbiterView.fxml";
-    public static final String VIEW_TITLE = "Arbiter";
+public class ArbiterController implements IServiceObserver, IController {
+    @Override
+    public String getStageTitle() {
+        return "Arbiter";
+    }
+
+    @Override
+    public String getFXMLFilePath() {
+        return "/ArbiterView.fxml";
+    }
 
     ExecutorService executor = Executors.newFixedThreadPool(10);
     private final IService service;
-    private final Arbiter arbiter;
 
     @FXML
     private TableView<Score> participantsTable;
@@ -74,31 +80,22 @@ public class ArbiterController implements IServiceObserver {
     @FXML
     private HBox connectionBox;
 
-    public ArbiterController(IService service, Arbiter arbiter) {
+    public ArbiterController(IService service) {
         this.service = service;
-        this.arbiter = arbiter;
     }
 
     @FXML
     public void initialize() {
-        this.arbiterNameField.setText(arbiter.getName());
-        this.arbiterTypeField.setText(arbiter.getType().toString().toLowerCase());
-
         addFieldNumber(pointsField);
         addTableDeselect(participantsTable);
         addTableUnselectable(rankingTable);
         setRankingsTableVisibility(false);
 
-        participantsTypeScoreColumn.setText(String.format("%s score",
-                StringUtils.toTitleCase(arbiter.getType().toString())));
         participantsNameColumn.setCellValueFactory(scoreCellDataFeatures -> {
             Score score = scoreCellDataFeatures.getValue();
             return new ReadOnlyStringWrapper(score.getParticipant().getName());
         });
-        participantsTypeScoreColumn.setCellValueFactory(scoreCellDataFeatures -> {
-            Score score = scoreCellDataFeatures.getValue();
-            return new ReadOnlyObjectWrapper<>(score.getScore(arbiter.getType()));
-        });
+
         participantsTotalScoreColumn.setCellValueFactory(scoreCellDataFeatures -> {
             Score score = scoreCellDataFeatures.getValue();
             return new ReadOnlyObjectWrapper<>(score.getTotalScore());
@@ -112,29 +109,53 @@ public class ArbiterController implements IServiceObserver {
         });
 
         rankingScoreColumn.setSortType(TableColumn.SortType.DESCENDING);
-        rankingScoreColumn.setCellValueFactory(scoreCellDataFeatures -> {
-            Score score = scoreCellDataFeatures.getValue();
-            return new ReadOnlyObjectWrapper<>(score.getScore(arbiter.getType()));
-        });
         rankingTable.getSortOrder().add(rankingScoreColumn);
         rankingTable.sort();
 
         participantsTable.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldSelection, newSelection) -> onSelectionChanged());
 
-        getTableData();
-
-        setConnectionBoxVisibility();
         service.addObserver(this);
     }
 
-    void closeWindowEvent(WindowEvent t) {
-        stop();
+    public void onWindowShow() {
+        Arbiter arbiter = service.getLoggedInArbiter();
+        if (arbiter == null) {
+            return;
+        }
+
+        this.arbiterNameField.setText(arbiter.getName());
+        this.arbiterTypeField.setText(arbiter.getType().toString().toLowerCase());
+        participantsTypeScoreColumn.setText(String.format("%s score",
+                StringUtils.toTitleCase(arbiter.getType().toString())));
+        participantsTypeScoreColumn.setCellValueFactory(scoreCellDataFeatures -> {
+            Score score = scoreCellDataFeatures.getValue();
+            return new ReadOnlyObjectWrapper<>(score.getScore(arbiter.getType()));
+        });
+        rankingScoreColumn.setCellValueFactory(scoreCellDataFeatures -> {
+            Score score = scoreCellDataFeatures.getValue();
+            return new ReadOnlyObjectWrapper<>(score.getScore(arbiter.getType()));
+        });
+        setConnectionBoxVisibility();
+        getTableData();
     }
 
     public void stop() {
         executor.shutdown();
         service.removeObserver(this);
+    }
+
+    private void setConnectionBoxVisibility(boolean visible) {
+        connectionBox.setManaged(visible);
+        connectionBox.setVisible(visible);
+    }
+
+    private void setConnectionBoxVisibility(ServiceConnectionStatus status) {
+        setConnectionBoxVisibility(status != ServiceConnectionStatus.CONNECTED);
+    }
+
+    private void setConnectionBoxVisibility() {
+        setConnectionBoxVisibility(service.getConnectionStatus());
     }
 
     public void setRankingsTableVisibility(boolean visible) {
@@ -167,8 +188,12 @@ public class ArbiterController implements IServiceObserver {
     }
 
     public void setRankingScore(Score score) {
-        Score scoreItem = findScoreInTable(rankingTable, score);
+        Arbiter arbiter = service.getLoggedInArbiter();
+        if (arbiter == null) {
+            return;
+        }
 
+        Score scoreItem = findScoreInTable(rankingTable, score);
         boolean isZeroScore = score.getScore(arbiter.getType()) == 0;
         boolean isNullItem = scoreItem == null;
         if (isZeroScore && !isNullItem) {
@@ -224,6 +249,11 @@ public class ArbiterController implements IServiceObserver {
     }
 
     void onSelectionChanged() {
+        Arbiter arbiter = service.getLoggedInArbiter();
+        if (arbiter == null) {
+            return;
+        }
+
         Score selected = getSelected();
         if (selected == null) {
             setButton.setDisable(true);
@@ -247,6 +277,11 @@ public class ArbiterController implements IServiceObserver {
     }
 
     @FXML
+    void onRetryButtonAction(ActionEvent event) {
+        service.ping();
+    }
+
+    @FXML
     void onRefreshButtonAction(ActionEvent event) {
         getTableData();
     }
@@ -261,21 +296,8 @@ public class ArbiterController implements IServiceObserver {
         Platform.runLater(() -> setScore(score));
     }
 
-    private void setConnectionBoxVisibility(boolean visible) {
-        connectionBox.setManaged(visible);
-        connectionBox.setVisible(visible);
-    }
-
-    private void setConnectionBoxVisibility(ServiceConnectionStatus status) {
-        setConnectionBoxVisibility(status != ServiceConnectionStatus.CONNECTED);
-    }
-
-    private void setConnectionBoxVisibility() {
-        setConnectionBoxVisibility(service.getConnectionStatus());
-    }
-
     @Override
     public void onConnectionStatusChange(ServiceConnectionStatus status) {
-        setConnectionBoxVisibility(status);
+        Platform.runLater(() -> setConnectionBoxVisibility(status));
     }
 }
