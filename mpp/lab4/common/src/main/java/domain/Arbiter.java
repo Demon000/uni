@@ -1,12 +1,28 @@
 package domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
+@Table(name="Arbiters")
 public class Arbiter implements Serializable {
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="ArbiterId")
     private int id = 0;
+
+    @Column(name="ArbiterName")
     private final String name;
+
+    @Column(name="ArbiterPassword")
     private final String password;
+
+    @Column(name="ArbiterType")
     private final ScoreType type;
+
+    public Arbiter() {
+        this("", "", ScoreType.INVALID);
+    }
 
     public Arbiter(String name, String password, ScoreType type) {
         this.name = name;

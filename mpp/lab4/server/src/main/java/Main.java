@@ -2,6 +2,10 @@ import domain.Arbiter;
 import domain.Participant;
 import domain.Score;
 import domain.ScoreType;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import repository.*;
 import server.IServer;
 import server.ObjectServer;
@@ -10,7 +14,6 @@ import service.Service;
 import utils.Configuration;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -24,6 +27,7 @@ public class Main {
     private static IScoreRepository scoreRepository;
     private static Service service;
     private static IServer server;
+    private static SessionFactory sessionFactory;
 
     public static void tryAddParticipant(IParticipantRepository repository, Participant participant) {
         try {
@@ -92,6 +96,21 @@ public class Main {
         }
     }
 
+    public static void createHibernateSessionFactory() {
+        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+                .configure()
+                .build();
+        try {
+            sessionFactory = new MetadataSources(registry)
+                    .addAnnotatedClass(Arbiter.class)
+                    .buildMetadata()
+                    .buildSessionFactory();
+        } catch (Exception e) {
+            StandardServiceRegistryBuilder.destroy(registry);
+            System.exit(-1);
+        }
+    }
+
     public static void createParticipantRepository() {
         try {
             participantRepository = new ParticipantRepository(connection);
@@ -110,6 +129,10 @@ public class Main {
         }
     }
 
+    public static void createHibernateArbiterRepository() {
+        arbiterRepository = new ArbiterHibernateRepository(sessionFactory);
+    }
+
     public static void createScoreRepository() {
         try {
             scoreRepository = new ScoreRepository(connection);
@@ -123,8 +146,11 @@ public class Main {
         service = new Service(participantRepository, arbiterRepository, scoreRepository);
     }
 
-    public static void createServer() {
-//        server = new ObjectServer();
+    public static void createObjectServer() {
+        server = new ObjectServer();
+    }
+
+    public static void createRemoteServer() {
         server = new RemoteServer();
     }
 
@@ -139,11 +165,13 @@ public class Main {
 
     public static void main(String[] args) {
         createConnection();
+        createHibernateSessionFactory();
         createParticipantRepository();
-        createArbiterRepository();
+//        createArbiterRepository();
+        createHibernateArbiterRepository();
         createScoreRepository();
         createService();
-        createServer();
+        createRemoteServer();
 
         tryAddParticipant(participantRepository, new Participant("Christian Tatoiu"));
         tryAddParticipant(participantRepository, new Participant("Radu Stefanescu"));
@@ -174,6 +202,7 @@ public class Main {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 server.stop();
+                destroyConnection();
             } catch (IOException ignored) {
             }
         }));
