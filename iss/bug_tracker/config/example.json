@@ -6,8 +6,25 @@
   "Mongo": {
     "url": "mongodb://localhost:27017"
   },
+  "Logger": {
+    "format": "dev"
+  },
   "TokenGenerator": {
     "secret": "secret here",
     "accessTokenExpireTime": "1d"
+  },
+  "AccessCookie": {
+    "maxAge": 86400,
+    "httpOnly": true,
+    "secure": true,
+    "overwrite": true
+  },
+  "TestUsers": {
+    "TESTER": [
+      {
+        "username": "username",
+        "password": "password"
+      }
+    ]
   }
 }

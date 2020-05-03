@@ -12,9 +12,28 @@ mongoose.connect(MongoConfig.url, {
     console.log('Mongoose failed to connect.');
 });
 
+const PrettyPrintDocuments = require('./lib/PrettyPrintDocuments');
+mongoose.plugin(PrettyPrintDocuments, {
+    hidden: {
+        password: true,
+    },
+});
+
+const UserService = require('./services/UserService');
+UserService.createTestUsers().then(() => {
+    console.log('Finished adding test users.');
+}).catch(() => {
+    console.log('Failed adding test users.');
+});
+
 const Express = require('express');
 require('express-async-errors');
 const app = Express();
+
+const LoggerConfig = Config.get('Logger');
+const Logger = require('morgan');
+const logger = Logger(LoggerConfig.format);
+app.use(logger);
 
 const api = require('./api/api');
 app.use('/api', api);

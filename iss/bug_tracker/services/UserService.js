@@ -1,3 +1,6 @@
+const Config = require('config');
+const TestUsersConfig = Config.get('TestUsers');
+
 const User = require('../models/User');
 const Errors = require('../lib/Errors');
 
@@ -25,6 +28,21 @@ class UserService {
         const isCorrect = await user.verifyPassword(password);
         if (!isCorrect) {
             throw new Errors.LoginError();
+        }
+    }
+
+    static async createTestUsers() {
+        console.log('Adding test users.');
+        for (const role in TestUsersConfig) {
+            const users = TestUsersConfig[role];
+            for (const user of users) {
+                const data = Object.assign({role}, user);
+                try {
+                    await this.createUser(data);
+                } catch (e) {
+                    console.log(`Already added test user ${user.username}.`);
+                }
+            }
         }
     }
 }

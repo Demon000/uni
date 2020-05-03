@@ -5,6 +5,8 @@ const router = require('express').Router();
 const UserService = require('../services/UserService');
 const AuthService = require('../services/AuthService');
 
+const { getUser } = require('./access');
+
 const AccessCookieConfig = Config.get('AccessCookie');
 
 router.post('/login', async (req, res) => {
@@ -16,6 +18,10 @@ router.post('/login', async (req, res) => {
     res.send({
         success: true
     });
+});
+
+router.get('/user', getUser, (req, res) => {
+    res.send(res.locals.user);
 });
 
 module.exports = router;

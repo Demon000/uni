@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
-const passwordEncrypt = require('mongoose-bcrypt');
+const Mongoose = require('mongoose');
+const PasswordEncrypt = require('mongoose-bcrypt');
 
-const UserRoles = require('./UserRoles')
+const UserRoles = require('./UserRoles');
 
-const schema = new mongoose.Schema({
+const schema = new Mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -34,6 +34,6 @@ schema.statics.findByUsername = function(username) {
     });
 };
 
-schema.plugin(passwordEncrypt);
+schema.plugin(PasswordEncrypt);
 
-module.exports = mongoose.model('User', schema);
+module.exports = Mongoose.model('User', schema);

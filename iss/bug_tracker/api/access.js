@@ -1,6 +1,6 @@
 const AuthService = require('../services/AuthService');
 
-function checkAccessToken(req, res, next) {
+function getUser(req, res, next) {
     const payload = req.cookies['x-access-token'];
     const accessToken = AuthService.getAccessTokenFromPayload(payload);
 
@@ -10,5 +10,5 @@ function checkAccessToken(req, res, next) {
 }
 
 module.exports = {
-    checkAccessToken,
+    getUser,
 };
