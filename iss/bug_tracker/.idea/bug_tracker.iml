@@ -11,5 +11,6 @@
     <orderEntry type="library" name="@types/express" level="application" />
     <orderEntry type="library" name="@types/cookie-parser" level="application" />
     <orderEntry type="library" name="@types/config" level="application" />
+    <orderEntry type="library" name="@types/mongoose" level="application" />
   </component>
 </module>

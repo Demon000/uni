@@ -1,36 +1,45 @@
-const errors = {
-    400: {
-        HelloError: {
-            code: 'hello-error',
-            message: 'Hello error.'
-        },
-    },
+class CustomError extends Error {
+    constructor(status, code, message) {
+        super(message);
+        this.code = code;
+        this.status = status;
+    }
+}
+
+class HelloError extends CustomError {
+    constructor() {
+        super(400, 'hello-error', 'Hello error.');
+    }
+}
+
+class UserCreateError extends CustomError {
+    constructor() {
+        super(400, 'user-create-error', 'Failed to create user.');
+    }
+}
+
+class LoginError extends CustomError {
+    constructor() {
+        super(401, 'login-error', 'Login failed.');
+    }
+}
+
+class AccessTokenError extends CustomError {
+    constructor() {
+        super(401, 'access-token-error', 'Access token is invalid.');
+    }
+}
+
+class UserNotFoundError extends CustomError {
+    constructor() {
+        super(404, 'user-not-found-error', 'User not found.');
+    }
+}
+
+module.exports = {
+    HelloError,
+    UserCreateError,
+    LoginError,
+    AccessTokenError,
+    UserNotFoundError,
 };
-
-function generate(name, status, code, message) {
-    class CustomError extends Error {
-        constructor() {
-            super(message);
-            this.name = name;
-            this.code = code;
-            this.status = status;
-        }
-    }
-
-    return CustomError;
-}
-
-const constructors = {};
-for (const status in errors) {
-    const group = errors[status];
-    for (let name in group) {
-        if (!group.hasOwnProperty(name)) {
-            continue;
-        }
-
-        const { code, message } = group[name];
-        constructors[name] = generate(name, status, code, message);
-    }
-}
-
-module.exports = constructors;

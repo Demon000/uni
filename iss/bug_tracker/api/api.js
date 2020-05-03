@@ -16,6 +16,9 @@ router.use(cookieParser);
 const hello = require('./hello');
 router.use('/hello', hello);
 
+const auth = require('./auth');
+router.use('/auth', auth);
+
 router.use((err, req, res, next) => {
     const data = {
         error: true,

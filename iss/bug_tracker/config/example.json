@@ -5,5 +5,9 @@
   },
   "Mongo": {
     "url": "mongodb://localhost:27017"
+  },
+  "TokenGenerator": {
+    "secret": "secret here",
+    "accessTokenExpireTime": "1d"
   }
 }
