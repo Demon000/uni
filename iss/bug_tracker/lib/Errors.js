@@ -36,10 +36,24 @@ class UserNotFoundError extends CustomError {
     }
 }
 
+class UserForbiddenError extends CustomError {
+    constructor() {
+        super(403, 'user-forbidden', 'User is not allowed to access resource.');
+    }
+}
+
+class BugNotFoundError extends CustomError {
+    constructor() {
+        super(404, 'bug-not-found', 'Bug not found.');
+    }
+}
+
 module.exports = {
     HelloError,
     UserCreateError,
     LoginError,
     AccessTokenError,
     UserNotFoundError,
+    UserForbiddenError,
+    BugNotFoundError,
 };

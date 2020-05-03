@@ -1,6 +1,8 @@
 const Mongoose = require('mongoose');
 const Types = Mongoose.Schema.Types;
 
+const BugStatuses = require('./BugStatuses');
+
 const schema = new Mongoose.Schema({
     title: {
         type: String,
@@ -9,6 +11,11 @@ const schema = new Mongoose.Schema({
     description: {
         type: String,
         required: true,
+    },
+    status: {
+        type: String,
+        enum: BugStatuses.getValues(),
+        default: BugStatuses.OPEN,
     },
     createdAt: {
         type: Date,
@@ -24,7 +31,18 @@ const schema = new Mongoose.Schema({
         type: Types.ObjectId,
         ref: 'User',
     },
+    solvedMessage: {
+        type: String,
+    },
 });
+
+schema.statics.forUserId = schema.query.forUserId = (userId) => {
+    return this.where('createdBy').equals(userId);
+};
+
+schema.statics.withStatus = schema.query.withStatus = (status) => {
+    return this.where('status').equals(status);
+};
 
 schema.index({ createdAt: 1 });
 schema.index({ createdBy: 1 });
