@@ -1,13 +1,14 @@
 const router = require('express').Router();
+
 const Errors = require('../lib/Errors');
 
-router.get('/world', async (req, res) => {
+router.get('/world', (req, res) => {
     res.send({
-        message: "Hello world."
+        message: 'Hello world.',
     });
 });
 
-router.get('/error', async (req, res) => {
+router.get('/error', () => {
     throw new Errors.HelloError();
 });
 

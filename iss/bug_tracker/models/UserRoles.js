@@ -1,7 +1,7 @@
 class UserRoles {
-    static TESTER = "TESTER";
-    static PROGRAMMER = "PROGRAMMER";
-    static ADMIN = "ADMIN";
+    static TESTER = 'TESTER';
+    static PROGRAMMER = 'PROGRAMMER';
+    static ADMIN = 'ADMIN';
 
     static getValues() {
         return [

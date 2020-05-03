@@ -11,7 +11,7 @@ class TokenGenerator {
 
     createAccessToken(data) {
         return this.createToken(data, {
-            expiresIn: config.accessTokenExpireTime,
+            expiresIn: this.config.accessTokenExpireTime,
         });
     }
 

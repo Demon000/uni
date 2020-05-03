@@ -19,6 +19,7 @@ router.use('/hello', hello);
 const auth = require('./auth');
 router.use('/auth', auth);
 
+// eslint-disable-next-line no-unused-vars
 router.use((err, req, res, next) => {
     const data = {
         error: true,
