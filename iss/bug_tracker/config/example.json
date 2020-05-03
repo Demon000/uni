@@ -1,0 +1,9 @@
+{
+  "Server": {
+    "port": 8080,
+    "host": "localhost"
+  },
+  "Mongo": {
+    "url": "mongodb://localhost:27017"
+  }
+}
