@@ -13,10 +13,10 @@ router.post('/login', async (req, res) => {
     const user = await UserService.getUserByUserName(req.body.username);
     await UserService.verifyPassword(user, req.body.password);
 
-    const accessPayload = AuthService.createAccessTokenPayload(user);
-    res.cookie('x-access-token', accessPayload, AccessCookieConfig);
+    const payload = AuthService.createAccessTokenPayload(user);
+    res.cookie('x-access-token', payload, AccessCookieConfig);
     res.send({
-        success: true
+        user,
     });
 });
 

@@ -36,12 +36,23 @@ const schema = new Mongoose.Schema({
     },
 });
 
-schema.statics.forUserId = schema.query.forUserId = (userId) => {
+schema.statics.forUserId = schema.query.forUserId = function (userId) {
     return this.where('createdBy').equals(userId);
 };
 
-schema.statics.withStatus = schema.query.withStatus = (status) => {
+schema.statics.withStatus = schema.query.withStatus = function (status) {
     return this.where('status').equals(status);
+};
+
+schema.methods.populateUsers = async function() {
+    await this.populate('createdBy').execPopulate();
+    await this.populate('solvedBy').execPopulate();
+};
+
+schema.query.populateUsers = function() {
+    return this
+        .populate('createdBy')
+        .populate('solvedBy');
 };
 
 schema.index({ createdAt: 1 });

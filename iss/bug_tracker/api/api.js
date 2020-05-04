@@ -13,19 +13,31 @@ const CookieParser = require('cookie-parser');
 const cookieParser = CookieParser();
 router.use(cookieParser);
 
+const Cors = require('cors');
+const cors = Cors({
+    origin: true,
+    credentials: true,
+});
+router.use(cors);
+router.options('*', cors);
+
 const hello = require('./hello');
 router.use('/hello', hello);
 
 const auth = require('./auth');
 router.use('/auth', auth);
 
+const bugs = require('./bugs');
+router.use('/bugs', bugs);
+
 // eslint-disable-next-line no-unused-vars
 router.use((err, req, res, next) => {
     const data = {
         error: true,
         message: err.message,
-        reason: err.name,
     };
+
+    console.error(err);
 
     const status = err.status || 500;
     res.status(status).send(data);

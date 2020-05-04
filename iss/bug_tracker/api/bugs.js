@@ -8,7 +8,7 @@ const BugService = require('../services/BugService');
 const { authUser } = require('./auth_common');
 const { authUserWithRole } = require('./auth_common');
 
-router.get('/bugs',
+router.get('/',
         authUser(),
         async (req, res) => {
     let authoredByUserOnly = false;
@@ -28,11 +28,11 @@ router.get('/bugs',
     res.send(bugs);
 });
 
-router.post('/bugs',
+router.post('/',
         authUser(),
         async (req, res) => {
+    console.log(req.body);
     const bug = await BugService.createBug(res.locals.user.id, req.body);
-
     res.send(bug);
 });
 
@@ -52,7 +52,7 @@ async function getBugFromParams(req, res) {
     return bug;
 }
 
-router.get('/bugs/:id',
+router.get('/:id',
         authUser(),
         async (req, res) => {
     const bug = await getBugFromParams(req, res);
@@ -60,7 +60,7 @@ router.get('/bugs/:id',
     res.send(bug);
 });
 
-router.post('/bugs/:id',
+router.post('/:id',
         authUser(),
         async (req, res) => {
     const bug = await getBugFromParams(req, res);
@@ -68,7 +68,7 @@ router.post('/bugs/:id',
     res.send(bug);
 });
 
-router.post('/bugs/:id/solve',
+router.post('/:id/solve',
         authUserWithRole(UserRoles.PROGRAMMER),
         async (req, res) => {
     const bug = await getBugFromParams(req, res);
@@ -76,10 +76,12 @@ router.post('/bugs/:id/solve',
     res.send(bug);
 });
 
-router.delete('/bugs/:id',
+router.delete('/:id',
         authUser(),
         async (req, res) => {
     const bug = await getBugFromParams(req, res);
     await BugService.deleteBug(bug);
     res.end();
 });
+
+module.exports = router;

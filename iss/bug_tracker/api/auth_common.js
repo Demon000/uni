@@ -4,7 +4,13 @@ const Errors = require('../lib/Errors');
 function authUserInner(role) {
     return (req, res, next) => {
         const payload = req.cookies['x-access-token'];
-        const accessToken = AuthService.getAccessTokenFromPayload(payload);
+
+        let accessToken;
+        try {
+            accessToken = AuthService.getAccessTokenFromPayload(payload);
+        } catch (e) {
+            throw new Errors.PayloadError();
+        }
 
         res.locals.user = AuthService.getUserFromAccessToken(accessToken);
 

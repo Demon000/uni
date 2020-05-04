@@ -24,6 +24,12 @@ class LoginError extends CustomError {
     }
 }
 
+class PayloadError extends CustomError {
+    constructor() {
+        super(401, 'payload-error', 'Payload is invalid.');
+    }
+}
+
 class AccessTokenError extends CustomError {
     constructor() {
         super(401, 'access-token-error', 'Access token is invalid.');
@@ -52,6 +58,7 @@ module.exports = {
     HelloError,
     UserCreateError,
     LoginError,
+    PayloadError,
     AccessTokenError,
     UserNotFoundError,
     UserForbiddenError,

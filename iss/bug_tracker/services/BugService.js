@@ -12,6 +12,7 @@ class BugService {
             createdBy: userId,
         });
         await bug.save();
+        await bug.populateUsers();
         return bug;
     }
 
@@ -20,7 +21,7 @@ class BugService {
         if (status !== BugStatuses.ALL) {
             query = query.withStatus(status);
         }
-        return await query.exec();
+        return await query.populateUsers().exec();
     }
 
     static async getBugs(status=BugStatuses.ALL) {
@@ -28,7 +29,7 @@ class BugService {
         if (status !== BugStatuses.ALL) {
             query = query.withStatus(status);
         }
-        return await query.exec();
+        return await query.populateUsers().exec();
     }
 
     static async getBugById(bugId) {
@@ -45,6 +46,8 @@ class BugService {
         if (!bug) {
             throw new Errors.BugNotFoundError();
         }
+
+        await bug.populateUsers();
 
         return bug;
     }

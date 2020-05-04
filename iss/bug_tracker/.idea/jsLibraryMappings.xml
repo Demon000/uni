@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="PROJECT" libraries="{@types/config, @types/cookie-parser, @types/express, @types/mongoose}" />
+    <file url="PROJECT" libraries="{@types/config, @types/cookie-parser, @types/express, @types/mongoose, @types/morgan, MaterialDesign-Webfont, axios, moment, vue, vue-js-modal, vue-moment, vue-router}" />
     <includedPredefinedLibrary name="Node.js Core" />
   </component>
 </project>

@@ -35,6 +35,9 @@ const Logger = require('morgan');
 const logger = Logger(LoggerConfig.format);
 app.use(logger);
 
+const web = Express.static('web');
+app.use('/', web);
+
 const api = require('./api/api');
 app.use('/api', api);
 
