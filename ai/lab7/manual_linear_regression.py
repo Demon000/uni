@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class ManualLinearModel:
+class ManualLinearRegression:
     def __init__(self):
         self.betas = None
 

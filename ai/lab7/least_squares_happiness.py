@@ -2,9 +2,10 @@ import csv
 import os
 from random import shuffle
 import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.linear_model import LinearRegression
 
-from manual_linear_model import ManualLinearModel
+from manual_linear_regression import ManualLinearRegression
 
 HAPPINESS_COLUMN = 2
 GDP_COLUMN = 5
@@ -73,18 +74,8 @@ def plot(training_inputs, training_outputs, test_inputs, test_outputs, predicted
     plot_scatter(ax, training_inputs, training_outputs, "red")
     plot_scatter(ax, test_inputs, test_outputs, "blue")
 
-    min_index = 0
-    max_index = 0
-    min_value = predicted_outputs[0]
-    max_value = predicted_outputs[0]
-    no_samples = len(predicted_outputs)
-    for i in range(no_samples):
-        if predicted_outputs[i] > max_value:
-            max_value = predicted_outputs[i]
-            max_index = i
-        if predicted_outputs[i] < min_value:
-            min_value = predicted_outputs[i]
-            min_index = i
+    min_index = np.argmin(predicted_outputs)
+    max_index = np.argmax(predicted_outputs)
 
     xs = [test_inputs[min_index][0], test_inputs[max_index][0]]
     ys = [test_inputs[min_index][1], test_inputs[max_index][1]]
@@ -103,8 +94,8 @@ def run(model, training_inputs, training_outputs, test_inputs, test_outputs, met
 
     loss = calculate_loss(predicted_outputs, test_outputs)
 
-    print(f"Predicted: {predicted_outputs}")
-    print(f"Expected: {test_outputs}")
+    # print(f"Predicted: {predicted_outputs}")
+    # print(f"Expected: {test_outputs}")
     print(f"Loss: {loss}")
 
     plot(training_inputs, training_outputs, test_inputs, test_outputs, predicted_outputs)
@@ -117,10 +108,10 @@ all_inputs, all_outputs = load_data(csv_2017_path)
 all_training_inputs, all_training_outputs, all_test_inputs, all_test_outputs = \
     split_training_set(all_inputs, all_outputs, 0.8)
 
-model = ManualLinearModel()
-run(model, all_inputs, all_outputs, all_inputs, all_outputs)
-run(model, all_training_inputs, all_training_outputs, all_test_inputs, all_test_outputs)
+linear_model = ManualLinearRegression()
+run(linear_model, all_inputs, all_outputs, all_inputs, all_outputs)
+run(linear_model, all_training_inputs, all_training_outputs, all_test_inputs, all_test_outputs)
 
-model = LinearRegression()
-run(model, all_inputs, all_outputs, all_inputs, all_outputs)
-run(model, all_training_inputs, all_training_outputs, all_test_inputs, all_test_outputs)
+linear_model = LinearRegression()
+run(linear_model, all_inputs, all_outputs, all_inputs, all_outputs)
+run(linear_model, all_training_inputs, all_training_outputs, all_test_inputs, all_test_outputs)
