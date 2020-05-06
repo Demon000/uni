@@ -7,20 +7,24 @@ from sklearn.linear_model import LinearRegression
 
 from manual_linear_regression import ManualLinearRegression
 
-HAPPINESS_COLUMN = 2
-GDP_COLUMN = 5
-FREEDOM_COLUMN = 8
 
-
-def load_data(file_path):
+def load_data(file_path, input_column_indices, output_column_index):
     data = []
     with open(file_path) as file:
         csv_reader = csv.reader(file, delimiter=",")
         for row in csv_reader:
             data.append(row)
 
-    inputs = [[float(line[GDP_COLUMN]), float(line[FREEDOM_COLUMN])] for line in data]
-    outputs = [[float(line[HAPPINESS_COLUMN])] for line in data]
+    inputs = []
+    outputs = []
+    for line in data:
+        input_values = []
+        for input_column_index in input_column_indices:
+            input_values.append(float(line[input_column_index]))
+
+        inputs.append(input_values)
+
+        outputs.append([float(line[output_column_index])])
 
     return inputs, outputs
 
@@ -94,16 +98,21 @@ def run(model, training_inputs, training_outputs, test_inputs, test_outputs, met
 
     loss = calculate_loss(predicted_outputs, test_outputs)
 
-    # print(f"Predicted: {predicted_outputs}")
-    # print(f"Expected: {test_outputs}")
+    print(f"Predicted: {predicted_outputs}")
+    print(f"Expected: {test_outputs}")
     print(f"Loss: {loss}")
 
-    plot(training_inputs, training_outputs, test_inputs, test_outputs, predicted_outputs)
+    # plot(training_inputs, training_outputs, test_inputs, test_outputs, predicted_outputs)
 
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+HAPPINESS_COLUMN = 2
+GDP_COLUMN = 5
+FREEDOM_COLUMN = 8
+
 csv_2017_path = os.path.join(__location__, "2017.csv")
-all_inputs, all_outputs = load_data(csv_2017_path)
+all_inputs, all_outputs = load_data(csv_2017_path, [GDP_COLUMN, FREEDOM_COLUMN], FREEDOM_COLUMN)
 
 all_training_inputs, all_training_outputs, all_test_inputs, all_test_outputs = \
     split_training_set(all_inputs, all_outputs, 0.8)
