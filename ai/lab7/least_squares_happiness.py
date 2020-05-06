@@ -98,8 +98,8 @@ def run(model, training_inputs, training_outputs, test_inputs, test_outputs, met
 
     loss = calculate_loss(predicted_outputs, test_outputs)
 
-    print(f"Predicted: {predicted_outputs}")
-    print(f"Expected: {test_outputs}")
+    # print(f"Predicted: {predicted_outputs}")
+    # print(f"Expected: {test_outputs}")
     print(f"Loss: {loss}")
 
     # plot(training_inputs, training_outputs, test_inputs, test_outputs, predicted_outputs)
@@ -110,9 +110,10 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 HAPPINESS_COLUMN = 2
 GDP_COLUMN = 5
 FREEDOM_COLUMN = 8
+TRUST_COLUMN = 10
 
 csv_2017_path = os.path.join(__location__, "2017.csv")
-all_inputs, all_outputs = load_data(csv_2017_path, [GDP_COLUMN, FREEDOM_COLUMN], FREEDOM_COLUMN)
+all_inputs, all_outputs = load_data(csv_2017_path, [GDP_COLUMN, FREEDOM_COLUMN, TRUST_COLUMN], HAPPINESS_COLUMN)
 
 all_training_inputs, all_training_outputs, all_test_inputs, all_test_outputs = \
     split_training_set(all_inputs, all_outputs, 0.8)
