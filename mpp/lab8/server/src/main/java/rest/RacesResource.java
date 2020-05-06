@@ -23,7 +23,7 @@ public class RacesResource {
 
         Arbiter arbiter;
         try {
-            arbiter = arbiterRepository.findById(document.getArbiterId());
+            arbiter = arbiterRepository.findById(document.getArbiter().getId());
         } catch (RepositoryError e) {
             return Response
                     .status(Response.Status.NOT_FOUND)
@@ -120,11 +120,11 @@ public class RacesResource {
                     .build();
         }
 
-        if (document.getArbiterId() != null &&
-                !document.getArbiterId().equals(race.getArbiter().getId())) {
+        if (document.getArbiter().getId() != null &&
+                !document.getArbiter().getId().equals(race.getArbiter().getId())) {
             Arbiter arbiter;
             try {
-                arbiter = arbiterRepository.findById(document.getArbiterId());
+                arbiter = arbiterRepository.findById(document.getArbiter().getId());
             } catch (RepositoryError e) {
                 return Response
                         .status(Response.Status.NOT_FOUND)

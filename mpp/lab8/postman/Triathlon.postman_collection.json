@@ -50,7 +50,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"arbiterId\": 1,\n\t\"name\": \"FANCY_CYCLING\"\n}\n",
+					"raw": "{\n\t\"arbiter\": {\n\t\t\"id\": 1\n\t},\n\t\"name\": \"FANCY_CYCLING\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -78,7 +78,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"arbiterId\": 2,\n\t\"name\": \"FANCY_CYCLING_CHANGED\"\n}",
+					"raw": "{\n\t\"arbiter\": {\n\t\t\"id\": 2\n\t},\n\t\"name\": \"FANCY_CYCLING_CHANGED\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"

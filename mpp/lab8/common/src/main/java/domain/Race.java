@@ -1,11 +1,10 @@
 package domain;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@JsonAutoDetect
 @Entity
 @Table(name="Races")
 public class Race implements Serializable {
@@ -67,31 +66,34 @@ public class Race implements Serializable {
                 '}';
     }
 
-    public static class PostDocument {
-        private final Integer id;
-        private final String name;
-        private final Integer arbiterId;
-
-        public PostDocument(Integer id, String name, Integer arbiterId) {
-            this.id = id;
-            this.name = name;
-            this.arbiterId = arbiterId;
-        }
-
-        public PostDocument() {
-            this(null, null, null);
-        }
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class PostDocument implements Serializable {
+        private Integer id;
+        private String name;
+        private Arbiter.PostDocument arbiter;
 
         public Integer getId() {
             return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
         }
 
         public String getName() {
             return name;
         }
 
-        public Integer getArbiterId() {
-            return arbiterId;
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public Arbiter.PostDocument getArbiter() {
+            return arbiter;
+        }
+
+        public void setArbiter(Arbiter.PostDocument document) {
+            this.arbiter = document;
         }
     }
 }
