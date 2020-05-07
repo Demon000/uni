@@ -1,6 +1,7 @@
 package domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -67,10 +68,25 @@ public class Race implements Serializable {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class PostDocument implements Serializable {
         private Integer id;
         private String name;
         private Arbiter.PostDocument arbiter;
+
+        public PostDocument(Integer id, String name, Integer arbiterId) {
+            this.id = id;
+            this.name = name;
+            this.arbiter = new Arbiter.PostDocument(arbiterId);
+        }
+
+        public PostDocument(String name, Integer arbiterId) {
+            this(null, name, arbiterId);
+        }
+
+        public PostDocument() {
+            this(null, null);
+        }
 
         public Integer getId() {
             return id;
@@ -94,6 +110,15 @@ public class Race implements Serializable {
 
         public void setArbiter(Arbiter.PostDocument document) {
             this.arbiter = document;
+        }
+
+        @Override
+        public String toString() {
+            return "PostDocument{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", arbiter=" + arbiter +
+                    '}';
         }
     }
 }

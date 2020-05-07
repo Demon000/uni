@@ -3,7 +3,7 @@ package rest;
 import domain.Arbiter;
 import repository.IArbiterRepository;
 import repository.RepositoryError;
-import utils.RepositoryUtils;
+import repository.RepositoryUtils;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

@@ -2,6 +2,7 @@ package domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -56,8 +57,17 @@ public class Arbiter implements Serializable {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class PostDocument implements Serializable {
         private Integer id;
+
+        public PostDocument(Integer id) {
+            this.id = id;
+        }
+
+        public PostDocument() {
+            this(null);
+        }
 
         public Integer getId() {
             return id;
@@ -65,6 +75,13 @@ public class Arbiter implements Serializable {
 
         public void setId(Integer id) {
             this.id = id;
+        }
+
+        @Override
+        public String toString() {
+            return "PostDocument{" +
+                    "id=" + id +
+                    '}';
         }
     }
 }

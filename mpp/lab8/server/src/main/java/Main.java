@@ -10,7 +10,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import repository.*;
 import rest.RestApplication;
 import utils.Configuration;
-import utils.RepositoryUtils;
+import repository.RepositoryUtils;
 
 import java.util.List;
 

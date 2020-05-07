@@ -5,7 +5,7 @@ import domain.Race;
 import repository.IArbiterRepository;
 import repository.IRaceRepository;
 import repository.RepositoryError;
-import utils.RepositoryUtils;
+import repository.RepositoryUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
