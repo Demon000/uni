@@ -21,7 +21,31 @@ public class Main {
     public static void tryPrintAllArbiters() {
         try {
             List<Arbiter> arbiters = arbitersResource.find();
+            if (arbiters == null) {
+                System.out.println("Failed to find arbiters");
+                return;
+            }
+
             printArbiters(arbiters);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void printRaces(List<Race> races) {
+        races.forEach(System.out::println);
+        System.out.println();
+    }
+
+    public static void tryPrintAllRaces() {
+        try {
+            List<Race> races = racesResource.find();
+            if (races == null) {
+                System.out.println("Failed to find races");
+                return;
+            }
+
+            printRaces(races);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,20 +87,6 @@ public class Main {
         }
     }
 
-    public static void printRaces(List<Race> races) {
-        races.forEach(System.out::println);
-        System.out.println();
-    }
-
-    public static void tryPrintAllRaces() {
-        try {
-            List<Race> races = racesResource.find();
-            printRaces(races);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void main(String[] args) {
         api = new API(configuration.getValue("server_host"),
                 configuration.getIntegerValue("server_port", 8080));
@@ -103,11 +113,10 @@ public class Main {
 
         race = tryFindRaceById(race.getId());
         if (race == null) {
-            System.out.println("Failed to retrieve race");
+            System.out.println("Failed to find race");
             System.exit(-1);
         }
         System.out.println("Found: " + race);
-
 
         race = tryUpdateRace(race.getId(), "FANCY_CYCLING_CHANGED", 2);
         if (race == null) {

@@ -9,18 +9,20 @@ import java.io.Serializable;
 
 @Entity
 @Table(name="Arbiters")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Arbiter implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "ArbiterId")
-    private final Integer id;
+    private Integer id;
 
     @Column(name = "ArbiterName")
-    private final String name;
+    private String name;
 
     @JsonIgnore
     @Column(name = "ArbiterPassword")
-    private final String password;
+    private String password;
 
     public Arbiter(Integer id, String name, String password) {
         this.name = name;
@@ -32,6 +34,10 @@ public class Arbiter implements Serializable {
         this(null, name, password);
     }
 
+    public Arbiter(Integer id) {
+        this(id, null, null);
+    }
+
     public Arbiter() {
         this(null, null);
     }
@@ -40,12 +46,24 @@ public class Arbiter implements Serializable {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -54,34 +72,5 @@ public class Arbiter implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class PostDocument implements Serializable {
-        private Integer id;
-
-        public PostDocument(Integer id) {
-            this.id = id;
-        }
-
-        public PostDocument() {
-            this(null);
-        }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        @Override
-        public String toString() {
-            return "PostDocument{" +
-                    "id=" + id +
-                    '}';
-        }
     }
 }

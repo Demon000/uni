@@ -1,5 +1,6 @@
 package rest;
 
+import domain.Arbiter;
 import domain.Race;
 
 import javax.ws.rs.client.Entity;
@@ -17,7 +18,7 @@ public class RacesResource {
 
     public Race add(String name, Integer arbiterId) {
         WebTarget target = api.getTarget().path("/races");
-        Race.PostDocument race = new Race.PostDocument(name, arbiterId);
+        Race race = new Race(name, new Arbiter(arbiterId));
         return target
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.json(race), Race.class);
@@ -39,7 +40,7 @@ public class RacesResource {
 
     public Race update(Integer id, String name, Integer arbiterId) {
         WebTarget target = api.getTarget().path("/races/" + id);
-        Race.PostDocument race = new Race.PostDocument(name, arbiterId);
+        Race race = new Race(name, new Arbiter(arbiterId));
         return target
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.json(race), Race.class);

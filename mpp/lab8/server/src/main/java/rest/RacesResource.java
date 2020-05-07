@@ -17,7 +17,7 @@ public class RacesResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response add(Race.PostDocument document) {
+    public Response add(Race document) {
         IArbiterRepository arbiterRepository = RepositoryUtils.getArbiterRepository();
         IRaceRepository raceRepository = RepositoryUtils.getRaceRepository();
 
@@ -31,7 +31,7 @@ public class RacesResource {
                     .build();
         }
 
-        Race race = new Race(arbiter, document.getName());
+        Race race = new Race(document.getName(), arbiter);
         try {
             raceRepository.add(race);
         } catch (RepositoryError e) {
@@ -100,7 +100,7 @@ public class RacesResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("id") int id, Race.PostDocument document) {
+    public Response update(@PathParam("id") int id, Race document) {
         IArbiterRepository arbiterRepository = RepositoryUtils.getArbiterRepository();
         IRaceRepository raceRepository = RepositoryUtils.getRaceRepository();
         Race race;

@@ -114,15 +114,15 @@ public class Main {
 
         Arbiter first = new Arbiter("Cosmin Tanislav", "passwordcosmin");
         tryAddArbiter(first);
-        tryAddRace(new Race(first, "CYCLING"));
+        tryAddRace(new Race("CYCLING", first));
 
         Arbiter second = new Arbiter("Mihai Solcan", "passwordsolcan");
         tryAddArbiter(second);
-        tryAddRace(new Race(second, "RUNNING"));
+        tryAddRace(new Race("RUNNING", second));
 
         Arbiter third = new Arbiter("Teodor Spiridon", "passwordrunning");
         tryAddArbiter(third);
-        tryAddRace(new Race(third, "SWIMMING"));
+        tryAddRace(new Race("SWIMMING", third));
 
         tryPrintAllArbiters();
 
