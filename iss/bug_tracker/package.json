@@ -6,8 +6,7 @@
     "start": "node ./index.js",
     "dev": "cross-env NODE_ENV=dev nodemon --ignore './web' ./index.js",
     "webpack-dev": "webpack",
-    "lint": "eslint -c .eslintrc.js \"**/*.js\"",
-    "lint-fix": "eslint --fix -c .eslintrc.js \"**/*.js\""
+    "lint": "eslint -c .eslintrc.js \"**/*.js\""
   },
   "keywords": [],
   "author": "",
