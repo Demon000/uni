@@ -22,7 +22,7 @@ const router = new VueRouter({
 
 const app = new Vue({
     router,
-}).$mount('#app')
+}).$mount('#app');
 
 app.$on('login', (data) => {
     router.replace({
@@ -35,4 +35,4 @@ app.$on('login', (data) => {
 
 router.push('/login')
     .then(() => {})
-    .catch(() => {})
+    .catch(() => {});
