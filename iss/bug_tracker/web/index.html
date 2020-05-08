@@ -11,43 +11,6 @@
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/index.css">
 
-    <script src="https://unpkg.com/axios/dist/axios.js"></script>
-
-    <script src="https://unpkg.com/moment/moment.js"></script>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-
-    <script type="text/x-template" id="login-view-template">
-        <div id="login-view">
-            <div id="login-view-modal">
-                <div id="login-view-logo">
-                    <span class="logo-main-part">
-                        Bug
-                    </span>
-                    <span class="logo-secondary-part">
-                        Tracker
-                    </span>
-                </div>
-
-                <div class="input-group">
-                    <label>Username</label>
-                    <input type="text" v-model="username">
-                </div>
-
-                <div class="input-group">
-                    <label>Password</label>
-                    <input type="password" v-model="password" v-on:keyup.enter="login">
-                </div>
-
-                <p id="login-error" v-if="error">{{ error }}</p>
-
-                <div class="buttons-wrapper">
-                    <button v-on:click="login">Login</button>
-                </div>
-            </div>
-        </div>
-    </script>
-
     <script type="text/x-template" id="bug-view-template">
         <div class="bug">
             <template v-if="!isEditing">
@@ -156,10 +119,6 @@
     <div id="app">
         <router-view></router-view>
     </div>
-    <script src="js/LoginComponent.js"></script>
-    <script src="js/BugComponent.js"></script>
-    <script src="js/BugsCategoryComponent.js"></script>
-    <script src="js/BugsComponent.js"></script>
-    <script src="js/index.js"></script>
+    <script src="dist/index.js"></script>
 </body>
 </html>

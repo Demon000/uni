@@ -1,4 +1,8 @@
-const BugComponent = Vue.component('bug-view', {
+import Vue from 'vue';
+import axios from 'axios';
+import moment from 'moment';
+
+export default Vue.component('bug-view', {
     template: '#bug-view-template',
     props: ['data', 'user'],
     data: function() {
@@ -20,7 +24,7 @@ const BugComponent = Vue.component('bug-view', {
         saveButtonClick: function() {
             axios
                 .post(`/api/bugs/${this.data.id}`, this.data)
-                .then(response => {
+                .then(() => {
                     this.$emit('finish-save');
                     this.isEditing = false;
                 })

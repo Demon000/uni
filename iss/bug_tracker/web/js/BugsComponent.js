@@ -1,4 +1,7 @@
-const BugsComponent = Vue.component('bugs-view', {
+import axios from 'axios';
+import Vue from "vue";
+
+export default Vue.component('bugs-view', {
     template: '#bugs-view-template',
     props: ['user'],
     data: function () {
@@ -18,7 +21,7 @@ const BugsComponent = Vue.component('bugs-view', {
                     title: this.addBugTitle,
                     description: this.addBugDescription,
                 })
-                .then(response => {
+                .then(() => {
                     this.$refs.openBugsCategory.load();
                     this.$refs.closedBugsCategory.load();
                 })

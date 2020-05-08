@@ -9,6 +9,10 @@ module.exports = {
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
+    "ignorePatterns": [
+        "web/dist/*.js",
+        "node_modules/"
+    ],
     "rules": {
         "quotes": [
             "error",

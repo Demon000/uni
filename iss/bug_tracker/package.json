@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./index.js",
     "dev": "cross-env NODE_ENV=dev nodemon ./index.js",
+    "webpack-dev": "webpack",
     "lint": "eslint -c .eslintrc.js \"**/*.js\"",
     "lint-fix": "eslint --fix -c .eslintrc.js \"**/*.js\""
   },
@@ -14,21 +15,29 @@
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "cross-env": "^7.0.2",
+    "css-loader": "^3.5.3",
     "eslint": "^6.8.0",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.3",
+    "vue-loader": "^15.9.2",
+    "vue-router": "^3.1.6",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "config": "^3.3.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.25.3",
     "mongoose": "^5.9.11",
     "mongoose-bcrypt": "^1.6.0",
     "mongoose-hidden": "^1.9.0",
     "morgan": "^1.10.0",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "vue": "^2.6.11"
   }
 }

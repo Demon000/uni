@@ -1,4 +1,7 @@
-const BugsCategoryComponent = Vue.component('bugs-category-view', {
+import Vue from 'vue';
+import axios from 'axios';
+
+export default Vue.component('bugs-category-view', {
     template: '#bugs-category-view-template',
     props: ['title', 'status', 'user'],
     data: function() {
@@ -27,7 +30,7 @@ const BugsCategoryComponent = Vue.component('bugs-category-view', {
         solveBug(bugId) {
             axios
                 .post(`/api/bugs/${bugId}/solved`)
-                .then(response => {
+                .then(() => {
                     this.load();
                 })
                 .catch(error => {
@@ -37,7 +40,7 @@ const BugsCategoryComponent = Vue.component('bugs-category-view', {
         deleteBug(bugId) {
             axios
                 .delete(`/api/bugs/${bugId}`)
-                .then(response => {
+                .then(() => {
                     this.load();
                 })
                 .catch(error => {
