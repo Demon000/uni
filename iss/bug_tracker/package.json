@@ -27,6 +27,8 @@
     "mongoose": "^5.9.11",
     "mongoose-bcrypt": "^1.6.0",
     "mongoose-hidden": "^1.9.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
   }
 }
