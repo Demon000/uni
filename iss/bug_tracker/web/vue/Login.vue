@@ -34,7 +34,6 @@
 
     export default {
         name: 'login-view',
-        template: '#login-view-template',
         data: function() {
             return {
                 username: '',
