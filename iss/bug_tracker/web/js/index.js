@@ -1,8 +1,8 @@
 import VueRouter from 'vue-router';
 import Vue from 'vue';
 
-import BugsComponent from './BugsComponent';
-import LoginView from '../vue/Login.vue';
+import Bugs from '../vue/Bugs.vue';
+import Login from '../vue/Login.vue';
 
 const routes = [
     {
@@ -12,13 +12,13 @@ const routes = [
     {
         path: '/bugs',
         name: 'bugs',
-        component: BugsComponent,
+        component: Bugs,
         props: true,
     },
     {
         path: '/login',
         name: 'login',
-        component: LoginView,
+        component: Login,
     },
 ];
 
@@ -27,8 +27,14 @@ const router = new VueRouter({
     routes,
 });
 
+import BugsList from "../vue/BugsList.vue";
+import BugItem from "../vue/BugItem.vue";
 const app = new Vue({
     router,
+    components: {
+        'bugs-list': BugsList,
+        'bug-item': BugItem,
+    },
 }).$mount('#app');
 
 app.$on('login', (data) => {
