@@ -17,19 +17,31 @@ class BugService {
     }
 
     static async getBugsForUser(userId, status=BugStatuses.ALL) {
-        let query = Bug.forUserId(userId);
+        let query = Bug.find();
+
+        if (userId !== null) {
+            query = query.forUserId(userId);
+        }
+
+        if (status === BugStatuses.CLOSED) {
+            query = query.sort({
+                solvedAt: -1,
+            });
+        } else if (status === BugStatuses.OPEN) {
+            query = query.sort({
+                createdAt: -1,
+            });
+        }
+
         if (status !== BugStatuses.ALL) {
             query = query.withStatus(status);
         }
+
         return await query.populateUsers().exec();
     }
 
     static async getBugs(status=BugStatuses.ALL) {
-        let query = Bug.find();
-        if (status !== BugStatuses.ALL) {
-            query = query.withStatus(status);
-        }
-        return await query.populateUsers().exec();
+        return await this.getBugsForUser(null, status);
     }
 
     static async getBugById(bugId) {
