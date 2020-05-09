@@ -31,7 +31,6 @@ router.get('/',
 router.post('/',
         authUser(),
         async (req, res) => {
-    console.log(req.body);
     const bug = await BugService.createBug(res.locals.user.id, req.body);
     res.send(bug);
 });

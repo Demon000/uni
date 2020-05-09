@@ -10,10 +10,9 @@
                 v-if="bug.status === status"
                 v-bind:key="bug.id"
                 v-bind:data="bug"
-                v-bind:user="user"
                 v-on:solve-click="solveBug(bug.id)"
                 v-on:delete-click="deleteBug(bug.id)"
-                v-on:finish-save="load()"
+                v-on:finish-save="loadBugs()"
         ></bug-item>
     </div>
 </template>
@@ -23,17 +22,20 @@
     import axios from 'axios';
 
     export default Vue.component('bugs-list', {
-        props: ['title', 'status', 'user'],
+        props: [
+            'title',
+            'status'
+        ],
         data: function() {
             return {
                 bugs: [],
             };
         },
         mounted: function() {
-            this.load();
+            this.loadBugs();
         },
         methods: {
-            load() {
+            loadBugs() {
                 axios
                     .get('/api/bugs', {
                         params: {
@@ -51,7 +53,7 @@
                 axios
                     .post(`/api/bugs/${bugId}/solved`)
                     .then(() => {
-                        this.load();
+                        this.loadBugs();
                     })
                     .catch(error => {
                         console.error(error);
@@ -61,7 +63,7 @@
                 axios
                     .delete(`/api/bugs/${bugId}`)
                     .then(() => {
-                        this.load();
+                        this.loadBugs();
                     })
                     .catch(error => {
                         console.error(error);

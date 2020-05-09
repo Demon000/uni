@@ -52,8 +52,12 @@
         name: 'bug-item',
         props: [
             'data',
-            'user'
         ],
+        computed: {
+            user: function() {
+                return this.$store.state.user;
+            },
+        },
         data: function() {
             return {
                 isEditing: false,

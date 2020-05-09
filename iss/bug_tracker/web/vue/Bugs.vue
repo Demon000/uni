@@ -31,8 +31,8 @@
                     <button v-on:click="addBug">ADD BUG</button>
                 </div>
             </div>
-            <bugs-list v-bind:title="'Open bugs'" v-bind:status="'OPEN'" v-bind:user="user" ref="openBugsCategory"></bugs-list>
-            <bugs-list v-bind:title="'Closed bugs'" v-bind:status="'CLOSED'" v-bind:user="user" ref="closedBugsCategory"></bugs-list>
+            <bugs-list v-bind:title="'Open bugs'" v-bind:status="'OPEN'" ref="openBugsCategory"></bugs-list>
+            <bugs-list v-bind:title="'Closed bugs'" v-bind:status="'CLOSED'" ref="closedBugsCategory"></bugs-list>
         </div>
     </div>
 </template>
@@ -42,15 +42,17 @@
     import axios from 'axios';
 
     export default Vue.component('bugs', {
-        props: [
-            'user'
-        ],
         data: function () {
             return {
                 isAdding: false,
                 addBugTitle: '',
                 addBugDescription: '',
             };
+        },
+        computed: {
+            user: function() {
+                return this.$store.state.user;
+            },
         },
         methods: {
             onAddViewToggleButtonClick: function () {
@@ -63,8 +65,8 @@
                         description: this.addBugDescription,
                     })
                     .then(() => {
-                        this.$refs.openBugsCategory.load();
-                        this.$refs.closedBugsCategory.load();
+                        this.$refs.openBugsCategory.loadBugs();
+                        this.$refs.closedBugsCategory.loadBugs();
                     })
                     .catch(error => {
                         console.error(error);
@@ -75,11 +77,40 @@
 </script>
 
 <style>
+    #nav-bar {
+        height: 64px;
+        line-height: 64px;
+
+        padding: 0 16px;
+
+        display: flex;
+        flex-direction: row;
+    }
+
+    #nav-bar-logo {
+        font-size: 32px;
+    }
+
+    #nav-bar-user {
+        margin-left: auto;
+    }
+
+    #nav-bar-user-username {
+        padding: 0 8px;
+    }
+
+    #nav-bar-user-icon {
+        font-size: 32px;
+        vertical-align: middle;
+
+        color: #bb86fc;
+    }
+
     #bugs-content {
         margin: 0 auto;
         max-width: 756px;
 
-        padding-top: 52px;
+        padding: 52px 16px 0 16px;
 
         position: relative;
     }
@@ -99,7 +130,7 @@
     #bug-add-view-toggle {
         position: absolute;
         top: 0;
-        right: 0;
+        right: 16px;
 
         background: #bb86fc;
     }

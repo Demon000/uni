@@ -31,7 +31,6 @@
 
 <script>
     import Vue from 'vue';
-    import axios from "axios";
 
     export default Vue.component('login', {
         data: function() {
@@ -41,38 +40,38 @@
                 error: '',
             };
         },
-        mounted: function() {
-            axios
-                .get('/api/auth/user')
-                .then(response => {
-                    this.emitLogin(response.data);
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+        mounted: async function() {
+            try {
+                await this.$store.dispatch('refreshLogin');
+            } catch (e) {
+                return;
+            }
+
+            try {
+                await this.$router.replace('bugs');
+            } catch (e) {
+                console.error(e);
+                // ignored
+            }
         },
         methods: {
-            login: function() {
-                this.setError(null);
-                axios
-                    .post('/api/auth/login', {
+            login: async function() {
+                try {
+                    await this.$store.dispatch('newLogin', {
                         username: this.username,
-                        password: this.password
-                    })
-                    .then(response => {
-                        this.emitLogin(response.data.user);
-                    })
-                    .catch(error => {
-                        this.setError(error.response.data.message);
+                        password: this.password,
                     });
-            },
-            emitLogin(user) {
-                this.$router.app.$emit('login', {
-                    user,
-                });
-            },
-            setError(message) {
-                this.error = message;
+                } catch (e) {
+                    this.error = e.response.data.message;
+                    return;
+                }
+
+                try {
+                    await this.$router.replace('bugs');
+                } catch (e) {
+                    console.error(e);
+                    // ignored
+                }
             },
         },
     });
