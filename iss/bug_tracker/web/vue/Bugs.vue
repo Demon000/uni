@@ -31,8 +31,18 @@
                     <button v-on:click="addBug">ADD BUG</button>
                 </div>
             </div>
-            <bugs-list v-bind:title="'Open bugs'" v-bind:status="'OPEN'" ref="openBugsCategory"></bugs-list>
-            <bugs-list v-bind:title="'Closed bugs'" v-bind:status="'CLOSED'" ref="closedBugsCategory"></bugs-list>
+            <bug-list
+                    v-bind:title="'Open bugs'"
+                    v-bind:status="'OPEN'"
+                    v-on:after-solve="loadBugs"
+                    ref="openBugsCategory"
+            ></bug-list>
+            <bug-list
+                    v-bind:title="'Solved bugs'"
+                    v-bind:status="'SOLVED'"
+                    v-on:after-solve="loadBugs"
+                    ref="solvedBugsCategory"
+            ></bug-list>
         </div>
     </div>
 </template>
@@ -55,22 +65,25 @@
             },
         },
         methods: {
-            onAddViewToggleButtonClick: function () {
+            onAddViewToggleButtonClick() {
                 this.isAdding = !this.isAdding;
             },
-            addBug: function () {
+            addBug() {
                 axios
                     .post('/api/bugs', {
                         title: this.addBugTitle,
                         description: this.addBugDescription,
                     })
                     .then(() => {
-                        this.$refs.openBugsCategory.loadBugs();
-                        this.$refs.closedBugsCategory.loadBugs();
+                        this.loadBugs();
                     })
                     .catch(error => {
                         console.error(error);
                     });
+            },
+            loadBugs() {
+                this.$refs.openBugsCategory.loadBugs();
+                this.$refs.solvedBugsCategory.loadBugs();
             },
         },
     });

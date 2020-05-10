@@ -1,12 +1,12 @@
 class BugStatuses {
     static OPEN = 'OPEN';
-    static CLOSED = 'CLOSED';
+    static SOLVED = 'SOLVED';
     static ALL = 'ALL';
 
     static getValues() {
         return [
             this.OPEN,
-            this.CLOSED,
+            this.SOLVED,
         ];
     }
 
@@ -14,8 +14,8 @@ class BugStatuses {
         switch (status.toUpperCase()) {
             case 'OPEN':
                 return this.OPEN;
-            case 'CLOSED':
-                return this.CLOSED;
+            case 'SOLVED':
+                return this.SOLVED;
             default:
                 return this.ALL;
         }

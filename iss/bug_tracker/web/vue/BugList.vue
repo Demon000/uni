@@ -1,5 +1,5 @@
 <template>
-    <div class="bugs-list">
+    <div class="bug-list">
         <p class="title">
             {{ title }}
         </p>
@@ -12,7 +12,7 @@
                 v-bind:data="bug"
                 v-on:solve-click="solveBug(bug.id)"
                 v-on:delete-click="deleteBug(bug.id)"
-                v-on:finish-save="loadBugs()"
+                v-on:after-save="loadBugs()"
         ></bug-item>
     </div>
 </template>
@@ -21,7 +21,7 @@
     import Vue from 'vue';
     import axios from 'axios';
 
-    export default Vue.component('bugs-list', {
+    export default Vue.component('bug-list', {
         props: [
             'title',
             'status'
@@ -44,6 +44,7 @@
                     })
                     .then(response => {
                         this.bugs = response.data;
+                        console.log(response.data)
                     })
                     .catch(error => {
                         console.error(error);
@@ -51,9 +52,9 @@
             },
             solveBug(bugId) {
                 axios
-                    .post(`/api/bugs/${bugId}/solved`)
+                    .post(`/api/bugs/${bugId}/solve`)
                     .then(() => {
-                        this.loadBugs();
+                        this.$emit('after-solve');
                     })
                     .catch(error => {
                         console.error(error);
@@ -74,11 +75,11 @@
 </script>
 
 <style>
-    .bugs-list {
+    .bug-list {
         margin-bottom: 32px;
     }
 
-    .bugs-list > .title {
+    .bug-list > .title {
         color: rgba(255, 255, 255, 0.6);
     }
 </style>

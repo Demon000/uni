@@ -1634,7 +1634,7 @@
 											"top": 154,
 											"width": 116.34619140625,
 											"height": 13,
-											"text": "CLOSED",
+											"text": "SOLVED",
 											"horizontalAlignment": 0
 										}
 									],
@@ -6395,7 +6395,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFx36BUt1P9MQs="
 							},
-							"name": "CLOSED"
+							"name": "SOLVED"
 						}
 					]
 				},

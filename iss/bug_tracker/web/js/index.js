@@ -31,14 +31,14 @@ const router = new VueRouter({
 });
 
 import store from './store';
-import BugsList from '../vue/BugsList.vue';
+import BugList from '../vue/BugList.vue';
 import BugItem from '../vue/BugItem.vue';
 new Vue({
     router,
     store,
     el: '#app',
     components: {
-        'bugs-list': BugsList,
+        'bug-list': BugList,
         'bug-item': BugItem,
     },
 });

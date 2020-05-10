@@ -2,11 +2,13 @@
     <div class="bug-item">
         <template v-if="!isEditing">
             <div class="buttons">
-                <template v-if="user.role === 'PROGRAMMER'">
-                    <i class="solve mdi mdi-check" v-on:click="solveButtonClick"></i>
+                <template v-if="data.status === 'OPEN'">
+                    <template v-if="user.role === 'PROGRAMMER'">
+                        <i class="solve mdi mdi-check" v-on:click="solveButtonClick"></i>
+                    </template>
+                    <i class="edit mdi mdi-pencil" v-on:click="editButtonClick"></i>
+                    <i class="delete mdi mdi-delete" v-on:click="deleteButtonClick"></i>
                 </template>
-                <i class="edit mdi mdi-pencil" v-on:click="editButtonClick"></i>
-                <i class="delete mdi mdi-delete" v-on:click="deleteButtonClick"></i>
             </div>
             <p class="title">{{ data.title }}</p>
             <p class="secondary-title">
@@ -16,7 +18,7 @@
                     at
                     {{ formatDate(data.createdAt) }}
                 </template>
-                <template v-else-if="data.status === 'CLOSED'">
+                <template v-else-if="data.status === 'SOLVED'">
                     solved by
                     {{ data.solvedBy.username }}
                     at
@@ -78,7 +80,7 @@
                 axios
                     .post(`/api/bugs/${this.data.id}`, this.data)
                     .then(() => {
-                        this.$emit('finish-save');
+                        this.$emit('after-save');
                         this.isEditing = false;
                     })
                     .catch(error => {
@@ -143,6 +145,12 @@
         padding: 4px;
 
         border-radius: 50%;
+    }
+    .bug-item > .buttons > .solve {
+        color: #03dac6;
+    }
+    .bug-item > .buttons > .solve:hover {
+        background: rgba(3, 218, 198, 0.06);
     }
     .bug-item > .buttons > .delete {
         color: #cf6679;

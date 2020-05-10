@@ -23,7 +23,7 @@ class BugService {
             query = query.forUserId(userId);
         }
 
-        if (status === BugStatuses.CLOSED) {
+        if (status === BugStatuses.SOLVED) {
             query = query.sort({
                 solvedAt: -1,
             });
@@ -74,6 +74,7 @@ class BugService {
         bug.solvedBy = userId;
         bug.solvedAt = Date.now();
         bug.solvedMessage = data.message;
+        bug.status = BugStatuses.SOLVED;
         await bug.save();
     }
 
