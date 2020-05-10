@@ -31,8 +31,8 @@ const router = new VueRouter({
 });
 
 import store from './store';
-import BugsList from "../vue/BugsList.vue";
-import BugItem from "../vue/BugItem.vue";
+import BugsList from '../vue/BugsList.vue';
+import BugItem from '../vue/BugItem.vue';
 new Vue({
     router,
     store,

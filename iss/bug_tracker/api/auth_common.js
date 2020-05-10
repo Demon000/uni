@@ -3,7 +3,6 @@ const Errors = require('../lib/Errors');
 
 function authUserInner(role) {
     return (req, res, next) => {
-        console.log(req.headers)
         const header = req.headers.authorization;
         if (!header) {
             throw new Errors.AccessTokenError();
