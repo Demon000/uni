@@ -71,7 +71,7 @@
             async onLogoutButtonClick() {
                 await this.$store.dispatch('logout');
                 await this.$router.replace({
-                    name: 'bugs',
+                    name: 'login',
                 });
             },
             onAddViewToggleButtonClick() {
