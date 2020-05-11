@@ -35,6 +35,10 @@ const Logger = require('morgan');
 const logger = Logger(LoggerConfig.format);
 app.use(logger);
 
+const History = require('connect-history-api-fallback');
+const history = History();
+app.use(history);
+
 const web = Express.static('web');
 app.use('/', web);
 
