@@ -40,7 +40,7 @@
                 error: '',
             };
         },
-        mounted: async function() {
+        async mounted() {
             try {
                 await this.$store.dispatch('refreshLogin');
             } catch (e) {
@@ -48,14 +48,16 @@
             }
 
             try {
-                await this.$router.replace('bugs');
+                await this.$router.replace({
+                    name: 'bugs',
+                });
             } catch (e) {
                 console.error(e);
                 // ignored
             }
         },
         methods: {
-            login: async function() {
+            async login() {
                 try {
                     await this.$store.dispatch('newLogin', {
                         username: this.username,
@@ -67,7 +69,9 @@
                 }
 
                 try {
-                    await this.$router.replace('bugs');
+                    await this.$router.replace({
+                        name: 'bugs',
+                    });
                 } catch (e) {
                     console.error(e);
                     // ignored

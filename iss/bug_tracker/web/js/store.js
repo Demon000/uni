@@ -4,8 +4,24 @@ import axios from 'axios';
 
 Vue.use(Vuex);
 
-function setAccessToken(accessToken) {
+function setAuthorizationHeader(accessToken) {
     axios.defaults.headers.authorization = `Bearer ${accessToken}`;
+}
+
+function unsetAuthorizationHeader() {
+    delete axios.defaults.headers.authorization;
+}
+
+function setToken(accessToken) {
+    localStorage.setItem('access_token', accessToken);
+}
+
+function getToken() {
+    return localStorage.getItem('access_token');
+}
+
+function unsetToken() {
+    localStorage.removeItem('access_token');
 }
 
 export default new Vuex.Store({
@@ -21,7 +37,7 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        newLogin: async function({ commit }, data) {
+        async newLogin({ commit }, data) {
             commit('unsetUser');
             let response;
             try {
@@ -32,18 +48,18 @@ export default new Vuex.Store({
 
             const accessToken = response.data.access_token;
             const user = response.data.user;
-            localStorage.setItem('access_token', accessToken);
-            setAccessToken(accessToken);
+            setToken(accessToken)
+            setAuthorizationHeader(accessToken);
             commit('setUser', user);
         },
-        refreshLogin: async function({ commit }) {
+        async refreshLogin({ commit }) {
             commit('unsetUser');
-            const accessToken = localStorage.getItem('access_token');
+            const accessToken = getToken();
             if (!accessToken) {
                 return;
             }
 
-            setAccessToken(accessToken);
+            setAuthorizationHeader(accessToken);
 
             let response;
             try {
@@ -55,6 +71,11 @@ export default new Vuex.Store({
             const user = response.data;
             commit('setUser', user);
         },
+        logout({ commit }) {
+            unsetToken();
+            unsetAuthorizationHeader();
+            commit('unsetUser');
+        }
     },
     getters: {
         isLoggedIn: state => !!state.user,

@@ -13,6 +13,9 @@
                 <span id="nav-bar-user-username" v-if="user">{{ user.username }}</span>
                 <i id="nav-bar-user-icon" class="mdi mdi-account-circle"></i>
             </div>
+            <span id="logout" v-on:click="onLogoutButtonClick">
+                LOGOUT
+            </span>
         </div>
         <div id="bugs-content">
             <button id="bug-add-view-toggle" class="fab mdi" v-bind:class="{ 'adding': isAdding }" v-on:click="onAddViewToggleButtonClick"></button>
@@ -65,6 +68,12 @@
             },
         },
         methods: {
+            async onLogoutButtonClick() {
+                await this.$store.dispatch('logout');
+                await this.$router.replace({
+                    name: 'bugs',
+                });
+            },
             onAddViewToggleButtonClick() {
                 this.isAdding = !this.isAdding;
             },
@@ -75,6 +84,8 @@
                         description: this.addBugDescription,
                     })
                     .then(() => {
+                        this.addBugTitle = '';
+                        this.addBugDescription = '';
                         this.loadBugs();
                     })
                     .catch(error => {
@@ -98,6 +109,10 @@
 
         display: flex;
         flex-direction: row;
+    }
+
+    #nav-bar > * {
+        margin: 0 8px;
     }
 
     #nav-bar-logo {

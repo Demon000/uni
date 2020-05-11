@@ -9,7 +9,7 @@
                 v-for="bug of bugs"
                 v-if="bug.status === status"
                 v-bind:key="bug.id"
-                v-bind:data="bug"
+                v-bind="bug"
                 v-on:solve-click="solveBug(bug.id)"
                 v-on:delete-click="deleteBug(bug.id)"
                 v-on:after-save="loadBugs()"

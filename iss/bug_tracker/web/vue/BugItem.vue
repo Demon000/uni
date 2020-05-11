@@ -2,44 +2,45 @@
     <div class="bug-item">
         <template v-if="!isEditing">
             <div class="buttons">
-                <template v-if="data.status === 'OPEN'">
+                <template v-if="status === 'OPEN'">
                     <template v-if="user.role === 'PROGRAMMER'">
-                        <i class="solve mdi mdi-check" v-on:click="solveButtonClick"></i>
+                        <i class="solve mdi mdi-check" v-on:click="onSolveButtonClick"></i>
                     </template>
-                    <i class="edit mdi mdi-pencil" v-on:click="editButtonClick"></i>
-                    <i class="delete mdi mdi-delete" v-on:click="deleteButtonClick"></i>
+                    <i class="edit mdi mdi-pencil" v-on:click="onEditButtonClick"></i>
+                    <i class="delete mdi mdi-delete" v-on:click="onDeleteButtonClick"></i>
                 </template>
             </div>
-            <p class="title">{{ data.title }}</p>
+            <p class="title">{{ title }}</p>
             <p class="secondary-title">
-                <template v-if="data.status === 'OPEN'">
-                    created by
-                    {{ data.createdBy.username }}
-                    at
-                    {{ formatDate(data.createdAt) }}
-                </template>
-                <template v-else-if="data.status === 'SOLVED'">
+                created by
+                {{ createdBy.username }}
+                at
+                {{ formatDate(createdAt) }}
+
+                <template v-if="status === 'SOLVED'">
+                    <br>
                     solved by
-                    {{ data.solvedBy.username }}
+                    {{ solvedBy.username }}
                     at
-                    {{ formatDate(data.solvedAt) }}
+                    {{ formatDate(solvedAt) }}
                 </template>
             </p>
-            <p class="description">{{ data.description }}</p>
+            <p class="description">{{ description }}</p>
         </template>
         <template v-else>
             <div class="input-group">
                 <label>Title</label>
-                <input type="text" v-model="data.title">
+                <input type="text" v-model="editedTitle">
             </div>
 
             <div class="input-group">
                 <label>Description</label>
-                <textarea v-model="data.description" rows="10"></textarea>
+                <textarea v-model="editedDescription" rows="10"></textarea>
             </div>
 
             <div class="buttons-wrapper">
-                <button v-on:click="saveButtonClick">SAVE BUG</button>
+                <button v-on:click="onCancelEditButtonClick">CANCEL</button>
+                <button v-on:click="onSaveEditButtonClick">SAVE BUG</button>
             </div>
         </template>
     </div>
@@ -53,7 +54,14 @@
     export default Vue.component('bug-item', {
         name: 'bug-item',
         props: [
-            'data',
+            'id',
+            'title',
+            'description',
+            'status',
+            'createdBy',
+            'createdAt',
+            'solvedBy',
+            'solvedAt',
         ],
         computed: {
             user: function() {
@@ -63,31 +71,41 @@
         data: function() {
             return {
                 isEditing: false,
+                editedTitle: '',
+                editedDescription: '',
             };
         },
         methods: {
             formatDate: function(date) {
                 return moment(date).format('dddd, MMMM Do YYYY, h:mm');
             },
-            solveButtonClick: function() {
+            onSolveButtonClick: function() {
                 this.$emit('solve-click');
             },
-            editButtonClick: function() {
+            onEditButtonClick: function() {
+                this.editedTitle = this.title;
+                this.editedDescription = this.description;
                 this.isEditing = true;
                 this.$emit('edit-click');
             },
-            saveButtonClick: function() {
+            onSaveEditButtonClick: function() {
                 axios
-                    .post(`/api/bugs/${this.data.id}`, this.data)
+                    .post(`/api/bugs/${this.id}`, {
+                        title: this.editedTitle,
+                        description: this.editedDescription,
+                    })
                     .then(() => {
-                        this.$emit('after-save');
                         this.isEditing = false;
+                        this.$emit('after-save');
                     })
                     .catch(error => {
                         console.error(error);
                     });
             },
-            deleteButtonClick: function() {
+            onCancelEditButtonClick: function() {
+                this.isEditing = false;
+            },
+            onDeleteButtonClick: function() {
                 this.$emit('delete-click');
             }
         }

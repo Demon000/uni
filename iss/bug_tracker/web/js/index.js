@@ -18,7 +18,7 @@ const router = new VueRouter({
     mode: 'history',
     routes: [
         {
-            path: '/bugs',
+            path: '/',
             name: 'bugs',
             component: Bugs,
             beforeEnter: loginRouteGuard,
