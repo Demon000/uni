@@ -1,0 +1,21 @@
+#races-list, #race-form {
+    display: inline-block;
+    vertical-align: top;
+}
+#races-list {
+    border-right: 1px solid grey;
+}
+#race-form {
+    padding: 8px;
+}
+.race {
+    padding: 8px;
+    cursor: pointer;
+}
+.race.selected {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.race > p {
+    margin: 0;
+}

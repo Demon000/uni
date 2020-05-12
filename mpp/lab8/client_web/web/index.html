@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Client Web</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+    <div id="app">
+        <div id="races-list">
+            <div class="race" v-for="race in races" v-on:click="onRaceClick(race)" v-bind:class="{ selected: race === selectedRace }">
+                <p>Id: {{ race.id }}</p>
+                <p>Name: {{ race.name }}</p>
+                <p>Arbiter id: {{ race.arbiter.id }}</p>
+                <p>Arbiter name: {{ race.arbiter.name }}</p>
+            </div>
+            <div class="race" v-on:click="onNewRaceClick()" v-bind:class="{ selected: newRace === selectedRace }">
+                New race
+            </div>
+        </div>
+        <div id="race-form" v-if="selectedRace">
+            <div class="input-group">
+                <label for="race-name">Name</label>
+                <input id="race-name" type="text" required v-model="selectedRace.name">
+            </div>
+            <div class="input-group">
+                <label for="race-arbiter-id">Arbiter</label>
+                <select id="race-arbiter-id" v-model="selectedRace.arbiter.id">
+                    <option v-for="arbiter in arbiters" v-bind:value="arbiter.id">{{ arbiter.name }}</option>
+                </select>
+                <button v-if="selectedRace === newRace" v-on:click="onCreateRaceClick">Create</button>
+                <template v-else>
+                    <button v-on:click="onUpdateRaceClick">Update</button>
+                    <button v-on:click="onDeleteRaceClick">Delete</button>
+                </template>
+            </div>
+        </div>
+    </div>
+    <script src="dist/index.js"></script>
+</body>
+</html>
