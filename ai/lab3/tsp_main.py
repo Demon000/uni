@@ -20,20 +20,4 @@ params = GraphParameters(graph,
                          no_crossover_points=10,
                          mutation_chance=0.03)
 
-seed(5)
 
-profiled = False
-console = True
-plot = True
-no_generations = 2000
-ga = GeneticAlgorithm(params)
-
-
-def run():
-    ga.run_generations(no_generations, console=console, plot=plot)
-
-
-if profiled:
-    cProfile.run(run.__code__)
-else:
-    run()

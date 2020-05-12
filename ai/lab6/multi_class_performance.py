@@ -6,9 +6,10 @@ from checks import check_same_size
 def mc_performance(predicted_classes, actual_classes):
     check_same_size(predicted_classes, actual_classes)
     labels = list(set(predicted_classes + actual_classes))
+    no_labels = len(labels)
     no_samples = len(predicted_classes)
 
-    accuracies = []
+    general_accuracy = 0.0
     precisions = []
     recalls = []
     for label in labels:
@@ -31,20 +32,21 @@ def mc_performance(predicted_classes, actual_classes):
         # what proportion of actual positives is correctly predicted?
         recall = true_positives / (true_positives + false_negatives)
 
-        accuracies.append(accuracy)
+        general_accuracy += accuracy
         precisions.append(precision)
         recalls.append(recall)
 
-    return labels, accuracies, precisions, recalls
+    return labels, precisions, recalls, general_accuracy / no_labels
 
 
 def print_mc_performance(predicted_classes, actual_classes):
-    labels, accuracies, precisions, recalls = mc_performance(predicted_classes, actual_classes)
+    labels, precisions, recalls, ge = mc_performance(predicted_classes, actual_classes)
     labels = [""] + labels
     accuracies = ["Accuracy"] + [str(x) for x in accuracies]
     precisions = ["Precision"] + [str(x) for x in precisions]
     recalls = ["Recall"] + [str(x) for x in recalls]
     print(tabulate([accuracies, precisions, recalls], headers=labels, tablefmt="fancy_grid"))
+    print(general_accuracy)
 
 
 C = "Cat"

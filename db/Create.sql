@@ -57,7 +57,6 @@ create table VideoComments(
 	CreateTime date not null,
 );
 
-
 create table VideoCommentVotes(
 	UserId int not null,
 	CommentId int,
@@ -67,7 +66,6 @@ create table VideoCommentVotes(
 
 	Vote bit not null,
 );
-
 
 create table PlaylistSortOrderLookup(
 	SortOrderId int primary key not null,
@@ -89,10 +87,8 @@ create table PlaylistVideos(
 	foreign key(PlaylistId) references Playlists(PlaylistId),
 	foreign key(VideoId) references Videos(VideoId),
 
-
 	AddTime date not null,
 );
-
 
 create table VideoReportTypeLookup(
 	VideoReportsTypeId int primary key,
@@ -109,8 +105,7 @@ create table VideoReports(
 	UserId int foreign key references Users(UserId) not null,
 
 	ReportTime date not null,
-	[Description] nvarchar(MAX) not null, /* Avoid Description keyword usage */
-	VideoReportsTypeId int foreign key references VideoReportTypeLookup(VideoReportsTypeId),
+	[Description] nvarchar(MAX) not null, // Avoid Description keyword usage
+	VideoReportsTypeId int foreign key references VideReportTypeLookup(VideoReportsTypeId),
 	VideoReportStatusLookup int foreign key references VideoReportStatusLookup(VideoReportsStatusId),
 );
-
