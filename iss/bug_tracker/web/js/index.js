@@ -1,4 +1,3 @@
-import VueRouter from 'vue-router';
 import Vue from 'vue';
 
 import Bugs from '../vue/Bugs.vue';
@@ -13,6 +12,7 @@ function loginRouteGuard(toRoute, fromRoute, next) {
     next('login');
 }
 
+import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 const router = new VueRouter({
     mode: 'history',
@@ -30,6 +30,9 @@ const router = new VueRouter({
         }
     ],
 });
+
+import VueSSE from 'vue-sse';
+Vue.use(VueSSE);
 
 import store from './store';
 import BugList from '../vue/BugList.vue';

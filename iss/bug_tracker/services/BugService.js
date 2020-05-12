@@ -19,7 +19,7 @@ class BugService {
     static async getBugsForUser(userId, status=BugStatuses.ALL) {
         let query = Bug.find();
 
-        if (userId !== null) {
+        if (userId) {
             query = query.forUserId(userId);
         }
 
@@ -44,17 +44,14 @@ class BugService {
         return await this.getBugsForUser(null, status);
     }
 
-    static async getBugById(bugId) {
-        const bug = await Bug.findById(bugId).exec();
-        if (!bug) {
-            throw new Errors.BugNotFoundError();
+    static async getBugByIdForUser(userId, bugId) {
+        let query = Bug.findById(bugId);
+
+        if (userId) {
+            query = query.forUserId(userId);
         }
 
-        return bug;
-    }
-
-    static async getBugByIdForUser(userId, bugId) {
-        const bug = await Bug.findById(bugId).forUserId(userId).exec();
+        const bug = await query.exec();
         if (!bug) {
             throw new Errors.BugNotFoundError();
         }
@@ -62,6 +59,10 @@ class BugService {
         await bug.populateUsers();
 
         return bug;
+    }
+
+    static async getBugById(bugId) {
+        return this.getBugByIdForUser(null, bugId);
     }
 
     static async updateBug(bug, data) {

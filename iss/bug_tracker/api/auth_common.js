@@ -1,19 +1,33 @@
 const AuthService = require('../services/AuthService');
 const Errors = require('../lib/Errors');
 
-function authUserInner(role) {
+function getPayloadFromHeader(req) {
+    const header = req.headers.authorization;
+    if (!header) {
+        throw new Errors.AccessTokenError();
+    }
+
+    const parts = header.split(' ');
+    if (parts.length !== 2) {
+        throw new Errors.AccessTokenError();
+    }
+
+    return parts[1];
+}
+
+function getPayloadFromQuery(req) {
+    return req.query.access_token;
+}
+
+function authUserInner(role, method='header') {
     return (req, res, next) => {
-        const header = req.headers.authorization;
-        if (!header) {
-            throw new Errors.AccessTokenError();
+        let payload = null;
+        if (method === 'header') {
+            payload = getPayloadFromHeader(req);
+        } else if (method === 'query') {
+            payload = getPayloadFromQuery(req);
         }
 
-        const parts = header.split(' ');
-        if (parts.length !== 2) {
-            throw new Errors.AccessTokenError();
-        }
-
-        const payload = parts[1];
         let accessToken;
         try {
             accessToken = AuthService.getAccessTokenFromPayload(payload);
@@ -31,12 +45,12 @@ function authUserInner(role) {
     };
 }
 
-function authUser() {
-    return authUserInner();
+function authUser(method) {
+    return authUserInner(null, method);
 }
 
-function authUserWithRole(role) {
-    return authUserInner(role);
+function authUserWithRole(role, method) {
+    return authUserInner(role, method);
 }
 
 module.exports = {

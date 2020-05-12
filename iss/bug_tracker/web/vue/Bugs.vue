@@ -13,9 +13,7 @@
                 <span id="nav-bar-user-username" v-if="user">{{ user.username }}</span>
                 <i id="nav-bar-user-icon" class="mdi mdi-account-circle"></i>
             </div>
-            <span id="logout" v-on:click="onLogoutButtonClick">
-                LOGOUT
-            </span>
+            <span id="nav-bar-logout" v-on:click="onLogoutButtonClick">LOGOUT</span>
         </div>
         <div id="bugs-content">
             <button id="bug-add-view-toggle" class="fab mdi" v-bind:class="{ 'adding': isAdding }" v-on:click="onAddViewToggleButtonClick"></button>
@@ -53,19 +51,41 @@
 <script>
     import Vue from 'vue';
     import axios from 'axios';
+    import { getAccessToken } from '../js/store';
 
     export default Vue.component('bugs', {
-        data: function () {
+        data() {
             return {
                 isAdding: false,
                 addBugTitle: '',
                 addBugDescription: '',
+                sse: null,
             };
         },
         computed: {
             user: function() {
                 return this.$store.state.user;
             },
+        },
+        async mounted() {
+            const accessToken = getAccessToken();
+            try {
+                this.sse = await this.$sse(`/api/bugs/sse?access_token=${accessToken}`, {
+                    format: 'json'
+                });
+            } catch (e) {
+                console.error(e);
+                return;
+            }
+
+            this.sse.onError(e => {
+                console.error(e);
+            });
+
+            const loadBugs = () => this.loadBugs();
+            this.sse.subscribe('bug-add', loadBugs);
+            this.sse.subscribe('bug-update', loadBugs);
+            this.sse.subscribe('bug-delete', loadBugs);
         },
         methods: {
             async onLogoutButtonClick() {
@@ -86,6 +106,7 @@
                     .then(() => {
                         this.addBugTitle = '';
                         this.addBugDescription = '';
+                        this.isAdding = false;
                         this.loadBugs();
                     })
                     .catch(error => {
@@ -104,6 +125,7 @@
     #nav-bar {
         height: 64px;
         line-height: 64px;
+        font-size: 14px;
 
         padding: 0 16px;
 
@@ -132,6 +154,10 @@
         vertical-align: middle;
 
         color: #bb86fc;
+    }
+
+    #nav-bar-logout {
+        cursor: pointer;
     }
 
     #bugs-content {

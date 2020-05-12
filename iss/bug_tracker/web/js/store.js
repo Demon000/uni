@@ -12,15 +12,15 @@ function unsetAuthorizationHeader() {
     delete axios.defaults.headers.authorization;
 }
 
-function setToken(accessToken) {
+function setAccessToken(accessToken) {
     localStorage.setItem('access_token', accessToken);
 }
 
-function getToken() {
+export function getAccessToken() {
     return localStorage.getItem('access_token');
 }
 
-function unsetToken() {
+function unsetAccessToken() {
     localStorage.removeItem('access_token');
 }
 
@@ -48,13 +48,13 @@ export default new Vuex.Store({
 
             const accessToken = response.data.access_token;
             const user = response.data.user;
-            setToken(accessToken)
+            setAccessToken(accessToken)
             setAuthorizationHeader(accessToken);
             commit('setUser', user);
         },
         async refreshLogin({ commit }) {
             commit('unsetUser');
-            const accessToken = getToken();
+            const accessToken = getAccessToken();
             if (!accessToken) {
                 return;
             }
@@ -72,7 +72,7 @@ export default new Vuex.Store({
             commit('setUser', user);
         },
         logout({ commit }) {
-            unsetToken();
+            unsetAccessToken();
             unsetAuthorizationHeader();
             commit('unsetUser');
         }

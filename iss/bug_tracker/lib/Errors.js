@@ -48,6 +48,12 @@ class BugNotFoundError extends CustomError {
     }
 }
 
+class AlreadySubscribedError extends CustomError {
+    constructor() {
+        super(403, 'already-subscribed-error', 'User is already subscribed to bug events.');
+    }
+}
+
 module.exports = {
     HelloError,
     UserCreateError,
@@ -56,4 +62,5 @@ module.exports = {
     UserNotFoundError,
     UserForbiddenError,
     BugNotFoundError,
+    AlreadySubscribedError,
 };

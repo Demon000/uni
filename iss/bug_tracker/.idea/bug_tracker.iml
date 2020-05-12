@@ -20,5 +20,6 @@
     <orderEntry type="library" name="vue-js-modal" level="application" />
     <orderEntry type="library" name="moment" level="application" />
     <orderEntry type="library" name="vue-moment" level="application" />
+    <orderEntry type="library" name="@types/express-session" level="application" />
   </component>
 </module>

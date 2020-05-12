@@ -30,6 +30,11 @@ const Express = require('express');
 require('express-async-errors');
 const app = Express();
 
+const Session = require('express-session');
+const SessionConfig = Config.get('Session');
+const session = Session(SessionConfig);
+app.use(session);
+
 const LoggerConfig = Config.get('Logger');
 const Logger = require('morgan');
 const logger = Logger(LoggerConfig.format);

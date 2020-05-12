@@ -3,6 +3,9 @@
     "port": 8080,
     "host": "localhost"
   },
+  "Session": {
+    "secret": "cat-secrets-are-the-best-trust-me"
+  },
   "Mongo": {
     "url": "mongodb://localhost:27017"
   },
@@ -12,12 +15,6 @@
   "TokenGenerator": {
     "secret": "secret here",
     "accessTokenExpireTime": "1d"
-  },
-  "AccessCookie": {
-    "maxAge": 86400,
-    "httpOnly": true,
-    "secure": true,
-    "overwrite": true
   },
   "TestUsers": {
     "TESTER": [

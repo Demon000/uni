@@ -40,7 +40,7 @@ class UserService {
                 try {
                     await this.createUser(data);
                 } catch (e) {
-                    console.log(`Already added test user ${user.username}.`);
+                    console.log(`Already added test user ${user.username} with role ${role}.`);
                 }
             }
         }

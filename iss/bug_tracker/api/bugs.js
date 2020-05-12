@@ -8,6 +8,27 @@ const BugService = require('../services/BugService');
 const { authUser } = require('./auth_common');
 const { authUserWithRole } = require('./auth_common');
 
+const ServerSideEvent = require('../lib/ServerSideEvent');
+const sse = new ServerSideEvent();
+
+function isBugAccessibleTo(bug, user) {
+    if (user.role === UserRoles.PROGRAMMER) {
+        return true;
+    }
+
+    return bug.createdBy.id === user.id;
+}
+
+function sendBug(name, bug) {
+    sse.sendEventIf(name, bug, res => isBugAccessibleTo(bug, res.locals.user));
+}
+
+router.get('/sse',
+        authUser('query'),
+        (req, res) => {
+    sse.subscribeHandler(req, res);
+});
+
 router.get('/',
         authUser(),
         async (req, res) => {
@@ -32,6 +53,7 @@ router.post('/',
         authUser(),
         async (req, res) => {
     const bug = await BugService.createBug(res.locals.user.id, req.body);
+    sendBug('bug-add', bug);
     res.send(bug);
 });
 
@@ -55,7 +77,6 @@ router.get('/:id',
         authUser(),
         async (req, res) => {
     const bug = await getBugFromParams(req, res);
-
     res.send(bug);
 });
 
@@ -64,6 +85,7 @@ router.post('/:id',
         async (req, res) => {
     const bug = await getBugFromParams(req, res);
     await BugService.updateBug(bug, req.body);
+    sendBug('bug-update', bug);
     res.send(bug);
 });
 
@@ -72,6 +94,7 @@ router.post('/:id/solve',
         async (req, res) => {
     const bug = await getBugFromParams(req, res);
     await BugService.solveBugForUser(res.locals.user.id, bug, req.body);
+    sendBug('bug-update', bug);
     res.send(bug);
 });
 
@@ -80,6 +103,7 @@ router.delete('/:id',
         async (req, res) => {
     const bug = await getBugFromParams(req, res);
     await BugService.deleteBug(bug);
+    sendBug('bug-delete', bug);
     res.end();
 });
 
