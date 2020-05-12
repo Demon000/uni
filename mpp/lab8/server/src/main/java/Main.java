@@ -1,8 +1,10 @@
 import domain.Arbiter;
 import domain.Race;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -12,6 +14,9 @@ import rest.RestApplication;
 import utils.Configuration;
 import repository.RepositoryUtils;
 
+import javax.servlet.*;
+import java.io.IOException;
+import java.util.EnumSet;
 import java.util.List;
 
 public class Main {
@@ -82,6 +87,10 @@ public class Main {
     public static void createServer() {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
+
+        FilterHolder holder = new FilterHolder(new CrossOriginFilter());
+        holder.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,POST,PATCH,DELETE,HEAD,OPTIONS");
+        context.addFilter(holder, "/api/*", EnumSet.of(DispatcherType.REQUEST));
 
         server = new Server(SERVER_PORT);
         server.setHandler(context);

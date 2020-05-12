@@ -96,7 +96,7 @@ public class RacesResource {
                 .build();
     }
 
-    @POST
+    @PATCH
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -189,7 +189,6 @@ public class RacesResource {
 
         return Response
                 .ok()
-                .entity(race)
                 .build();
     }
 }
