@@ -5,7 +5,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
+from batch_gradient_descent import BatchGradientDescent
+from manual_batch_gradient_descent import ManualBatchGradientDescent
 from manual_linear_regression import ManualLinearRegression
+from manual_normalizer import ManualNormalizer
+from normalizer import Normalizer
 
 
 def load_data(file_path, input_column_indices, output_column_index):
@@ -71,7 +75,7 @@ def plot_scatter(ax, inputs, outputs, color):
     ax.scatter3D(x_line, y_line, z_line, color)
 
 
-def plot(training_inputs, training_outputs, test_inputs, test_outputs, predicted_outputs):
+def plot_predicted_outputs(training_inputs, training_outputs, test_inputs, test_outputs, predicted_outputs, labels):
     plt.figure()
     ax = plt.axes(projection="3d")
 
@@ -86,23 +90,56 @@ def plot(training_inputs, training_outputs, test_inputs, test_outputs, predicted
     zs = [predicted_outputs[min_index][0], predicted_outputs[max_index][0]]
     ax.plot(xs, ys, zs)
 
-    ax.set_xlabel("GDP")
-    ax.set_ylabel("Freedom")
-    ax.set_zlabel("Happiness")
+    ax.set_xlabel(labels[0])
+    ax.set_ylabel(labels[1])
+    ax.set_zlabel(labels[2])
     plt.show()
 
 
-def run(model, training_inputs, training_outputs, test_inputs, test_outputs, method="manual"):
-    model.fit(training_inputs, training_outputs)
-    predicted_outputs = model.predict(test_inputs)
+def plot_losses(losses):
+    plt.plot(range(len(losses)), losses)
+    plt.xlabel("Iteration")
+    plt.ylabel("Loss")
+    plt.title(losses[-1])
 
-    loss = calculate_loss(predicted_outputs, test_outputs)
+
+def run(model, normalizer, training_inputs, training_outputs,
+        test_inputs, test_outputs, labels=None, iterations=1):
+    last_predicted_outputs = None
+    last_loss = None
+    losses = []
+
+    normalizer.fit(training_inputs)
+
+    training_inputs = normalizer.transform(training_inputs)
+    test_inputs = normalizer.transform(test_inputs)
+
+    for i in range(iterations):
+        model.fit(training_inputs, training_outputs)
+        last_predicted_outputs = model.predict(test_inputs)
+        last_loss = calculate_loss(last_predicted_outputs, test_outputs)
+        losses.append(last_loss)
 
     # print(f"Predicted: {predicted_outputs}")
     # print(f"Expected: {test_outputs}")
-    print(f"Loss: {loss}")
+    print(f"Mean: {normalizer.mean}")
+    print(f"Variance: {normalizer.variance}")
+    print(f"Loss: {last_loss}")
 
-    # plot(training_inputs, training_outputs, test_inputs, test_outputs, predicted_outputs)
+    if iterations != 1:
+        plot_losses(losses)
+
+    if len(training_inputs[0]) == 2 and len(training_outputs[0]) == 1 and \
+            labels is not None and len(labels) == 3:
+        plot_predicted_outputs(training_inputs, training_outputs, test_inputs, test_outputs, last_predicted_outputs,
+                               labels)
+
+
+def run_both(model, normalizer, inputs, outputs,
+             training_inputs, training_outputs,
+             test_inputs, test_outputs, labels, iterations=1):
+    run(model, normalizer, inputs, outputs, inputs, outputs, labels, iterations)
+    run(model, normalizer, training_inputs, training_outputs, test_inputs, test_outputs, labels, iterations)
 
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -112,16 +149,30 @@ GDP_COLUMN = 5
 FREEDOM_COLUMN = 8
 TRUST_COLUMN = 10
 
+input_columns = [GDP_COLUMN, FREEDOM_COLUMN]
+output_column = HAPPINESS_COLUMN
+all_labels = ["GDP", "Freedom", "Happiness"]
+
 csv_2017_path = os.path.join(__location__, "2017.csv")
-all_inputs, all_outputs = load_data(csv_2017_path, [GDP_COLUMN, FREEDOM_COLUMN, TRUST_COLUMN], HAPPINESS_COLUMN)
+all_inputs, all_outputs = load_data(csv_2017_path, input_columns, output_column)
 
 all_training_inputs, all_training_outputs, all_test_inputs, all_test_outputs = \
     split_training_set(all_inputs, all_outputs, 0.8)
 
-linear_model = ManualLinearRegression()
-run(linear_model, all_inputs, all_outputs, all_inputs, all_outputs)
-run(linear_model, all_training_inputs, all_training_outputs, all_test_inputs, all_test_outputs)
+# run_both(ManualLinearRegression(), Normalizer(), all_inputs, all_outputs,
+#          all_training_inputs, all_training_outputs,
+#          all_test_inputs, all_test_outputs, all_labels)
+# run_both(LinearRegression(), Normalizer(), all_inputs, all_outputs,
+#          all_training_inputs, all_training_outputs,
+#          all_test_inputs, all_test_outputs, all_labels)
 
-linear_model = LinearRegression()
-run(linear_model, all_inputs, all_outputs, all_inputs, all_outputs)
-run(linear_model, all_training_inputs, all_training_outputs, all_test_inputs, all_test_outputs)
+#
+# run(BatchGradientDescent(learning_rate=0.00001), Normalizer(), all_training_inputs, all_training_outputs,
+#     all_test_inputs, all_test_outputs, all_labels, iterations=10000)
+# run(ManualBatchGradientDescent(learning_rate=0.00001), Normalizer(), all_training_inputs, all_training_outputs,
+#     all_test_inputs, all_test_outputs, all_labels, iterations=10000)
+
+run(BatchGradientDescent(learning_rate=0.00001), ManualNormalizer(), all_inputs, all_outputs,
+    all_inputs, all_outputs, all_labels, iterations=10000)
+run(ManualBatchGradientDescent(learning_rate=0.00001), ManualNormalizer(), all_inputs, all_outputs,
+    all_inputs, all_outputs, all_labels, iterations=10000)
