@@ -6,20 +6,11 @@ import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import service.IService;
-import service.IServiceObserver;
-import service.ServiceConnectionStatus;
-import service.ServiceError;
+import service.*;
 import utils.StringUtils;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -27,7 +18,7 @@ import java.util.concurrent.Executors;
 
 import static utils.FxUtils.*;
 
-public class ArbiterController implements IServiceObserver, IController {
+public class ArbiterController implements IController {
     @Override
     public String getStageTitle() {
         return "Arbiter";
@@ -77,9 +68,6 @@ public class ArbiterController implements IServiceObserver, IController {
     @FXML
     private Label arbiterTypeField;
 
-    @FXML
-    private HBox connectionBox;
-
     public ArbiterController(IService service) {
         this.service = service;
     }
@@ -114,8 +102,6 @@ public class ArbiterController implements IServiceObserver, IController {
 
         participantsTable.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldSelection, newSelection) -> onSelectionChanged());
-
-        service.addObserver(this);
     }
 
     public void onWindowShow() {
@@ -136,26 +122,11 @@ public class ArbiterController implements IServiceObserver, IController {
             Score score = scoreCellDataFeatures.getValue();
             return new ReadOnlyObjectWrapper<>(score.getScore(arbiter.getType()));
         });
-        setConnectionBoxVisibility();
         getTableData();
     }
 
     public void stop() {
         executor.shutdown();
-        service.removeObserver(this);
-    }
-
-    private void setConnectionBoxVisibility(boolean visible) {
-        connectionBox.setManaged(visible);
-        connectionBox.setVisible(visible);
-    }
-
-    private void setConnectionBoxVisibility(ServiceConnectionStatus status) {
-        setConnectionBoxVisibility(status != ServiceConnectionStatus.CONNECTED);
-    }
-
-    private void setConnectionBoxVisibility() {
-        setConnectionBoxVisibility(service.getConnectionStatus());
     }
 
     public void setRankingsTableVisibility(boolean visible) {
@@ -277,11 +248,6 @@ public class ArbiterController implements IServiceObserver, IController {
     }
 
     @FXML
-    void onRetryButtonAction(ActionEvent event) {
-        service.ping();
-    }
-
-    @FXML
     void onRefreshButtonAction(ActionEvent event) {
         getTableData();
     }
@@ -289,15 +255,5 @@ public class ArbiterController implements IServiceObserver, IController {
     @FXML
     void onShowRankingsButtonAction(ActionEvent event) {
         setRankingsTableVisibility(showRankingsButton.isSelected());
-    }
-
-    @Override
-    public void onSetScore(Score score) {
-        Platform.runLater(() -> setScore(score));
-    }
-
-    @Override
-    public void onConnectionStatusChange(ServiceConnectionStatus status) {
-        Platform.runLater(() -> setConnectionBoxVisibility(status));
     }
 }

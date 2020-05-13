@@ -5,6 +5,10 @@ import grpc.triathlon.ErrorNumber;
 public class ServiceError extends Exception {
     ErrorNumber errorNumber;
 
+    public ServiceError(Exception e) {
+        super(e);
+    }
+
     public ServiceError(ErrorNumber errorNumber) {
         super("Unrecognized error");
 
@@ -22,8 +26,6 @@ public class ServiceError extends Exception {
                 return "Bearer invalid";
             case BEARER_NOT_AUTHORIZED:
                 return "Bearer not authorized";
-            case ALREADY_SUBSCRIBED:
-                return "Client already subscribed";
             case ALREADY_LOGGED_IN:
                 return "Client already logged in";
             case CONNECTION_ERROR:

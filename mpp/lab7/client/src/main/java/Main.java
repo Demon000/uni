@@ -1,25 +1,29 @@
 import controller.ArbiterController;
 import controller.IController;
 import controller.LoginController;
+import domain.Score;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import service.GrpcService;
-import service.IService;
-import service.IServiceObserver;
+import service.*;
 import utils.Configuration;
 
 import java.io.IOException;
 
 import static utils.FxUtils.showErrorAlert;
 
-public class Main extends Application implements IServiceObserver {
+public class Main extends Application implements IObserver {
     public static Configuration configuration = new Configuration(Main.class);
     public static String serverAddress = configuration.getValue("server_address", "127.0.0.1");
     public static Integer serverPort = configuration.getIntegerValue("server_port", 8080);
     public static IService service;
+
+    public static String mqServerAddress = configuration.getValue("mq_server_address", "127.0.0.1");
+    public static Integer mqServerPort = configuration.getIntegerValue("mq_server_port", 5672);
+    private MqService mqService;
+
 
     private Stage primaryStage;
     private LoginController loginController;
@@ -41,6 +45,7 @@ public class Main extends Application implements IServiceObserver {
             loginScene = new Scene(loader.load());
         } catch (IOException e) {
             e.printStackTrace();
+            System.exit(-1);
         }
     }
 
@@ -54,6 +59,7 @@ public class Main extends Application implements IServiceObserver {
             arbiterScene = new Scene(loader.load());
         } catch (IOException e) {
             e.printStackTrace();
+            System.exit(-1);
         }
     }
 
@@ -108,7 +114,35 @@ public class Main extends Application implements IServiceObserver {
     }
 
     public void stopService() {
-        service.stop();
+        try {
+            service.stop();
+        } catch (CanStartError e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    public void createMqService() {
+        mqService = new MqService(mqServerAddress, mqServerPort);
+        mqService.addObserver(this);
+    }
+
+    public void startMqService() {
+        try {
+            mqService.start();
+        } catch (CanStartError e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    public void stopMqService() {
+        try {
+            mqService.stop();
+        } catch (CanStartError e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 
     @Override
@@ -116,6 +150,7 @@ public class Main extends Application implements IServiceObserver {
         this.primaryStage = primaryStage;
 
         createService();
+        createMqService();
 
         showLoginScene();
     }
@@ -125,21 +160,30 @@ public class Main extends Application implements IServiceObserver {
         stopLoginController();
         stopArbiterController();
         service.logout();
+        stopMqService();
         stopService();
         destroyService();
         // printRunningThreads();
     }
 
     @Override
-    public void onLoginStatusChange(boolean loggedIn) {
-        if (loggedIn) {
-            Platform.runLater(this::showArbiterScene);
-        } else {
-            stopService();
-            Platform.runLater(() -> {
-                showErrorAlert("Arbiter is no longer logged in");
-                showLoginScene();
-            });
+    public void onEvent(String name, Object object) {
+        if (name.equals(GrpcService.LOGIN_EVENT)) {
+            boolean loggedIn = (Boolean) object;
+            if (loggedIn) {
+                Platform.runLater(this::showArbiterScene);
+                startMqService();
+            } else {
+                stopMqService();
+                stopService();
+                Platform.runLater(() -> {
+                    showErrorAlert("Arbiter is no longer logged in");
+                    showLoginScene();
+                });
+            }
+        } else if (name.equals(MqService.SCORE_SET_EVENT)) {
+            Score score = (Score) object;
+            arbiterController.setScore(score);
         }
     }
 }

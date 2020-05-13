@@ -6,24 +6,21 @@ import grpc.triathlon.*;
 import grpc.triathlon.TriathlonServiceGrpc.TriathlonServiceBlockingStub;
 import grpc.triathlon.TriathlonServiceGrpc.TriathlonServiceStub;
 import io.grpc.*;
-import io.grpc.stub.StreamObserver;
 import utils.GrpcHeaderCopy;
 
 import java.util.*;
 
-public class GrpcService extends BaseService implements ChannelStateListener.StateListener {
+public class GrpcService extends Observable implements IService {
+    public static String LOGIN_EVENT = "LOGIN_EVENT";
     private final String serverAddress;
     private final Integer serverPort;
 
     private final GrpcHeaderCopy authorizationHeaderCopy = new GrpcHeaderCopy("authorization");
-    private final ChannelStateListener listener = new ChannelStateListener(this);
-    private OnSetScoreObserver onSetScoreObserver = new OnSetScoreObserver();
     private TriathlonServiceBlockingStub blockingStub;
-    private TriathlonServiceStub asyncStub;
     private ManagedChannel channel;
     private Arbiter arbiter;
 
-    public GrpcService(String serverAddress, Integer serverPort) {
+    public GrpcService(String serverAddress, int serverPort) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
     }
@@ -33,7 +30,7 @@ public class GrpcService extends BaseService implements ChannelStateListener.Sta
     }
 
     @Override
-    public void start() {
+    public void start() throws CanStartError {
         if (isStarted()) {
             return;
         }
@@ -41,17 +38,12 @@ public class GrpcService extends BaseService implements ChannelStateListener.Sta
         channel = ManagedChannelBuilder.forAddress(serverAddress, serverPort)
                 .usePlaintext()
                 .build();
-        listener.setChannel(channel);
         blockingStub = TriathlonServiceGrpc.newBlockingStub(channel)
                 .withInterceptors(authorizationHeaderCopy);
-        asyncStub = TriathlonServiceGrpc.newStub(channel)
-                .withInterceptors(authorizationHeaderCopy);
-
-        subscribeSetScore();
     }
 
     @Override
-    public void stop() {
+    public void stop() throws CanStartError {
         if (!isStarted()) {
             return;
         }
@@ -59,85 +51,9 @@ public class GrpcService extends BaseService implements ChannelStateListener.Sta
         channel.shutdown();
     }
 
-    private ServiceConnectionStatus getConnectionStatus(ConnectivityState state) {
-        if (state == ConnectivityState.READY) {
-            return ServiceConnectionStatus.CONNECTED;
-        } else {
-            return ServiceConnectionStatus.DISCONNECTED;
-        }
-    }
-
-    public ServiceConnectionStatus getConnectionStatus() {
-        return getConnectionStatus(channel.getState(false));
-    }
-
-    @Override
-    public void onStateChanged(ConnectivityState oldState, ConnectivityState newState) {
-        if (oldState == ConnectivityState.TRANSIENT_FAILURE && newState == ConnectivityState.READY) {
-            ping();
-        }
-
-        observersConnectionStatusChange(getConnectionStatus(newState));
-    }
-
-    public void subscribeSetScore() {
-        if (isStarted()) {
-            asyncStub.subscribeSetScore(SubscribeSetScoreRequest.newBuilder().build(), onSetScoreObserver);
-        }
-    }
-
-    public void unsubscribeSetScore() {
-        if (isStarted()) {
-            blockingStub.unsubscribeSetScore(UnsubscribeSetScoreRequest.newBuilder().build());
-        }
-    }
-
-    @Override
-    public void onAddFirstObserver(IServiceObserver observer) {
-        subscribeSetScore();
-    }
-
-    @Override
-    public void onRemoveLastObserver(IServiceObserver observer) {
-        unsubscribeSetScore();
-    }
-
-    private class OnSetScoreObserver implements StreamObserver<ScoreResponse> {
-        @Override
-        public void onNext(ScoreResponse response) {
-            if (response.hasScore()) {
-                observerSetScore(Score.fromProto(response.getScore()));
-            }
-        }
-
-        @Override
-        public void onError(Throwable t) {
-            t.printStackTrace();
-        }
-
-        @Override
-        public void onCompleted() {}
-    }
-
     @Override
     public Arbiter getLoggedInArbiter() {
         return arbiter;
-    }
-
-    @Override
-    public boolean ping() {
-        PingResponse response;
-        try {
-            response = blockingStub.ping(PingRequest.newBuilder().build());
-        } catch (StatusRuntimeException e) {
-            return false;
-        }
-
-        if (!response.getLoggedIn()) {
-            handleLogout();
-        }
-
-        return response.getLoggedIn();
     }
 
     public void handleLogin(Arbiter arbiter) {
@@ -148,7 +64,7 @@ public class GrpcService extends BaseService implements ChannelStateListener.Sta
             return;
         }
 
-        observersLoginStatusChange(true);
+        observersSendEvent(LOGIN_EVENT,true);
     }
 
     public void handleLogout(boolean requested) {
@@ -158,7 +74,7 @@ public class GrpcService extends BaseService implements ChannelStateListener.Sta
 
         arbiter = null;
         if (!requested) {
-            observersLoginStatusChange(false);
+            observersSendEvent(LOGIN_EVENT,false);
         }
     }
 
@@ -182,6 +98,13 @@ public class GrpcService extends BaseService implements ChannelStateListener.Sta
     @Override
     public Arbiter loginArbiter(String name, String password) throws ServiceError {
         ArbiterLoginResponse response;
+
+        try {
+            start();
+        } catch (CanStartError e) {
+            throw new ServiceError(e);
+        }
+
         try {
             response = blockingStub.loginArbiter(ArbiterLoginRequest.newBuilder()
                     .setName(name)
@@ -197,8 +120,6 @@ public class GrpcService extends BaseService implements ChannelStateListener.Sta
 
         Arbiter arbiter = Arbiter.fromProto(response.getArbiter());
         handleLogin(arbiter);
-
-        subscribeSetScore();
 
         return arbiter;
     }

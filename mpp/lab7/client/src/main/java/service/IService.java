@@ -5,8 +5,7 @@ import domain.Score;
 
 import java.util.List;
 
-public interface IService {
-    boolean ping();
+public interface IService extends ICanStart, IObservable {
     Arbiter loginArbiter(String name, String password) throws ServiceError;
     void logout();
     Arbiter getLoggedInArbiter();
@@ -15,10 +14,4 @@ public interface IService {
     List<Score> getRankings() throws ServiceError;
 
     Score setScoreValue(int participantId, int value) throws ServiceError;
-    void addObserver(IServiceObserver observer);
-    void removeObserver(IServiceObserver observer);
-
-    void start();
-    void stop();
-    ServiceConnectionStatus getConnectionStatus();
 }

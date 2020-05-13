@@ -56,7 +56,6 @@ public class LoginController implements IController {
     private void loginArbiter() {
         executor.execute(() -> {
             try {
-                service.start();
                 service.loginArbiter(nameField.getText(), passwordField.getText());
             } catch (ServiceError e) {
                 Platform.runLater(() -> showErrorAlert(e));

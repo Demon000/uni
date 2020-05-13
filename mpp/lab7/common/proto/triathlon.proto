@@ -33,7 +33,6 @@ enum ErrorNumber {
     BEARER_MISSING = 1;
     BEARER_INVALID = 2;
     BEARER_NOT_AUTHORIZED = 3;
-    ALREADY_SUBSCRIBED = 4;
     ALREADY_LOGGED_IN = 5;
     CONNECTION_ERROR = 100;
 }
@@ -67,22 +66,10 @@ message SetScoreRequest {
     int32 value = 2;
 }
 
-message SubscribeSetScoreRequest {}
-message UnsubscribeSetScoreRequest {}
-message UnsubscribeSetScoreResponse {}
-message PingRequest {}
-message PingResponse {
-    bool logged_in = 1;
-    bool subscribed = 2;
-}
-
 service TriathlonService {
-    rpc Ping(PingRequest) returns (PingResponse);
     rpc LoginArbiter(ArbiterLoginRequest) returns (ArbiterLoginResponse);
     rpc Logout(ArbiterLogoutRequest) returns (ArbiterLogoutResponse);
     rpc GetScores(ScoresRequest) returns (stream ScoreResponse);
     rpc GetRankings(ScoresRequest) returns (stream ScoreResponse);
     rpc SetScoreValue(SetScoreRequest) returns (ScoreResponse);
-    rpc SubscribeSetScore(SubscribeSetScoreRequest) returns (stream ScoreResponse);
-    rpc UnsubscribeSetScore(UnsubscribeSetScoreRequest) returns (UnsubscribeSetScoreResponse);
 }

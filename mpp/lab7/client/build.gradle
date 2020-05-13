@@ -14,12 +14,13 @@ repositories {
 def log4jVersion = '2.13.1'
 def grpcVersion = '1.29.0'
 def protobufVersion = '3.11.0'
+def rabbitMqVersion = '5.9.0'
 
 dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: "${log4jVersion}"
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: "${log4jVersion}"
 
-    compile group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
+    compile group: 'com.rabbitmq', name: 'amqp-client', version: "${rabbitMqVersion}"
 
     compile group: 'com.google.protobuf', name: 'protobuf-java', version: "${protobufVersion}"
     compile group: 'io.grpc', name: 'grpc-all', version: "${grpcVersion}"

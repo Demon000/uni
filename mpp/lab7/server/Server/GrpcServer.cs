@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Grpc.Core.Utils;
-using log4net;
 using server.Domain;
-using server.Service;
 using Triathlon;
 
 namespace server.Server
 {
-    public class GrpcServer : TriathlonService.TriathlonServiceBase, IServiceObserver
+    public class GrpcServer : TriathlonService.TriathlonServiceBase
     {
-        private static readonly ILog Log = LogManager.GetLogger("GrpcServer");
         private readonly Service.Service _service;
         private readonly Auth _auth;
 
@@ -21,25 +16,6 @@ namespace server.Server
         {
             _service = service;
             _auth = auth;
-        }
-
-        public override Task<PingResponse> Ping(PingRequest request, ServerCallContext context)
-        {
-            bool loggedIn;
-            bool subscribed;
-            try
-            {
-                var client = _auth.GetClient(context);
-                loggedIn = true;
-                subscribed = client.IsSubscribed;
-            }
-            catch
-            {
-                loggedIn = false;
-                subscribed = false;
-            }
-
-            return Task.FromResult(new PingResponse {LoggedIn = loggedIn, Subscribed = subscribed});
         }
 
         public override Task<ArbiterLoginResponse> LoginArbiter(ArbiterLoginRequest request,
@@ -146,62 +122,6 @@ namespace server.Server
             
             var score = _service.SetScoreValue(request.ParticipantId, client.Arbiter.Type, request.Value);
             return Task.FromResult(new ScoreResponse {Score = score.ToProto()});
-        }
-
-        public override Task SubscribeSetScore(SubscribeSetScoreRequest request,
-            IServerStreamWriter<ScoreResponse> responseStream, ServerCallContext context)
-        {
-            GrpcClient client;
-            try
-            {
-                client = _auth.GetClient(context);
-            }
-            catch (GrpcError e)
-            {
-                return Task.FromResult(new ScoreResponse {ErrorNo = e.ErrorNumber});
-            }
-
-            if (client.IsSubscribed)
-            {
-                return Task.FromResult(new ScoreResponse {ErrorNo = ErrorNumber.AlreadySubscribed});
-            }
-
-            client.SubscribeSetScore();
-            
-            while (client.GetPushedScore(out var score, context.CancellationToken))
-            {
-                if (score != null)
-                {
-                    responseStream.WriteAsync(new ScoreResponse {Score = score.ToProto()});
-                }
-            }
-
-            return Task.CompletedTask;
-        }
-
-        public override Task<UnsubscribeSetScoreResponse> UnsubscribeSetScore(UnsubscribeSetScoreRequest request,
-            ServerCallContext context)
-        {
-            GrpcClient client;
-            try
-            {
-                client = _auth.GetClient(context);
-            }
-            catch (GrpcError)
-            {
-                return Task.FromResult(new UnsubscribeSetScoreResponse());
-            }
-            
-            client.UnsubscribeSetScore();
-            return Task.FromResult(new UnsubscribeSetScoreResponse());
-        }
-
-        public void OnSetScore(Score score)
-        {
-            foreach (var client in _auth.GetClients())
-            {
-                client.PushScore(score);
-            }
         }
     }
 }

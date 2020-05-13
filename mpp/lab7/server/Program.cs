@@ -14,14 +14,17 @@ namespace server
 {
     internal static class Program
     {
-        private static DbConnection _connection;
+        private static DbConnection _dbConnection;
         private static IParticipantRepository _participantRepository;
         private static IArbiterRepository _arbiterRepository;
         private static IScoreRepository _scoreRepository;
         private static Service.Service _service;
+
         private static GrpcServer _grpcServer;
         private static Grpc.Core.Server _server;
         private static Auth _auth;
+        
+        private static MqServer _mqServer;
 
         private static string GetConfig(string key, string value)
         {
@@ -59,7 +62,7 @@ namespace server
             }
         }
 
-        private static void TryLogin(String name, String password) {
+        private static void TryLogin(string name, string password) {
             try
             {
                 var arbiter = _service.LoginArbiter(name, password);
@@ -117,7 +120,6 @@ namespace server
         private static void StartServer()
         {
             _server.Start();
-            _service.AddObserver(_grpcServer);
         }
 
         private static void WaitForShutdown()
@@ -129,21 +131,37 @@ namespace server
         
         private static void StopServer()
         {
-            _service.RemoveObserver(_grpcServer);
             _server.ShutdownAsync().Wait();
         }
 
-        
+        private static void CreateProducer()
+        {
+            _mqServer = new MqServer(GetConfig("mqServerHost", "localhost"),
+                GetIntegerConfig("mqServerPort", 5672));
+        }
+
+        private static void StartProducer()
+        {
+            _mqServer.Start();
+            _service.AddObserver(_mqServer);
+        }
+
+        private static void StopProducer()
+        {
+            _service.RemoveObserver(_mqServer);
+            _mqServer.Stop();
+        }
+
         [STAThread]
         public static void Main()
         {
             ConfigureLogger();
             
-            _connection = new SQLiteConnection(ConfigurationManager.AppSettings["databaseConnection"]);
-            _connection.Open();
-            _participantRepository = new ParticipantRepository(_connection);
-            _arbiterRepository = new ArbiterRepository(_connection);
-            _scoreRepository = new ScoreRepository(_connection);
+            _dbConnection = new SQLiteConnection(ConfigurationManager.AppSettings["databaseConnection"]);
+            _dbConnection.Open();
+            _participantRepository = new ParticipantRepository(_dbConnection);
+            _arbiterRepository = new ArbiterRepository(_dbConnection);
+            _scoreRepository = new ScoreRepository(_dbConnection);
             _service = new Service.Service(_participantRepository, _arbiterRepository, _scoreRepository);
             
             TryAddParticipant(new Participant("Christian Tatoiu"));
@@ -175,9 +193,15 @@ namespace server
 
             CreateAuth();
             CreateServer();
+            CreateProducer();
+            
+            StartProducer();
             StartServer();
+            
             WaitForShutdown();
+            
             StopServer();
+            StopProducer();
         }
     }
 }
