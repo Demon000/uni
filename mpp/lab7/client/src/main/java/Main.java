@@ -183,7 +183,9 @@ public class Main extends Application implements IObserver {
             }
         } else if (name.equals(MqService.SCORE_SET_EVENT)) {
             Score score = (Score) object;
-            arbiterController.setScore(score);
+            Platform.runLater(() -> {
+                arbiterController.setScore(score);
+            });
         }
     }
 }
