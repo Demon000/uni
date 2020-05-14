@@ -38,7 +38,6 @@ class Track {
 
     public function setFromCity(?City $fromCity): self {
         $this->fromCity = $fromCity;
-
         return $this;
     }
 
@@ -48,7 +47,6 @@ class Track {
 
     public function setToCity(?City $toCity): self {
         $this->toCity = $toCity;
-
         return $this;
     }
 }

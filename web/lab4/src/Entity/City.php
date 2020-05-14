@@ -26,11 +26,11 @@ class City implements JsonSerializable {
 
     public function jsonSerialize() {
         $data = [
-                'id' => $this->getId(),
-                'name' => $this->getName(),
+                'id' => $this->id,
+                'name' => $this->name,
         ];
 
-        if ($this->connections != null) {
+        if ($this->connections) {
             $data['connections'] = $this->connections;
         }
 

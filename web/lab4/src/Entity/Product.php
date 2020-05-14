@@ -34,10 +34,10 @@ class Product implements JsonSerializable {
 
     public function jsonSerialize() {
         return [
-                'id' => $this->getId(),
-                'name' => $this->getName(),
-                'description' => $this->getDescription(),
-                'price' => $this->getPrice(),
+                'id' => $this->id,
+                'name' => $this->name,
+                'description' => $this->description,
+                'price' => $this->price,
         ];
     }
 
@@ -51,7 +51,6 @@ class Product implements JsonSerializable {
 
     public function setName(string $name): self {
         $this->name = $name;
-
         return $this;
     }
 
@@ -61,7 +60,6 @@ class Product implements JsonSerializable {
 
     public function setDescription(string $description): self {
         $this->description = $description;
-
         return $this;
     }
 
@@ -71,7 +69,6 @@ class Product implements JsonSerializable {
 
     public function setPrice(int $price): self {
         $this->price = $price;
-
         return $this;
     }
 }

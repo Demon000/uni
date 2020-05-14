@@ -39,11 +39,11 @@ class Person implements JsonSerializable {
 
     public function jsonSerialize() {
         return [
-                'id' => $this->getId(),
-                'first_name' => $this->getFirstName(),
-                'last_name' => $this->getLastName(),
-                'phone' => $this->getPhone(),
-                'email' => $this->getEmail(),
+                'id' => $this->id,
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
+                'phone' => $this->phone,
+                'email' => $this->email,
         ];
     }
 
@@ -57,7 +57,6 @@ class Person implements JsonSerializable {
 
     public function setFirstName(string $first_name): self {
         $this->first_name = $first_name;
-
         return $this;
     }
 
@@ -67,7 +66,6 @@ class Person implements JsonSerializable {
 
     public function setLastName(string $last_name): self {
         $this->last_name = $last_name;
-
         return $this;
     }
 
@@ -77,7 +75,6 @@ class Person implements JsonSerializable {
 
     public function setPhone(string $phone): self {
         $this->phone = $phone;
-
         return $this;
     }
 
@@ -87,7 +84,6 @@ class Person implements JsonSerializable {
 
     public function setEmail(string $email): self {
         $this->email = $email;
-
         return $this;
     }
 }
