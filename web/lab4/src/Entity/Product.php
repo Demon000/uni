@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  */
-class Product {
+class Product implements JsonSerializable {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -31,7 +32,7 @@ class Product {
      */
     private $price;
 
-    public function toSerializable() {
+    public function jsonSerialize() {
         return array(
                 'id' => $this->getId(),
                 'name' => $this->getName(),

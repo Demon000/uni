@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\PersonRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass=PersonRepository::class)
  */
-class Person {
+class Person implements JsonSerializable {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -36,7 +37,7 @@ class Person {
      */
     private $email;
 
-    public function toSerializable() {
+    public function jsonSerialize() {
         return array(
                 'id' => $this->getId(),
                 'first_name' => $this->getFirstName(),
