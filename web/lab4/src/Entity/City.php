@@ -22,11 +22,19 @@ class City implements JsonSerializable {
      */
     private $name;
 
+    private array $connections = [];
+
     public function jsonSerialize() {
-        return array(
+        $data = [
                 'id' => $this->getId(),
                 'name' => $this->getName(),
-        );
+        ];
+
+        if ($this->connections != null) {
+            $data['connections'] = $this->connections;
+        }
+
+        return $data;
     }
 
     public function getId(): ?int {
@@ -39,7 +47,11 @@ class City implements JsonSerializable {
 
     public function setName(string $name): self {
         $this->name = $name;
+        return $this;
+    }
 
+    public function setConnections(array $connections): self {
+        $this->connections = $connections;
         return $this;
     }
 }

@@ -50,10 +50,10 @@ class TicTacToeController extends AbstractController {
     }
 
     public function getGameResponse($table) {
-        return new JsonResponse(array(
+        return $this->json([
                 'table' => $table->getInnerTable(),
                 'state' => $table->getState(),
-        ));
+        ]);
     }
 
     /**

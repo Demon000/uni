@@ -15,15 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class CityController extends AbstractController {
     /**
      * @Route("/", methods={"GET"}, name="list")
-     * @return JsonResponse
      */
     public function listCities() {
         $cityRepository = $this->getDoctrine()->getRepository(City::class);
         $cities = $cityRepository->findAll();
-        $cities = array_map(function ($city) {
-            return $city->toSerializable();
-        }, $cities);
-        return new JsonResponse($cities);
+        return $this->json($cities);
     }
 
     /**
@@ -33,28 +29,21 @@ class CityController extends AbstractController {
      */
     public function getCity(string $id) {
         $cityRepository = $this->getDoctrine()->getRepository(City::class);
-        $city = $cityRepository->findOneBy(array(
+        $city = $cityRepository->findOneBy([
                 'id' => $id,
-        ));
+        ]);
 
         $trackRepository = $this->getDoctrine()->getRepository(Track::class);
         $connections = $trackRepository->findConnectedCities($city);
 
         if ($city == null) {
-            $response = new JsonResponse(array(
+            return $this->json([
                     'error' => true,
                     'message' => 'Failed to find city',
-            ));
-            $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $response;
+            ], Response::HTTP_NOT_FOUND);
         }
 
-        $city = $city->toSerializable();
-        $connections = array_map(function ($city) {
-            return $city->toSerializable();
-        }, $connections);
-
-        $city['connections'] = $connections;
-        return new JsonResponse($city);
+        $city->setConnections($connections);
+        return $this->json($city);
     }
 }

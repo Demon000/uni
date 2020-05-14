@@ -23,18 +23,15 @@ class PersonController extends AbstractController {
 
         $personRepository = $this->getDoctrine()->getRepository(Person::class);
         $people = $personRepository->findPaginated($page, $entries);
-        $people = array_map(function ($person) {
-            return $person->toSerializable();
-        }, $people);
-        $count = $personRepository->count(array());
+        $count = $personRepository->count([]);
         $before = min($page * $entries, $count);
         $after = max($count - ($page + 1) * $entries, 0);
 
-        return new JsonResponse(array(
+        return $this->json([
                 'count' => $count,
                 'before' => $before,
                 'after' => $after,
                 'data' => $people,
-        ));
+        ]);
     }
 }

@@ -20,10 +20,7 @@ class ProductController extends AbstractController {
     public function listProducts() {
         $productRepository = $this->getDoctrine()->getRepository(Product::class);
         $products = $productRepository->findAll();
-        $products = array_map(function ($city) {
-            return $city->toSerializable();
-        }, $products);
-        return new JsonResponse($products);
+        return $this->json($products);
     }
 
     /**
@@ -40,12 +37,10 @@ class ProductController extends AbstractController {
                 'id' => $id,
         ));
         if ($product == null) {
-            $response = new JsonResponse(array(
+            return $this->json(array(
                     'error' => true,
                     'message' => 'Failed to find product',
-            ));
-            $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $response;
+            ), Response::HTTP_NOT_FOUND);
         }
 
         if (array_key_exists('name', $body)) {
@@ -62,7 +57,6 @@ class ProductController extends AbstractController {
 
         $productRepository->update($product);
 
-        $product = $product->toSerializable();
-        return new JsonResponse($product);
+        return $this->json($product);
     }
 }

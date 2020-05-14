@@ -38,13 +38,13 @@ class Person implements JsonSerializable {
     private $email;
 
     public function jsonSerialize() {
-        return array(
+        return [
                 'id' => $this->getId(),
                 'first_name' => $this->getFirstName(),
                 'last_name' => $this->getLastName(),
                 'phone' => $this->getPhone(),
                 'email' => $this->getEmail(),
-        );
+        ];
     }
 
     public function getId(): ?int {

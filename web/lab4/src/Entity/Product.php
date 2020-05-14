@@ -33,12 +33,12 @@ class Product implements JsonSerializable {
     private $price;
 
     public function jsonSerialize() {
-        return array(
+        return [
                 'id' => $this->getId(),
                 'name' => $this->getName(),
                 'description' => $this->getDescription(),
                 'price' => $this->getPrice(),
-        );
+        ];
     }
 
     public function getId(): ?int {

@@ -38,11 +38,11 @@ class GameError extends Exception {
     }
 
     public function toResponse() {
-        $response = new JsonResponse(array(
+        $response = new JsonResponse([
                 'error' => true,
                 'code' => $this->error_code,
                 'message' => $this->getMessage(),
-        ));
+        ]);
         $response->setStatusCode($this->status);
         return $response;
     }
