@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\TicTacToe\GameCellState;
 use App\TicTacToe\GameError;
-use App\TicTacToe\GameState;
 use App\TicTacToe\GameTable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,40 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class TicTacToeController extends AbstractController {
     const SESSION_TABLE = "tic_tac_toe_table";
+    const REQUEST_BODY_MOVE_KEY = 'move';
     private SessionInterface $session;
 
     public function __construct(SessionInterface $session) {
         $this->session = $session;
-    }
-
-    public function getGameTable() {
-        return $this->session->get(self::SESSION_TABLE);
-    }
-
-    public function setGameTable($table) {
-        $this->session->set(self::SESSION_TABLE, $table);
-    }
-
-    public function getGameState() {
-        $table = $this->session->get(self::SESSION_TABLE);
-        return GameTable::getState($table);
-    }
-
-    public function getGameResponse() {
-        return new JsonResponse(array(
-                'table' => $this->getGameTable(),
-                'state' => $this->getGameState(),
-        ));
-    }
-
-    public function isGameRunning() {
-        $state = $this->getGameState();
-        return GameState::isRunning($state);
-    }
-
-    public function isGameStarted() {
-        $state = $this->getGameState();
-        return GameState::isStarted($state);
     }
 
     /**
@@ -58,11 +28,32 @@ class TicTacToeController extends AbstractController {
      * @return JsonResponse
      */
     public function state() {
-        if (!$this->isGameStarted()) {
-            return GameError::NotStarted()->toResponse();
+        try {
+            $table = $this->getGameTable();
+        } catch (GameError $e) {
+            return $e->toResponse();
         }
 
-        return $this->getGameResponse();
+        return $this->getGameResponse($table);
+    }
+
+    /**
+     * @return GameTable
+     * @throws GameError
+     */
+    public function getGameTable() {
+        $inner_table = $this->session->get(self::SESSION_TABLE);
+        if ($inner_table == null) {
+            throw GameError::NotStarted();
+        }
+        return new GameTable($inner_table);
+    }
+
+    public function getGameResponse($table) {
+        return new JsonResponse(array(
+                'table' => $table->getInnerTable(),
+                'state' => $table->getState(),
+        ));
     }
 
     /**
@@ -70,12 +61,12 @@ class TicTacToeController extends AbstractController {
      * @return JsonResponse
      */
     public function start() {
-        $table = GameTable::createTable();
+        $table = new GameTable();
 
-        $player = GameTable::getRandomPlayer();
+        $player = GameCellState::getRandomPlayer();
         if ($player == GameCellState::COMPUTER) {
             try {
-                GameTable::makeBestMove($table, $player);
+                $table->makeBestMove($player);
             } catch (GameError $e) {
                 return $e->toResponse();
             }
@@ -83,32 +74,27 @@ class TicTacToeController extends AbstractController {
 
         $this->setGameTable($table);
 
-        return $this->getGameResponse();
+        return $this->getGameResponse($table);
     }
 
-    /**
-     * @param $user_move
-     * @throws GameError
-     */
-    public function playRound($user_move) {
-        $table = $this->getGameTable();
-        GameTable::makeMove($table, $user_move, GameCellState::USER);
-        GameTable::makeBestMove($table, GameCellState::COMPUTER);
-        $this->setGameTable($table);
+    public function setGameTable($table) {
+        $inner_table = $table->getInnerTable();
+        $this->session->set(self::SESSION_TABLE, $inner_table);
     }
 
-    const REQUEST_BODY_MOVE_KEY = 'move';
     /**
      * @Route("/play", methods={"POST"}, name="play")
      * @param Request $request
      * @return JsonResponse
      */
     public function play(Request $request) {
-        if (!$this->isGameStarted()) {
-            return GameError::NotStarted()->toResponse();
+        try {
+            $table = $this->getGameTable();
+        } catch (GameError $e) {
+            return $e->toResponse();
         }
 
-        if (!$this->isGameRunning()) {
+        if (!$table->isRunning()) {
             return GameError::NotRunning()->toResponse();
         }
 
@@ -123,11 +109,14 @@ class TicTacToeController extends AbstractController {
         }
 
         try {
-            $this->playRound($move);
+            $table->makeMove($move, GameCellState::USER);
+            $table->makeBestMove(GameCellState::COMPUTER);
         } catch (GameError $e) {
-            return $e->toResponse();
+
         }
 
-        return $this->getGameResponse();
+        $this->setGameTable($table);
+
+        return $this->getGameResponse($table);
     }
 }

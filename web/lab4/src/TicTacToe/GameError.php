@@ -17,16 +17,6 @@ class GameError extends Exception {
         $this->status = $status;
     }
 
-    public function toResponse() {
-        $response = new JsonResponse(array(
-                'error' => true,
-                'code' => $this->error_code,
-                'message' => $this->getMessage(),
-        ));
-        $response->setStatusCode($this->status);
-        return $response;
-    }
-
     public static function NotStarted() {
         return new GameError('Game not started', 'not-started', 400);
     }
@@ -45,5 +35,15 @@ class GameError extends Exception {
 
     public static function MoveMissingError() {
         return new GameError('Game move is missing', 'move-missing', 400);
+    }
+
+    public function toResponse() {
+        $response = new JsonResponse(array(
+                'error' => true,
+                'code' => $this->error_code,
+                'message' => $this->getMessage(),
+        ));
+        $response->setStatusCode($this->status);
+        return $response;
     }
 }

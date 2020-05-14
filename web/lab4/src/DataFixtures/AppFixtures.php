@@ -9,12 +9,10 @@ use App\Entity\Track;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class AppFixtures extends Fixture
-{
+class AppFixtures extends Fixture {
     private $manager = null;
 
-    public function load(ObjectManager $manager)
-    {
+    public function load(ObjectManager $manager) {
         $this->manager = $manager;
 
         $this->createTracks();
@@ -24,8 +22,7 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-    public function createTracks()
-    {
+    public function createTracks() {
         $suceavaCity = $this->createCity('Suceava');
         $clujCity = $this->createCity('Cluj-Napoca');
         $iasiCity = $this->createCity('Iasi');
@@ -47,8 +44,7 @@ class AppFixtures extends Fixture
      * @param string $name
      * @return City
      */
-    public function createCity(string $name)
-    {
+    public function createCity(string $name) {
         $city = new City();
         $city->setName($name);
         $this->manager->persist($city);
@@ -60,8 +56,7 @@ class AppFixtures extends Fixture
      * @param City $toCity
      * @return Track
      */
-    public function createTrack(City $fromCity, city $toCity) : Track
-    {
+    public function createTrack(City $fromCity, city $toCity): Track {
         $track = new Track();
         $track->setFromCity($fromCity);
         $track->setToCity($toCity);
@@ -85,8 +80,7 @@ class AppFixtures extends Fixture
         $this->createPerson('Catalin', 'Vancea', '+07652849519', 'vcatalin@gmail.com');
     }
 
-    public function createPerson(string $first_name, string $last_name, string $phone, string $email) : Person
-    {
+    public function createPerson(string $first_name, string $last_name, string $phone, string $email): Person {
         $person = new Person();
         $person->setFirstName($first_name);
         $person->setLastName($last_name);
@@ -96,16 +90,14 @@ class AppFixtures extends Fixture
         return $person;
     }
 
-    public function createProducts()
-    {
+    public function createProducts() {
         $this->createProduct('Xiaomi Mi9', 'Xiaomi Mi 9, Dual SIM, 64GB, 6GB RAM, 4G, Blue', 2199);
         $this->createProduct('Xiaomi Redmi Note 8 Pro', 'Xiaomi Redmi Note 8 Pro, Dual SIM, 64GB, 6GB RAM, 4G, Blue', 1099);
         $this->createProduct('Xiaomi Mi Note 10 Pro', 'Xiaomi Mi Note 10 Pro, Dual SIM, 256GB, 8GB RAM, 4G, Midnight Black', 2699);
         $this->createProduct('Xiaomi Mi Note 10', 'Xiaomi Mi Note 10, Dual SIM, 128GB, 6GB RAM, 4G, Aurora Green', 2388);
     }
 
-    public function createProduct(string $name, string $description, int $price)
-    {
+    public function createProduct(string $name, string $description, int $price) {
         $product = new Product();
         $product->setName($name);
         $product->setDescription($description);

@@ -30,4 +30,13 @@ class GameCellState {
                 return self::EMPTY;
         }
     }
+
+    public static function getRandomPlayer() {
+        $random = rand() / getrandmax();
+        if ($random < 0.5) {
+            return self::COMPUTER;
+        }
+
+        return self::USER;
+    }
 }
