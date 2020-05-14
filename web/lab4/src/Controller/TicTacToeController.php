@@ -112,7 +112,7 @@ class TicTacToeController extends AbstractController {
             $table->makeMove($move, GameCellState::USER);
             $table->makeBestMove(GameCellState::COMPUTER);
         } catch (GameError $e) {
-
+            return $e->toResponse();
         }
 
         $this->setGameTable($table);
