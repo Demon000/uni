@@ -12,14 +12,12 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/products", name="products_")
  */
-class ProductController extends AbstractController
-{
+class ProductController extends AbstractController {
     /**
      * @Route("/", methods={"GET"}, name="list")
      * @return JsonResponse
      */
-    public function listProducts()
-    {
+    public function listProducts() {
         $productRepository = $this->getDoctrine()->getRepository(Product::class);
         $products = $productRepository->findAll();
         $products = array_map(function ($city) {
@@ -34,18 +32,17 @@ class ProductController extends AbstractController
      * @param string $id
      * @return JsonResponse
      */
-    public function updateProduct(Request $request, string $id)
-    {
+    public function updateProduct(Request $request, string $id) {
         $productRepository = $this->getDoctrine()->getRepository(Product::class);
         $body = json_decode($request->getContent(), true);
 
         $product = $productRepository->findOneBy(array(
-            'id' => $id,
+                'id' => $id,
         ));
         if ($product == null) {
             $response = new JsonResponse(array(
-                'error' => true,
-                'message' => 'Failed to find product',
+                    'error' => true,
+                    'message' => 'Failed to find product',
             ));
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
             return $response;

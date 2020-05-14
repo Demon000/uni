@@ -11,15 +11,13 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/people", name="people_")
  */
-class PersonController extends AbstractController
-{
+class PersonController extends AbstractController {
     /**
      * @Route("/", methods={"GET"}, name="list")
      * @param Request $request
      * @return JsonResponse
      */
-    public function listPeople(Request $request)
-    {
+    public function listPeople(Request $request) {
         $page = $request->query->get('page');
         $entries = 3;
 
@@ -33,10 +31,10 @@ class PersonController extends AbstractController
         $after = max($count - ($page + 1) * $entries, 0);
 
         return new JsonResponse(array(
-            'count' => $count,
-            'before' => $before,
-            'after' => $after,
-            'data' => $people,
+                'count' => $count,
+                'before' => $before,
+                'after' => $after,
+                'data' => $people,
         ));
     }
 }

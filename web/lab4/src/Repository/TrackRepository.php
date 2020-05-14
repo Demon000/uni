@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Track;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -13,22 +12,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Track[]    findAll()
  * @method Track[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TrackRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
-    {
+class TrackRepository extends ServiceEntityRepository {
+    public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Track::class);
-    }
-
-    public function findWithCity($city)
-    {
-        return $this->createQueryBuilder('track')
-            ->orWhere('track.fromCity = :city')
-            ->orWhere('track.toCity = :city')
-            ->setParameter('city', $city)
-            ->getQuery()
-            ->getResult()
-        ;
     }
 
     public function findConnectedCities($city) {
@@ -40,5 +26,14 @@ class TrackRepository extends ServiceEntityRepository
                 return $track->getFromCity();
             }
         }, $tracks);
+    }
+
+    public function findWithCity($city) {
+        return $this->createQueryBuilder('track')
+                ->orWhere('track.fromCity = :city')
+                ->orWhere('track.toCity = :city')
+                ->setParameter('city', $city)
+                ->getQuery()
+                ->getResult();
     }
 }

@@ -3,15 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\TrackRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TrackRepository::class)
  */
-class Track
-{
+class Track {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -31,30 +28,25 @@ class Track
      */
     private $toCity;
 
-    public function getId(): ?int
-    {
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getFromCity(): ?City
-    {
+    public function getFromCity(): ?City {
         return $this->fromCity;
     }
 
-    public function setFromCity(?City $fromCity): self
-    {
+    public function setFromCity(?City $fromCity): self {
         $this->fromCity = $fromCity;
 
         return $this;
     }
 
-    public function getToCity(): ?City
-    {
+    public function getToCity(): ?City {
         return $this->toCity;
     }
 
-    public function setToCity(?City $toCity): self
-    {
+    public function setToCity(?City $toCity): self {
         $this->toCity = $toCity;
 
         return $this;

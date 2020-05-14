@@ -12,14 +12,12 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/cities", name="cities_")
  */
-class CityController extends AbstractController
-{
+class CityController extends AbstractController {
     /**
      * @Route("/", methods={"GET"}, name="list")
      * @return JsonResponse
      */
-    public function listCities()
-    {
+    public function listCities() {
         $cityRepository = $this->getDoctrine()->getRepository(City::class);
         $cities = $cityRepository->findAll();
         $cities = array_map(function ($city) {
@@ -36,7 +34,7 @@ class CityController extends AbstractController
     public function getCity(string $id) {
         $cityRepository = $this->getDoctrine()->getRepository(City::class);
         $city = $cityRepository->findOneBy(array(
-            'id' => $id,
+                'id' => $id,
         ));
 
         $trackRepository = $this->getDoctrine()->getRepository(Track::class);
@@ -44,8 +42,8 @@ class CityController extends AbstractController
 
         if ($city == null) {
             $response = new JsonResponse(array(
-                'error' => true,
-                'message' => 'Failed to find city',
+                    'error' => true,
+                    'message' => 'Failed to find city',
             ));
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
             return $response;

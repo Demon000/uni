@@ -8,8 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  */
-class Product
-{
+class Product {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -32,54 +31,46 @@ class Product
      */
     private $price;
 
-    public function getId(): ?int
-    {
+    public function toSerializable() {
+        return array(
+                'id' => $this->getId(),
+                'name' => $this->getName(),
+                'description' => $this->getDescription(),
+                'price' => $this->getPrice(),
+        );
+    }
+
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
+    public function getName(): ?string {
         return $this->name;
     }
 
-    public function setName(string $name): self
-    {
+    public function setName(string $name): self {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
+    public function getDescription(): ?string {
         return $this->description;
     }
 
-    public function setDescription(string $description): self
-    {
+    public function setDescription(string $description): self {
         $this->description = $description;
 
         return $this;
     }
 
-    public function getPrice(): ?int
-    {
+    public function getPrice(): ?int {
         return $this->price;
     }
 
-    public function setPrice(int $price): self
-    {
+    public function setPrice(int $price): self {
         $this->price = $price;
 
         return $this;
-    }
-
-    public function toSerializable()
-    {
-        return array(
-            'id' => $this->getId(),
-            'name' => $this->getName(),
-            'description' => $this->getDescription(),
-            'price' => $this->getPrice(),
-        );
     }
 }

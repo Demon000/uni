@@ -8,8 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=CityRepository::class)
  */
-class City
-{
+class City {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -22,28 +21,24 @@ class City
      */
     private $name;
 
-    public function getId(): ?int
-    {
+    public function toSerializable() {
+        return array(
+                'id' => $this->getId(),
+                'name' => $this->getName(),
+        );
+    }
+
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
+    public function getName(): ?string {
         return $this->name;
     }
 
-    public function setName(string $name): self
-    {
+    public function setName(string $name): self {
         $this->name = $name;
 
         return $this;
-    }
-
-    public function toSerializable()
-    {
-        return array(
-            'id' => $this->getId(),
-            'name' => $this->getName(),
-        );
     }
 }

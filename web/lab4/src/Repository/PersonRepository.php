@@ -13,21 +13,17 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Person[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  * @method int         count(array $criteria)
  */
-class PersonRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
-    {
+class PersonRepository extends ServiceEntityRepository {
+    public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Person::class);
     }
 
-    public function findPaginated(int $page=0, int $entries=5)
-    {
+    public function findPaginated(int $page = 0, int $entries = 5) {
         $skipped = $page * $entries;
         return $this->createQueryBuilder('person')
-            ->setFirstResult($skipped)
-            ->setMaxResults($entries)
-            ->getQuery()
-            ->getResult()
-        ;
+                ->setFirstResult($skipped)
+                ->setMaxResults($entries)
+                ->getQuery()
+                ->getResult();
     }
 }
