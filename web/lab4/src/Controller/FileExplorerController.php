@@ -15,17 +15,6 @@ class FileExplorerController extends AbstractController {
     const FILE_EXPLORER_ROOT_KEY = 'FILE_EXPLORER_ROOT';
 
     /**
-     * @return string
-     * @throws FileError
-     */
-    public function getFileExplorerRootPath() {
-        if (!array_key_exists(self::FILE_EXPLORER_ROOT_KEY, $_ENV)) {
-            throw FileError::NotFound();
-        }
-        return $_ENV[self::FILE_EXPLORER_ROOT_KEY];
-    }
-
-    /**
      * @Route("/{relative_file_path}", name="list", defaults={"relative_file_path"="/"},
      *     requirements={"relative_file_path"=".+"})
      * @param string $relative_file_path
@@ -42,5 +31,16 @@ class FileExplorerController extends AbstractController {
         $file->populateFiles();
 
         return $this->json($file);
+    }
+
+    /**
+     * @return string
+     * @throws FileError
+     */
+    public function getFileExplorerRootPath() {
+        if (!array_key_exists(self::FILE_EXPLORER_ROOT_KEY, $_ENV)) {
+            throw FileError::NotFound();
+        }
+        return $_ENV[self::FILE_EXPLORER_ROOT_KEY];
     }
 }

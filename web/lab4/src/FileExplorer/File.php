@@ -74,9 +74,9 @@ class File implements JsonSerializable {
 
     public function jsonSerialize() {
         $data = [
-            'path' => $this->relative_path,
-            'type' => $this->type,
-            'mime' => $this->mime,
+                'path' => $this->relative_path,
+                'type' => $this->type,
+                'mime' => $this->mime,
         ];
 
         if ($this->files) {

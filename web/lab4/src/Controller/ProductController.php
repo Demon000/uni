@@ -33,14 +33,14 @@ class ProductController extends AbstractController {
         $productRepository = $this->getDoctrine()->getRepository(Product::class);
         $body = json_decode($request->getContent(), true);
 
-        $product = $productRepository->findOneBy(array(
+        $product = $productRepository->findOneBy([
                 'id' => $id,
-        ));
+        ]);
         if ($product == null) {
-            return $this->json(array(
+            return $this->json([
                     'error' => true,
                     'message' => 'Failed to find product',
-            ), Response::HTTP_NOT_FOUND);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         if (array_key_exists('name', $body)) {
