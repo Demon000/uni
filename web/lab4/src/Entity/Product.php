@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
@@ -32,12 +34,22 @@ class Product implements JsonSerializable {
      */
     private $price;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ProductAttribute::class, mappedBy="product", orphanRemoval=true)
+     */
+    private $attributes;
+
+    public function __construct() {
+        $this->attributes = new ArrayCollection();
+    }
+
     public function jsonSerialize() {
         return [
                 'id' => $this->id,
                 'name' => $this->name,
                 'description' => $this->description,
                 'price' => $this->price,
+                'attributes' => $this->attributes,
         ];
     }
 
@@ -69,6 +81,34 @@ class Product implements JsonSerializable {
 
     public function setPrice(int $price): self {
         $this->price = $price;
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProductAttribute[]
+     */
+    public function getAttributes(): Collection {
+        return $this->attributes;
+    }
+
+    public function addAttribute(ProductAttribute $attribute): self {
+        if (!$this->attributes->contains($attribute)) {
+            $this->attributes[] = $attribute;
+            $attribute->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttribute(ProductAttribute $attribute): self {
+        if ($this->attributes->contains($attribute)) {
+            $this->attributes->removeElement($attribute);
+            // set the owning side to null (unless already changed)
+            if ($attribute->getProduct() === $this) {
+                $attribute->setProduct(null);
+            }
+        }
+
         return $this;
     }
 }

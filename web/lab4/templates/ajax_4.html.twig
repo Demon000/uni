@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<title>AJAX 4</title>
+{{ encore_entry_link_tags('ajax_4') }}
+
+{% block body %}
+    <div id="app">
+        <table id="game-table">
+            <tr v-for="(row, rowIndex) in table">
+                <td v-for="(cell, columnIndex) in row"
+                    v-on:click="onCellClick(rowIndex, columnIndex)">
+                    ${ toGameLetter(cell) }
+                </td>
+            </tr>
+        </table>
+        <p v-if="state == 'win_user'">
+            You won!
+        </p>
+        <p v-else-if="state == 'win_computer'">
+            You lost. :(
+        </p>
+        <p v-else-if="state == 'draw'">
+            It's a draw!
+        </p>
+
+        <button v-on:click="onStartClick">Start</button>
+    </div>
+
+    {{ encore_entry_script_tags('ajax_4') }}
+{% endblock %}

@@ -1,0 +1,12 @@
+#game-table {
+    border-collapse: collapse;
+    font-size: 32px;
+}
+#game-table td {
+    border: 1px solid black;
+    width: 64px;
+    height: 64px;
+    line-height: 64px;
+    text-align: center;
+    cursor: pointer;
+}

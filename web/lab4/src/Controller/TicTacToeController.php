@@ -24,20 +24,6 @@ class TicTacToeController extends AbstractController {
     }
 
     /**
-     * @Route("/state", methods={"GET"}, name="state")
-     * @return JsonResponse
-     */
-    public function state() {
-        try {
-            $table = $this->getGameTable();
-        } catch (GameError $e) {
-            return $e->toResponse();
-        }
-
-        return $this->getGameResponse($table);
-    }
-
-    /**
      * @return GameTable
      * @throws GameError
      */
@@ -54,6 +40,25 @@ class TicTacToeController extends AbstractController {
                 'table' => $table->getInnerTable(),
                 'state' => $table->getState(),
         ]);
+    }
+
+    /**
+     * @Route("/state", methods={"GET"}, name="state")
+     * @return JsonResponse
+     */
+    public function state() {
+        try {
+            $table = $this->getGameTable();
+        } catch (GameError $e) {
+            return $e->toResponse();
+        }
+
+        return $this->getGameResponse($table);
+    }
+
+    public function setGameTable($table) {
+        $inner_table = $table->getInnerTable();
+        $this->session->set(self::SESSION_TABLE, $inner_table);
     }
 
     /**
@@ -75,11 +80,6 @@ class TicTacToeController extends AbstractController {
         $this->setGameTable($table);
 
         return $this->getGameResponse($table);
-    }
-
-    public function setGameTable($table) {
-        $inner_table = $table->getInnerTable();
-        $this->session->set(self::SESSION_TABLE, $inner_table);
     }
 
     /**

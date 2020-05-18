@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<title>AJAX 6</title>
+{{ encore_entry_link_tags('ajax_6') }}
+
+{% block body %}
+    <div id="app">
+        <div id="query">
+            <div v-for="attribute in attributes">
+                <p>${ attribute.name | capitalize }</p>
+                <select v-model="attribute.value" v-on:change="loadProducts">
+                    <option value="">None</option>
+                    <option v-for="value in attribute.values"
+                            v-bind:value="value">${ value }</option>
+                </select>
+            </div>
+        </div>
+        <div id="products">
+            <div class="product" v-for="product in products">
+                <p>Name: ${product.name}</p>
+                <p>Description: ${product.description}</p>
+                <p>Price: ${product.price}</p>
+            </div>
+        </div>
+    </div>
+
+    {{ encore_entry_script_tags('ajax_6') }}
+{% endblock %}

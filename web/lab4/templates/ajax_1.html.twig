@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<title>AJAX 1</title>
+{{ encore_entry_link_tags('ajax_1') }}
+
+{% block body %}
+    <div id="app">
+        <div id="cities">
+            <div class="city"
+                 v-for="city in cities"
+                 v-bind:key="city.id"
+                 v-on:click="onCityClick(city)"
+                 v-bind:class="{ selected: selectedCity === city}">
+                <p class="name">
+                    ${ city.name }
+                </p>
+            </div>
+        </div>
+        <div id="connections" v-if="selectedCity">
+            <div class="city"
+                 v-for="city in connections"
+                 v-bind:key="city.id">
+                <p class="name">
+                    ${ city.name }
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {{ encore_entry_script_tags('ajax_1') }}
+{% endblock %}

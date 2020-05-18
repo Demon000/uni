@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<title>AJAX 3</title>
+{{ encore_entry_link_tags('ajax_3') }}
+
+{% block body %}
+    <div id="app">
+        <div id="products">
+            <div class="product"
+                 v-for="product in products"
+                 v-on:click="onProductClick(product)"
+                 v-bind:class="{ selected: selectedProduct === product }">
+                <p>Id: ${ product.id }</p>
+            </div>
+        </div>
+        <div id="product-form" v-if="selectedProduct">
+            <div>
+                <label for="product-name">Name</label>
+                <input id="product-name" type="text" v-model="productName">
+            </div>
+            <div>
+                <label for="product-description">Name</label>
+                <textarea id="product-description" v-model="productDescription"></textarea>
+            </div>
+            <div>
+                <label for="product-price">Price</label>
+                <input id="product-price" type="number" v-model="productPrice">
+            </div>
+            <button v-on:click="onSaveClick"
+                    v-bind:disabled="!changed">Save</button>
+        </div>
+    </div>
+
+    {{ encore_entry_script_tags('ajax_3') }}
+{% endblock %}

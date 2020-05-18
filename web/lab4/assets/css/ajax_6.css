@@ -1,0 +1,8 @@
+#query, #products {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#query {
+    padding: 8px;
+}

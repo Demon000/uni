@@ -24,6 +24,32 @@ class ProductRepository extends ServiceEntityRepository {
      * @throws ORMException
      */
     public function update(Product $product) {
-        $this->getEntityManager()->persist($product);
+        $this->getEntityManager()->flush($product);
+    }
+
+    public function findAllWithAttributes($attributes) {
+        $qb = $this->createQueryBuilder('product')
+            ->innerJoin('product.attributes', 'productAttribute')
+            ->innerJoin('productAttribute.attributeType', 'attributeType');
+
+        $index = 0;
+        foreach ($attributes as $attributeName => $attributeValue) {
+            $attributeNameParameter = sprintf('attributeName%d', $index);
+            $attributeValueParameter = sprintf('attributeValue%d', $index);
+            $qb->orWhere(sprintf('attributeType.name = :%s and productAttribute.value = :%s',
+                    $attributeNameParameter, $attributeValueParameter));
+            $qb->setParameter($attributeNameParameter, $attributeName);
+            $qb->setParameter($attributeValueParameter, $attributeValue);
+            $index++;
+        }
+
+        if ($index != 0) {
+            $qb->groupBy('product.id');
+            $qb->having('count(distinct attributeType.id) = :numberOfFilters');
+            $qb->setParameter('numberOfFilters', $index);
+        }
+
+        return $qb->getQuery()
+                ->getResult();
     }
 }

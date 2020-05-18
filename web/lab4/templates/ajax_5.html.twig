@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+
+<title>AJAX 5</title>
+{{ encore_entry_link_tags('ajax_5') }}
+
+{% block body %}
+    <div id="app">
+        <file-tree v-bind:path="rootPath"></file-tree>
+    </div>
+
+    {{ encore_entry_script_tags('ajax_5') }}
+{% endblock %}

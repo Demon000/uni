@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AttributeType;
 use App\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,12 +16,23 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductController extends AbstractController {
     /**
      * @Route("/", methods={"GET"}, name="list")
+     * @param Request $request
      * @return JsonResponse
      */
-    public function listProducts() {
+    public function listProducts(Request $request) {
         $productRepository = $this->getDoctrine()->getRepository(Product::class);
-        $products = $productRepository->findAll();
+        $products = $productRepository->findAllWithAttributes($request->query);
         return $this->json($products);
+    }
+
+    /**
+     * @Route("/attributes", methods={"GET"}, name="attributes")
+     * @return JsonResponse
+     */
+    public function listAttributes() {
+        $attributeTypeRepository = $this->getDoctrine()->getRepository(AttributeType::class);
+        $attributesTypes = $attributeTypeRepository->findAll();
+        return $this->json($attributesTypes);
     }
 
     /**

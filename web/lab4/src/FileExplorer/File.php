@@ -12,6 +12,7 @@ class File implements JsonSerializable {
     private string $root_path;
     private string $absolute_path;
     private string $relative_path;
+    private string $name;
     private array $files = [];
 
     /**
@@ -45,6 +46,7 @@ class File implements JsonSerializable {
         $this->root_path = $root_path;
         $this->absolute_path = $file_path;
         $this->relative_path = $relative_file_path;
+        $this->name = pathinfo($file_path, PATHINFO_BASENAME);
     }
 
     public static function addTrailingSlash($path) {
@@ -75,6 +77,7 @@ class File implements JsonSerializable {
     public function jsonSerialize() {
         $data = [
                 'path' => $this->relative_path,
+                'name' => $this->name,
                 'type' => $this->type,
                 'mime' => $this->mime,
         ];

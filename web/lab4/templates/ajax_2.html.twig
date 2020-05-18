@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<title>AJAX 2</title>
+{{ encore_entry_link_tags('ajax_2') }}
+
+{% block body %}
+    <div id="app">
+        <div id="people">
+            <div class="person"
+                 v-for="person in people"
+                 v-bind:key="person.id">
+                <p>Id: ${ person.id }</p>
+                <p>Name: ${ person.first_name } ${ person.last_name }</p>
+                <p>Phone: ${ person.phone }</p>
+                <p>Email: ${ person.email }</p>
+            </div>
+        </div>
+        <button v-on:click="prevPage()" v-bind:disabled="loading || before <= 0">Prev page</button>
+        <button v-on:click="nextPage()" v-bind:disabled="loading || after <= 0">Next page</button>
+    </div>
+
+    {{ encore_entry_script_tags('ajax_2') }}
+{% endblock %}

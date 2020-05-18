@@ -1,0 +1,15 @@
+#products, #product-form {
+    display: inline-block;
+    vertical-align: top;
+}
+#products {
+    border-right: 1px solid black;
+}
+.product {
+    cursor: pointer;
+    padding: 8px;
+    margin: 0;
+}
+.product.selected {
+    background: lightgrey;
+}

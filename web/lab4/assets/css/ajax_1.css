@@ -1,0 +1,18 @@
+#cities, #connections {
+    display: inline-block;
+    vertical-align: top;
+}
+.city {
+    padding: 8px;
+    margin: 0;
+}
+#cities {
+    border-right: 1px solid black;
+}
+#cities > .city {
+    cursor: pointer;
+}
+#cities > .city.selected {
+    background: lightgrey;
+}
+
