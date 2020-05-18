@@ -1,10 +1,9 @@
 import '../css/ajax_1.css';
 
 import Vue from 'vue';
+import Request from './Request';
 
-const useXHR = true;
-
-const app = new Vue({
+new Vue({
     el: '#app',
     delimiters: ['${', '}'],
     data: {
@@ -12,43 +11,38 @@ const app = new Vue({
         selectedCity: null,
         connections: [],
     },
-    mounted() {
-        this.loadCities();
+    async mounted() {
+        await this.loadCities();
     },
     methods: {
-        loadCities() {
-            if (useXHR) {
-                const req = new XMLHttpRequest();
-                req.responseType = 'json';
-                req.open('GET', '/api/cities', true);
-                req.onload = () => {
-                    this.cities = req.response;
-                };
-                req.onerror = () => {
-                    console.error('Failed to retrieve cities');
-                };
-                req.send();
+        async loadCities() {
+            let response;
+            try {
+                response = await Request.get(`/api/cities`);
+            } catch (e) {
+                console.error(e);
+                return;
             }
+
+            this.cities = response;
         },
-        loadConnections(city) {
+        async loadConnections(city) {
             this.connections = [];
-            if (useXHR) {
-                const req = new XMLHttpRequest();
-                req.responseType = 'json';
-                req.open('GET', `/api/cities/${city.id}`, true);
-                req.onload = () => {
-                    this.connections = req.response.connections;
-                };
-                req.onerror = () => {
-                    console.error('Failed to retrieve city connections');
-                };
-                req.send();
+
+            let response;
+            try {
+                response = await Request.get(`/api/cities/${city.id}`);
+            } catch (e) {
+                console.error(e);
+                return;
             }
+
+            this.connections = response.connections;
         },
-        onCityClick(city) {
+        async onCityClick(city) {
             if (this.selectedCity !== city) {
                 this.selectedCity = city;
-                this.loadConnections(city);
+                await this.loadConnections(city);
             } else {
                 this.selectedCity = null;
             }

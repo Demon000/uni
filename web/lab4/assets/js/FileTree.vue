@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    const useXHR = true;
+    import Request from "./Request";
 
     export default {
         name: 'file-tree',
@@ -61,38 +61,26 @@
                 return this.type === 'directory';
             },
         },
-        mounted() {
-            this.loadFile();
+        async mounted() {
+            await this.loadFile();
         },
         methods: {
-            setData(data) {
-                this.name = data.name;
-                this.type = data.type;
-                this.mime = data.mime;
-                this.files = data.files;
-                this.isLoaded = true;
-            },
-            loadFile() {
+            async loadFile() {
                 this.isLoaded = false;
 
-                if (useXHR) {
-                    const req = new XMLHttpRequest();
-                    req.responseType = 'json';
-                    req.open('GET', `/api/file_explorer/${this.path}`, true);
-                    req.onload = () => {
-                        if (req.response.error) {
-                            console.error(req.response.message);
-                            return;
-                        }
-
-                        this.setData(req.response);
-
-                    };
-                    req.onerror = () => {
-                        console.error('Failed to retrieve files');
-                    };
-                    req.send();
+                let response;
+                try {
+                    response = await Request.post(`/api/file_explorer/${this.path}`);
+                } catch (e) {
+                    console.error(e);
+                    return;
                 }
+
+                this.name = response.name;
+                this.type = response.type;
+                this.mime = response.mime;
+                this.files = response.files;
+                this.isLoaded = true;
             },
             onExpandClick() {
                 if (!this.isDirectory) {

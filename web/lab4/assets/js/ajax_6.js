@@ -1,19 +1,18 @@
 import '../css/ajax_6.css';
 
 import Vue from 'vue';
+import Request from "./Request";
 
-const useXHR = true;
-
-const app = new Vue({
+new Vue({
     el: '#app',
     delimiters: ['${', '}'],
     data: {
         products: [],
         attributes: [],
     },
-    mounted() {
-        this.loadProducts();
-        this.loadAttributes();
+    async mounted() {
+        await this.loadProducts();
+        await this.loadAttributes();
     },
     filters: {
         capitalize: function (value) {
@@ -30,27 +29,18 @@ const app = new Vue({
 
             this.attributes = attributes;
         },
-        loadAttributes() {
-            if (useXHR) {
-                const req = new XMLHttpRequest();
-                req.responseType = 'json';
-                req.open('GET', `/api/products/attributes`, true);
-                req.onload = () => {
-                    if (req.response.error) {
-                        console.error(req.response.message);
-                        return;
-                    }
-
-                    this.setAttributes(req.response);
-
-                };
-                req.onerror = () => {
-                    console.error('Failed to retrieve attributes');
-                };
-                req.send();
+        async loadAttributes() {
+            let response;
+            try {
+                response = await Request.get('/api/products/attributes');
+            } catch (e) {
+                console.error(e);
+                return;
             }
+
+            this.setAttributes(response);
         },
-        loadProducts() {
+        async loadProducts() {
             let queryString = '';
 
             for (const attribute of Object.values(this.attributes)) {
@@ -69,23 +59,16 @@ const app = new Vue({
                 queryString = '?' + queryString;
             }
 
-            if (useXHR) {
-                const req = new XMLHttpRequest();
-                req.responseType = 'json';
-                req.open('GET', `/api/products${queryString}`, true);
-                req.onload = () => {
-                    if (req.response.error) {
-                        console.error(req.response.message);
-                        return;
-                    }
-
-                    this.products = req.response;
-                };
-                req.onerror = () => {
-                    console.error('Failed to retrieve attributes');
-                };
-                req.send();
+            let response;
+            try {
+                response = await Request.get(`/api/products${queryString}`);
+            } catch (e) {
+                console.error(e);
+                return;
             }
+
+
+            this.products = response;
         },
     },
 });

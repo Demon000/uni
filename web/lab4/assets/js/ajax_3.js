@@ -1,10 +1,9 @@
 import '../css/ajax_3.css';
 
 import Vue from 'vue';
+import Request from "./Request";
 
-const useXHR = true;
-
-const app = new Vue({
+new Vue({
     el: '#app',
     delimiters: ['${', '}'],
     data: {
@@ -25,39 +24,32 @@ const app = new Vue({
                 this.selectedProduct.price !== this.productPrice;
         }
     },
-    mounted() {
-        this.loadProducts();
+    async mounted() {
+        await this.loadProducts();
     },
     methods: {
-        loadProducts() {
-            if (useXHR) {
-                const req = new XMLHttpRequest();
-                req.responseType = 'json';
-                req.open('GET', `/api/products`, true);
-                req.onload = () => {
-                    this.products = req.response;
-                };
-                req.onerror = () => {
-                    console.error('Failed to retrieve products');
-                };
-                req.send();
+        async loadProducts() {
+            let response;
+
+            try {
+                response = await Request.get('/api/products');
+            } catch (e) {
+                console.error(e);
+                return;
             }
+
+            this.products = response;
         },
-        updateProduct(id, data) {
-            if (useXHR) {
-                const req = new XMLHttpRequest();
-                req.responseType = 'json';
-                req.open('PATCH', `/api/products/${id}`, true);
-                req.onload = () => {
-                    this.loadProducts();
-                    this.selectProduct(null);
-                };
-                req.onerror = () => {
-                    console.error('Failed to update product');
-                };
-                req.setRequestHeader('Content-Type', 'application/json');
-                req.send(JSON.stringify(data));
+        async updateProduct(id, data) {
+            try {
+                await Request.patch(`/api/products/${id}`, data);
+            } catch (e) {
+                console.error(e);
+                return;
             }
+
+            await this.loadProducts();
+            await this.selectProduct();
         },
         selectProduct(product) {
             if (product) {
@@ -80,8 +72,8 @@ const app = new Vue({
                 this.selectProduct(null);
             }
         },
-        onSaveClick() {
-            this.updateProduct(this.selectedProduct.id, {
+        async onSaveClick() {
+            await this.updateProduct(this.selectedProduct.id, {
                 name: this.productName,
                 description: this.productDescription,
                 price: this.productPrice,

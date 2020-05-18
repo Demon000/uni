@@ -1,10 +1,9 @@
 import '../css/ajax_4.css';
 
 import Vue from 'vue';
+import Request from "./Request";
 
-const useXHR = true;
-
-const app = new Vue({
+new Vue({
     el: '#app',
     delimiters: ['${', '}'],
     data: {
@@ -36,47 +35,31 @@ const app = new Vue({
             this.table = data.table;
             this.state = data.state;
         },
-        onStartClick() {
-            if (useXHR) {
-                const req = new XMLHttpRequest();
-                req.responseType = 'json';
-                req.open('POST', `/api/tic_tac_toe/start`, true);
-                req.onload = () => {
-                    if (req.response.error) {
-                        console.error(req.response.message);
-                        return;
-                    }
-
-                    this.updateData(req.response);
-                };
-                req.onerror = () => {
-                    console.error('Failed to update table');
-                };
-                req.send();
+        async onStartClick() {
+            let response;
+            try {
+                response = await Request.post('/api/tic_tac_toe/start');
+            } catch (e) {
+                console.error(e);
+                return;
             }
+
+
+            this.updateData(response);
         },
-        onCellClick(rowIndex, columnIndex) {
-            if (useXHR) {
-                const req = new XMLHttpRequest();
-                req.responseType = 'json';
-                req.open('POST', `/api/tic_tac_toe/play`, true);
-                req.onload = () => {
-                    if (req.response.error) {
-                        console.error(req.response.message);
-                        return;
-                    }
-
-                    this.updateData(req.response);
-
-                };
-                req.onerror = () => {
-                    console.error('Failed to update table');
-                };
-                req.setRequestHeader('Content-Type', 'application/json');
-                req.send(JSON.stringify({
+        async onCellClick(rowIndex, columnIndex) {
+            let response;
+            try {
+                response = await Request.post('/api/tic_tac_toe/play', {
                     move: [rowIndex, columnIndex],
-                }));
+                });
+            } catch (e) {
+                console.error(e);
+                return;
             }
+
+
+            this.updateData(response);
         },
     },
 });

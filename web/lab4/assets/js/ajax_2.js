@@ -1,10 +1,9 @@
 import '../css/ajax_2.css';
 
 import Vue from 'vue';
+import Request from "./Request";
 
-const useXHR = true;
-
-const app = new Vue({
+new Vue({
     el: '#app',
     delimiters: ['${', '}'],
     data: {
@@ -14,35 +13,33 @@ const app = new Vue({
         after: 0,
         loading: false,
     },
-    mounted() {
-        this.loadPeople();
+    async mounted() {
+        await this.loadPeople();
     },
     methods: {
-        loadPeople() {
+        async loadPeople() {
             this.loading = true;
-            if (useXHR) {
-                const req = new XMLHttpRequest();
-                req.responseType = 'json';
-                req.open('GET', `/api/people?page=${this.page}`, true);
-                req.onload = () => {
-                    this.people = req.response.data;
-                    this.before = req.response.before;
-                    this.after = req.response.after;
-                    this.loading = false;
-                };
-                req.onerror = () => {
-                    console.error('Failed to retrieve people');
-                };
-                req.send();
+
+            let response;
+            try {
+                response = await Request.get(`/api/people?page=${this.page}`);
+            } catch (e) {
+                console.error(e);
+                return;
             }
+
+            this.people = response.data;
+            this.before = response.before;
+            this.after = response.after;
+            this.loading = false;
         },
-        nextPage() {
+        async nextPage() {
             this.page++;
-            this.loadPeople();
+            await this.loadPeople();
         },
-        prevPage() {
+        async prevPage() {
             this.page--;
-            this.loadPeople();
+            await this.loadPeople();
         },
     },
 });

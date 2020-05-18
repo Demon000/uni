@@ -58,7 +58,7 @@ class WebController extends AbstractController
     }
 
     /**
-     * @Route("/ajax_6", name="ajax_5")
+     * @Route("/ajax_6", name="ajax_6")
      */
     public function ajax_6()
     {
