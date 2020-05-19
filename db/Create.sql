@@ -10,6 +10,7 @@ drop table if exists VideoVotes;
 drop table if exists Videos;
 drop table if exists UserSubscriptions;
 drop table if exists Users;
+drop table if exists HistoryEntries;
 
 create table Users(
 	UserId int primary key not null identity(1, 1),
@@ -108,4 +109,11 @@ create table VideoReports(
 	[Description] nvarchar(MAX) not null, /* Avoid Description keyword usage */
 	VideoReportsTypeId int foreign key references VideReportTypeLookup(VideoReportsTypeId),
 	VideoReportStatusLookup int foreign key references VideoReportStatusLookup(VideoReportsStatusId),
+);
+
+create table HistoryEntries(
+	HistoryEntryId int primary key identity,
+	TableName nvarchar(MAX),
+	ActionName nvarchar(MAX),
+	[Time] datetime,
 );
