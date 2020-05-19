@@ -105,7 +105,7 @@ create table VideoReports(
 	UserId int foreign key references Users(UserId) not null,
 
 	ReportTime date not null,
-	[Description] nvarchar(MAX) not null, // Avoid Description keyword usage
+	[Description] nvarchar(MAX) not null, /* Avoid Description keyword usage */
 	VideoReportsTypeId int foreign key references VideReportTypeLookup(VideoReportsTypeId),
 	VideoReportStatusLookup int foreign key references VideoReportStatusLookup(VideoReportsStatusId),
 );
