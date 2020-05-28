@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<title>PHP 4</title>
+
+{% block body %}
+    Registration successful.
+
+    Before you login, you must verify your email by clicking on the following link.
+
+    <a href="{{ absolute_url(path('php_4_verify_email', {'user_verification_uuid': user_verification_uuid})) }}">Verify</a>
+{% endblock %}

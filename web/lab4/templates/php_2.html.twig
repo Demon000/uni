@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<title>PHP 2</title>
+
+{{ encore_entry_link_tags('php_2') }}
+
+{% block body %}
+    <form method="get">
+        <select name="entries">
+            {% for i_entries in available_entries %}
+                <option value="{{ i_entries }}"
+                        {{ i_entries == entries ? 'selected' : '' }}
+                >{{ i_entries }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Show">
+    </form>
+    <div id="people">
+        {% for person in people %}
+        <div class="person">
+            <p>Id: {{ person.id }}</p>
+            <p>Name: {{ person.firstName }} {{ person.lastName }}</p>
+            <p>Phone: {{ person.phone }}</p>
+            <p>Email: {{ person.email }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% if before > 0 %}
+        <a href="{{ path('php_2', { 'page': page - 1, 'entries': entries }) }}">
+            <button>Prev page</button>
+        </a>
+    {% else %}
+        <button disabled>Prev page</button>
+    {% endif %}
+    {% if after > 0 %}
+        <a href="{{ path('php_2', { 'page': page + 1, 'entries': entries }) }}">
+            <button>Next page</button>
+        </a>
+    {% else %}
+        <button disabled>Next page</button>
+    {% endif %}
+
+{#    {{ encore_entry_script_tags('php_2') }}#}
+{% endblock %}

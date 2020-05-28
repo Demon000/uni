@@ -29,6 +29,10 @@ Encore
     .addEntry('ajax_4', './assets/js/ajax_4.js')
     .addEntry('ajax_5', './assets/js/ajax_5.js')
     .addEntry('ajax_6', './assets/js/ajax_6.js')
+
+    .addEntry('php_2', './assets/js/php_2.js')
+    .addEntry('php_5', './assets/js/php_5.js')
+
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 

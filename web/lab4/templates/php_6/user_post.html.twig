@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<title>PHP 5</title>
+
+{{ encore_entry_link_tags('php_5') }}
+
+{% block body %}
+    {% if user %}
+        {% include 'nav_bar.html.twig' with { 'user': user } %}
+    {% endif %}
+    
+    {% set is_own_post = user and user_post.user.id == user.id %}
+
+    <h1>{{ user_post.title }}</h1>
+    <p>{{ user_post.description }}</p>
+    
+    <h1>Comments</h1>
+
+    {% for post_comment in post_comments %}
+        {% if post_comment.verified or is_own_post %}
+            <div class="comment">
+                <p><b>{{ post_comment.name }}</b></p>
+                <p>{{ post_comment.message }}</p>
+            </div>
+            
+            {% if not post_comment.verified and is_own_post %}
+                This comment is not verified.
+                <a href="{{ path('php_6_post_comment_verify', {'userPostId': user_post.id, 'postCommentId': post_comment.id}) }}">Verify.</a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    <h2>Add new comment</h2>
+    <form method="post" action="{{ path('php_6_post_comments_create', {'userPostId': user_post.id }) }}">
+        <label>
+            Name
+            <br>
+            <input name="name" type="text" required>
+        </label>
+        <br>
+        <label>
+            Message
+            <br>
+            <textarea name="message" required></textarea>
+        </label>
+        <br>
+        <input type="submit" value="Post comment">
+    </form>
+{% endblock %}

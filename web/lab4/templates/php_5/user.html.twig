@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<title>PHP 5</title>
+
+{{ encore_entry_link_tags('php_5') }}
+
+{% block body %}
+    {% include 'nav_bar.html.twig' with { 'user': user } %}
+    <div id="wrapper">
+        <div id="main">
+            <div id="header">
+                <h2>Profile of {{ viewed_user.email }}</h2>
+            </div>
+
+            <div id="posts">
+                <h2>Posts</h2>
+
+                {% if user == viewed_user %}
+                    <h3>Add new post</h3>
+                    <form method="post" action="{{ path('php_6_user_posts_create') }}" enctype="multipart/form-data">
+                        <label>
+                            Title
+                            <br>
+                            <input name="title" type="text" required>
+                        </label>
+                        <br>
+                        <label>
+                            Description
+                            <br>
+                            <textarea name="description" required></textarea>
+                        </label>
+                        <br>
+                        <input type="submit" value="Add post">
+                    </form>
+                {% endif %}
+
+                {% for user_post in user_posts %}
+                    <div class="post">
+                        <a href="{{ path('php_6_post_get', {'userPostId': user_post.id}) }}">{{ user_post.title }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div id="images">
+                <h2>Images</h2>
+
+                {% if user == viewed_user %}
+                    <h3>Add new image</h3>
+                    <form method="post" action="{{ path('php_5_user_images_create') }}" enctype="multipart/form-data">
+                        <label>
+                            Image
+                            <br>
+                            <input name="image" type="file" accept="image/*">
+                        </label>
+                        <br>
+                        <input type="submit" value="Add image">
+                    </form>
+                {% endif %}
+
+                {% for user_image in user_images %}
+                    <div class="image">
+                        <img src="{{ asset(user_image.path) }}">
+                        <a href="{{ path('php_5_user_images_delete', {'userImageId': user_image.id}) }}">Remove</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="sidebar">
+            <div id="users">
+                <h2>Users</h2>
+                {% for i_user in users %}
+                    {% if i_user.id != user.id and i_user.id != viewed_user.id %}
+                        <a href="{{ path('php_5_user', {'viewedUserId': i_user.id} ) }}">
+                            <div class="user">
+                                {{ i_user.email }}
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

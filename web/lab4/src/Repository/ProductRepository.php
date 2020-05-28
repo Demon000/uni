@@ -24,7 +24,8 @@ class ProductRepository extends ServiceEntityRepository {
      * @throws ORMException
      */
     public function update(Product $product) {
-        $this->getEntityManager()->flush($product);
+        $this->_em->persist($product);
+        $this->_em->flush();
     }
 
     public function findAllWithAttributes($attributes) {

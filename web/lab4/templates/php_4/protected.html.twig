@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+
+<title>PHP 4</title>
+
+{% block body %}
+    {% include 'nav_bar.html.twig' with { 'user': user } %}
+
+    This is a protected page.
+{% endblock %}

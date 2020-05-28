@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<title>PHP 4</title>
+
+{% block body %}
+    <form method="post" action="{{ path('php_4_register') }}">
+        <label>
+            Email
+            <input type="email" name="email" required>
+        </label>
+        <br>
+        <label>
+            Password
+            <input type="password" name="password" required>
+        </label>
+        <br>
+        <input type="submit" value="Register">
+    </form>
+    <br>
+    <form method="post" action="{{ path('php_4_login') }}">
+        <label>
+            Email
+            <input type="email" name="email" required>
+        </label>
+        <br>
+        <label>
+            Password
+            <input type="password" name="password" required>
+        </label>
+        <br>
+        <input type="submit" value="Login">
+    </form>
+{% endblock %}
