@@ -1,5 +1,5 @@
 <div id="nav-bar">
-    Logged in as {{ user.email }}.
+    Logged in as {{ user.email | e }}.
     <a href="{{ path('php_4') }}">Index</a>
     <a href="{{ path('php_5_user') }}">Profile</a>
     <a href="{{ path('php_4_logout') }}">Logout</a>

@@ -11,16 +11,16 @@
     
     {% set is_own_post = user and user_post.user.id == user.id %}
 
-    <h1>{{ user_post.title }}</h1>
-    <p>{{ user_post.description }}</p>
+    <h1>{{ user_post.title | e }}</h1>
+    <p>{{ user_post.description | e }}</p>
     
     <h1>Comments</h1>
 
     {% for post_comment in post_comments %}
         {% if post_comment.verified or is_own_post %}
             <div class="comment">
-                <p><b>{{ post_comment.name }}</b></p>
-                <p>{{ post_comment.message }}</p>
+                <p><b>{{ post_comment.name | e }}</b></p>
+                <p>{{ post_comment.message | e }}</p>
             </div>
             
             {% if not post_comment.verified and is_own_post %}

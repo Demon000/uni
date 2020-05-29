@@ -9,7 +9,7 @@
     <div id="wrapper">
         <div id="main">
             <div id="header">
-                <h2>Profile of {{ viewed_user.email }}</h2>
+                <h2>Profile of {{ viewed_user.email | e}}</h2>
             </div>
 
             <div id="posts">
@@ -36,7 +36,7 @@
 
                 {% for user_post in user_posts %}
                     <div class="post">
-                        <a href="{{ path('php_6_post_get', {'userPostId': user_post.id}) }}">{{ user_post.title }}</a>
+                        <a href="{{ path('php_6_post_get', {'userPostId': user_post.id}) }}">{{ user_post.title | e }}</a>
                     </div>
                 {% endfor %}
             </div>
@@ -72,7 +72,7 @@
                     {% if i_user.id != user.id and i_user.id != viewed_user.id %}
                         <a href="{{ path('php_5_user', {'viewedUserId': i_user.id} ) }}">
                             <div class="user">
-                                {{ i_user.email }}
+                                {{ i_user.email | e }}
                             </div>
                         </a>
                     {% endif %}
