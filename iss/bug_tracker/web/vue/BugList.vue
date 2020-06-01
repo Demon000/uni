@@ -4,22 +4,28 @@
             {{ title }}
         </p>
 
-        <p v-if="!bugs.length">No bugs.</p>
-        <bug-item
-                v-for="bug of bugs"
-                v-if="bug.status === status"
-                v-bind:key="bug.id"
-                v-bind="bug"
-                v-on:solve-success="onSolveSuccess"
-                v-on:delete-success="onDeleteSuccess"
-                v-on:edit-success="onEditSuccess"
-        ></bug-item>
+        <template v-if="bugs.length">
+            <bug-item
+                    v-for="bug of bugs"
+                    v-if="bug.status === status"
+                    v-bind:key="bug.id"
+                    v-bind="bug"
+                    v-on:solve-success="onSolveSuccess"
+                    v-on:delete-success="onDeleteSuccess"
+                    v-on:edit-success="onEditSuccess"
+            ></bug-item>
 
-        <div class="buttons">
-            <button class="prev" v-bind:disabled="before <= 0" v-on:click="onPrevPageClick">PREVIOUS PAGE</button>
-            <span class="info">{{ before + 1 }} - {{ Math.min(before + entries, count) }} / {{ count }}</span>
-            <button class="next" v-bind:disabled="after <= 0" v-on:click="onNextPageClick">NEXT PAGE</button>
-        </div>
+            <div class="buttons">
+                <button class="prev" v-bind:disabled="before <= 0" v-on:click="onPrevPageClick">PREVIOUS PAGE</button>
+                <span class="info">{{ before + 1 }} - {{ Math.min(before + entries, count) }} / {{ count }}</span>
+                <button class="next" v-bind:disabled="after <= 0" v-on:click="onNextPageClick">NEXT PAGE</button>
+            </div>
+        </template>
+        <template v-else>
+            <p v-if="!bugs.length">
+                No bugs.
+            </p>
+        </template>
     </div>
 </template>
 
