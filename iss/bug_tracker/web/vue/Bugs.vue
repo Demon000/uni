@@ -25,6 +25,7 @@
             <bug-list
                     v-bind:title="'Open bugs'"
                     v-bind:status="'OPEN'"
+                    v-bind:entries="10"
                     v-on:solve-success="loadBugs"
                     v-on:delete-success="loadBugs"
                     v-on:edit-success="loadBugs"
@@ -33,6 +34,7 @@
             <bug-list
                     v-bind:title="'Solved bugs'"
                     v-bind:status="'SOLVED'"
+                    v-bind:entries="10"
                     v-on:solve-success="loadBugs"
                     v-on:delete-success="loadBugs"
                     v-on:edit-success="loadBugs"

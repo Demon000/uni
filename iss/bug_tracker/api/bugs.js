@@ -29,24 +29,51 @@ router.get('/sse',
     sse.subscribeHandler(req, res);
 });
 
+function tryParseNumberQuery(query, value, min=null, max=null) {
+    if (typeof query !== 'string') {
+        return value;
+    }
+
+    const parsed = Number.parseInt(query, 10);
+    if (Number.isNaN(parsed)) {
+        return value;
+    }
+
+    if (min !== null && parsed < min) {
+        return value;
+    }
+
+    if (max !== null && parsed > max) {
+        return value;
+    }
+
+    return parsed;
+}
+
 router.get('/',
         authUser(),
         async (req, res) => {
-    let authoredByUserOnly = false;
+    let user = null;
     if (res.locals.user.role === UserRoles.TESTER ||
             req.query.owner === 'self') {
-        authoredByUserOnly = true;
+        user = res.locals.user;
     }
+
+    const page = tryParseNumberQuery(req.query.page, 0, 0);
+    const entries = tryParseNumberQuery(req.query.entries, 10, 10, 10);
 
     const status = BugStatuses.fromString(req.query.status);
-    let bugs;
-    if (authoredByUserOnly) {
-        bugs = await BugService.getBugsForUser(res.locals.user.id, status);
-    } else {
-        bugs = await BugService.getBugs(status);
-    }
+    const count = await BugService.countBugs(user, status);
+    const before = Math.min(page * entries, count);
+    const after = Math.max(count - (page + 1) * entries, 0);
+    const bugs = await BugService.getBugs(before, entries, user, status);
 
-    res.send(bugs);
+    res.send({
+        count,
+        before,
+        after,
+        data: bugs,
+    });
 });
 
 router.post('/',

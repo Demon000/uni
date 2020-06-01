@@ -16,32 +16,38 @@ class BugService {
         return bug;
     }
 
-    static async getBugsForUser(userId, status=BugStatuses.ALL) {
+    static getBugsForUserQuery(userId, status=BugStatuses.ALL) {
         let query = Bug.find();
 
         if (userId) {
-            query = query.forUserId(userId);
+            query.forUserId(userId);
         }
 
         if (status === BugStatuses.SOLVED) {
-            query = query.sort({
+            query.sort({
                 solvedAt: -1,
             });
         } else if (status === BugStatuses.OPEN) {
-            query = query.sort({
+            query.sort({
                 createdAt: -1,
             });
         }
 
         if (status !== BugStatuses.ALL) {
-            query = query.withStatus(status);
+            query.withStatus(status);
         }
 
-        return await query.populateUsers().exec();
+        return query;
     }
 
-    static async getBugs(status=BugStatuses.ALL) {
-        return await this.getBugsForUser(null, status);
+    static countBugs(userId, status=BugStatuses.ALL) {
+        const query = this.getBugsForUserQuery(userId, status);
+        return query.countDocuments().exec();
+    }
+
+    static getBugs(before, entries, userId, status=BugStatuses.ALL) {
+        const query = this.getBugsForUserQuery(userId, status);
+        return query.skip(before).limit(entries).populateUsers().exec();
     }
 
     static async getBugByIdForUser(userId, bugId) {
