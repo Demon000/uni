@@ -10,9 +10,9 @@
                 v-if="bug.status === status"
                 v-bind:key="bug.id"
                 v-bind="bug"
-                v-on:solve-click="solveBug(bug.id)"
-                v-on:delete-click="deleteBug(bug.id)"
-                v-on:after-save="loadBugs()"
+                v-on:solve-success="onSolveSuccess"
+                v-on:delete-success="onDeleteSuccess"
+                v-on:edit-success="onEditSuccess"
         ></bug-item>
     </div>
 </template>
@@ -49,26 +49,15 @@
                         console.error(error);
                     });
             },
-            solveBug(bugId) {
-                axios
-                    .post(`/api/bugs/${bugId}/solve`)
-                    .then(() => {
-                        this.$emit('after-solve');
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+            onSolveSuccess() {
+                this.$emit('solve-success');
             },
-            deleteBug(bugId) {
-                axios
-                    .delete(`/api/bugs/${bugId}`)
-                    .then(() => {
-                        this.loadBugs();
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+            onDeleteSuccess() {
+                this.$emit('delete-success');
             },
+            onEditSuccess() {
+                this.$emit('edit-success');
+            }
         },
     });
 </script>

@@ -35,6 +35,7 @@ import VueSSE from 'vue-sse';
 Vue.use(VueSSE);
 
 import store from './store';
+import BugForm from '../vue/BugForm.vue';
 import BugList from '../vue/BugList.vue';
 import BugItem from '../vue/BugItem.vue';
 new Vue({
@@ -44,5 +45,6 @@ new Vue({
     components: {
         'bug-list': BugList,
         'bug-item': BugItem,
+        'bug-form': BugForm,
     },
 });

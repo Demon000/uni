@@ -18,32 +18,24 @@
         <div id="bugs-content">
             <button id="bug-add-view-toggle" class="fab mdi" v-bind:class="{ 'adding': isAdding }" v-on:click="onAddViewToggleButtonClick"></button>
             <div id="bug-add-view-wrapper" v-bind:style="{ height: bugAddViewHeight }">
-                <div id="bug-add-view" ref="bugAddView">
-                    <div class="input-group">
-                        <label>Title</label>
-                        <input type="text" v-model="addBugTitle">
-                    </div>
-
-                    <div class="input-group">
-                        <label>Description</label>
-                        <textarea v-model="addBugDescription" rows="10"></textarea>
-                    </div>
-
-                    <div class="buttons-wrapper">
-                        <button v-on:click="addBug">ADD BUG</button>
-                    </div>
-                </div>
+                <bug-form v-bind:mode="'add'"
+                          v-on:add-success="onAddSuccess"
+                          ref="bugAddView"></bug-form>
             </div>
             <bug-list
                     v-bind:title="'Open bugs'"
                     v-bind:status="'OPEN'"
-                    v-on:after-solve="loadBugs"
+                    v-on:solve-success="loadBugs"
+                    v-on:delete-success="loadBugs"
+                    v-on:edit-success="loadBugs"
                     ref="openBugsCategory"
             ></bug-list>
             <bug-list
                     v-bind:title="'Solved bugs'"
                     v-bind:status="'SOLVED'"
-                    v-on:after-solve="loadBugs"
+                    v-on:solve-success="loadBugs"
+                    v-on:delete-success="loadBugs"
+                    v-on:edit-success="loadBugs"
                     ref="solvedBugsCategory"
             ></bug-list>
         </div>
@@ -52,15 +44,12 @@
 
 <script>
     import Vue from 'vue';
-    import axios from 'axios';
     import { getAccessToken } from '../js/store';
 
     export default Vue.component('bugs', {
         data() {
             return {
                 isAdding: false,
-                addBugTitle: '',
-                addBugDescription: '',
                 bugAddViewHeight: '0px',
                 sse: null,
             };
@@ -103,32 +92,20 @@
                 const bugAddView = this.$refs.bugAddView;
                 let height = 0;
                 if (this.isAdding) {
-                    height = bugAddView.offsetHeight;
+                    height = bugAddView.getHeight();
                 }
                 this.bugAddViewHeight = height + 'px';
             },
             onAddViewToggleButtonClick() {
                 this.setIsAdding(!this.isAdding);
             },
-            addBug() {
-                axios
-                    .post('/api/bugs', {
-                        title: this.addBugTitle,
-                        description: this.addBugDescription,
-                    })
-                    .then(() => {
-                        this.addBugTitle = '';
-                        this.addBugDescription = '';
-                        this.setIsAdding(false);
-                        this.loadBugs();
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-            },
             loadBugs() {
                 this.$refs.openBugsCategory.loadBugs();
                 this.$refs.solvedBugsCategory.loadBugs();
+            },
+            onAddSuccess() {
+                this.loadBugs();
+                this.setIsAdding(false);
             },
         },
     });
@@ -185,15 +162,6 @@
     #bug-add-view-wrapper {
         transition: height 250ms;
         overflow: hidden;
-    }
-    #bug-add-view {
-        padding: 8px;
-
-        border-radius: 4px;
-        background: #1e1e1e;
-    }
-    #bug-add-view .buttons-wrapper {
-        text-align: right;
     }
 
     #bug-add-view-toggle {

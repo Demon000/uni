@@ -1,6 +1,6 @@
 <template>
     <div class="bug-item">
-        <template v-if="!isEditing">
+        <div class="content" v-if="!isEditing">
             <div class="buttons">
                 <template v-if="status === 'OPEN'">
                     <template v-if="user.role === 'PROGRAMMER'">
@@ -26,23 +26,14 @@
                 </template>
             </p>
             <p class="description">{{ description }}</p>
-        </template>
-        <template v-else>
-            <div class="input-group">
-                <label>Title</label>
-                <input type="text" v-model="editedTitle">
-            </div>
-
-            <div class="input-group">
-                <label>Description</label>
-                <textarea v-model="editedDescription" rows="10"></textarea>
-            </div>
-
-            <div class="buttons-wrapper">
-                <button v-on:click="onCancelEditButtonClick">CANCEL</button>
-                <button v-on:click="onSaveEditButtonClick">SAVE BUG</button>
-            </div>
-        </template>
+        </div>
+        <bug-form v-else
+                  v-bind:id="id"
+                  v-bind:title="title"
+                  v-bind:description="description"
+                  v-bind:mode="'edit'"
+                  v-on:edit-success="onEditSuccess"
+                  v-on:edit-cancel="onCancelEditButtonClick"></bug-form>
     </div>
 </template>
 
@@ -52,7 +43,6 @@
     import moment from 'moment';
 
     export default Vue.component('bug-item', {
-        name: 'bug-item',
         props: [
             'id',
             'title',
@@ -68,82 +58,85 @@
                 return this.$store.state.user;
             },
         },
-        data: function() {
+        data() {
             return {
                 isEditing: false,
-                editedTitle: '',
-                editedDescription: '',
             };
         },
         methods: {
-            formatDate: function(date) {
+            formatDate(date) {
                 return moment(date).format('dddd, MMMM Do YYYY, h:mm');
             },
-            onSolveButtonClick: function() {
-                this.$emit('solve-click');
+            setIsEditing(status) {
+                this.isEditing = status;
             },
-            onEditButtonClick: function() {
-                this.editedTitle = this.title;
-                this.editedDescription = this.description;
-                this.isEditing = true;
-                this.$emit('edit-click');
-            },
-            onSaveEditButtonClick: function() {
+            onSolveButtonClick() {
                 axios
-                    .post(`/api/bugs/${this.id}`, {
-                        title: this.editedTitle,
-                        description: this.editedDescription,
-                    })
+                    .post(`/api/bugs/${this.id}/solve`)
                     .then(() => {
-                        this.isEditing = false;
-                        this.$emit('after-save');
+                        this.$emit('solve-success');
                     })
                     .catch(error => {
                         console.error(error);
                     });
             },
-            onCancelEditButtonClick: function() {
-                this.isEditing = false;
+            onDeleteButtonClick() {
+                axios
+                    .delete(`/api/bugs/${this.id}`)
+                    .then(() => {
+                        this.$emit('delete-success');
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
             },
-            onDeleteButtonClick: function() {
-                this.$emit('delete-click');
-            }
+            onEditButtonClick() {
+                this.setIsEditing(true);
+            },
+            onCancelEditButtonClick() {
+                this.setIsEditing(false);
+            },
+            onEditSuccess() {
+                this.$emit('edit-success');
+                this.setIsEditing(false);
+            },
         }
     });
 </script>
 
-<style>
+<style scoped>
     .bug-item {
         margin-bottom: 16px;
-
-        padding: 8px;
 
         border-radius: 4px;
         background: #1e1e1e;
 
         position: relative;
     }
-    .bug-item > .title,
-    .bug-item > .secondary-title,
-    .bug-item > .description {
+    .bug-item .content {
+        padding: 8px;
+    }
+    .bug-item .content .title,
+    .bug-item .content .secondary-title,
+    .bug-item .content .description {
         margin: 0;
     }
-    .bug-item > .secondary-title {
+    .bug-item .content .secondary-title {
         font-size: 0.875rem;
         font-weight: 400;
         line-height: 1.25rem;
 
         color: rgba(255, 255, 255, 0.6);
     }
-    .bug-item > .title {
+    .bug-item .content .title {
         font-size: 1.25rem;
         font-weight: 500;
         line-height: 2rem;
     }
-    .bug-item > .description {
+    .bug-item .content .description {
         margin: 16px 0 8px 0;
     }
-    .bug-item > .buttons {
+    .bug-item .content .buttons {
         position: absolute;
         top: 0;
         right: 0;
@@ -151,10 +144,7 @@
         font-size: 18px;
         padding: 8px;
     }
-    .bug-item .buttons-wrapper {
-        text-align: right;
-    }
-    .bug-item > .buttons > .mdi {
+    .bug-item .content .buttons .mdi {
         display: inline-block;
         width: 32px;
         height: 32px;
@@ -164,22 +154,22 @@
 
         border-radius: 50%;
     }
-    .bug-item > .buttons > .solve {
+    .bug-item .content .buttons .solve {
         color: #03dac6;
     }
-    .bug-item > .buttons > .solve:hover {
+    .bug-item .content .buttons .solve:hover {
         background: rgba(3, 218, 198, 0.06);
     }
-    .bug-item > .buttons > .delete {
+    .bug-item .content .buttons .delete {
         color: #cf6679;
     }
-    .bug-item > .buttons > .delete:hover {
+    .bug-item .content .buttons .delete:hover {
         background: rgba(207, 102, 121, 0.06);
     }
-    .bug-item > .buttons > .edit {
+    .bug-item .content .buttons .edit {
         color: #ffee58;
     }
-    .bug-item > .buttons > .edit:hover {
+    .bug-item .content .buttons .edit:hover {
         background: rgba(255, 238, 88, 0.06);
     }
 </style>
