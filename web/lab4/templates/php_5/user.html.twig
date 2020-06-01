@@ -12,10 +12,12 @@
                 <h2>Profile of {{ viewed_user.email | e}}</h2>
             </div>
 
+            {% set is_own_profile = user == viewed_user %}
+
             <div id="posts">
                 <h2>Posts</h2>
 
-                {% if user == viewed_user %}
+                {% if is_own_profile %}
                     <h3>Add new post</h3>
                     <form method="post" action="{{ path('php_6_user_posts_create') }}" enctype="multipart/form-data">
                         <label>
@@ -44,7 +46,7 @@
             <div id="images">
                 <h2>Images</h2>
 
-                {% if user == viewed_user %}
+                {% if is_own_profile %}
                     <h3>Add new image</h3>
                     <form method="post" action="{{ path('php_5_user_images_create') }}" enctype="multipart/form-data">
                         <label>
@@ -60,7 +62,9 @@
                 {% for user_image in user_images %}
                     <div class="image">
                         <img src="{{ asset(user_image.path) }}">
-                        <a href="{{ path('php_5_user_images_delete', {'userImageId': user_image.id}) }}">Remove</a>
+                        {% if is_own_profile %}
+                            <a href="{{ path('php_5_user_images_delete', {'userImageId': user_image.id}) }}">Remove</a>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
