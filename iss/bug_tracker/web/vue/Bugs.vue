@@ -17,19 +17,21 @@
         </div>
         <div id="bugs-content">
             <button id="bug-add-view-toggle" class="fab mdi" v-bind:class="{ 'adding': isAdding }" v-on:click="onAddViewToggleButtonClick"></button>
-            <div id="bug-add-view" v-bind:class="{ 'adding': isAdding }">
-                <div class="input-group">
-                    <label>Title</label>
-                    <input type="text" v-model="addBugTitle">
-                </div>
+            <div id="bug-add-view-wrapper" v-bind:style="{ height: bugAddViewHeight }">
+                <div id="bug-add-view" ref="bugAddView">
+                    <div class="input-group">
+                        <label>Title</label>
+                        <input type="text" v-model="addBugTitle">
+                    </div>
 
-                <div class="input-group">
-                    <label>Description</label>
-                    <textarea v-model="addBugDescription" rows="10"></textarea>
-                </div>
+                    <div class="input-group">
+                        <label>Description</label>
+                        <textarea v-model="addBugDescription" rows="10"></textarea>
+                    </div>
 
-                <div class="buttons-wrapper">
-                    <button v-on:click="addBug">ADD BUG</button>
+                    <div class="buttons-wrapper">
+                        <button v-on:click="addBug">ADD BUG</button>
+                    </div>
                 </div>
             </div>
             <bug-list
@@ -59,11 +61,12 @@
                 isAdding: false,
                 addBugTitle: '',
                 addBugDescription: '',
+                bugAddViewHeight: '0px',
                 sse: null,
             };
         },
         computed: {
-            user: function() {
+            user() {
                 return this.$store.state.user;
             },
         },
@@ -96,6 +99,13 @@
             },
             onAddViewToggleButtonClick() {
                 this.isAdding = !this.isAdding;
+
+                const bugAddView = this.$refs.bugAddView;
+                let height = 0;
+                if (this.isAdding) {
+                    height = bugAddView.offsetHeight;
+                }
+                this.bugAddViewHeight = height + 'px';
             },
             addBug() {
                 axios
@@ -169,13 +179,15 @@
         position: relative;
     }
 
-    #bug-add-view {
-        max-height: 0;
-        transition: max-height 500ms;
+    #bug-add-view-wrapper {
+        transition: height 250ms;
         overflow: hidden;
     }
-    #bug-add-view.adding {
-        max-height: 100vh;
+    #bug-add-view {
+        padding: 8px;
+
+        border-radius: 4px;
+        background: #1e1e1e;
     }
     #bug-add-view .buttons-wrapper {
         text-align: right;
