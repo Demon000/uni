@@ -97,8 +97,8 @@
                     name: 'login',
                 });
             },
-            onAddViewToggleButtonClick() {
-                this.isAdding = !this.isAdding;
+            setIsAdding(status) {
+                this.isAdding = status;
 
                 const bugAddView = this.$refs.bugAddView;
                 let height = 0;
@@ -106,6 +106,9 @@
                     height = bugAddView.offsetHeight;
                 }
                 this.bugAddViewHeight = height + 'px';
+            },
+            onAddViewToggleButtonClick() {
+                this.setIsAdding(!this.isAdding);
             },
             addBug() {
                 axios
@@ -116,7 +119,7 @@
                     .then(() => {
                         this.addBugTitle = '';
                         this.addBugDescription = '';
-                        this.isAdding = false;
+                        this.setIsAdding(false);
                         this.loadBugs();
                     })
                     .catch(error => {
