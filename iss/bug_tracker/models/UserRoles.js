@@ -10,6 +10,31 @@ class UserRoles {
             this.ADMIN,
         ];
     }
+
+    static isExactRole(role, targetRole) {
+        return role === targetRole;
+    }
+
+    static isCompatibleRole(role, targetRole) {
+        if (role === targetRole) {
+            return true;
+        }
+
+        switch (role) {
+            case this.PROGRAMMER:
+                if ([this.TESTER].includes(targetRole)) {
+                    return true;
+                }
+                break;
+            case this.ADMIN:
+                if ([this.PROGRAMMER, this.TESTER].includes(targetRole)) {
+                    return true;
+                }
+                break
+        }
+
+        return false;
+    }
 }
 
 module.exports = UserRoles;

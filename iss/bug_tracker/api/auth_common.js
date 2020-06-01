@@ -1,4 +1,5 @@
 const AuthService = require('../services/AuthService');
+const UserRoles = require('../models/UserRoles');
 const Errors = require('../lib/Errors');
 
 function getPayloadFromHeader(req) {
@@ -37,7 +38,7 @@ function authUserInner(role, method='header') {
 
         res.locals.user = AuthService.getUserFromAccessToken(accessToken);
 
-        if (role && res.locals.user.role !== role) {
+        if (UserRoles.isCompatibleRole(res.locals.user.role, role)) {
             throw new Errors.UserForbiddenError();
         }
 

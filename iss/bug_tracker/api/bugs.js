@@ -12,7 +12,7 @@ const ServerSideEvent = require('../lib/ServerSideEvent');
 const sse = new ServerSideEvent();
 
 function isBugAccessibleTo(bug, user) {
-    if (user.role === UserRoles.PROGRAMMER) {
+    if (UserRoles.isCompatibleRole(user.role, UserRoles.PROGRAMMER)) {
         return true;
     }
 
@@ -54,7 +54,7 @@ router.get('/',
         authUser(),
         async (req, res) => {
     let user = null;
-    if (res.locals.user.role === UserRoles.TESTER ||
+    if (UserRoles.isExactRole(res.locals.user.role, UserRoles.TESTER) ||
             req.query.owner === 'self') {
         user = res.locals.user;
     }
@@ -84,20 +84,13 @@ router.post('/',
     res.send(bug);
 });
 
-async function getBugFromParams(req, res) {
-    let authoredByUserOnly = false;
-    if (res.locals.user.role === UserRoles.TESTER) {
-        authoredByUserOnly = true;
+function getBugFromParams(req, res) {
+    let user = null;
+    if (UserRoles.isExactRole(res.locals.user.role, UserRoles.TESTER)) {
+        user = res.locals.user;
     }
 
-    let bug;
-    if (authoredByUserOnly) {
-        bug = await BugService.getBugByIdForUser(res.locals.user.id, req.params.id);
-    } else {
-        bug = await BugService.getBugById(req.params.id);
-    }
-
-    return bug;
+    return BugService.getBugById(user, req.params.id);
 }
 
 router.get('/:id',

@@ -50,7 +50,7 @@ class BugService {
         return query.skip(before).limit(entries).populateUsers().exec();
     }
 
-    static async getBugByIdForUser(userId, bugId) {
+    static async getBugById(userId, bugId) {
         let query = Bug.findById(bugId);
 
         if (userId) {
@@ -65,10 +65,6 @@ class BugService {
         await bug.populateUsers();
 
         return bug;
-    }
-
-    static async getBugById(bugId) {
-        return this.getBugByIdForUser(null, bugId);
     }
 
     static async updateBug(bug, data) {
