@@ -35,6 +35,7 @@ import VueSSE from 'vue-sse';
 Vue.use(VueSSE);
 
 import store from './store';
+import NavBar from '../vue/NavBar.vue';
 import BugForm from '../vue/BugForm.vue';
 import BugList from '../vue/BugList.vue';
 import BugItem from '../vue/BugItem.vue';
@@ -43,6 +44,7 @@ new Vue({
     store,
     el: '#app',
     components: {
+        'nav-bar': NavBar,
         'bug-list': BugList,
         'bug-item': BugItem,
         'bug-form': BugForm,

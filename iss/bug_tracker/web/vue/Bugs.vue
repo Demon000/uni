@@ -1,20 +1,6 @@
 <template>
     <div id="bugs-view">
-        <div id="nav-bar">
-            <div id="nav-bar-logo">
-                <span class="logo-main-part">
-                    Bug
-                </span>
-                <span class="logo-secondary-part">
-                    Tracker
-                </span>
-            </div>
-            <div id="nav-bar-user">
-                <span id="nav-bar-user-username" v-if="user">{{ user.username }}</span>
-                <i id="nav-bar-user-icon" class="mdi mdi-account-circle"></i>
-            </div>
-            <span id="nav-bar-logout" v-on:click="onLogoutButtonClick">LOGOUT</span>
-        </div>
+        <nav-bar></nav-bar>
         <div id="bugs-content">
             <button id="bug-add-view-toggle" class="fab mdi" v-bind:class="{ 'adding': isAdding }" v-on:click="onAddViewToggleButtonClick"></button>
             <div id="bug-add-view-wrapper" v-bind:style="{ height: bugAddViewHeight }">
@@ -56,11 +42,6 @@
                 sse: null,
             };
         },
-        computed: {
-            user() {
-                return this.$store.state.user;
-            },
-        },
         async mounted() {
             const accessToken = getAccessToken();
             try {
@@ -82,12 +63,6 @@
             this.sse.subscribe('bug-delete', loadBugs);
         },
         methods: {
-            async onLogoutButtonClick() {
-                await this.$store.dispatch('logout');
-                await this.$router.replace({
-                    name: 'login',
-                });
-            },
             setIsAdding(status) {
                 this.isAdding = status;
 
@@ -114,44 +89,6 @@
 </script>
 
 <style>
-    #nav-bar {
-        height: 64px;
-        line-height: 64px;
-        font-size: 14px;
-
-        padding: 0 16px;
-
-        display: flex;
-        flex-direction: row;
-    }
-
-    #nav-bar > * {
-        margin: 0 8px;
-    }
-
-    #nav-bar-logo {
-        font-size: 32px;
-    }
-
-    #nav-bar-user {
-        margin-left: auto;
-    }
-
-    #nav-bar-user-username {
-        padding: 0 8px;
-    }
-
-    #nav-bar-user-icon {
-        font-size: 32px;
-        vertical-align: middle;
-
-        color: #bb86fc;
-    }
-
-    #nav-bar-logout {
-        cursor: pointer;
-    }
-
     #bugs-content {
         margin: 0 auto;
         max-width: 756px;
