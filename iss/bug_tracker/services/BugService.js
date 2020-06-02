@@ -73,8 +73,8 @@ class BugService {
         await bug.save();
     }
 
-    static async solveBugForUser(userId, bug, data) {
-        bug.solvedBy = userId;
+    static async solveBug(user, bug, data) {
+        bug.solvedBy = user.id;
         bug.solvedAt = Date.now();
         bug.solvedMessage = data.message;
         bug.status = BugStatuses.SOLVED;

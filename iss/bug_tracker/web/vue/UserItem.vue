@@ -1,13 +1,14 @@
 <template>
     <div class="user-item">
-        <div class="content" v-if="!isEditing">
+        <div class="content">
             <p class="title">{{ username }}</p>
             <p class="secondary-title">
+                {{ role }}
+                <br>
                 created at
                 {{ formatDate(createdAt) }}
             </p>
         </div>
-
     </div>
 </template>
 
@@ -20,6 +21,7 @@
             'id',
             'username',
             'createdAt',
+            'role',
         ],
         methods: {
             formatDate(date) {

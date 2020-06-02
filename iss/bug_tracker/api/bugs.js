@@ -113,7 +113,7 @@ router.post('/:id/solve',
         authUserWithRole(UserRoles.PROGRAMMER),
         async (req, res) => {
     const bug = await getBugFromParams(req, res);
-    await BugService.solveBugForUser(res.locals.user.id, bug, req.body);
+    await BugService.solveBug(res.locals.user, bug, req.body);
     sendBug('bug-update', bug);
     res.send(bug);
 });
