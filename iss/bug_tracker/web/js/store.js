@@ -39,13 +39,7 @@ export default new Vuex.Store({
     actions: {
         async newLogin({ commit }, data) {
             commit('unsetUser');
-            let response;
-            try {
-                response = await axios.post('/api/auth/login', data);
-            } catch (e) {
-                return;
-            }
-
+            const response = await axios.post('/api/auth/login', data);
             const accessToken = response.data.access_token;
             const user = response.data.user;
             setAccessToken(accessToken)
@@ -61,13 +55,7 @@ export default new Vuex.Store({
 
             setAuthorizationHeader(accessToken);
 
-            let response;
-            try {
-                response = await axios.get('/api/auth/user');
-            } catch (e) {
-                return;
-            }
-
+            const response = await axios.get('/api/auth/user');
             const user = response.data;
             commit('setUser', user);
         },

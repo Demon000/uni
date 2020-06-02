@@ -1,15 +1,21 @@
 import Vue from 'vue';
+import store from './store';
 
 import Bugs from '../vue/Bugs.vue';
 import Login from '../vue/Login.vue';
 
-function loginRouteGuard(toRoute, fromRoute, next) {
-    if (store.getters.isLoggedIn) {
+async function loginRouteGuard(toRoute, fromRoute, next) {
+    try {
+        await store.dispatch('refreshLogin');
         next();
-        return;
+    } catch (e) {
+        next({
+            name: 'login',
+            query: {
+                redirectFrom: toRoute.fullPath
+            },
+        });
     }
-
-    next('login');
 }
 
 import VueRouter from 'vue-router';
@@ -34,7 +40,6 @@ const router = new VueRouter({
 import VueSSE from 'vue-sse';
 Vue.use(VueSSE);
 
-import store from './store';
 import NavBar from '../vue/NavBar.vue';
 import BugForm from '../vue/BugForm.vue';
 import BugList from '../vue/BugList.vue';

@@ -33,27 +33,17 @@
     import Vue from 'vue';
 
     export default Vue.component('login', {
-        data: function() {
+        data() {
             return {
                 username: '',
                 password: '',
                 error: '',
             };
         },
-        async mounted() {
-            try {
-                await this.$store.dispatch('refreshLogin');
-            } catch (e) {
-                return;
-            }
-
-            try {
-                await this.$router.replace({
-                    name: 'bugs',
-                });
-            } catch (e) {
-                console.error(e);
-                // ignored
+        props: {
+            redirectFrom: {
+                type: String,
+                default: null,
             }
         },
         methods: {
@@ -69,12 +59,15 @@
                 }
 
                 try {
-                    await this.$router.replace({
-                        name: 'bugs',
-                    });
+                    if (this.redirectFrom == null) {
+                        await this.$router.replace({
+                            name: 'bugs',
+                        });
+                    } else {
+                        await this.$router.replace(this.redirectFrom);
+                    }
                 } catch (e) {
                     console.error(e);
-                    // ignored
                 }
             },
         },
