@@ -167,3 +167,72 @@ input:-webkit-autofill {
 
     position: relative;
 }
+
+.common-item {
+    margin-bottom: 16px;
+
+    border-radius: 4px;
+    background: #1e1e1e;
+
+    position: relative;
+}
+.common-item .content .title,
+.common-item .content .secondary-title,
+.common-item .content .description {
+    margin: 0;
+}
+.common-item .content {
+    padding: 8px;
+}
+.common-item .content .title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 2rem;
+}
+.common-item .content .secondary-title {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.25rem;
+
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.common-item .content .description {
+    margin: 16px 0 8px 0;
+}
+.common-item .content .buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    font-size: 18px;
+    padding: 8px;
+}
+.common-item .content .buttons .mdi {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    line-height: 24px;
+    text-align: center;
+    padding: 4px;
+
+    border-radius: 50%;
+}
+.common-item .content .buttons .solve {
+    color: #03dac6;
+}
+.common-item .content .buttons .solve:hover {
+    background: rgba(3, 218, 198, 0.06);
+}
+.common-item .content .buttons .delete {
+    color: #cf6679;
+}
+.common-item .content .buttons .delete:hover {
+    background: rgba(207, 102, 121, 0.06);
+}
+.common-item .content .buttons .edit {
+    color: #ffee58;
+}
+.common-item .content .buttons .edit:hover {
+    background: rgba(255, 238, 88, 0.06);
+}
