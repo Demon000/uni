@@ -30,6 +30,9 @@ router.use('/auth', auth);
 const bugs = require('./bugs');
 router.use('/bugs', bugs);
 
+const users = require('./users');
+router.use('/users', users);
+
 // eslint-disable-next-line no-unused-vars
 router.use((err, req, res, next) => {
     const data = {
@@ -37,7 +40,7 @@ router.use((err, req, res, next) => {
         message: err.message,
     };
 
-    console.error(err);
+    // console.error(err);
 
     const status = err.status || 500;
     res.status(status).send(data);

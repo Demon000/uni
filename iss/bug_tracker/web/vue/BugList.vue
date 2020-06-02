@@ -39,7 +39,7 @@
             'status',
             'entries',
         ],
-        data: function() {
+        data() {
             return {
                 bugs: [],
                 page: 0,

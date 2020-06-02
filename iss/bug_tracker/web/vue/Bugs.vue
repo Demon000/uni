@@ -1,7 +1,7 @@
 <template>
-    <div id="bugs-view">
+    <div>
         <nav-bar></nav-bar>
-        <div id="bugs-content">
+        <div id="main-content">
             <button id="bug-add-view-toggle" class="fab mdi" v-bind:class="{ 'adding': isAdding }" v-on:click="onAddViewToggleButtonClick"></button>
             <div id="bug-add-view-wrapper" v-bind:style="{ height: bugAddViewHeight }">
                 <bug-form v-bind:mode="'add'"
@@ -89,15 +89,6 @@
 </script>
 
 <style>
-    #bugs-content {
-        margin: 0 auto;
-        max-width: 756px;
-
-        padding: 52px 16px 0 16px;
-
-        position: relative;
-    }
-
     #bug-add-view-wrapper {
         transition: height 250ms;
         overflow: hidden;

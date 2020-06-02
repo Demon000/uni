@@ -158,3 +158,12 @@ input:-webkit-autofill {
     animation-name: webkit-autofill;
     animation-fill-mode: both;
 }
+
+#main-content {
+    margin: 0 auto;
+    max-width: 756px;
+
+    padding: 52px 16px 0 16px;
+
+    position: relative;
+}

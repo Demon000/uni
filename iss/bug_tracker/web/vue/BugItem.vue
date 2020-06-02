@@ -54,7 +54,7 @@
             'solvedAt',
         ],
         computed: {
-            user: function() {
+            user() {
                 return this.$store.state.user;
             },
         },
@@ -121,17 +121,17 @@
     .bug-item .content .description {
         margin: 0;
     }
+    .bug-item .content .title {
+        font-size: 1.25rem;
+        font-weight: 500;
+        line-height: 2rem;
+    }
     .bug-item .content .secondary-title {
         font-size: 0.875rem;
         font-weight: 400;
         line-height: 1.25rem;
 
         color: rgba(255, 255, 255, 0.6);
-    }
-    .bug-item .content .title {
-        font-size: 1.25rem;
-        font-weight: 500;
-        line-height: 2rem;
     }
     .bug-item .content .description {
         margin: 16px 0 8px 0;

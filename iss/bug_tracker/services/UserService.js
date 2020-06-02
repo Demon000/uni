@@ -11,6 +11,10 @@ class UserService {
         return user;
     }
 
+    static getUsers() {
+        return User.find().exec();
+    }
+
     static async getUserByUserName(username) {
         const user = await User.findByUsername(username);
         if (!user) {

@@ -1,18 +1,22 @@
 <template>
     <div id="nav-bar">
         <div id="nav-bar-logo">
-                <span class="logo-main-part">
-                    Bug
-                </span>
+            <span class="logo-main-part">
+                Bug
+            </span>
             <span class="logo-secondary-part">
-                    Tracker
-                </span>
+                Tracker
+            </span>
         </div>
-        <div id="nav-bar-user">
-            <span id="nav-bar-user-username" v-if="user">{{ user.username }}</span>
-            <i id="nav-bar-user-icon" class="mdi mdi-account-circle"></i>
-        </div>
-        <span id="nav-bar-logout" v-on:click="onLogoutButtonClick">LOGOUT</span>
+        <template v-if="user">
+            <span v-on:click="onBugsButtonClick">BUGS</span>
+            <span v-if="user.role === 'ADMIN'"v-on:click="onUsersButtonClick">USERS</span>
+            <div id="nav-bar-user">
+                <span id="nav-bar-user-username" v-if="user">{{ user.username }}</span>
+                <i id="nav-bar-user-icon" class="mdi mdi-account-circle"></i>
+            </div>
+            <span id="nav-bar-logout" v-on:click="onLogoutButtonClick">LOGOUT</span>
+        </template>
     </div>
 </template>
 
@@ -32,6 +36,24 @@
                     name: 'login',
                 });
             },
+            async onUsersButtonClick() {
+                try {
+                    await this.$router.replace({
+                        name: 'users',
+                    });
+                } catch (e) {
+                    // ignored
+                }
+            },
+            async onBugsButtonClick() {
+                try {
+                    await this.$router.replace({
+                        name: 'bugs',
+                    });
+                } catch (e) {
+                    // ignored
+                }
+            }
         }
     });
 </script>
@@ -50,6 +72,8 @@
 
     #nav-bar > * {
         margin: 0 8px;
+        padding: 0 8px;
+        cursor: pointer;
     }
 
     #nav-bar-logo {
@@ -60,18 +84,10 @@
         margin-left: auto;
     }
 
-    #nav-bar-user-username {
-        padding: 0 8px;
-    }
-
     #nav-bar-user-icon {
         font-size: 32px;
         vertical-align: middle;
 
         color: #bb86fc;
-    }
-
-    #nav-bar-logout {
-        cursor: pointer;
     }
 </style>
