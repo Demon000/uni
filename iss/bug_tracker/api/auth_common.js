@@ -38,7 +38,7 @@ function authUserInner(role, method='header') {
 
         res.locals.user = AuthService.getUserFromAccessToken(accessToken);
 
-        if (UserRoles.isCompatibleRole(res.locals.user.role, role)) {
+        if (!UserRoles.isCompatibleRole(res.locals.user.role, role)) {
             throw new Errors.UserForbiddenError();
         }
 

@@ -16,7 +16,7 @@ class UserRoles {
     }
 
     static isCompatibleRole(role, targetRole) {
-        if (role === targetRole) {
+        if (role === targetRole || (targetRole == null && role)) {
             return true;
         }
 
