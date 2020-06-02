@@ -5,6 +5,9 @@ import Bugs from '../vue/Bugs.vue';
 import Login from '../vue/Login.vue';
 
 async function loginRouteGuard(toRoute, fromRoute, next) {
+    if (store.getters.isLoggedIn) {
+        next();
+    }
     try {
         await store.dispatch('refreshLogin');
         next();
