@@ -3,7 +3,7 @@
         <div class="content" v-if="!isEditing">
             <div class="buttons">
                 <template v-if="status === 'OPEN'">
-                    <template v-if="user.role === 'PROGRAMMER'">
+                    <template v-if="user.role === 'PROGRAMMER' || user.role === 'ADMIN'">
                         <i class="solve mdi mdi-check" v-on:click="onSolveButtonClick"></i>
                     </template>
                     <i class="edit mdi mdi-pencil" v-on:click="onEditButtonClick"></i>
