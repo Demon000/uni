@@ -1,0 +1,31 @@
+{
+  "name": "mpp-exam-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start-dev": "cross-env NODE_ENV=dev ./node_modules/nodemon/bin/nodemon.js -e ts --exec \"npm run compile && npm run start\"",
+    "compile": "./node_modules/typescript/bin/tsc",
+    "start": "node dist/index.js"
+  },
+  "author": "Demon000",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@types/config": "0.0.36",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.6",
+    "@types/morgan": "^1.9.1",
+    "cross-env": "^7.0.2",
+    "nodemon": "^2.0.4",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "config": "^3.3.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "morgan": "^1.10.0"
+  }
+}
