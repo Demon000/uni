@@ -14,3 +14,21 @@ export class HelloError extends CustomError {
         super(400, 'hello-error', 'Hello error.');
     }
 }
+
+export class UserNotFoundError extends CustomError {
+    constructor() {
+        super(404, 'user-not-found-error', 'User not found.');
+    }
+}
+
+export class LoginError extends CustomError {
+    constructor() {
+        super(401, 'login-error', 'Login failed.');
+    }
+}
+
+export class AccessTokenError extends CustomError {
+    constructor() {
+        super(401, 'access-token-error', 'Access token is invalid.');
+    }
+}

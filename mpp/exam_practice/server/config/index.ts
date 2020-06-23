@@ -1,7 +1,8 @@
 import Config from 'config';
-import UserInterface from '../model/UserInterface';
+import User from '../domain/User';
 import {CorsOptions} from 'cors';
-
+import {ConnectionOptions} from 'typeorm';
+import {TokenGeneratorOptions} from '../lib/TokenGenerator';
 export interface ConfigInterface {
     Server: {
         port: number,
@@ -10,8 +11,10 @@ export interface ConfigInterface {
     Logger: {
         format: string,
     },
+    Database: ConnectionOptions,
+    TokenGenerator: TokenGeneratorOptions,
     Cors: CorsOptions,
-    Users: [UserInterface],
+    Users: [User],
 }
 
 const config: ConfigInterface = {
@@ -22,6 +25,8 @@ const config: ConfigInterface = {
     Logger: {
         format: Config.get('Logger.format'),
     },
+    Database: Config.get('Database'),
+    TokenGenerator: Config.get('TokenGenerator'),
     Cors: Config.get('Cors'),
     Users: Config.get('Users'),
 };
