@@ -1,11 +1,13 @@
+const path = require('path');
+
 module.exports = {
     mode: 'development',
     entry: {
-        index: __dirname + '/client/js/index.js',
+        index: path.resolve(__dirname, './client/ts/index.ts'),
     },
     output: {
         filename: '[name].js',
-        path: __dirname + '/client/dist/'
+        path: path.resolve(__dirname, './client/dist/'),
     },
     module: {
         rules: [
@@ -20,12 +22,18 @@ module.exports = {
                     'css-loader'
                 ]
             },
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            }
         ],
     },
     resolve: {
         alias: {
             vue: 'vue/dist/vue.esm.js',
         },
+        extensions: [ '.tsx', '.ts', '.js', '.vue' ],
     },
     watch: true,
 };
