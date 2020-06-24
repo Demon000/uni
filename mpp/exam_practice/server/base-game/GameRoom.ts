@@ -1,19 +1,12 @@
 import User from '../../common/domain/User';
 import Answer from '../../common/base-game/Answer';
 import Question, {QuestionType} from '../../common/base-game/Question';
+import {GameRoomState} from '../../common/base-game/GameRoomState';
+import {IGameRoom} from '../../common/base-game/IGameRoom';
 
-export enum GameRoomState {
-    WAITING_FOR_PLAYERS = 'WAITING_FOR_PLAYERS',
-    WAITING_TO_START = 'WAITING_TO_START',
-    WAITING_FOR_QUESTIONS = 'WAITING_FOR_QUESTIONS',
-    WAITING_FOR_ANSWERS = 'WAITING_FOR_ANSWERS',
-    ROUND_ENDED = 'ROUND_ENDED',
-    ENDED = 'ENDED',
-}
-
-export default class GameRoom {
-    private readonly _neededNoPlayers: number;
-    private readonly _neededNoRounds: number;
+export default class GameRoom implements IGameRoom {
+    readonly neededNoPlayers: number;
+    readonly neededNoRounds: number;
     readonly questionType: QuestionType;
 
     state: GameRoomState = GameRoomState.WAITING_FOR_PLAYERS;
@@ -23,8 +16,8 @@ export default class GameRoom {
     round: number = -1;
 
     constructor(neededNoPlayers: number, neededNoRounds: number, questionType: QuestionType) {
-        this._neededNoPlayers = neededNoPlayers;
-        this._neededNoRounds = neededNoRounds;
+        this.neededNoPlayers = neededNoPlayers;
+        this.neededNoRounds = neededNoRounds;
         this.questionType = questionType;
 
         this.reset();
@@ -41,7 +34,7 @@ export default class GameRoom {
     }
 
     isFull() {
-        return this._neededNoPlayers == this.players.length;
+        return this.neededNoPlayers == this.players.length;
     }
 
     isEmpty() {
@@ -182,7 +175,7 @@ export default class GameRoom {
     }
 
     isFinalRound(): boolean {
-        return this.round == this._neededNoRounds - 1;
+        return this.round == this.neededNoRounds - 1;
     }
 
     startNextRound() {

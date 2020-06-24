@@ -4,16 +4,20 @@ import GameService from '../base-game/GameService';
 
 import GameRoom from '../base-game/GameRoom';
 
-import TOMGameAnswer from '../../common/tom-game/TOMGameAnswer';
-import TOMGameQuestion from '../../common/tom-game/TOMGameQuestion';
+import TOMAnswer, {ITOMAnswer} from '../../common/tom-game/TOMAnswer';
+import TOMQuestion from '../../common/tom-game/TOMQuestion';
 import {QuestionType} from '../../common/base-game/Question';
 
 export default class TOMGameService extends GameService {
+    protected readonly _neededNoPlayers: number;
+    protected readonly _neededNoRounds: number;
     private readonly _letters: string[];
 
     constructor(neededNoPlayers: number, neededNoRounds: number, letters: string[]) {
-        super(neededNoPlayers, neededNoRounds);
+        super();
 
+        this._neededNoPlayers = neededNoPlayers;
+        this._neededNoRounds = neededNoRounds;
         this._letters = letters;
     }
 
@@ -29,15 +33,17 @@ export default class TOMGameService extends GameService {
 
     createComputerQuestion() {
         const letter = this.getRandomLetter();
-        return new TOMGameQuestion(letter);
+        return new TOMQuestion({
+            letter: letter,
+        });
     }
 
     createPlayerQuestion(...args: any[]) {
         return undefined;
     }
 
-    createPlayerAnswer(player: User, country: string, city: string, sea: string) {
-        return new TOMGameAnswer(country, city, sea);
+    createPlayerAnswer(options: ITOMAnswer) {
+        return new TOMAnswer(options);
     }
 
     evaluateRoomAnswers(room: GameRoom): void {

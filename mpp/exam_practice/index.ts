@@ -1,10 +1,11 @@
-import Config from './config';
-
 import http from 'http';
-import Express, {json, urlencoded} from 'express';
+
+import Express, {json, Router, urlencoded} from 'express';
 import Logger from 'morgan';
 import CookieParser from 'cookie-parser';
 import Cors from 'cors';
+
+import Config from './config';
 
 const app = Express();
 const httpServer = http.createServer(app);
@@ -29,24 +30,54 @@ const cors = Cors(Config.Cors);
 app.use(cors);
 app.options('*', cors);
 
+import SocketIO from 'socket.io';
+import {createConnection} from 'typeorm';
+
 import ClientServer from './client';
-ClientServer(app, httpServer)
-    .then(() => {
-        console.log('Successfully added client routes');
-    })
-    .catch(e => {
-        console.log('Failed to add client routes', e);
+
+import UserSchema from './server/schema/UserSchema';
+
+import UserRepository from './server/repository/UserRepository';
+
+import TokenGenerator from './server/lib/TokenGenerator';
+
+import UserService from './server/service/UserService';
+import AuthService from './server/service/AuthService';
+
+import ApiRouter from './server/router/ApiRouter';
+
+import TOMGameService from './server/tom-game/TOMGameService';
+import GameSocket from './server/base-game/GameSocket';
+
+(async function() {
+    const connection = await createConnection({
+        ...Config.Database,
+        synchronize: true,
+        entities: [
+            UserSchema,
+        ],
     });
 
-import ApiServer from './server';
-ApiServer(app, httpServer)
-    .then(() => {
-        console.log('Successfully added api server routes');
-    })
-    .catch(e => {
-        console.log('Failed to add api server routes', e);
-    });
+    const userRepository = connection.getCustomRepository(UserRepository);
+    const userService = new UserService(userRepository);
 
-httpServer.listen(Config.Server.port, Config.Server.host, () => {
-    console.log('Server successfully started');
-});
+    const tokenGenerator = new TokenGenerator(Config.TokenGenerator);
+    const authService = new AuthService(tokenGenerator);
+
+    await userService.createTestUsers(Config.Users);
+
+    const clientServerRouter = await ClientServer();
+    app.use('/', clientServerRouter);
+
+    const apiRouter = ApiRouter(userService, authService);
+    app.use('/api', apiRouter);
+
+    const io = SocketIO().listen(httpServer);
+    const tomGameService = new TOMGameService(3, 3, ['A', 'B', 'C']);
+    const tomGameNamespace = io.of('tom');
+    new GameSocket(tomGameNamespace, userService, authService, tomGameService);
+
+    httpServer.listen(Config.Server.port, Config.Server.host, () => {
+        console.log('Server successfully started');
+    });
+})();

@@ -1,5 +1,7 @@
 const path = require('path');
 
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
 module.exports = {
     mode: 'development',
     entry: {
@@ -19,16 +21,23 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     'vue-style-loader',
-                    'css-loader'
+                    'css-loader',
                 ]
             },
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
+                loader: 'ts-loader',
                 exclude: /node_modules/,
+                options: {
+                    appendTsSuffixTo: [/\.vue$/],
+                    configFile: "tsconfig.client.json",
+                },
             }
         ],
     },
+    plugins: [
+        new VueLoaderPlugin(),
+    ],
     resolve: {
         alias: {
             vue: 'vue/dist/vue.esm.js',

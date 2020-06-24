@@ -1,5 +1,3 @@
-import {EventEmitter} from 'events';
-
 import User from '../../common/domain/User';
 
 import {AlreadyPlayingError, NotPlayingError, QuestionNotFoundError} from '../lib/Errors';
@@ -7,22 +5,18 @@ import {AlreadyPlayingError, NotPlayingError, QuestionNotFoundError} from '../li
 import GameRoom from './GameRoom';
 import Answer from '../../common/base-game/Answer';
 import Question, {QuestionType} from '../../common/base-game/Question';
+import {IGameService} from '../../common/base-game/IGameService';
+import EventEmitter from 'eventemitter3';
 
 export enum BaseGameEvents {
     ROOM_UPDATE = 'game-room-update',
 }
 
-export default abstract class GameService extends EventEmitter {
-    protected readonly _neededNoPlayers: number;
-    protected readonly _neededNoRounds: number;
-
+export default abstract class GameService extends EventEmitter implements IGameService {
     private rooms: GameRoom[] = [];
 
-    protected constructor(neededNoPlayers: number, neededNoRounds: number) {
+    protected constructor() {
         super();
-
-        this._neededNoPlayers = neededNoPlayers;
-        this._neededNoRounds = neededNoRounds;
     }
 
     abstract createRoom(): GameRoom;
@@ -139,10 +133,10 @@ export default abstract class GameService extends EventEmitter {
         }
     }
 
-    abstract createPlayerAnswer(player: User, ...args: any[]): Answer;
+    abstract createPlayerAnswer(...args: any[]): Answer;
 
     createAndAddPlayerAnswer(player: User, questionId: number, ...args: any[]) {
-        const answer = this.createPlayerAnswer(player, ...args);
+        const answer = this.createPlayerAnswer(...args);
         this.addPlayerAnswer(player, questionId, answer);
     }
 

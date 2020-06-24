@@ -13,8 +13,8 @@ export default function(userService: UserService, authService: AuthService, auth
         const accessTokenPayload = authService.createAccessTokenPayload(user);
 
         res.send({
-            user,
-            'access_token': accessTokenPayload,
+            user: user.toResponse(),
+            access_token: accessTokenPayload,
         });
     });
 

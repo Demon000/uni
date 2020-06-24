@@ -1,0 +1,68 @@
+import Vue from 'vue';
+import Vuex from 'vuex';
+import axios from 'axios';
+
+Vue.use(Vuex);
+
+function setAuthorizationHeader(accessToken: string) {
+    axios.defaults.headers.authorization = `Bearer ${accessToken}`;
+}
+
+function unsetAuthorizationHeader() {
+    delete axios.defaults.headers.authorization;
+}
+
+function setAccessToken(accessToken: string) {
+    localStorage.setItem('access_token', accessToken);
+}
+
+export function getAccessToken() {
+    return localStorage.getItem('access_token');
+}
+
+function unsetAccessToken() {
+    localStorage.removeItem('access_token');
+}
+
+export default new Vuex.Store({
+    state: {
+        user: null,
+    },
+    mutations: {
+        setUser(state, user) {
+            state.user = user;
+        },
+        unsetUser(state) {
+            state.user = null;
+        },
+    },
+    actions: {
+        async newLogin({ commit }, data) {
+            commit('unsetUser');
+            const response = await axios.post('/api/auth/login', data);
+            const accessToken = response.data.access_token;
+            const user = response.data.user;
+            setAccessToken(accessToken)
+            setAuthorizationHeader(accessToken);
+            commit('setUser', user);
+        },
+        async refreshLogin({ commit }) {
+            commit('unsetUser');
+            const accessToken = getAccessToken();
+            if (!accessToken) {
+                throw new Error('Missing access token');
+            }
+
+            setAuthorizationHeader(accessToken);
+
+            const response = await axios.get('/api/auth/user');
+            const user = response.data;
+            commit('setUser', user);
+        },
+        logout({ commit }) {
+            unsetAccessToken();
+            unsetAuthorizationHeader();
+            commit('unsetUser');
+        }
+    },
+});

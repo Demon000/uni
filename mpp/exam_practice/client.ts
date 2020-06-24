@@ -1,6 +1,15 @@
-import * as http from 'http';
 import * as Express from 'express';
+import {Router} from 'express';
+import History from 'connect-history-api-fallback';
 
-export default async function(app: Express.Express, server: http.Server) {
-    app.use(Express.static('client'));
+export default async function() {
+    const router = Router();
+
+    const history = History();
+    router.use(history)
+
+    const clientStatic = Express.static('client');
+    router.use(clientStatic);
+
+    return router;
 }
