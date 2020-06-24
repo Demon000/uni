@@ -6,7 +6,7 @@ import GameRoom from '../base-game/GameRoom';
 
 import TOMGameAnswer from './TOMGameAnswer';
 import TOMGameQuestion from './TOMGameQuestion';
-import Question, {QuestionType} from '../base-game/Question';
+import {QuestionType} from '../base-game/Question';
 
 export default class TOMGameService extends GameService {
     private readonly _letters: string[];

@@ -1,4 +1,4 @@
-import Question, {QuestionType} from '../base-game/Question';
+import Question from '../base-game/Question';
 
 export default class TOMGameQuestion extends Question {
     id: number = 0;

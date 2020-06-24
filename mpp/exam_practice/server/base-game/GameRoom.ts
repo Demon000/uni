@@ -88,12 +88,8 @@ export default class GameRoom {
     isCurrentRoundComputerQuestioned(): boolean {
         const questions = this.getCurrentRoundQuestions();
 
-        if (this.questionType === QuestionType.COMPUTER_GENERATED && questions.length === 1 &&
-                !questions[0].player) {
-            return true;
-        }
-
-        return false;
+        return this.questionType === QuestionType.COMPUTER_GENERATED && questions.length === 1 &&
+            !questions[0].player;
     }
 
     isCurrentRoundPlayerQuestioned(player: User): boolean {
