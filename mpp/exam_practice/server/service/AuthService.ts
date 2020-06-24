@@ -20,7 +20,7 @@ export default class AuthService {
         this._tokenGenerator = tokenGenerator;
     }
 
-    createAccessTokenPayload(user: User) {
+    createAccessTokenPayload(user: User): string {
         const data: AccessToken = {
             reason: TokenReason.ACCESS_TOKEN,
             user: {

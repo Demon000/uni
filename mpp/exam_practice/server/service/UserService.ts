@@ -24,7 +24,7 @@ export default class UserService {
         return user;
     }
 
-    async getUserByUsername(username: string) {
+    async getUserByUsername(username: string): Promise<User> {
         const user = await this._repository.findOneByUsername(username);
         if (!user) {
             throw new UserNotFoundError();
@@ -49,7 +49,6 @@ export default class UserService {
             try {
                 await this.createUser(userConfig);
             } catch (e) {
-                console.error(e);
                 console.log(`Already added test user ${userConfig.username}`);
             }
         }

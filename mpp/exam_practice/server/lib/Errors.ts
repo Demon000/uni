@@ -32,3 +32,21 @@ export class AccessTokenError extends CustomError {
         super(401, 'access-token-error', 'Access token is invalid.');
     }
 }
+
+export class AlreadyPlayingError extends CustomError {
+    constructor() {
+        super(400, 'already-playing-error', 'Player is already playing a base-game.');
+    }
+}
+
+export class NotPlayingError extends CustomError {
+    constructor() {
+        super(400, 'not-playing-error', 'Player is not currently playing a base-game.');
+    }
+}
+
+export class QuestionNotFoundError extends CustomError {
+    constructor() {
+        super(400, 'question-not-found-error', 'Player tried to answer an invalid question.');
+    }
+}
