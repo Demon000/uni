@@ -31,6 +31,7 @@ export default class GameRoom {
     }
 
     setState(state: GameRoomState) {
+        console.log(`setting room: ${this} state to ${state}`);
         this.state = state;
     }
 
@@ -180,18 +181,22 @@ export default class GameRoom {
         return true;
     }
 
-    areAllRoundsAnswered(): boolean {
-        return this.round == this._neededNoRounds;
+    isFinalRound(): boolean {
+        return this.round == this._neededNoRounds - 1;
     }
 
     startNextRound() {
+        if (this.isFinalRound()) {
+            return;
+        }
+
         this.round++;
         this.setState(GameRoomState.WAITING_FOR_QUESTIONS);
     }
 
     endRound() {
         this.setState(GameRoomState.ROUND_ENDED);
-        if (this.areAllRoundsAnswered()) {
+        if (this.isFinalRound()) {
             this.setState(GameRoomState.ENDED);
         }
     }

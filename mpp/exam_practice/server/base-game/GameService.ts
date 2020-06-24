@@ -102,7 +102,7 @@ export default abstract class GameService extends EventEmitter {
         room.startNextRound();
         console.log(`round: ${room.round} started in ${room}`);
 
-        if (!room.areAllRoundsAnswered() && room.questionType === QuestionType.COMPUTER_GENERATED) {
+        if (room.questionType === QuestionType.COMPUTER_GENERATED) {
             this.createAndAddComputerQuestion(room);
         }
     }
