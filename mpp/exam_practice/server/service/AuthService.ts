@@ -1,4 +1,4 @@
-import User from '../domain/User';
+import User from '../../common/domain/User';
 import {AccessTokenError} from '../lib/Errors';
 import TokenGenerator from '../lib/TokenGenerator';
 

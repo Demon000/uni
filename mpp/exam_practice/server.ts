@@ -1,26 +1,30 @@
 import * as http from 'http';
 
-import Express from 'express';
+
+import {Express, json, urlencoded} from 'express';
+import CookieParser from 'cookie-parser';
+import Cors from 'cors';
+
 import Logger from 'morgan';
 import SocketIO from 'socket.io';
 import {createConnection} from 'typeorm';
 
 import Config from './config';
 
-import UserSchema from './schema/UserSchema';
+import UserSchema from './server/schema/UserSchema';
 
-import UserRepository from './repository/UserRepository';
-import UserService from './service/UserService';
+import UserRepository from './server/repository/UserRepository';
+import UserService from './server/service/UserService';
 
-import TokenGenerator from './lib/TokenGenerator';
-import AuthService from './service/AuthService';
+import TokenGenerator from './server/lib/TokenGenerator';
+import AuthService from './server/service/AuthService';
 
-import ApiRouter from './router/ApiRouter';
+import ApiRouter from './server/router/ApiRouter';
 
-import TOMGameService from './tom-game/TOMGameService';
-import GameSocket from './base-game/GameSocket';
+import TOMGameService from './server/tom-game/TOMGameService';
+import GameSocket from './server/base-game/GameSocket';
 
-(async function() {
+export default async function(app: Express, server: http.Server) {
     const connection = await createConnection({
         ...Config.Database,
         synchronize: true,
@@ -40,14 +44,6 @@ import GameSocket from './base-game/GameSocket';
         console.log('Finished adding test users.');
     });
 
-    require('express-async-errors');
-
-    const app = Express();
-    const server = http.createServer(app);
-
-    const logger = Logger(Config.Logger.format);
-    app.use(logger);
-
     const apiRouter = ApiRouter(userService, authService);
     app.use('/api', apiRouter);
 
@@ -56,8 +52,4 @@ import GameSocket from './base-game/GameSocket';
     const tomGameService = new TOMGameService(3, 3, ['A', 'B', 'C']);
     const tomGameNamespace = io.of('tom');
     new GameSocket(tomGameNamespace, userService, authService, tomGameService);
-
-    server.listen(Config.Server.port, Config.Server.host, () => {
-        console.log('Server successfully started.');
-    });
-})();
+}

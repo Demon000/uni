@@ -1,12 +1,12 @@
 import {EventEmitter} from 'events';
 
-import User from '../domain/User';
+import User from '../../common/domain/User';
 
 import {AlreadyPlayingError, NotPlayingError, QuestionNotFoundError} from '../lib/Errors';
 
 import GameRoom from './GameRoom';
-import Answer from './Answer';
-import Question, {QuestionType} from './Question';
+import Answer from '../../common/base-game/Answer';
+import Question, {QuestionType} from '../../common/base-game/Question';
 
 export enum BaseGameEvents {
     ROOM_UPDATE = 'game-room-update',

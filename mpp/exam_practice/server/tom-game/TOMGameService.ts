@@ -1,12 +1,12 @@
-import User from '../domain/User';
+import User from '../../common/domain/User';
 
 import GameService from '../base-game/GameService';
 
 import GameRoom from '../base-game/GameRoom';
 
-import TOMGameAnswer from './TOMGameAnswer';
-import TOMGameQuestion from './TOMGameQuestion';
-import {QuestionType} from '../base-game/Question';
+import TOMGameAnswer from '../../common/tom-game/TOMGameAnswer';
+import TOMGameQuestion from '../../common/tom-game/TOMGameQuestion';
+import {QuestionType} from '../../common/base-game/Question';
 
 export default class TOMGameService extends GameService {
     private readonly _letters: string[];

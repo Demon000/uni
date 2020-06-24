@@ -1,6 +1,6 @@
 import {Namespace, Socket} from 'socket.io';
 
-import User from '../domain/User';
+import User from '../../common/domain/User';
 
 import {AccessTokenError, UserNotFoundError} from '../lib/Errors';
 

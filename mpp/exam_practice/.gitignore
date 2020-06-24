@@ -183,9 +183,13 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+# Compiled stuff
+dist/
+client/dist/
+
 # Configs
 config/*.json
-!config/example.json
+!server/config/example.json
 
 # Database
-sqlite.db
+server/sqlite.db

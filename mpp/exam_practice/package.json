@@ -2,10 +2,11 @@
   "name": "mpp-exam-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
+    "webpack-dev": "webpack",
     "start-dev": "cross-env NODE_ENV=dev ./node_modules/nodemon/bin/nodemon.js -e ts -x \"npm run compile && npm run start || exit 1\"",
-    "compile": "./node_modules/typescript/bin/tsc",
+    "compile": "./node_modules/typescript/bin/tsc --build tsconfig.json",
     "start": "node dist/index.js"
   },
   "author": "Demon000",
@@ -19,8 +20,16 @@
     "@types/morgan": "^1.9.1",
     "@types/socket.io": "^2.1.8",
     "cross-env": "^7.0.2",
+    "css-loader": "^3.6.0",
     "nodemon": "^2.0.4",
-    "typescript": "^3.9.5"
+    "ts-loader": "^7.0.5",
+    "typescript": "^3.9.5",
+    "vue-loader": "^16.0.0-beta.4",
+    "vue-router": "^3.3.4",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "config": "^3.3.1",
@@ -32,6 +41,8 @@
     "morgan": "^1.10.0",
     "socket.io": "^2.3.0",
     "sqlite3": "^4.2.0",
-    "typeorm": "^0.2.25"
+    "typeorm": "^0.2.25",
+    "vue": "^2.6.11",
+    "vuex": "^3.4.0"
   }
 }

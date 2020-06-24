@@ -1,8 +1,10 @@
 import Config from 'config';
-import User from '../domain/User';
 import {CorsOptions} from 'cors';
 import {ConnectionOptions} from 'typeorm';
-import {TokenGeneratorOptions} from '../lib/TokenGenerator';
+
+import User from '../common/domain/User';
+import {TokenGeneratorOptions} from '../server/lib/TokenGenerator';
+
 export interface ConfigInterface {
     Server: {
         port: number,

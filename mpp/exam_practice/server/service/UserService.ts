@@ -1,4 +1,4 @@
-import User, {UserOptions} from '../domain/User';
+import User, {UserOptions} from '../../common/domain/User';
 import IUserRepository from '../repository/IUserRepository';
 import {LoginError, UserNotFoundError} from '../lib/Errors';
 

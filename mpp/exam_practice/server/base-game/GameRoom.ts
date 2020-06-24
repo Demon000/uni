@@ -1,6 +1,6 @@
-import User from '../domain/User';
-import Answer from './Answer';
-import Question, {QuestionType} from './Question';
+import User from '../../common/domain/User';
+import Answer from '../../common/base-game/Answer';
+import Question, {QuestionType} from '../../common/base-game/Question';
 
 export enum GameRoomState {
     WAITING_FOR_PLAYERS = 'WAITING_FOR_PLAYERS',
