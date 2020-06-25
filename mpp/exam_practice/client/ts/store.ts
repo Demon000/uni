@@ -4,6 +4,10 @@ import axios from 'axios';
 
 Vue.use(Vuex);
 
+enum LocalStorageItems {
+    ACCESS_TOKEN_PAYLOAD = 'access_token_payload',
+}
+
 function setAuthorizationHeader(accessToken: string) {
     axios.defaults.headers.authorization = `Bearer ${accessToken}`;
 }
@@ -12,28 +16,28 @@ function unsetAuthorizationHeader() {
     delete axios.defaults.headers.authorization;
 }
 
-function setAccessToken(accessToken: string) {
-    localStorage.setItem('access_token', accessToken);
+function setAccessTokenPayload(accessToken: string) {
+    localStorage.setItem(LocalStorageItems.ACCESS_TOKEN_PAYLOAD, accessToken);
 }
 
-export function getAccessToken() {
-    return localStorage.getItem('access_token');
+export function getAccessTokenPayload() {
+    return localStorage.getItem(LocalStorageItems.ACCESS_TOKEN_PAYLOAD);
 }
 
-function unsetAccessToken() {
-    localStorage.removeItem('access_token');
+function unsetAccessTokenPayload() {
+    localStorage.removeItem(LocalStorageItems.ACCESS_TOKEN_PAYLOAD);
 }
 
 export default new Vuex.Store({
     state: {
-        user: null,
+        user: undefined,
     },
     mutations: {
         setUser(state, user) {
             state.user = user;
         },
         unsetUser(state) {
-            state.user = null;
+            state.user = undefined;
         },
     },
     actions: {
@@ -42,13 +46,13 @@ export default new Vuex.Store({
             const response = await axios.post('/api/auth/login', data);
             const accessToken = response.data.access_token;
             const user = response.data.user;
-            setAccessToken(accessToken)
+            setAccessTokenPayload(accessToken)
             setAuthorizationHeader(accessToken);
             commit('setUser', user);
         },
         async refreshLogin({ commit }) {
             commit('unsetUser');
-            const accessToken = getAccessToken();
+            const accessToken = getAccessTokenPayload();
             if (!accessToken) {
                 throw new Error('Missing access token');
             }
@@ -60,7 +64,7 @@ export default new Vuex.Store({
             commit('setUser', user);
         },
         logout({ commit }) {
-            unsetAccessToken();
+            unsetAccessTokenPayload();
             unsetAuthorizationHeader();
             commit('unsetUser');
         }

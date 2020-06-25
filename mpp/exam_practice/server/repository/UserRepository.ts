@@ -1,5 +1,5 @@
 import IUserRepository from './IUserRepository';
-import User from '../../common/domain/User';
+import User from '../domain/User';
 import {EntityRepository, Repository} from 'typeorm';
 
 @EntityRepository(User)

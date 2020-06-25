@@ -2,7 +2,7 @@ import Config from 'config';
 import {CorsOptions} from 'cors';
 import {ConnectionOptions} from 'typeorm';
 
-import User from '../common/domain/User';
+import User from '../server/domain/User';
 import {TokenGeneratorOptions} from '../server/lib/TokenGenerator';
 
 export interface ConfigInterface {

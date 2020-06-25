@@ -1,6 +1,8 @@
+import 'source-map-support/register'
+
 import http from 'http';
 
-import Express, {json, Router, urlencoded} from 'express';
+import Express, {json, urlencoded} from 'express';
 import Logger from 'morgan';
 import CookieParser from 'cookie-parser';
 import Cors from 'cors';
@@ -46,8 +48,8 @@ import AuthService from './server/service/AuthService';
 
 import ApiRouter from './server/router/ApiRouter';
 
-import TOMGameService from './server/tom-game/TOMGameService';
-import GameSocket from './server/base-game/GameSocket';
+import GameSocket from './server/socket/GameSocket';
+import GameService from './server/service/GameService';
 
 (async function() {
     const connection = await createConnection({
@@ -73,8 +75,8 @@ import GameSocket from './server/base-game/GameSocket';
     app.use('/api', apiRouter);
 
     const io = SocketIO().listen(httpServer);
-    const tomGameService = new TOMGameService(3, 3, ['A', 'B', 'C']);
-    const tomGameNamespace = io.of('tom');
+    const tomGameService = new GameService(2, 3, ['A', 'B', 'C']);
+    const tomGameNamespace = io.of('/tom');
     new GameSocket(tomGameNamespace, userService, authService, tomGameService);
 
     httpServer.listen(Config.Server.port, Config.Server.host, () => {

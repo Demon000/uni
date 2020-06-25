@@ -4,6 +4,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
     mode: 'development',
+    devtool: 'inline-source-map',
     entry: {
         index: path.resolve(__dirname, './client/ts/index.ts'),
     },

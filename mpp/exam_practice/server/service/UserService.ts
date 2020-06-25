@@ -1,6 +1,7 @@
-import User, {UserOptions} from '../../common/domain/User';
+import User from '../domain/User';
 import IUserRepository from '../repository/IUserRepository';
 import {LoginError, UserNotFoundError} from '../lib/Errors';
+import IUser from '../../common/domain/IUser';
 
 export default class UserService {
     private _repository: IUserRepository;
@@ -9,7 +10,7 @@ export default class UserService {
         this._repository = repository;
     }
 
-    async createUser(options: UserOptions): Promise<User> {
+    async createUser(options: IUser): Promise<User> {
         const user = new User(options);
         await this._repository.add(user);
         return user;

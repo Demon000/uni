@@ -13,13 +13,13 @@ export default function(userService: UserService, authService: AuthService, auth
         const accessTokenPayload = authService.createAccessTokenPayload(user);
 
         res.send({
-            user: user.toResponse(),
+            user: user.toPasswordSafe(),
             access_token: accessTokenPayload,
         });
     });
 
     router.get('/user', authMiddleware.checkUser, (req, res) => {
-        res.send(res.locals.user.toResponse());
+        res.send(res.locals.user.toPasswordSafe());
     });
 
     return router;
