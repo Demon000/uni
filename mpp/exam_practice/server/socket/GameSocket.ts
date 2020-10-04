@@ -9,7 +9,6 @@ import UserService from '../service/UserService';
 import GameService from '../service/GameService';
 import GameRoom from '../game/GameRoom';
 import ISafeUser from '../../common/domain/ISafeUser';
-import IQuestion from '../../common/domain/IQuestion';
 import IAnswer from '../../common/domain/IAnswer';
 
 export default class GameSocket {
@@ -53,12 +52,16 @@ export default class GameSocket {
             self.onRoomStart(socket);
         });
 
-        socket.on(GameSocketEvents.USER_ANSWER, (questionId: number, answerOptions: IAnswer) => {
-            self.onUserAnswer(socket, questionId, answerOptions);
+        socket.on(GameSocketEvents.JOIN_ROOM, () => {
+            self.onJoinRoom(socket);
         });
 
-        socket.on(GameSocketEvents.USER_QUESTION, (questionOptions: IQuestion) => {
-            self.onUserQuestion(socket, questionOptions);
+        socket.on(GameSocketEvents.LEAVE_ROOM, () => {
+            self.onLeaveRoom(socket);
+        });
+
+        socket.on(GameSocketEvents.USER_ANSWER, (questionId: number, answerOptions: IAnswer) => {
+            self.onUserAnswer(socket, questionId, answerOptions);
         });
 
         socket.on(GameSocketEvents.DISCONNECT, () => {
@@ -83,7 +86,7 @@ export default class GameSocket {
     addUser(socket: Socket, user: ISafeUser) {
         this._logger.info(`adding socket: ${socket.id}, user:`, user);
         this.socketUserMap[socket.id] = user;
-        this._gameService.addPlayer(user);
+        this._gameService.joinRoom(user);
     }
 
     removeUser(socket: Socket) {
@@ -94,7 +97,7 @@ export default class GameSocket {
 
         this._logger.info(`removing socket: ${socket.id}, user:`, user);
         delete this.socketUserMap[socket.id];
-        this._gameService.removePlayer(user);
+        this._gameService.leaveRoom(user);
     }
 
     onRoomUpdate(user: ISafeUser, room: GameRoom) {
@@ -102,6 +105,8 @@ export default class GameSocket {
         if (!socket) {
             return;
         }
+
+        this._logger.info(`sending room update to socket: ${socket.id}`, 'user:', user);
 
         socket.emit(GameServiceEvents.ROOM_UPDATE, room);
     }
@@ -144,6 +149,24 @@ export default class GameSocket {
         }
     }
 
+    onJoinRoom(socket: Socket) {
+        const user = this.getUser(socket);
+        if (!user) {
+            return;
+        }
+
+        this._gameService.joinRoom(user);
+    }
+
+    onLeaveRoom(socket: Socket) {
+        const user = this.getUser(socket);
+        if (!user) {
+            return;
+        }
+
+        this._gameService.leaveRoom(user);
+    }
+
     onUserAnswer(socket: Socket, questionId: number, answerOptions: IAnswer) {
         const user = this.getUser(socket);
         if (!user) {
@@ -151,15 +174,6 @@ export default class GameSocket {
         }
 
         this._gameService.createAndAddPlayerAnswer(user, questionId, answerOptions);
-    }
-
-    onUserQuestion(socket: Socket, questionOptions: IQuestion) {
-        const user = this.getUser(socket);
-        if (!user) {
-            return;
-        }
-
-        this._gameService.createAndAddPlayerQuestion(user, questionOptions);
     }
 
     onDisconnect(socket: Socket) {

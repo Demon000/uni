@@ -3,14 +3,7 @@ import Question from '../../common/domain/Question';
 import {GameRoomStatus} from '../../common/game/GameRoomStatus';
 import GameRoomState, {IGameRoomState} from '../../common/domain/IGameRoomState';
 import ISafeUser from '../../common/domain/ISafeUser';
-import {QuestionType} from '../../common/game/QuestionType';
-import {
-    AlreadyPlayingError,
-    InvalidActionError,
-    InvalidAnswerError,
-    InvalidQuestionError,
-    NotPlayingError
-} from '../lib/Errors';
+import {AlreadyPlayingError, InvalidActionError, InvalidAnswerError, NotPlayingError} from '../lib/Errors';
 
 export default class GameRoom {
     state: GameRoomState ;
@@ -27,8 +20,24 @@ export default class GameRoom {
         return this.state.round;
     }
 
-    get questionType() {
-        return this.state.questionType;
+    get status() {
+        return this.state.status;
+    }
+
+    get originalConfiguration() {
+        return this.state.originalConfiguration;
+    }
+
+    get answers() {
+        return this.state.answers;
+    }
+
+    set originalConfiguration(configuration: string[]) {
+        this.state.originalConfiguration = configuration;
+    }
+
+    setWinner(player: ISafeUser) {
+        this.state.winner = player;
     }
 
     setStatus(status: GameRoomStatus) {
@@ -45,6 +54,10 @@ export default class GameRoom {
 
     findPlayerIndex(player: ISafeUser) {
         return this.state.players.findIndex(p => p.id === player.id);
+    }
+
+    findPlayerByUsername(username: string) {
+        return this.state.players.find(player => player.username === username);
     }
 
     isPlaying(player: ISafeUser) {
@@ -64,6 +77,10 @@ export default class GameRoom {
     }
 
     reset() {
+        if (this.status === GameRoomStatus.ENDED) {
+            return;
+        }
+
         this.setStatus(GameRoomStatus.WAITING_FOR_PLAYERS);
         this.state.answers = [];
         this.state.questions = [];
@@ -78,49 +95,21 @@ export default class GameRoom {
 
         this.state.players.splice(index, 1);
 
-        if (!this.isFull()) {
-            this.reset();
+        if (this.status !== GameRoomStatus.WAITING_FOR_PLAYERS) {
+            this.setStatus(GameRoomStatus.ENDED);
         }
     }
 
-    getCurrentRoundQuestions(): Question[] {
-        return this.state.questions.filter(question => question.round == this.state.round);
-    }
-
-    isCurrentRoundComputerQuestioned(): boolean {
-        const questions = this.getCurrentRoundQuestions();
-
-        return this.state.questionType === QuestionType.COMPUTER_GENERATED && questions.length === 1 &&
-            !questions[0].player;
-    }
-
-    isCurrentRoundPlayerQuestioned(player: ISafeUser): boolean {
-        const questions = this.getCurrentRoundQuestions();
-
-        for (const question of questions) {
-            if (question.player?.id == player.id && question.round == this.state.round) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    isCurrentRoundAllPlayerQuestioned(): boolean {
-        for (const player of this.state.players) {
-            if (!this.isCurrentRoundPlayerQuestioned(player)) {
-                return false;
-            }
-        }
-
-        return true;
+    getRoundQuestion(round: number=this.round): Question | undefined {
+        return this.state.questions.find(question => question.round == round);
     }
 
     isCurrentRoundFullyQuestioned(): boolean {
-        return this.isCurrentRoundComputerQuestioned() || this.isCurrentRoundAllPlayerQuestioned();
+        const question = this.getRoundQuestion();
+        return !!question;
     }
 
-    addQuestion(question: Question) {
+    addComputerQuestion(question: Question) {
         if (this.state.status !== GameRoomStatus.WAITING_FOR_QUESTIONS) {
             throw new InvalidActionError();
         }
@@ -134,27 +123,6 @@ export default class GameRoom {
         }
     }
 
-    addComputerQuestion(question: Question) {
-        if (this.state.questionType !== QuestionType.COMPUTER_GENERATED) {
-            throw new InvalidQuestionError();
-        }
-
-        this.addQuestion(question);
-    }
-
-    addPlayerQuestion(player: ISafeUser, question: Question) {
-        if (this.state.questionType !== QuestionType.PLAYER_ADDED) {
-            throw new InvalidQuestionError();
-        }
-
-        if (this.isCurrentRoundPlayerQuestioned(player)) {
-            throw new InvalidQuestionError();
-        }
-
-        question.player = player;
-        this.addQuestion(question);
-    }
-
     isQuestionPlayerAnswered(question: Question, player: ISafeUser): boolean {
         for (const answer of this.state.answers) {
             if (answer.player?.id == player.id && answer.question?.id === question.id && answer.round == question.round) {
@@ -165,12 +133,14 @@ export default class GameRoom {
         return false;
     }
 
-    areAllQuestionsPlayerAnswered(player: ISafeUser): boolean {
-        const questions = this.getCurrentRoundQuestions();
-        for (const question of questions) {
-            if (!this.isQuestionPlayerAnswered(question, player)) {
-                return false;
-            }
+    isCurrentRoundPlayerAnswered(player: ISafeUser): boolean {
+        const question = this.getRoundQuestion();
+        if (!question) {
+            return false;
+        }
+
+        if (!this.isQuestionPlayerAnswered(question, player)) {
+            return false;
         }
 
         return true;
@@ -178,7 +148,7 @@ export default class GameRoom {
 
     isCurrentRoundFullyAnswered(): boolean {
         for (const player of this.state.players) {
-            if (!this.areAllQuestionsPlayerAnswered(player)) {
+            if (!this.isCurrentRoundPlayerAnswered(player)) {
                 return false;
             }
         }
@@ -191,10 +161,6 @@ export default class GameRoom {
     }
 
     startNextRound() {
-        if (this.isFinalRound()) {
-            return;
-        }
-
         this.state.round++;
         this.setStatus(GameRoomStatus.WAITING_FOR_QUESTIONS);
     }
@@ -206,8 +172,8 @@ export default class GameRoom {
         }
     }
 
-    getCurrentRoundAnswers(): Answer[] {
-        return this.state.answers.filter(answer => answer.round == this.state.round);
+    getRoundAnswers(round: number=this.round): Answer[] {
+        return this.state.answers.filter(answer => answer.round == round);
     }
 
     getQuestionById(id: number): Question | undefined {
@@ -237,9 +203,9 @@ export default class GameRoom {
     }
 
     toPlayerState(player: ISafeUser): IGameRoomState {
-        let state = this.state.status;
-        if (state === GameRoomStatus.WAITING_FOR_ANSWERS && this.areAllQuestionsPlayerAnswered(player)) {
-            state = GameRoomStatus.WAITING_FOR_ROUND_END;
+        let status = this.state.status;
+        if (status === GameRoomStatus.WAITING_FOR_ANSWERS && this.isCurrentRoundPlayerAnswered(player)) {
+            status = GameRoomStatus.WAITING_FOR_EVERYONE_TO_ANSWER;
         }
 
         const questions = this.state.questions.map(question => question.toSafe());
@@ -248,12 +214,20 @@ export default class GameRoom {
         return {
             neededNoRounds: this.state.neededNoRounds,
             neededNoPlayers: this.state.neededNoPlayers,
-            questionType: this.state.questionType,
             players: this.state.players,
             round: this.state.round,
-            status: state,
+            winner: this.state.winner,
+            originalConfiguration: this.originalConfiguration,
+            status,
             questions,
             answers,
+        };
+    }
+
+    toInitialGameState(): Partial<IGameRoomState> {
+        return {
+            players: this.state.players,
+            originalConfiguration: this.originalConfiguration,
         };
     }
 }

@@ -6,10 +6,6 @@ export default interface IAnswer {
     id: number;
     question: Question | undefined;
     player: ISafeUser | undefined;
-    points: number;
 
-    // TODO
-    country: string;
-    city: string;
-    mountain: string;
+    roll: number | undefined;
 }

@@ -50,6 +50,8 @@ import ApiRouter from './server/router/ApiRouter';
 
 import GameSocket from './server/socket/GameSocket';
 import GameService from './server/service/GameService';
+import QuestionSchema from './server/schema/QuestionSchema';
+import AnswerSchema from './server/schema/AnswerSchema';
 
 (async function() {
     const connection = await createConnection({
@@ -57,27 +59,29 @@ import GameService from './server/service/GameService';
         synchronize: true,
         entities: [
             UserSchema,
+            // QuestionSchema,
+            // AnswerSchema,
         ],
     });
 
     const userRepository = connection.getCustomRepository(UserRepository);
     const userService = new UserService(userRepository);
+    const gameService = new GameService(3, 3, 3);
 
     const tokenGenerator = new TokenGenerator(Config.TokenGenerator);
     const authService = new AuthService(tokenGenerator);
 
     await userService.createTestUsers(Config.Users);
 
+    const apiRouter = ApiRouter(userService, authService, gameService);
+    app.use('/api', apiRouter);
+
     const clientServerRouter = await ClientServer();
     app.use('/', clientServerRouter);
 
-    const apiRouter = ApiRouter(userService, authService);
-    app.use('/api', apiRouter);
-
     const io = SocketIO().listen(httpServer);
-    const tomGameService = new GameService(2, 3, ['A', 'B', 'C']);
     const tomGameNamespace = io.of('/tom');
-    new GameSocket(tomGameNamespace, userService, authService, tomGameService);
+    new GameSocket(tomGameNamespace, userService, authService, gameService);
 
     httpServer.listen(Config.Server.port, Config.Server.host, () => {
         console.log('Server successfully started');

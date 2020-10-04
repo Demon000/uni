@@ -1,10 +1,6 @@
-import ISafeUser from './ISafeUser';
+import IConfiguration from './IConfiguration';
 
-export default interface IQuestion {
+export default interface IQuestion extends IConfiguration {
     round: number;
     id: number;
-    player: ISafeUser | undefined;
-
-    // TODO
-    letter: string;
 }

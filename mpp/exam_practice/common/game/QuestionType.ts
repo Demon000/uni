@@ -1,4 +1,0 @@
-export enum QuestionType {
-    COMPUTER_GENERATED = 'COMPUTER_GENERATED',
-    PLAYER_ADDED = 'PLAYER_ADDED',
-}

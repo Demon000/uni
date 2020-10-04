@@ -7,24 +7,15 @@ export default class Answer implements IAnswer {
     id: number;
     question: Question | undefined;
     player: ISafeUser | undefined ;
-    points: number;
 
-    // TODO
-    country: string;
-    city: string;
-    mountain: string;
+    roll: number;
 
     constructor(options?: Partial<IAnswer>) {
         this.round = options?.round || 0;
         this.id = options?.id || 0;
         this.question = options?.question;
         this.player = options?.player;
-        this.points = options?.points || 0;
-
-        // TODO
-        this.country = options?.country || '';
-        this.city = options?.city || '';
-        this.mountain = options?.mountain || '';
+        this.roll = options?.roll || 0;
     }
 
     toSafe(): IAnswer {
@@ -33,10 +24,7 @@ export default class Answer implements IAnswer {
             round: this.round,
             question: this.question,
             player: this.player,
-            points: this.points,
-            country: '',
-            city: '',
-            mountain: '',
+            roll: this.roll,
         };
     }
 }

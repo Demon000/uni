@@ -1,8 +1,8 @@
-import {EntitySchema, EntitySchemaRelationOptions} from 'typeorm';
+import {EntitySchema} from 'typeorm';
 import Answer from '../../common/domain/Answer';
 
 export default new EntitySchema<Answer>({
-    name: 'tom_answer',
+    name: 'answer',
     target: Answer,
     columns: {
         id: {
@@ -15,24 +15,9 @@ export default new EntitySchema<Answer>({
             type: 'integer',
             nullable: false,
         },
-        points: {
+        roll: {
             type: 'integer',
             nullable: false,
-        },
-        country: {
-            type: 'nvarchar',
-            nullable: false,
-            length: 255,
-        },
-        city: {
-            type: 'nvarchar',
-            nullable: false,
-            length: 255,
-        },
-        mountain: {
-            type: 'nvarchar',
-            nullable: false,
-            length: 255,
         },
     },
     relations: {
@@ -40,11 +25,11 @@ export default new EntitySchema<Answer>({
             type: 'one-to-one',
             target: 'question',
             eager: true,
-        } as EntitySchemaRelationOptions,
+        },
         player: {
             type: 'one-to-one',
             target: 'user',
             eager: true,
-        } as EntitySchemaRelationOptions,
+        },
     },
 });

@@ -2,7 +2,7 @@ import {EntitySchema} from 'typeorm';
 import Question from '../../common/domain/Question';
 
 export default new EntitySchema<Question>({
-    name: 'tom_question',
+    name: 'question',
     target: Question,
     columns: {
         id: {
@@ -15,17 +15,9 @@ export default new EntitySchema<Question>({
             type: 'integer',
             nullable: false,
         },
-        letter: {
-            type: 'nvarchar',
+        configuration: {
+            type: 'simple-json',
             nullable: false,
-            length: 255,
-        },
-    },
-    relations: {
-        player: {
-            type: 'one-to-one',
-            target: 'user',
-            eager: true,
         },
     },
 });

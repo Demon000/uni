@@ -9,6 +9,7 @@ export enum GameServiceEvents {
 
 export interface IGameService extends EventEmitter {
     startRoom(player: ISafeUser): void;
+    joinRoom(player: ISafeUser): void;
+    leaveRoom(player: ISafeUser): void;
     createAndAddPlayerAnswer(player: ISafeUser, questionId: number, answerOptions: IAnswer): void;
-    createAndAddPlayerQuestion(player: ISafeUser, questionOptions: IQuestion): void;
 }

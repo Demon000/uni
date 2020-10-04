@@ -47,29 +47,7 @@
             }
         },
         methods: {
-            async login() {
-                try {
-                    await this.$store.dispatch('newLogin', {
-                        username: this.username,
-                        password: this.password,
-                    });
-                } catch (e) {
-                    this.error = e.response.data.message;
-                    return;
-                }
 
-                try {
-                    if (this.redirectFrom == null) {
-                        await this.$router.replace({
-                            name: 'bugs',
-                        });
-                    } else {
-                        await this.$router.replace(this.redirectFrom);
-                    }
-                } catch (e) {
-                    console.error(e);
-                }
-            },
         },
     });
 </script>

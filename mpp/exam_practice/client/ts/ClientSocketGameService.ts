@@ -7,7 +7,6 @@ import {GameSocketEvents} from '../../common/socket/GameSocket';
 import {getAccessTokenPayload} from './store';
 import ISafeUser from '../../common/domain/ISafeUser';
 import IAnswer from '../../common/domain/IAnswer';
-import IQuestion from '../../common/domain/IQuestion';
 
 export default class ClientSocketGameService extends EventEmitter implements IGameService {
     private readonly _socket: SocketIOClient.Socket;
@@ -32,6 +31,7 @@ export default class ClientSocketGameService extends EventEmitter implements IGa
     }
 
     private onRoomUpdate(room: IGameRoomState) {
+        console.log(room);
         this.emit(GameServiceEvents.ROOM_UPDATE, room);
     }
 
@@ -39,11 +39,15 @@ export default class ClientSocketGameService extends EventEmitter implements IGa
         this._socket.emit(GameSocketEvents.USER_ANSWER, questionId, answerOptions);
     }
 
-    createAndAddPlayerQuestion(player: ISafeUser, questionOptions: IQuestion): void {
-        this._socket.emit(GameSocketEvents.USER_QUESTION, questionOptions);
-    }
-
     startRoom(player: ISafeUser): void {
         this._socket.emit(GameSocketEvents.ROOM_START);
+    }
+
+    joinRoom(player: ISafeUser): void {
+        this._socket.emit(GameSocketEvents.JOIN_ROOM);
+    }
+
+    leaveRoom(player: ISafeUser): void {
+        this._socket.emit(GameSocketEvents.LEAVE_ROOM);
     }
 }
