@@ -1,0 +1,13 @@
+int main() {
+    int radius;
+    double pi = 3.14159265358979323846;
+
+    scanf("%d", &radius);
+
+    double perimeter = 2 * pi * radius;
+    double area = pi * radius * radius;
+
+    printf("perimeter: %f, area: %f\n", perimeter, area);
+
+    return 0;
+}
