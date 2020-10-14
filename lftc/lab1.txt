@@ -1,0 +1,218 @@
+Specification:
+<program> -> <function_list>
+
+<function_list> -> <function> <function_list>
+<function_list> -> <function>
+
+<function> -> <function_prototype> <scope>
+<function_prototype> -> <data_type> ID(<argument_list>)
+
+<argument_list> -> <argument>, <argument_list>
+<argument_list> -> <argument>
+<argument> -> <data_type> ID
+
+<instruction_list> -> <instruction> <instruction_list>
+<instruction_list> -> <instruction>
+
+<instruction> -> <variable_declaration>;
+<instruction> -> <variable_assignment>;
+<instruction> -> <function_call>;
+<instruction> -> <return>;
+<instruction> -> <break>;
+
+<instruction> -> <scoped_instruction>;
+<instruction> -> <scoped_instruction>
+
+<scoped_instruction> -> <if_else>
+<scoped_instruction> -> <if>
+<scoped_instruction> -> <for>
+<scoped_instruction> -> <while>
+
+<variable_declaration> -> <data_type> <variable_assignment_list>
+<variable_assignment_list> -> <variable_assignment_opt>, <variable_assignment_list>
+<variable_assignment_list> -> <variable_assignment_opt>
+<variable_assignment_opt> -> <variable_assignment>
+<variable_assignment_opt> -> ID
+<variable_assignment> -> ID = <expression>
+
+<function_call> -> ID(<function_argument_list>)
+<function_argument_list> -> <expression>, <function_argument_list>
+<function_argument_list> -> <expression>
+
+<return> -> return <expression>
+<if_else> -> <if> else <scope>
+<if> -> if (<expression>) <scope>
+<for> -> for (variable_assignment; expression; expression) <scope>
+<while> -> while (expression) <scope>
+<break> -> break
+
+<expression> -> <expression> <operator> <expression>
+<expression> -> FLOAT_CONST
+<expression> -> STR_CONST
+<expression> -> INT_CONST
+<expression> -> &ID
+<expression> -> ID
+<operator> -> *
+<operator> -> /
+<operator> -> %
+<operator> -> <
+<operator> -> >
+<operator> -> <=
+<operator> -> ==
+<operator> -> !=
+<operator> -> -
+<operator> -> +
+
+<data_type> -> int
+<data_type> -> double
+
+<scope> -> <scope_start> <instruction_list> <scope_end>
+<scope_start> -> {
+<scope_end> -> }
+
+FLOAT_CONST -> INT_CONST.[0-9]+
+INT_CONST -> [1-9][0-9]*
+STR_CONST -> "[\x20-\x7F]*"
+ID -> [a-zA-Z_][a-zA-Z0-9_]
+
+Circle perimeter and area calculation:
+int main() {
+    int radius;
+    double pi = 3.14159265358979323846;
+
+    scanf("%d", &radius);
+
+    double perimeter = 2 * pi * radius;
+    double area = pi * radius * radius;
+
+    printf("perimeter: %f, area: %f\n", perimeter, area);
+
+    return 0;
+}
+
+Min and max of 3 numbers:
+int main() {
+    int a;
+    int b;
+    int c;
+
+    scanf("%d", &a);
+    scanf("%d", &b);
+    scanf("%d", &c);
+
+    int min = a;
+    int max = a;
+
+    if (b < min) {
+        min = b;
+    }
+
+    if (c < min) {
+        min = c;
+    }
+
+    if (b > max) {
+        max = b;
+    }
+
+    if (c > max) {
+        max = c;
+    }
+
+    printf("min: %d, max: %d\n", min, max);
+
+    return 0;
+}
+
+Check if number is prime:
+int main() {
+    int n;
+    int i;
+    int is_prime = 1;
+
+    scanf("%d", &n);
+
+    for (i = 2; i <= n / 2; i = i + 1) {
+        if (n % i == 0) {
+            is_prime = 0;
+            break;
+        }
+    }
+
+    if (n == 1) {
+        printf("1 is neither prime nor composite\n");
+    } else {
+        if (is_prime) {
+            printf("%d is a prime number\n", n);
+        } else {
+            printf("%d is not a prime number\n", n);
+        }
+    }
+
+    return 0;
+}
+
+Find greatest common divisor:
+int main() {
+    int a, b;
+
+    scanf("%d", &a);
+    scanf("%d", &b);
+
+
+    while (a != b) {
+        if (a > b) {
+            a = a - b;
+        } else {
+            b = b - a;
+        }
+    }
+
+    printf("gcd: %d\n", a);
+
+    return 0;
+}
+
+Sum of n numbers read from user:
+int main() {
+    int n;
+    int sum = 0;
+    int x;
+
+    scanf("%d", &n);
+
+    while (n > 0) {
+        scanf("%d", &x);
+        sum = sum + x;
+        n = n - 1;
+    }
+
+    printf("sum: %d\n", sum);
+    
+    return 0;
+}
+
+Program with errors both in original language and subset language:
+int main() {
+	int x = 2*;
+	scanf("%d", int x);
+}
+
+Program with errors in subset language but not in original language:
+int main() {
+	int n = 9;
+    int is_prime = 1;
+
+    for (int i = 2; i <= n / 2; i++)
+        if (n % i == 0)
+            is_prime = 0;
+
+    if (n == 1)
+        printf("1 is neither prime nor composite\n");
+    else if (is_prime)
+	    printf("%d is a prime number\n", n);
+	else
+	    printf("%d is not a prime number\n", n);
+
+    return 0;
+}
