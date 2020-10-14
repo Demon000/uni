@@ -2,12 +2,13 @@
 #define JPEG_YUVCODEC_H
 
 
-#include "../RawImage.h"
+#include "../generic/RawRGBImage.h"
+#include "RawYUVImage.h"
 
 class YUVCodec {
 public:
-    void decode(RawImage &source, RawImage &target);
-    void encode(RawImage &source, RawImage &target);
+    void encode(RawRGBImage &source, RawYUVImage &target);
+    void decode(RawYUVImage &source, RawRGBImage &target);
 };
 
 

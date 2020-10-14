@@ -1,7 +1,6 @@
 #ifndef JPEG_YUV420CODEC_H
 #define JPEG_YUV420CODEC_H
 
-
 #include "../yuv444/YUV444Image.h"
 #include "YUV420Image.h"
 

@@ -1,4 +1,3 @@
-#include <cassert>
 #include "../utils/utils.h"
 #include "YUVCodec.h"
 
@@ -34,16 +33,10 @@ void rawPixelConversion(RawImage &source, RawImage &target, F f) {
     }
 }
 
-void YUVCodec::encode(RawImage &source, RawImage &target) {
-    assert(source.type == RawImageType::RAW_RGB);
-
-    target.type = RawImageType::RAW_YUV;
+void YUVCodec::encode(RawRGBImage &source, RawYUVImage &target) {
     rawPixelConversion(source, target, pixelRGBtoYUV);
 }
 
-void YUVCodec::decode(RawImage &source, RawImage &target) {
-    assert(source.type == RawImageType::RAW_YUV);
-
-    target.type = RawImageType::RAW_RGB;
+void YUVCodec::decode(RawYUVImage &source, RawRGBImage &target) {
     rawPixelConversion(source, target, pixelYUVtoRGB);
 }

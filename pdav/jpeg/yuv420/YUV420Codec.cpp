@@ -1,5 +1,4 @@
 #include "YUV420Codec.h"
-#include "../yuv444/YUV444Image.h"
 #include "YUV420Image.h"
 
 void YUV420Codec::encode(YUV444Image &source, YUV420Image &target) {
@@ -10,22 +9,22 @@ void YUV420Codec::encode(YUV444Image &source, YUV420Image &target) {
             const auto& sourceBlock = source.dataAt(blockX, blockY);
             auto& targetBlock = target.dataAt(blockX, blockY);
 
-            for (uint32_t relativeY = 0; relativeY < YUV_SOURCE_BLOCK_SIZE; relativeY++) {
-                for (uint32_t relativeX = 0; relativeX < YUV_SOURCE_BLOCK_SIZE; relativeX++) {
+            for (uint32_t relativeY = 0; relativeY < 8; relativeY++) {
+                for (uint32_t relativeX = 0; relativeX < 8; relativeX++) {
                     targetBlock.y[relativeY][relativeX] = sourceBlock.y[relativeY][relativeX];
                 }
             }
 
-            for (uint32_t sampledY = 0; sampledY < YUV420_U_V_BLOCK_SIZE; sampledY++) {
-                for (uint32_t sampledX = 0; sampledX < YUV420_U_V_BLOCK_SIZE; sampledX++) {
+            for (uint32_t sampledY = 0; sampledY < 4; sampledY++) {
+                for (uint32_t sampledX = 0; sampledX < 4; sampledX++) {
                     double averageU = 0, averageV = 0;
                     int count = 0;
-                    for (uint32_t relativeY = 0; relativeY < YUV420_U_V_GROUP_SIZE; relativeY++) {
-                        for (uint32_t relativeX = 0; relativeX < YUV420_U_V_GROUP_SIZE; relativeX++) {
-                            uint32_t unsampledX = sampledX * YUV420_U_V_GROUP_SIZE + relativeX;
-                            uint32_t unsampledY = sampledY * YUV420_U_V_GROUP_SIZE + relativeY;
-                            uint32_t pixelX = blockX * YUV_SOURCE_BLOCK_SIZE + unsampledX;
-                            uint32_t pixelY = blockY * YUV_SOURCE_BLOCK_SIZE + unsampledY;
+                    for (uint32_t relativeY = 0; relativeY < 2; relativeY++) {
+                        for (uint32_t relativeX = 0; relativeX < 2; relativeX++) {
+                            uint32_t unsampledX = sampledX * 2 + relativeX;
+                            uint32_t unsampledY = sampledY * 2 + relativeY;
+                            uint32_t pixelX = blockX * 8 + unsampledX;
+                            uint32_t pixelY = blockY * 8 + unsampledY;
                             if (pixelX >= target.width() || pixelY >= target.height()) {
                                 continue;
                             }
@@ -51,22 +50,22 @@ void YUV420Codec::decode(YUV420Image &source, YUV444Image &target) {
             const auto& sourceBlock = source.dataAt(blockX, blockY);
             auto& targetBlock = target.dataAt(blockX, blockY);
 
-            for (uint32_t relativeY = 0; relativeY < YUV_SOURCE_BLOCK_SIZE; relativeY++) {
-                for (uint32_t relativeX = 0; relativeX < YUV_SOURCE_BLOCK_SIZE; relativeX++) {
+            for (uint32_t relativeY = 0; relativeY < 8; relativeY++) {
+                for (uint32_t relativeX = 0; relativeX < 8; relativeX++) {
                     targetBlock.y[relativeY][relativeX] = sourceBlock.y[relativeY][relativeX];
                 }
             }
 
-            for (uint32_t sampledY = 0; sampledY < YUV420_U_V_BLOCK_SIZE; sampledY++) {
-                for (uint32_t sampledX = 0; sampledX < YUV420_U_V_BLOCK_SIZE; sampledX++) {
+            for (uint32_t sampledY = 0; sampledY < 4; sampledY++) {
+                for (uint32_t sampledX = 0; sampledX < 4; sampledX++) {
                     uint8_t averageU = sourceBlock.u[sampledY][sampledX];
                     uint8_t averageV = sourceBlock.v[sampledY][sampledX];
-                    for (uint32_t relativeY = 0; relativeY < YUV420_U_V_GROUP_SIZE; relativeY++) {
-                        for (uint32_t relativeX = 0; relativeX < YUV420_U_V_GROUP_SIZE; relativeX++) {
-                            uint32_t unsampledX = sampledX * YUV420_U_V_GROUP_SIZE + relativeX;
-                            uint32_t unsampledY = sampledY * YUV420_U_V_GROUP_SIZE + relativeY;
-                            uint32_t pixelX = blockX * YUV_SOURCE_BLOCK_SIZE + unsampledX;
-                            uint32_t pixelY = blockY * YUV_SOURCE_BLOCK_SIZE + unsampledY;
+                    for (uint32_t relativeY = 0; relativeY < 2; relativeY++) {
+                        for (uint32_t relativeX = 0; relativeX < 2; relativeX++) {
+                            uint32_t unsampledX = sampledX * 2 + relativeX;
+                            uint32_t unsampledY = sampledY * 2 + relativeY;
+                            uint32_t pixelX = blockX * 8 + unsampledX;
+                            uint32_t pixelY = blockY * 8 + unsampledY;
                             if (pixelX >= target.width() || pixelY >= target.height()) {
                                 continue;
                             }

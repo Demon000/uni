@@ -5,13 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include "generic/Image.h"
-
-enum RawImageType {
-    RAW_UNKNOWN,
-    RAW_RGB,
-    RAW_YUV,
-};
+#include "Image.h"
 
 struct Raw24BitData {
     uint8_t x = 0;
@@ -19,10 +13,7 @@ struct Raw24BitData {
     uint8_t z = 0;
 };
 
-class RawImage : public Image<Raw24BitData> {
-public:
-    RawImageType type = RawImageType::RAW_UNKNOWN;
-};
+class RawImage : public Image<Raw24BitData> {};
 
 
 #endif //JPEG_RAWIMAGE_H

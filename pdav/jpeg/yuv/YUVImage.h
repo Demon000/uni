@@ -3,12 +3,10 @@
 
 #include <cstdint>
 
-static constexpr uint32_t YUV_SOURCE_BLOCK_SIZE = 8;
-
 template <typename D>
 class YUVImage : public BlockImage<D> {
 public:
-    YUVImage() : BlockImage<D>(YUV_SOURCE_BLOCK_SIZE) {}
+    YUVImage() : BlockImage<D>(8) {}
 };
 
 #endif //JPEG_YUVIMAGE_H

@@ -5,13 +5,10 @@
 #include "../generic/BlockImage.h"
 #include "../yuv/YUVImage.h"
 
-static constexpr int YUV420_U_V_BLOCK_SIZE = 4;
-static constexpr int YUV420_U_V_GROUP_SIZE = YUV_SOURCE_BLOCK_SIZE / YUV420_U_V_BLOCK_SIZE;
-
 struct YUV420Data {
-    uint8_t y[YUV_SOURCE_BLOCK_SIZE][YUV_SOURCE_BLOCK_SIZE] = {0};
-    uint8_t u[YUV420_U_V_BLOCK_SIZE][YUV420_U_V_BLOCK_SIZE] = {0};
-    uint8_t v[YUV420_U_V_BLOCK_SIZE][YUV420_U_V_BLOCK_SIZE] = {0};
+    uint8_t y[8][8] = {0};
+    uint8_t u[4][4] = {0};
+    uint8_t v[4][4] = {0};
 };
 
 class YUV420Image : public YUVImage<YUV420Data> {};

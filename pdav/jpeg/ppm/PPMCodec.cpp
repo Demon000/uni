@@ -1,7 +1,6 @@
 #include <fstream>
 #include <cstring>
 #include "PPMCodec.h"
-#include "../RawImage.h"
 
 enum PPMFormat {
     PPM3,
@@ -70,7 +69,7 @@ void writeUintLine(std::ofstream& output, uint32_t value) {
     output << value << '\n';
 }
 
-void PPMCodec::readP3(RawImage &image, std::ifstream& input, uint32_t max) {
+void PPMCodec::readP3(RawRGBImage &image, std::ifstream& input, uint32_t max) {
     uint32_t temp;
 
     for (size_t i = 0; i < image.dataSize(); i++) {
@@ -86,7 +85,7 @@ void PPMCodec::readP3(RawImage &image, std::ifstream& input, uint32_t max) {
     }
 }
 
-void PPMCodec::readP6(RawImage &image, std::ifstream& input, uint32_t max) {
+void PPMCodec::readP6(RawRGBImage &image, std::ifstream& input, uint32_t max) {
     uint8_t temp;
 
     skip_whitespace(input, 1);
@@ -104,7 +103,7 @@ void PPMCodec::readP6(RawImage &image, std::ifstream& input, uint32_t max) {
     }
 }
 
-void PPMCodec::read(RawImage &image, std::ifstream& input) {
+void PPMCodec::read(RawRGBImage &image, std::ifstream& input) {
     char format_buffer[PPM_FORMAT_LENGTH];
     enum PPMFormat format;
     uint32_t width;
@@ -127,7 +126,6 @@ void PPMCodec::read(RawImage &image, std::ifstream& input) {
         throw std::runtime_error("2 byte color component parsing not supported");
     }
 
-    image.type = RawImageType::RAW_RGB;
     image.resize(width, height);
 
     if (format == PPMFormat::PPM3) {
@@ -137,7 +135,7 @@ void PPMCodec::read(RawImage &image, std::ifstream& input) {
     }
 }
 
-void PPMCodec::write(RawImage &image, std::ofstream &output) {
+void PPMCodec::write(RawRGBImage &image, std::ofstream &output) {
     std::ifstream input;
 
     output << PPM3_FORMAT_HEADER << '\n';

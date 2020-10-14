@@ -1,5 +1,4 @@
 #include <cmath>
-#include <cassert>
 #include "DCTCodec.h"
 #include "../utils/utils.h"
 
@@ -11,14 +10,14 @@ double alpha(double value) {
     }
 }
 
-void runForwardDCT(const uint8_t (&source)[DCT_BLOCK_SIZE][DCT_BLOCK_SIZE],
-                   int32_t (&target)[DCT_BLOCK_SIZE][DCT_BLOCK_SIZE]) {
-    for (uint32_t targetY = 0; targetY < DCT_BLOCK_SIZE; targetY++) {
-        for (uint32_t targetX = 0; targetX < DCT_BLOCK_SIZE; targetX++) {
+void runForwardDCT(const uint8_t (&source)[8][8],
+                   int32_t (&target)[8][8]) {
+    for (uint32_t targetY = 0; targetY < 8; targetY++) {
+        for (uint32_t targetX = 0; targetX < 8; targetX++) {
             double targetValue = (1.0 / 4.0) * alpha(targetY) * alpha(targetX);
             double sourceValuesSum = 0;
-            for (uint32_t sourceY = 0; sourceY < DCT_BLOCK_SIZE; sourceY++) {
-                for (uint32_t sourceX = 0; sourceX < DCT_BLOCK_SIZE; sourceX++) {
+            for (uint32_t sourceY = 0; sourceY < 8; sourceY++) {
+                for (uint32_t sourceX = 0; sourceX < 8; sourceX++) {
                     double sourceValue = source[sourceY][sourceX] - 128;
                     sourceValue *= cos(((2 * sourceX + 1) * targetX * M_PI) / 16);
                     sourceValue *= cos(((2 * sourceY + 1) * targetY * M_PI) / 16);
@@ -31,14 +30,14 @@ void runForwardDCT(const uint8_t (&source)[DCT_BLOCK_SIZE][DCT_BLOCK_SIZE],
     }
 }
 
-void runBackwardDCT(const int32_t (&source)[DCT_BLOCK_SIZE][DCT_BLOCK_SIZE],
-                    uint8_t (&target)[DCT_BLOCK_SIZE][DCT_BLOCK_SIZE]) {
-    for (uint32_t targetY = 0; targetY < DCT_BLOCK_SIZE; targetY++) {
-        for (uint32_t targetX = 0; targetX < DCT_BLOCK_SIZE; targetX++) {
+void runBackwardDCT(const int32_t (&source)[8][8],
+                    uint8_t (&target)[8][8]) {
+    for (uint32_t targetY = 0; targetY < 8; targetY++) {
+        for (uint32_t targetX = 0; targetX < 8; targetX++) {
             double targetValue = (1.0 / 4.0);
             double sourceValuesSum = 0;
-            for (uint32_t sourceY = 0; sourceY < DCT_BLOCK_SIZE; sourceY++) {
-                for (uint32_t sourceX = 0; sourceX < DCT_BLOCK_SIZE; sourceX++) {
+            for (uint32_t sourceY = 0; sourceY < 8; sourceY++) {
+                for (uint32_t sourceX = 0; sourceX < 8; sourceX++) {
                     double sourceValue = alpha(sourceY) * alpha(sourceX) * source[sourceY][sourceX];
                     sourceValue *= cos(((2 * targetX + 1) * sourceX * M_PI) / 16);
                     sourceValue *= cos(((2 * targetY + 1) * sourceY * M_PI) / 16);
@@ -52,8 +51,7 @@ void runBackwardDCT(const int32_t (&source)[DCT_BLOCK_SIZE][DCT_BLOCK_SIZE],
     }
 }
 
-void DCTCodec::encode(YUV444Image &source, Int32Image &target) {
-    target.type = Int32ImageType::INT32_DCT;
+void DCTCodec::encode(YUV444Image &source, DCTImage &target) {
     target.resize(source.width(), source.height());
 
     for (uint32_t blockY = 0; blockY < source.dataHeight(); blockY++) {
@@ -68,9 +66,7 @@ void DCTCodec::encode(YUV444Image &source, Int32Image &target) {
     }
 }
 
-void DCTCodec::decode(Int32Image &source, YUV444Image &target) {
-    assert(source.type == Int32ImageType::INT32_DCT);
-
+void DCTCodec::decode(DCTImage &source, YUV444Image &target) {
     target.resize(source.width(), source.height());
 
     for (uint32_t blockY = 0; blockY < source.dataHeight(); blockY++) {

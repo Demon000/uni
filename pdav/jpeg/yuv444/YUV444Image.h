@@ -6,9 +6,9 @@
 #include "../yuv/YUVImage.h"
 
 struct YUV444Data {
-    uint8_t y[YUV_SOURCE_BLOCK_SIZE][YUV_SOURCE_BLOCK_SIZE] = {0};
-    uint8_t u[YUV_SOURCE_BLOCK_SIZE][YUV_SOURCE_BLOCK_SIZE] = {0};
-    uint8_t v[YUV_SOURCE_BLOCK_SIZE][YUV_SOURCE_BLOCK_SIZE] = {0};
+    uint8_t y[8][8] = {0};
+    uint8_t u[8][8] = {0};
+    uint8_t v[8][8] = {0};
 };
 
 class YUV444Image : public YUVImage<YUV444Data> {};
