@@ -3,8 +3,6 @@
 #include "Lexer.h"
 #include "utils.h"
 
-#define DEBUG 0
-
 enum LexerStatus Lexer::skipWhitespace(std::istream &in) {
     char c;
 
@@ -23,7 +21,33 @@ enum LexerStatus Lexer::skipWhitespace(std::istream &in) {
     return SKIP_WHITESPACE_SUCCESS;
 }
 
-void Lexer::tokenize(std::istream& in) {
+void Lexer::insertSimpleToken(std::shared_ptr<Token> token) {
+    tokens_.push_back(std::make_shared<Token>(*token));
+}
+
+void Lexer::insertIndexedToken(std::shared_ptr<Token> token) {
+    IndexedTokenValue value(token->buffer);
+
+    Node<IndexedTokenValue> *node;
+    if (token->id == TK_ID) {
+        node = identifiers_.insertNode(value, true);
+    } else {
+        node = constants_.insertNode(value, true);
+    }
+    token->index = node->data.index = node->index;
+
+    insertSimpleToken(token);
+}
+
+void Lexer::insertToken(std::shared_ptr<Token> token) {
+    if (token->isIndexed()) {
+        insertIndexedToken(token);
+    } else {
+        insertSimpleToken(token);
+    }
+}
+
+LexerStatus Lexer::tokenize(std::istream& in) {
     while (!in.eof()) {
         status = skipWhitespace(in);
         if (status != SKIP_WHITESPACE_SUCCESS) {
@@ -32,34 +56,61 @@ void Lexer::tokenize(std::istream& in) {
 
         for (const auto& token : tokenDefinitions) {
             auto initialPosition = in.tellg();
-            if (DEBUG) std::cout << "Trying: " << token->label << std::endl;
             status = token->tryFind(in);
             if (status == FIND_TOKEN_SUCCESS) {
-                if (DEBUG) std::cout << "Found: " << token->label << " " << token->id << " " << token->buffer << std::endl;
-                tokens.push_back(std::make_shared<Token>(*token));
+                insertToken(token);
                 break;
-            } else {
-                auto finalPosition = in.tellg();
-                if (initialPosition != finalPosition) {
-                    std::stringstream ss;
-                    ss << "Stream position changed from " << initialPosition << " to " << finalPosition << " for token "
-                            << token->label << " fail case" << std::endl;
-                    throw std::runtime_error(ss.str());
-                }
+            }
+
+            auto finalPosition = in.tellg();
+            if (initialPosition != finalPosition) {
+                std::stringstream ss;
+                ss << "Stream position changed from " << initialPosition << " to " << finalPosition << " for token "
+                   << token->label << " fail case" << std::endl;
+                throw std::runtime_error(ss.str());
             }
         }
 
         if (status != FIND_TOKEN_SUCCESS) {
-            throw std::runtime_error("Failed to find token");
+            return FIND_TOKEN_FAILED;
+        }
+    }
+
+    return PARSE_SUCCESS;
+}
+
+void Lexer::describeTokens(const std::vector<std::shared_ptr<Token>>& tokens,
+                           std::ostream& out) {
+    out << "Id\t\tBuffer\t\tLabel\t\tValue index" << std::endl;
+    for (const auto& token : tokens) {
+        if (token->isIndexed()) {
+            out << token->id << "\t\t" << token->buffer << "\t\t" << token->label << "\t\t" << token->index << std::endl;
+        } else {
+            out << token->id << "\t\t" << token->buffer << "\t\t" << token->label  << "\t\t" << "-" << std::endl;
         }
     }
 }
 
-void Lexer::describe(std::ostream& out) {
-    out << "Token id\tMatched text\tToken label" << std::endl;
-    for (const auto& token : tokens) {
-        out << token->id << "\t\t" << token->buffer << "\t\t" << token->label << std::endl;
+void Lexer::describeIndexedTokenValues(const std::vector<IndexedTokenValue>& values,
+                                       std::ostream& out) {
+    out << "Id\t\tValue" << std::endl;
+    for (const auto& value : values) {
+        out << value.index << "\t\t" << value.buffer << std::endl;
     }
+}
+
+void Lexer::describe(std::ostream& out) {
+    out << "Tokens" << std::endl;
+    describeTokens(tokens_, out);
+    out << std::endl;
+
+    out << "Identifiers" << std::endl;
+    describeIndexedTokenValues(identifiers_.linear(), out);
+    out << std::endl;
+
+    out << "Constants" << std::endl;
+    describeIndexedTokenValues(constants_.linear(), out);
+    out << std::endl;
 }
 
 void Token::putLastBack(std::istream& in) {
@@ -137,11 +188,14 @@ enum LexerStatus ExactTextToken::tryFind(std::istream &in) {
 
     auto status = readOfSize(in, textMatch.size());
     if (status != READ_SUCCESS || buffer != textMatch) {
-        putBufferBack(in);
-        return FIND_TOKEN_FAILED;
+        goto fail_find;
     }
 
     return FIND_TOKEN_SUCCESS;
+
+fail_find:
+    putBufferBack(in);
+    return FIND_TOKEN_FAILED;
 }
 
 enum LexerStatus ExactKeywordToken::tryFind(std::istream &in) {
@@ -149,11 +203,14 @@ enum LexerStatus ExactKeywordToken::tryFind(std::istream &in) {
 
     auto status = readValidWord(in, VALID_CATCH_ALL_CHARS);
     if (status != READ_SUCCESS || textMatch != buffer) {
-        putBufferBack(in);
-        return FIND_TOKEN_FAILED;
+        goto fail_find;
     }
 
     return FIND_TOKEN_SUCCESS;
+
+fail_find:
+    putBufferBack(in);
+    return FIND_TOKEN_FAILED;
 }
 
 enum LexerStatus DelimitedTextToken::tryFind(std::istream &in) {
@@ -162,7 +219,7 @@ enum LexerStatus DelimitedTextToken::tryFind(std::istream &in) {
     char c;
     while (true) {
         if (in.eof()) {
-            return FIND_TOKEN_FAILED;
+            goto fail_find;
         }
 
         in.get(c);
@@ -170,8 +227,7 @@ enum LexerStatus DelimitedTextToken::tryFind(std::istream &in) {
 
         if (buffer.size() == start.size()) {
             if (!buffer.starts_with(start)) {
-                putBufferBack(in);
-                return FIND_TOKEN_FAILED;
+                goto fail_find;
             }
         }
 
@@ -183,6 +239,10 @@ enum LexerStatus DelimitedTextToken::tryFind(std::istream &in) {
     }
 
     return FIND_TOKEN_SUCCESS;
+
+fail_find:
+    putBufferBack(in);
+    return FIND_TOKEN_FAILED;
 }
 
 enum LexerStatus IntToken::tryFind(std::istream &in) {
@@ -253,9 +313,13 @@ enum LexerStatus IdToken::tryFind(std::istream &in) {
         goto fail_find;
     }
 
+    if (buffer.length() > ID_TOKEN_MAX_LENGTH) {
+        goto fail_find;
+    }
+
     return FIND_TOKEN_SUCCESS;
 
-    fail_find:
+fail_find:
     putBufferBack(in);
     return FIND_TOKEN_FAILED;
 }

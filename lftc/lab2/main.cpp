@@ -6,7 +6,14 @@ int main() {
     std::ofstream out("lexer.txt");
     Lexer lexer;
 
-    lexer.tokenize(in);
+    auto status = lexer.tokenize(in);
+    if (status != PARSE_SUCCESS) {
+        std::cout << "Failed to parse input file\n";
+        std::cout << "Buffer remaining:\n";
+        std::cout << in.rdbuf();
+        return -1;
+    }
+
     lexer.describe(out);
 
     return 0;

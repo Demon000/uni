@@ -4,10 +4,10 @@ int main() {
 
     scanf("%d", &radius);
 
-    double perimeter = 2 * pi * radius;
+    double per = 2 * pi * radius;
     double area = pi * radius * radius;
 
-    printf("perimeter: %f, area: %f\n", perimeter, area);
+    printf("perimeter: %f, area: %f\n", per, area);
 
     return 0;
 }

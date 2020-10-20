@@ -3,5 +3,5 @@ project(lab2)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(lab2 main.cpp Lexer.cpp Lexer.h utils.cpp utils.h)
+add_executable(lab2 main.cpp Lexer.cpp Lexer.h utils.cpp utils.h BinarySearchTree.h)
 configure_file(test.c.txt test.c.txt COPYONLY)

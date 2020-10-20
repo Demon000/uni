@@ -7,6 +7,7 @@
 #include <fstream>
 #include <map>
 #include <memory>
+#include "BinarySearchTree.h"
 
 enum LexerStatus {
     REACHED_EOF,
@@ -15,6 +16,7 @@ enum LexerStatus {
     FIND_TOKEN_SUCCESS,
     FIND_TOKEN_FAILED,
     SKIP_WHITESPACE_SUCCESS,
+    PARSE_SUCCESS,
 };
 
 enum TokenId {
@@ -74,8 +76,8 @@ enum TokenId {
 
 class Token {
 public:
-    Token(enum TokenId id, std::string label)
-            : id(id), label(std::move(label)) {}
+    Token(enum TokenId id, std::string label, bool isIndexed=false)
+            : id(id), label(std::move(label)), isIndexed_(isIndexed) {}
     Token() : Token(TK_DEFAULT, "") {}
 
     enum LexerStatus readOfSize(std::istream& in, size_t size);
@@ -84,8 +86,11 @@ public:
     void putLastBack(std::istream& in);
     void putBufferBack(std::istream& in);
     virtual enum LexerStatus tryFind(std::istream& in);
+    bool isIndexed() { return isIndexed_; };
 
+    bool isIndexed_;
     enum TokenId id;
+    int index = 0;
     std::string buffer;
     std::string label;
 };
@@ -113,10 +118,29 @@ public:
     enum LexerStatus tryFind(std::istream& in) override;
 };
 
+class IndexedTokenValue {
+public:
+    IndexedTokenValue(std::string  buffer)
+            : buffer(std::move(buffer)) {}
+
+    IndexedTokenValue() {}
+
+    friend int operator<=>(const IndexedTokenValue &lhs, const IndexedTokenValue &rhs) {
+        return lhs.buffer.compare(rhs.buffer);
+    }
+
+    friend bool operator==(const IndexedTokenValue &lhs, const IndexedTokenValue &rhs) {
+        return (lhs <=> rhs) == 0;
+    }
+
+    int index = 0;
+    std::string buffer;
+};
+
 class DelimitedTextToken : public Token {
 public:
     DelimitedTextToken(enum TokenId id, std::string label, std::string start, std::string end)
-            : Token(id, std::move(label)), start(std::move(start)), end(std::move(end)) {
+            : Token(id, std::move(label), true), start(std::move(start)), end(std::move(end)) {
     }
 
     enum LexerStatus tryFind(std::istream& in) override;
@@ -128,19 +152,23 @@ private:
 
 class IntToken : public Token {
 public:
-    using Token::Token;
+    IntToken(enum TokenId id, std::string label)
+            : Token(id, std::move(label), true) {}
     enum LexerStatus tryFind(std::istream& in) override;
 };
 
 class DoubleToken : public Token {
 public:
-    using Token::Token;
+    DoubleToken(enum TokenId id, std::string label)
+            : Token(id, std::move(label), true) {}
     enum LexerStatus tryFind(std::istream& in) override;
 };
 
+constexpr int ID_TOKEN_MAX_LENGTH =  8;
 class IdToken : public Token {
 public:
-    using Token::Token;
+    IdToken(enum TokenId id, std::string label)
+            : Token(id, std::move(label), true) {}
     enum LexerStatus tryFind(std::istream& in) override;
 };
 
@@ -201,12 +229,21 @@ static std::vector<std::shared_ptr<Token>> tokenDefinitions {
 class Lexer {
 public:
     static enum LexerStatus skipWhitespace(std::istream& in);
-    void tokenize(std::istream& in);
+    LexerStatus tokenize(std::istream& in);
     void describe(std::ostream& out);
 
     enum LexerStatus status;
 private:
-    std::vector<std::shared_ptr<Token>> tokens;
+    void insertToken(std::shared_ptr<Token> token);
+    void insertIndexedToken(std::shared_ptr<Token> token);
+    void insertSimpleToken(std::shared_ptr<Token> token);
+    void describeTokens(const std::vector<std::shared_ptr<Token>> &tokens, std::ostream &out);
+    void describeIndexedTokenValues(const std::vector<IndexedTokenValue> &values, std::ostream &out);
+
+    std::vector<std::shared_ptr<Token>> tokens_;
+    BinarySearchTree<IndexedTokenValue> identifiers_;
+    BinarySearchTree<IndexedTokenValue> constants_;
+
 };
 
 
