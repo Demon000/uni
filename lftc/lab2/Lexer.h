@@ -234,9 +234,9 @@ public:
 
     enum LexerStatus status;
 private:
-    void insertToken(std::shared_ptr<Token> token);
-    void insertIndexedToken(std::shared_ptr<Token> token);
-    void insertSimpleToken(std::shared_ptr<Token> token);
+    void insertToken(const std::shared_ptr<Token>& token);
+    void insertIndexedToken(const std::shared_ptr<Token>& token);
+    void insertSimpleToken(const std::shared_ptr<Token>& token);
     void describeTokens(const std::vector<std::shared_ptr<Token>> &tokens, std::ostream &out);
     void describeIndexedTokenValues(const std::vector<IndexedTokenValue> &values, std::ostream &out);
 

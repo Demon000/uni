@@ -3,7 +3,7 @@
 
 int main() {
     std::ifstream in("test.c.txt");
-    std::ofstream out("lexer.txt");
+    std::ofstream out("lexer.csv");
     Lexer lexer;
 
     auto status = lexer.tokenize(in);

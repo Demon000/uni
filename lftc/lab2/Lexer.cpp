@@ -21,11 +21,11 @@ enum LexerStatus Lexer::skipWhitespace(std::istream &in) {
     return SKIP_WHITESPACE_SUCCESS;
 }
 
-void Lexer::insertSimpleToken(std::shared_ptr<Token> token) {
+void Lexer::insertSimpleToken(const std::shared_ptr<Token>& token) {
     tokens_.push_back(std::make_shared<Token>(*token));
 }
 
-void Lexer::insertIndexedToken(std::shared_ptr<Token> token) {
+void Lexer::insertIndexedToken(const std::shared_ptr<Token>& token) {
     IndexedTokenValue value(token->buffer);
 
     Node<IndexedTokenValue> *node;
@@ -39,7 +39,7 @@ void Lexer::insertIndexedToken(std::shared_ptr<Token> token) {
     insertSimpleToken(token);
 }
 
-void Lexer::insertToken(std::shared_ptr<Token> token) {
+void Lexer::insertToken(const std::shared_ptr<Token>& token) {
     if (token->isIndexed()) {
         insertIndexedToken(token);
     } else {
@@ -81,21 +81,21 @@ LexerStatus Lexer::tokenize(std::istream& in) {
 
 void Lexer::describeTokens(const std::vector<std::shared_ptr<Token>>& tokens,
                            std::ostream& out) {
-    out << "Id\t\tBuffer\t\tLabel\t\tValue index" << std::endl;
+    out << "Id\tBuffer\tLabel\tValue index" << std::endl;
     for (const auto& token : tokens) {
         if (token->isIndexed()) {
-            out << token->id << "\t\t" << token->buffer << "\t\t" << token->label << "\t\t" << token->index << std::endl;
+            out << token->id << "\t" << token->buffer << "\t" << token->label << "\t" << token->index << std::endl;
         } else {
-            out << token->id << "\t\t" << token->buffer << "\t\t" << token->label  << "\t\t" << "-" << std::endl;
+            out << token->id << "\t" << token->buffer << "\t" << token->label  << "\t" << "-" << std::endl;
         }
     }
 }
 
 void Lexer::describeIndexedTokenValues(const std::vector<IndexedTokenValue>& values,
                                        std::ostream& out) {
-    out << "Id\t\tValue" << std::endl;
+    out << "Id\tValue" << std::endl;
     for (const auto& value : values) {
-        out << value.index << "\t\t" << value.buffer << std::endl;
+        out << value.index << "\t" << value.buffer << std::endl;
     }
 }
 
