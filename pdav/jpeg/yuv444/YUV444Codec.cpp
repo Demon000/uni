@@ -1,4 +1,3 @@
-#include <cassert>
 #include "YUV444Codec.h"
 
 void YUV444Codec::encode(RawYUVImage &source, YUV444Image &target) {

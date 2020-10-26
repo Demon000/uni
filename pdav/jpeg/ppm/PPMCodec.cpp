@@ -11,7 +11,7 @@ enum PPMFormat {
 #define PPM6_FORMAT_HEADER "P6"
 #define PPM_FORMAT_LENGTH 2
 
-static void skip_whitespace(std::ifstream& input, int skip=0) {
+static void skip_whitespace(std::ifstream &input, int skip=0) {
     bool is_comment = false;
     bool is_beginning = true;
     int skipped = 0;
@@ -55,21 +55,21 @@ skipping:
     }
 }
 
-void readUint(std::ifstream& input, uint32_t& value) {
+void readUint(std::ifstream &input, uint32_t &value) {
     skip_whitespace(input);
 
     input >> value;
 }
 
-void readByte(std::ifstream& input, uint8_t& value) {
+void readByte(std::ifstream &input, uint8_t &value) {
     input.read(reinterpret_cast<char *>(&value), sizeof(value));
 }
 
-void writeUintLine(std::ofstream& output, uint32_t value) {
+void writeUintLine(std::ofstream &output, uint32_t value) {
     output << value << '\n';
 }
 
-void PPMCodec::readP3(RawRGBImage &image, std::ifstream& input, uint32_t max) {
+void PPMCodec::readP3(RawRGBImage &image, std::ifstream &input, uint32_t max) {
     uint32_t temp;
 
     for (size_t i = 0; i < image.dataSize(); i++) {
@@ -85,7 +85,7 @@ void PPMCodec::readP3(RawRGBImage &image, std::ifstream& input, uint32_t max) {
     }
 }
 
-void PPMCodec::readP6(RawRGBImage &image, std::ifstream& input, uint32_t max) {
+void PPMCodec::readP6(RawRGBImage &image, std::ifstream &input, uint32_t max) {
     uint8_t temp;
 
     skip_whitespace(input, 1);
@@ -103,7 +103,7 @@ void PPMCodec::readP6(RawRGBImage &image, std::ifstream& input, uint32_t max) {
     }
 }
 
-void PPMCodec::read(RawRGBImage &image, std::ifstream& input) {
+void PPMCodec::read(RawRGBImage &image, std::ifstream &input) {
     char format_buffer[PPM_FORMAT_LENGTH];
     enum PPMFormat format;
     uint32_t width;
