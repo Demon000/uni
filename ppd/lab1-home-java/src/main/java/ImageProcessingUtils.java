@@ -3,13 +3,13 @@ public class ImageProcessingUtils {
         int sum = 0;
         int count = 0;
 
-        for (int i = y - size + 1; i <= y; i++) {
-            if (i < 0 || i >= source.height) {
+        for (int i = y - (size - 1); i <= y; i++) {
+            if (i < 0 || i >= source.getHeight()) {
                 continue;
             }
 
-            for (int j = x - size + 1; j <= x; j++) {
-                if (j < 0 || j >= source.width) {
+            for (int j = x - (size - 1); j <= x; j++) {
+                if (j < 0 || j >= source.getWidth()) {
                     continue;
                 }
 

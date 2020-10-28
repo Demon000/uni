@@ -2,27 +2,24 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Image {
-    int[] pixels;
-    int width;
-    int height;
-
-    public Image() {}
-
     public Image(int width, int height) {
-        resize(width, height, width * height);
+        this(width, height, width * height);
     }
 
     public Image(int width, int height, int size) {
-        resize(width, height, size);
+        this(width, height, 0, size);
     }
 
-    public void resize(int width, int height) {
-        resize(width, height, width * height);
+    public Image(int width, int height, int start, int end) {
+        resize(width, height, end - start);
+        this.start = start;
+        this.end = end;
     }
 
     public void resize(int width, int height, int size) {
         this.width = width;
         this.height = height;
+        this.size = size;
         this.pixels = new int[size];
     }
 
@@ -38,8 +35,19 @@ public class Image {
         return i / width;
     }
 
+    private void checkAccess(int i) {
+        if (i < start) {
+            throw new ImageException("Accessing value before skip image data");
+        }
+
+        if (i >= end) {
+            throw new ImageException("Accessing value after skip image data");
+        }
+    }
+
     public void setPixel(int i, int value) {
-        pixels[i] = value;
+        checkAccess(i);
+        pixels[i - start] = value;
     }
 
     public void setPixel(int x, int y, int value) {
@@ -47,15 +55,44 @@ public class Image {
     }
 
     public int getPixel(int i) {
-        return pixels[i];
+        checkAccess(i);
+        return pixels[i - start];
     }
 
     public int getPixel(int x, int y) {
-        return pixels[mapCoordinates(x, y)];
+        return getPixel(mapCoordinates(x, y));
     }
 
     public int[] getPixels() {
         return pixels;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getSize() {
+        return width * height;
+    }
+
+    public int getRealSize() {
+        return size;
+    }
+
+    public boolean isSkip() {
+        return getSize() != getRealSize();
     }
 
     public static Image readFromFile(String path) throws IOException, ImageException {
@@ -128,4 +165,11 @@ public class Image {
 
         return sb.toString();
     }
+
+    protected int[] pixels;
+    protected int width;
+    protected int height;
+    protected int size;
+    protected int start;
+    protected int end;
 }

@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <memory>
+#include <thread>
 #include "Image.h"
-#include "DynamicImage.h"
-#include "AverageImageProcessingThread.h"
-#include "StaticImage.h"
+#include "CacheOutputImageProcessingThread.h"
+#include "ImageUtils.h"
 
 #define INPUT_FILE_PATH "date.txt"
 
@@ -12,19 +13,17 @@ enum ProcessingType {
     THREADS,
 };
 
-typedef StaticImage ImageClass;
-typedef void (*processingFunctionType)(Image& source, Image& target, int p, int size);
+typedef void (*processingFunctionType)(Image& source, int p, int size);
 
-void runThreads(Image& source, Image& target, int p, int size) {
-    std::vector<std::shared_ptr<AverageImageProcessingThread>> threadsData;
+void runThreads(Image& source, int p, int size) {
+    std::vector<std::shared_ptr<CacheOutputImageProcessingThread>> threadsData;
     std::vector<std::shared_ptr<std::thread>> threads;
-    int n = source.width * source.height;
+    CountDownLatch latch(p);
+    int n = source.getWidth() * source.getHeight();
     int chunk = n / p;
     int rest = n % p;
     int start;
     int end = 0;
-
-    target.resize(source.width, source.height);
 
     for (int i = 0; i < p; i++) {
         start = end;
@@ -39,9 +38,9 @@ void runThreads(Image& source, Image& target, int p, int size) {
             rest--;
         }
 
-        threadsData.push_back(std::make_shared<AverageImageProcessingThread>(&source, &target, start, end, size));
-        std::shared_ptr<AverageImageProcessingThread> threadData = threadsData.back();
-        threads.push_back(std::make_shared<std::thread>(&AverageImageProcessingThread::run, threadData));
+        threadsData.push_back(std::make_shared<CacheOutputImageProcessingThread>(source, latch, start, end, size));
+        std::shared_ptr<CacheOutputImageProcessingThread> threadData = threadsData.back();
+        threads.push_back(std::make_shared<std::thread>(&CacheOutputImageProcessingThread::run, threadData));
     }
 
     for (int i = 0; i < p; i++) {
@@ -51,28 +50,21 @@ void runThreads(Image& source, Image& target, int p, int size) {
     }
 }
 
-void runSequential(Image& source, Image& target, int p, int size) {
-    target.resize(source.width, source.height);
-    for (int i = 0; i < source.height; i++) {
-        for (int j = 0; j < source.width; j++) {
-            ImageProcessingUtils::averagePixels(&source, &target, j, i, size);
+void runSequential(Image &source, int p, int size) {
+    Image temp(source.getWidth(), source.getHeight());
+
+    for (int i = 0; i < source.getHeight(); i++) {
+        for (int j = 0; j < source.getWidth(); j++) {
+            ImageProcessingUtils::averagePixels(source, temp, j, i, size);
         }
     }
+
+    ImageUtils::copyPixels(temp, source);
 }
 
 int runWithParameters(int width, int height, int size, enum ProcessingType type, int threads, int runs) {
-    std::ofstream out(INPUT_FILE_PATH);
-    ImageClass generatedImage;
-    generatedImage.resize(width, height);
-    generatedImage.fillRandom();
-    generatedImage.writeToFile(out);
-    out.close();
-
     std::ifstream in(INPUT_FILE_PATH);
-    ImageClass sourceImage;
-    sourceImage.readFromFile(in);
-
-    ImageClass targetImage;
+    Image sourceImage = Image::readFromFile(in);
 
     processingFunctionType processingFn;
     switch (type) {
@@ -88,57 +80,66 @@ int runWithParameters(int width, int height, int size, enum ProcessingType type,
 
     auto startTime = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < runs; i++) {
-        processingFn(sourceImage, targetImage, threads, size);
+        processingFn(sourceImage, threads, size);
     }
     auto duration = std::chrono::high_resolution_clock::now() - startTime;
     auto averageDuration = duration_cast<std::chrono::milliseconds>(duration / runs).count();
-
-//    std::cout << sourceImage.toString() << "\n";
-//    std::cout << targetImage.toString() << "\n";
 
     std::cout << "Average duration: " << averageDuration << "\n";
 
     return 0;
 }
 
+static int parameters[][5] {
+        { 10, 10, 3, ProcessingType::SEQUENTIAL, 0 },
+        { 10, 10, 3, ProcessingType::THREADS, 4 },
+
+        { 1000, 1000, 5, ProcessingType::SEQUENTIAL, 0 },
+        { 1000, 1000, 5, ProcessingType::THREADS, 2 },
+        { 1000, 1000, 5, ProcessingType::THREADS, 4 },
+        { 1000, 1000, 5, ProcessingType::THREADS, 8 },
+        { 1000, 1000, 5, ProcessingType::THREADS, 16 },
+
+        { 10, 10000, 5, ProcessingType::SEQUENTIAL, 0 },
+        { 10, 10000, 5, ProcessingType::THREADS, 2 },
+        { 10, 10000, 5, ProcessingType::THREADS, 4 },
+        { 10, 10000, 5, ProcessingType::THREADS, 8 },
+        { 10, 10000, 5, ProcessingType::THREADS, 16 },
+
+        { 10000, 10, 5, ProcessingType::SEQUENTIAL, 0 },
+        { 10000, 10, 5, ProcessingType::THREADS, 2 },
+        { 10000, 10, 5, ProcessingType::THREADS, 4 },
+        { 10000, 10, 5, ProcessingType::THREADS, 8 },
+        { 10000, 10, 5, ProcessingType::THREADS, 16 },
+};
+
 int main() {
     int runs = 5;
+    int lastWidth = 0;
+    int lastHeight = 0;
 
-    int parameters[][5] {
-            { 10, 10, 3, ProcessingType::THREADS, 4 },
-            { 10, 10, 3, ProcessingType::SEQUENTIAL, 0 },
+    for (auto parameter : parameters) {
+        std::cout << "Running N=" << parameter[0] << ", M=" << parameter[1]
+                  << ", n=m=" << parameter[2];
 
-            { 1000, 1000, 5, ProcessingType::THREADS, 2 },
-            { 1000, 1000, 5, ProcessingType::THREADS, 4 },
-            { 1000, 1000, 5, ProcessingType::THREADS, 8 },
-            { 1000, 1000, 5, ProcessingType::THREADS, 16 },
-            { 1000, 1000, 5, ProcessingType::SEQUENTIAL, 0 },
-
-            { 10, 10000, 5, ProcessingType::THREADS, 2 },
-            { 10, 10000, 5, ProcessingType::THREADS, 4 },
-            { 10, 10000, 5, ProcessingType::THREADS, 8 },
-            { 10, 10000, 5, ProcessingType::THREADS, 16 },
-            { 10, 10000, 5, ProcessingType::SEQUENTIAL, 0 },
-
-            { 10000, 10, 5, ProcessingType::THREADS, 2 },
-            { 10000, 10, 5, ProcessingType::THREADS, 4 },
-            { 10000, 10, 5, ProcessingType::THREADS, 8 },
-            { 10000, 10, 5, ProcessingType::THREADS, 16 },
-            { 10000, 10, 5, ProcessingType::SEQUENTIAL, 0 },
-    };
-    int size = sizeof(parameters) / sizeof(parameters[0]);
-
-    for (int i = 0; i < size; i++) {
-        std::cout << "Running N=" << parameters[i][0] << ", M=" << parameters[i][1]
-                << ", n=m=" << parameters[i][2];
-
-        if (parameters[i][3] == ProcessingType::THREADS) {
-            std::cout << ", p=" << parameters[i][4] << ";" << std::endl;
-        } else if (parameters[i][3] == ProcessingType::SEQUENTIAL) {
+        if (parameter[3] == ProcessingType::THREADS) {
+            std::cout << ", p=" << parameter[4] << ";" << std::endl;
+        } else if (parameter[3] == ProcessingType::SEQUENTIAL) {
             std::cout << ", p=sequential;" << std::endl;
         }
 
-        runWithParameters(parameters[i][0], parameters[i][1],
-                          parameters[i][2], static_cast<ProcessingType>(parameters[i][3]), parameters[i][4], runs);
+        if (lastWidth != parameter[0] || lastHeight != parameter[1]) {
+            lastWidth = parameter[0];
+            lastHeight = parameter[1];
+
+            std::ofstream out(INPUT_FILE_PATH);
+            Image generatedImage = Image::generateRandom(lastWidth, lastHeight);
+            generatedImage.writeToFile(out);
+            out.close();
+        }
+
+        runWithParameters(parameter[0], parameter[1],
+                          parameter[2], static_cast<ProcessingType>(parameter[3]),
+                          parameter[4], runs);
     }
 }

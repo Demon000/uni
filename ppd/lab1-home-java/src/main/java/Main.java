@@ -1,7 +1,8 @@
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 interface IProcessing {
-    void operation(Image source, Image target, int p, int size);
+    void operation(Image image, int p, int size);
 }
 
 public class Main {
@@ -9,15 +10,14 @@ public class Main {
     public static final int THREADS = 0;
     public static final int SEQUENTIAL = 1;
 
-    public static void runThreads(Image source, Image target, int p, int size) {
-        AverageImageProcessingThread[] threads = new AverageImageProcessingThread[p];
-        int n = source.width * source.height;
+    public static void runThreads(Image image, int p, int size) {
+        CountDownLatch latch = new CountDownLatch(p);
+        CacheOutputImageProcessingThread[] threads = new CacheOutputImageProcessingThread[p];
+        int n = image.getWidth() * image.getHeight();
         int chunk = n / p;
         int rest = n % p;
         int start;
         int end = 0;
-
-        target.resize(source.width, source.height);
 
         for (int i = 0; i < p; i++) {
             start = end;
@@ -32,7 +32,7 @@ public class Main {
                 rest--;
             }
 
-            threads[i] = new AverageImageProcessingThread(source, target, start, end, size);
+            threads[i] = new CacheOutputImageProcessingThread(image, latch, start, end, size);
             threads[i].start();
         }
 
@@ -45,33 +45,20 @@ public class Main {
         }
     }
 
-    public static void runSequential(Image source, Image target, int p, int size) {
-        target.resize(source.width, source.height);
-        for (int i = 0; i < source.height; i++) {
-            for (int j = 0; j < source.width; j++) {
-                ImageProcessingUtils.averagePixels(source, target, j, i, size);
+    public static void runSequential(Image image, int p, int size) {
+        Image temp = new Image(image.getWidth(), image.getHeight());
+
+        for (int i = 0; i < image.getHeight(); i++) {
+            for (int j = 0; j < image.getWidth(); j++) {
+                ImageProcessingUtils.averagePixels(image, temp, j, i, size);
             }
         }
+
+        ImageUtils.copyPixels(temp, image);
     }
 
-    public static void runWithParameters(int width, int height, int size, int type, int threads, int runs) {
-        Image generatedImage = Image.generateRandom(width, height);
-        try {
-            generatedImage.writeToFile(INPUT_FILE_PATH);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        Image sourceImage;
-        try {
-            sourceImage = Image.readFromFile(INPUT_FILE_PATH);
-        } catch (ImageException | IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        Image targetImage = new Image();
+    public static void runWithParameters(int width, int height, int size, int type, int threads,
+                                         int runs, boolean dump) {
         IProcessing processingFn;
         switch (type) {
             case THREADS:
@@ -85,12 +72,30 @@ public class Main {
                 return;
         }
 
-
-        long startTime = System.nanoTime();
+        long averageDuration = 0;
         for (int i = 0; i < runs; i++) {
-            processingFn.operation(sourceImage, targetImage, threads, size);
+            Image image;
+            try {
+                image = Image.readFromFile(INPUT_FILE_PATH);
+            } catch (ImageException | IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (dump) {
+                System.out.print("Before: ");
+                System.out.println(image);
+            }
+
+            long startTime = System.nanoTime();
+            processingFn.operation(image, threads, size);
+            averageDuration += System.nanoTime() - startTime;
+
+            if (dump) {
+                System.out.print("After: ");
+                System.out.println(image);
+            }
         }
-        long averageDuration = System.nanoTime() - startTime;
 
         averageDuration /= 1000000;
         averageDuration /= runs;
@@ -98,30 +103,35 @@ public class Main {
         System.out.printf("Average duration: %d\n", averageDuration);
     }
 
+    // Width, height, kernel, processing type, number of threads
+    static final int[][] parameters = {
+            { 10, 10, 3, SEQUENTIAL, 0 },
+            { 10, 10, 3, THREADS, 4 },
+
+            { 1000, 1000, 5, SEQUENTIAL, 0 },
+            { 1000, 1000, 5, THREADS, 2 },
+            { 1000, 1000, 5, THREADS, 4 },
+            { 1000, 1000, 5, THREADS, 8 },
+            { 1000, 1000, 5, THREADS, 16 },
+
+            { 10, 10000, 5, SEQUENTIAL, 0 },
+            { 10, 10000, 5, THREADS, 2 },
+            { 10, 10000, 5, THREADS, 4 },
+            { 10, 10000, 5, THREADS, 8 },
+            { 10, 10000, 5, THREADS, 16 },
+
+            { 10000, 10, 5, SEQUENTIAL, 0 },
+            { 10000, 10, 5, THREADS, 2 },
+            { 10000, 10, 5, THREADS, 4 },
+            { 10000, 10, 5, THREADS, 8 },
+            { 10000, 10, 5, THREADS, 16 },
+    };
+
     public static void main(String[] args) {
-        int[][] parameters = {
-                { 10, 10, 3, THREADS, 4 },
-                { 10, 10, 3, SEQUENTIAL, 0 },
-
-                { 1000, 1000, 5, THREADS, 2 },
-                { 1000, 1000, 5, THREADS, 4 },
-                { 1000, 1000, 5, THREADS, 8 },
-                { 1000, 1000, 5, THREADS, 16 },
-                { 1000, 1000, 5, SEQUENTIAL, 0 },
-
-                { 10, 10000, 5, THREADS, 2 },
-                { 10, 10000, 5, THREADS, 4 },
-                { 10, 10000, 5, THREADS, 8 },
-                { 10, 10000, 5, THREADS, 16 },
-                { 10, 10000, 5, SEQUENTIAL, 0 },
-
-                { 10000, 10, 5, THREADS, 2 },
-                { 10000, 10, 5, THREADS, 4 },
-                { 10000, 10, 5, THREADS, 8 },
-                { 10000, 10, 5, THREADS, 16 },
-                { 10000, 10, 5, SEQUENTIAL, 0 },
-        };
+        boolean dump = false;
         int runs = 5;
+        int lastWidth = 0;
+        int lastHeight = 0;
 
         for (int[] parameter : parameters) {
             System.out.printf("Running N=%d, M=%d, n=m=%d", parameter[0], parameter[1], parameter[2]);
@@ -132,8 +142,21 @@ public class Main {
                 System.out.print(", p=sequential\n");
             }
 
+            if (lastWidth != parameter[0] || lastHeight != parameter[1]) {
+                lastWidth = parameter[0];
+                lastHeight = parameter[1];
+
+                Image generatedImage = Image.generateRandom(lastWidth, lastHeight);
+                try {
+                    generatedImage.writeToFile(INPUT_FILE_PATH);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+
             runWithParameters(parameter[0], parameter[1],
-                    parameter[2], parameter[3], parameter[4], runs);
+                    parameter[2], parameter[3], parameter[4], runs, dump);
         }
     }
 }
