@@ -1,0 +1,141 @@
+11
+ss
+swz
+swb
+swx
+soend
+sbend
+sxend
+swp
+swm
+sn
+sfz
+
+6
+swz
+soend
+sbend
+sxend
+sn
+sfz
+
+108
+ss swz 0
+swz swb b
+swz swx x
+
+swb sbend 0
+swb sbend 1
+sbend sbend 0
+sbend sbend 1
+
+swx sxend 0
+swx sxend 1
+swx sxend 2
+swx sxend 3
+swx sxend 4
+swx sxend 5
+swx sxend 6
+swx sxend 7
+swx sxend 8
+swx sxend 9
+swx sxend a
+swx sxend A
+swx sxend b
+swx sxend B
+swx sxend c
+swx sxend C
+swx sxend d
+swx sxend D
+swx sxend e
+swx sxend E
+swx sxend f
+swx sxend F
+
+sxend sxend 0
+sxend sxend 1
+sxend sxend 2
+sxend sxend 3
+sxend sxend 4
+sxend sxend 5
+sxend sxend 6
+sxend sxend 7
+sxend sxend 8
+sxend sxend 9
+sxend sxend a
+sxend sxend A
+sxend sxend b
+sxend sxend B
+sxend sxend c
+sxend sxend C
+sxend sxend d
+sxend sxend D
+sxend sxend e
+sxend sxend E
+sxend sxend f
+sxend sxend F
+
+swz soend 0
+swz soend 1
+swz soend 2
+swz soend 3
+swz soend 4
+swz soend 5
+swz soend 6
+swz soend 7
+
+soend soend 0
+soend soend 1
+soend soend 2
+soend soend 3
+soend soend 4
+soend soend 5
+soend soend 6
+soend soend 7
+
+ss swp +
+ss swm -
+
+ss sn 1
+ss sn 2
+ss sn 3
+ss sn 4
+ss sn 5
+ss sn 6
+ss sn 7
+ss sn 8
+ss sn 9
+
+swp sn 1
+swp sn 2
+swp sn 3
+swp sn 4
+swp sn 5
+swp sn 6
+swp sn 7
+swp sn 8
+swp sn 9
+
+swm sn 1
+swm sn 2
+swm sn 3
+swm sn 4
+swm sn 5
+swm sn 6
+swm sn 7
+swm sn 8
+swm sn 9
+
+sn sn 0
+sn sn 1
+sn sn 2
+sn sn 3
+sn sn 4
+sn sn 5
+sn sn 6
+sn sn 7
+sn sn 8
+sn sn 9
+
+swp sfz 0
+swm sfz 0

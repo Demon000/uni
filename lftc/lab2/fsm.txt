@@ -1,0 +1,16 @@
+<fsm_text> ::= <states_list> " " <final_states_list> " " <transitions_list>
+<states_list> ::= <number> " " <states_enumeration>
+<final_states_list> ::= <number> " " <states_enumeration>
+<transitions_list> ::= <number> " " <transitions_enumeration>
+
+<states_enumeration> ::= <state> <states_enumeration> | <state>
+<transitions_enumeration> ::= <transition> <transitions_enumeration> | <transition>
+
+<transition> ::= <state> " " <state> " " <alphanum>
+<state> ::= <alphanum> <state> | <alphanum>
+
+<alphanum> ::= '0' | '1' | ... | '9' | 'a' | ... | 'z' | 'A' | ... | 'Z'
+<number> ::= <first_digit> <following_digits> | <following_digit>
+<following_digits> ::= <following_digit> <following_digits> | <following_digit>
+<first_digit> ::= '1' | '2' | ... | '9'
+<following_digit> ::= '0' | '1' | ... | '9'
