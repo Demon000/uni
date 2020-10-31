@@ -8,6 +8,7 @@
 #include <map>
 #include <memory>
 #include "BinarySearchTree.h"
+#include "FiniteStateMachine.h"
 
 enum LexerStatus {
     REACHED_EOF,
@@ -80,12 +81,7 @@ public:
             : id(id), label(std::move(label)), isIndexed_(isIndexed) {}
     Token() : Token(TK_DEFAULT, "") {}
 
-    enum LexerStatus readOfSize(std::istream& in, size_t size);
-    enum LexerStatus readValidWord(std::istream& in, const std::string& validChars);
-    enum LexerStatus readValidChar(std::istream& in, const std::string& validChars);
-    void putLastBack(std::istream& in);
-    void putBufferBack(std::istream& in);
-    virtual enum LexerStatus tryFind(std::istream& in);
+    virtual LexerStatus tryFind(std::istream& in);
     bool isIndexed() { return isIndexed_; };
 
     bool isIndexed_;
@@ -107,15 +103,15 @@ protected:
 class ExactTextToken : public TextToken {
 public:
     using TextToken::TextToken;
-    enum LexerStatus tryFind(std::istream& in) override;
+    LexerStatus tryFind(std::istream& in) override;
 };
-
-#define VALID_CATCH_ALL_CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 
 class ExactKeywordToken : public TextToken {
 public:
     using TextToken::TextToken;
-    enum LexerStatus tryFind(std::istream& in) override;
+    LexerStatus tryFind(std::istream& in) override;
+
+    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all_keyword.txt"};
 };
 
 class IndexedTokenValue {
@@ -143,7 +139,7 @@ public:
             : Token(id, std::move(label), true), start(std::move(start)), end(std::move(end)) {
     }
 
-    enum LexerStatus tryFind(std::istream& in) override;
+    LexerStatus tryFind(std::istream& in) override;
 
 private:
     std::string start;
@@ -154,14 +150,20 @@ class IntToken : public Token {
 public:
     IntToken(enum TokenId id, std::string label)
             : Token(id, std::move(label), true) {}
-    enum LexerStatus tryFind(std::istream& in) override;
+    LexerStatus tryFind(std::istream& in) override;
+
+    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all_keyword.txt"};
+    FiniteStateMachine integerFsm{"fsm_integer.txt"};
 };
 
 class DoubleToken : public Token {
 public:
     DoubleToken(enum TokenId id, std::string label)
             : Token(id, std::move(label), true) {}
-    enum LexerStatus tryFind(std::istream& in) override;
+    LexerStatus tryFind(std::istream& in) override;
+
+    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all_keyword.txt"};
+    FiniteStateMachine realFsm{"fsm_real.txt"};
 };
 
 constexpr int ID_TOKEN_MAX_LENGTH =  8;
@@ -169,7 +171,9 @@ class IdToken : public Token {
 public:
     IdToken(enum TokenId id, std::string label)
             : Token(id, std::move(label), true) {}
-    enum LexerStatus tryFind(std::istream& in) override;
+    LexerStatus tryFind(std::istream& in) override;
+
+    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all_keyword.txt"};
 };
 
 #define token_map_simple(tk_id, tk_class) \
@@ -184,55 +188,10 @@ public:
 #define token_map_exact_keyword(tk_id, ...) \
     token_map_generic(tk_id, ExactKeywordToken, __VA_ARGS__)
 
-static std::vector<std::shared_ptr<Token>> tokenDefinitions {
-        token_map_exact_text(TK_OP_EQUAL, "=="),
-        token_map_exact_text(TK_OP_NOT_EQUAL, "!="),
-        token_map_exact_text(TK_OP_LESS_EQUAL, "<="),
-        token_map_exact_text(TK_OP_GREATER_EQUAL, ">="),
-        token_map_exact_text(TK_OP_LESS, "<"),
-        token_map_exact_text(TK_OP_GREATER, ">"),
-        token_map_exact_text(TK_OP_BW_AND, "&"),
-
-        token_map_exact_text(TK_OP_ASSIGN, "="),
-        token_map_exact_text(TK_OP_PLUS, "+"),
-        token_map_exact_text(TK_OP_MINUS, "-"),
-        token_map_exact_text(TK_OP_MULTIPLY, "*"),
-        token_map_exact_text(TK_OP_DIVIDE, "/"),
-        token_map_exact_text(TK_OP_MOD, "%"),
-
-        token_map_exact_text(TK_LEFT_BRACE, "{"),
-        token_map_exact_text(TK_LEFT_PAREN, "("),
-        token_map_exact_text(TK_RIGHT_BRACE, "}"),
-        token_map_exact_text(TK_RIGHT_PAREN, ")"),
-        token_map_exact_text(TK_SEMICOLON, ";"),
-        token_map_exact_text(TK_COMMA, ","),
-
-        token_map_exact_keyword(TK_KEYWORD_DOUBLE, "double"),
-        token_map_exact_keyword(TK_KEYWORD_INT, "int"),
-
-        token_map_exact_keyword(TK_KEYWORD_IF, "if"),
-        token_map_exact_keyword(TK_KEYWORD_ELSE, "else"),
-        token_map_exact_keyword(TK_KEYWORD_FOR, "for"),
-        token_map_exact_keyword(TK_KEYWORD_WHILE, "while"),
-
-        token_map_exact_keyword(TK_KEYWORD_RETURN, "return"),
-        token_map_exact_keyword(TK_KEYWORD_BREAK, "break"),
-
-        token_map_generic(TK_CONST_STRING, DelimitedTextToken, "\"", "\""),
-
-        token_map_simple(TK_CONST_DOUBLE, DoubleToken),
-        token_map_simple(TK_CONST_INT, IntToken),
-
-        token_map_simple(TK_ID, IdToken),
-};
-
 class Lexer {
 public:
-    static enum LexerStatus skipWhitespace(std::istream& in);
     LexerStatus tokenize(std::istream& in);
     void describe(std::ostream& out);
-
-    enum LexerStatus status;
 private:
     void insertToken(const std::shared_ptr<Token>& token);
     void insertIndexedToken(const std::shared_ptr<Token>& token);
@@ -240,10 +199,51 @@ private:
     void describeTokens(const std::vector<std::shared_ptr<Token>> &tokens, std::ostream &out);
     void describeIndexedTokenValues(const std::vector<IndexedTokenValue> &values, std::ostream &out);
 
-    std::vector<std::shared_ptr<Token>> tokens_;
-    BinarySearchTree<IndexedTokenValue> identifiers_;
-    BinarySearchTree<IndexedTokenValue> constants_;
+    std::vector<std::shared_ptr<Token>> tokens;
+    BinarySearchTree<IndexedTokenValue> identifiers;
+    BinarySearchTree<IndexedTokenValue> constants;
 
+    std::vector<std::shared_ptr<Token>> tokenDefinitions {
+            token_map_exact_text(TK_OP_EQUAL, "=="),
+            token_map_exact_text(TK_OP_NOT_EQUAL, "!="),
+            token_map_exact_text(TK_OP_LESS_EQUAL, "<="),
+            token_map_exact_text(TK_OP_GREATER_EQUAL, ">="),
+            token_map_exact_text(TK_OP_LESS, "<"),
+            token_map_exact_text(TK_OP_GREATER, ">"),
+            token_map_exact_text(TK_OP_BW_AND, "&"),
+
+            token_map_exact_text(TK_OP_ASSIGN, "="),
+            token_map_exact_text(TK_OP_PLUS, "+"),
+            token_map_exact_text(TK_OP_MINUS, "-"),
+            token_map_exact_text(TK_OP_MULTIPLY, "*"),
+            token_map_exact_text(TK_OP_DIVIDE, "/"),
+            token_map_exact_text(TK_OP_MOD, "%"),
+
+            token_map_exact_text(TK_LEFT_BRACE, "{"),
+            token_map_exact_text(TK_LEFT_PAREN, "("),
+            token_map_exact_text(TK_RIGHT_BRACE, "}"),
+            token_map_exact_text(TK_RIGHT_PAREN, ")"),
+            token_map_exact_text(TK_SEMICOLON, ";"),
+            token_map_exact_text(TK_COMMA, ","),
+
+            token_map_exact_keyword(TK_KEYWORD_DOUBLE, "double"),
+            token_map_exact_keyword(TK_KEYWORD_INT, "int"),
+
+            token_map_exact_keyword(TK_KEYWORD_IF, "if"),
+            token_map_exact_keyword(TK_KEYWORD_ELSE, "else"),
+            token_map_exact_keyword(TK_KEYWORD_FOR, "for"),
+            token_map_exact_keyword(TK_KEYWORD_WHILE, "while"),
+
+            token_map_exact_keyword(TK_KEYWORD_RETURN, "return"),
+            token_map_exact_keyword(TK_KEYWORD_BREAK, "break"),
+
+            token_map_generic(TK_CONST_STRING, DelimitedTextToken, "\"", "\""),
+
+            token_map_simple(TK_CONST_DOUBLE, DoubleToken),
+            token_map_simple(TK_CONST_INT, IntToken),
+
+            token_map_simple(TK_ID, IdToken),
+    };
 };
 
 

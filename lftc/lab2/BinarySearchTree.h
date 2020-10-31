@@ -47,7 +47,7 @@ public:
         return length_;
     }
 
-    Node<T>* insertNode(const T& data, bool unique= false) {
+    Node<T>* insertNode(const T& data, bool unique=false) {
         Node<T> *added;
         root = insert(nullptr, root, &added, data, unique);
         return added;
@@ -56,7 +56,11 @@ public:
     std::vector<T> linear() {
         std::vector<T> items;
 
-        Node<T> *current = root->smallest();
+        Node<T> *current = nullptr;
+        if (root != nullptr) {
+            current = root->smallest();
+        }
+
         while (current != nullptr) {
             items.push_back(current->data);
             current = current->next();
@@ -66,7 +70,7 @@ public:
     }
 
 private:
-    struct Node<T> *root;
+    struct Node<T> *root = nullptr;
     int length_ = 0;
 
     Node<T>* destroyNode(Node<T> *node) {
