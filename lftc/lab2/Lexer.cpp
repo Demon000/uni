@@ -203,14 +203,21 @@ LexerStatus DoubleToken::tryFind(std::istream &in) {
 LexerStatus IdToken::tryFind(std::istream &in) {
     Token::tryFind(in);
 
+    FiniteStateMachine::Result result;
     std::string matchedBuffer;
-    auto result = keywordCatchAllFsm.parse(in);
+    std::string extraBuffer;
+
+    result = idFsm.parse(in);
     matchedBuffer = result.matched;
     if (matchedBuffer.empty()) {
         return FIND_TOKEN_FAILED;
     }
 
-    if (matchedBuffer.length() > ID_TOKEN_MAX_LENGTH) {
+    auto positionBefore = in.tellg();
+    result = keywordCatchAllFsm.parse(in);
+    extraBuffer = result.matched;
+    if (!extraBuffer.empty()) {
+        in.seekg(positionBefore);
         return FIND_TOKEN_FAILED;
     }
 

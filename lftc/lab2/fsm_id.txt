@@ -1,0 +1,5 @@
+s,ss
+s,se,f
+
+t,ss,se,a-zA-Z_
+t,se,se,1-9a-zA-Z_

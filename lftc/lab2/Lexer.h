@@ -111,7 +111,7 @@ public:
     using TextToken::TextToken;
     LexerStatus tryFind(std::istream& in) override;
 
-    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all_keyword.txt"};
+    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all.txt"};
 };
 
 class IndexedTokenValue {
@@ -152,7 +152,7 @@ public:
             : Token(id, std::move(label), true) {}
     LexerStatus tryFind(std::istream& in) override;
 
-    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all_keyword.txt"};
+    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all.txt"};
     FiniteStateMachine integerFsm{"fsm_integer.txt"};
 };
 
@@ -162,7 +162,7 @@ public:
             : Token(id, std::move(label), true) {}
     LexerStatus tryFind(std::istream& in) override;
 
-    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all_keyword.txt"};
+    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all.txt"};
     FiniteStateMachine realFsm{"fsm_real.txt"};
 };
 
@@ -173,7 +173,8 @@ public:
             : Token(id, std::move(label), true) {}
     LexerStatus tryFind(std::istream& in) override;
 
-    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all_keyword.txt"};
+    FiniteStateMachine keywordCatchAllFsm{"fsm_catch_all.txt"};
+    FiniteStateMachine idFsm{"fsm_id.txt"};
 };
 
 #define token_map_simple(tk_id, tk_class) \
