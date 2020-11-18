@@ -51,18 +51,20 @@ void insertIndexedToken(Token & token) {
     insertSimpleToken(token);
 }
 
-void insertToken(enum TokenId id, std::string const& label, std::string const& buffer) {
+enum TokenId insertToken(enum TokenId id, std::string const& label, std::string const& buffer) {
 	Token token(id, label, buffer);
 	if (token.isIndexed()) {
 		insertIndexedToken(token);
 	} else {
 		insertSimpleToken(token);
 	}
+
+	return id;
 }
 
 #define token_map(tk_id) \
-	insertToken(tk_id, std::string(#tk_id), std::string(yytext)); \
-	return tk_id;
+	return insertToken(tk_id, std::string(#tk_id), std::string(yytext));
+
 %}
 
 %%
