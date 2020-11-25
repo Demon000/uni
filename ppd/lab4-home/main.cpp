@@ -184,6 +184,7 @@ int main() {
                 }
             }
         }
+        lastMembers = members;
 
         std::cout << " took " << sum / noRuns << "us on average for " << noRuns << " runs" << std::endl;
 
