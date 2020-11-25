@@ -1,35 +1,32 @@
 #include <thread>
-#include "PolynomialAdder.h"
+#include "Queue.h"
 #include "PolynomialStreamsGenerator.h"
 
 std::vector<PolynomialMember>
 runThreaded(std::vector<PolynomialStream> const& streams, int noProducerThreads, int noConsumerThreads, LockingType type) {
-    auto streamsQueue = Queue<PolynomialStream>(streams, true);
-    auto polynomialAdder = PolynomialAdder(type);
+    Queue<PolynomialStream> streamsQueue{streams, true};
+    Queue<PolynomialMember> membersQueue;
+    Polynomial polynomial{type};
 
     std::vector<std::thread> threads;
     for (int i = 0; i < noProducerThreads; i++) {
         auto thread = std::thread([&]() {
-            while (true) {
-                PolynomialStream stream;
-                auto closed = streamsQueue.popFront(stream);
-                if (closed) {
-                    break;
-                }
-
+            streamsQueue.popAllFront([&](PolynomialStream & stream) {
                 stream.read([&](PolynomialMember const& member) {
-                    polynomialAdder.queueMember(member);
+                    membersQueue.pushBack(member);
                 });
-            }
+            });
 
-            polynomialAdder.finishQueueingMembers();
+            membersQueue.markClosed();
         });
         threads.push_back(std::move(thread));
     }
 
     for (int i = 0; i < noConsumerThreads; i++) {
         auto thread = std::thread([&]() {
-            polynomialAdder.takeMembersAndAdd();
+            membersQueue.popAllFront([&](PolynomialMember & member) {
+                polynomial.add(member);
+            });
         });
         threads.push_back(std::move(thread));
     }
@@ -40,19 +37,19 @@ runThreaded(std::vector<PolynomialStream> const& streams, int noProducerThreads,
         }
     }
 
-    return polynomialAdder.getMembers();
+    return polynomial.getMembers();
 }
 
-std::vector<PolynomialMember> runSequential(std::vector<PolynomialStream> const& streams) {
-    auto polynomialAdder = PolynomialAdder(LockingType::NO_LOCK);
+std::vector<PolynomialMember> runSequential(std::vector<PolynomialStream> const& streams, LockingType type) {
+    Polynomial polynomial{type};
 
     for (auto & stream : streams) {
         stream.read([&](auto const& member) {
-            polynomialAdder.queueMember(member);
+            polynomial.add(member);
         });
     }
 
-    return polynomialAdder.getMembers();
+    return polynomial.getMembers();
 }
 
 #define PATH_BEGIN "polynomials/polynomial_"
@@ -110,8 +107,12 @@ int main() {
             { 5, 100, 10000, 0, 3, 5, INDIVIDUAL_LOCK },
 
             { 5, 100, 10000, 1, 0, 0, NO_LOCK },
+
+//            { 5000, 100, 10000, 0, 3, 3, GLOBAL_LOCK },
+//            { 5000, 100, 10000, 0, 3, 5, INDIVIDUAL_LOCK },
+//            { 5000, 100, 10000, 1, 0, 0, NO_LOCK },
     };
-    int noRuns = 50;
+    int noRuns = 100;
 
     int lastNoPolynomials = -1;
     int lastMaxNoMembers = -1;
@@ -140,7 +141,7 @@ int main() {
             if (config[3] == 0) {
                 members = runThreaded(streams, config[4], config[5], (LockingType) config[6]);
             } else if (config[3] == 1) {
-                members = runSequential(streams);
+                members = runSequential(streams, (LockingType) config[6]);
             }
 
             auto end = std::chrono::duration_cast<std::chrono::microseconds>(

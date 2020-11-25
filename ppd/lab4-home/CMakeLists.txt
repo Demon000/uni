@@ -3,7 +3,7 @@ project(lab4_home)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(lab4_home main.cpp Queue.h Polynomial.h PolynomialAdder.h PolynomialStreamsGenerator.h PolynomialStream.h)
+add_executable(lab4_home main.cpp Queue.h Polynomial.h PolynomialStreamsGenerator.h PolynomialStream.h)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)

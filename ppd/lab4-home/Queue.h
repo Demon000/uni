@@ -63,6 +63,19 @@ public:
         return false;
     }
 
+    template <typename F>
+    void popAllFront(F fn) {
+        while (true) {
+            D data;
+            auto failed = popFront(data);
+            if (failed) {
+                break;
+            }
+
+            fn(data);
+        }
+    }
+
 private:
     std::atomic_bool closed = false;
     std::mutex m;
