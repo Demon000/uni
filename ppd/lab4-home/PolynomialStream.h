@@ -8,8 +8,14 @@
 class PolynomialStream {
 public:
     PolynomialStream() : PolynomialStream(nullptr) {}
+
     PolynomialStream(std::istream *in) : in(in) {}
 
+    /**
+     * Read from a stream with polynomial members, run a function for each member constructed
+     * @tparam F function template
+     * @param fn function to run
+     */
     template <typename F>
     void read(F fn) const {
         while (true) {

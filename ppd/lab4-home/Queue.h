@@ -19,6 +19,10 @@ public:
 
     Queue(bool closed=false) : closed(closed) {}
 
+    /**
+     * Add an element to the queue
+     * @param data the element to be added to the queue
+     */
     void pushBack(D const& data) {
         std::lock_guard lock(m);
 
@@ -26,6 +30,9 @@ public:
         c.notify_one();
     }
 
+    /**
+     * Mark the queue as closed
+     */
     void markClosed() {
         std::lock_guard lock(m);
 
@@ -33,15 +40,11 @@ public:
         c.notify_all();
     }
 
-    bool isClosed() {
-        return closed;
-    }
-
-    bool isEmpty() {
-        std::lock_guard lock(m);
-        return q.empty();
-    }
-
+    /**
+     * Pop an element from the queue
+     * @param data reference in which to put the popped data
+     * @return whether the queue is closed or not
+     */
     bool popFront(D & data) {
         std::unique_lock lock(m);
 
@@ -63,6 +66,11 @@ public:
         return false;
     }
 
+    /**
+     * Pop elements from the queue until it drains and gets closed, run a function for each element popped
+     * @tparam F function template
+     * @param fn function to run
+     */
     template <typename F>
     void popAllFront(F fn) {
         while (true) {

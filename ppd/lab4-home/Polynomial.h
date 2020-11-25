@@ -39,6 +39,10 @@ public:
             : type(type) {
     }
 
+    /**
+     * Add a polynomial member to the linked list
+     * @param member the member to add
+     */
     void add(PolynomialMember const& member) {
         Node *node;
 
@@ -91,6 +95,10 @@ public:
         }
     }
 
+    /**
+     * Get all the members from the polynomial
+     * @return the members of the polynomial
+     */
     std::vector<PolynomialMember> getMembers() {
         std::vector<PolynomialMember> members;
 
