@@ -20,11 +20,11 @@ public:
     }
 
     void takeMembersAndAdd() {
-        while (memberQueue.shouldWait()) {
+        while (true) {
             PolynomialMember member;
-            auto taken = memberQueue.popFront(member);
-            if (!taken) {
-                continue;
+            auto closed = memberQueue.popFront(member);
+            if (closed) {
+                break;
             }
 
             polynomial.add(member);

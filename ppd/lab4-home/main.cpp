@@ -10,11 +10,11 @@ runThreaded(std::vector<PolynomialStream> const& streams, int noProducerThreads,
     std::vector<std::thread> threads;
     for (int i = 0; i < noProducerThreads; i++) {
         auto thread = std::thread([&]() {
-            while (streamsQueue.shouldWait()) {
+            while (true) {
                 PolynomialStream stream;
-                auto taken = streamsQueue.popFront(stream);
-                if (!taken) {
-                    continue;
+                auto closed = streamsQueue.popFront(stream);
+                if (closed) {
+                    break;
                 }
 
                 stream.read([&](PolynomialMember const& member) {

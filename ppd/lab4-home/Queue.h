@@ -28,11 +28,12 @@ public:
 
     void markClosed() {
         std::lock_guard lock(m);
+
         closed = true;
+        c.notify_all();
     }
 
     bool isClosed() {
-        std::lock_guard lock(m);
         return closed;
     }
 
@@ -41,28 +42,29 @@ public:
         return q.empty();
     }
 
-    bool shouldWait() {
-        return !(isEmpty() && isClosed());
-    }
-
-    bool popFront(D & data, std::chrono::milliseconds const& timeout=1ms) {
+    bool popFront(D & data) {
         std::unique_lock lock(m);
 
-        while (q.empty()) {
-            auto status = c.wait_for(lock, timeout);
-            if (status == std::cv_status::timeout) {
-                return false;
+        while (true) {
+            if (!q.empty()) {
+                break;
             }
+
+            if (closed) {
+                return true;
+            }
+
+            c.wait(lock);
         }
 
         data = q.front();
         q.pop();
 
-        return true;
+        return false;
     }
 
 private:
-    bool closed = false;
+    std::atomic_bool closed = false;
     std::mutex m;
     std::condition_variable c;
     std::queue<D> q;
