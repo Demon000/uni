@@ -47,11 +47,9 @@ public:
         /*
          * We iterate with a node behind so we can insert a new node if needed.
          */
-
         node = sentinel;
+        if (type == INDIVIDUAL_LOCK) node->m.lock();
         while (true) {
-            if (type == INDIVIDUAL_LOCK) node->m.lock();
-
             /*
              * There is no node after the current one, add one.
              */
@@ -88,6 +86,7 @@ public:
 
             auto oldNode = node;
             node = node->next;
+            if (type == INDIVIDUAL_LOCK) node->m.lock();
             if (type == INDIVIDUAL_LOCK) oldNode->m.unlock();
         }
     }
