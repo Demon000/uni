@@ -8,36 +8,61 @@
 
 class Grammar {
 public:
-    Grammar(std::istream & in) {
+    explicit Grammar(std::istream & in) {
+        read(in);
+    }
+
+    Grammar() = default;
+
+    void read(std::istream & in) {
         while (true) {
+            if (!in) {
+                break;
+            }
+
             ProductionRule rule;
             auto success = rule.read(in);
             if (!success) {
-                break;
+                continue;
             }
 
             rules.push_back(rule);
         }
     }
 
-    std::string getStartSymbol() {
-        if (rules.empty()) {
-            throw std::runtime_error("No production rules exist");
+    template <typename F>
+    std::vector<Symbol> getFilteredSymbols(F fn) const {
+        std::vector<Symbol> symbols;
+        for (auto const& rule : rules) {
+            std::vector<Symbol> filteredSymbols = rule.getFilteredSymbols(fn);
+            symbols.insert(symbols.end(), filteredSymbols.begin(), filteredSymbols.end());
         }
-
-        return rules[0].lhs;
+        return symbols;
     }
 
-    std::vector<ProductionRule> findRulesContaining(std::string const& symbol) {
-        std::vector<ProductionRule> matchesRules;
+    [[nodiscard]] std::vector<Symbol> getTerminalSymbols() const {
+        return getFilteredSymbols(Symbol::isTerminal);
+    }
 
-        for (auto const& rule : rules) {
-            if (rule.rhs.find(symbol) != std::string::npos) {
-                matchesRules.push_back(rule);
-            }
-        }
+    [[nodiscard]] std::vector<Symbol> getNonTerminalSymbols() const {
+        return getFilteredSymbols(Symbol::isNonTerminal);
+    }
 
-        return matchesRules;
+    [[nodiscard]] std::vector<ProductionRule> getProductionRules() const {
+        return rules;
+    }
+
+    template <typename F>
+    [[nodiscard]] std::vector<ProductionRule> getFilteredProductionRules(F fn) const {
+        std::vector<ProductionRule> filteredRules;
+        std::copy_if(rules.begin(), rules.end(), std::back_inserter(filteredRules), fn);
+        return filteredRules;
+    }
+
+    std::vector<ProductionRule> getProductionRulesForSymbol(std::string const& name) const {
+        return getFilteredProductionRules([&](ProductionRule const& rule) {
+            return rule.isSymbolNameInLhs(name);
+        });
     }
 
 private:

@@ -1,4 +1,70 @@
-S -> aSb
-S -> ba
-X -> S
-S -> X
+<program> -> <function_list>
+
+<function_list> -> <function> <function_list>
+<function_list> -> <function>
+
+<function> -> <function_prototype> <scope>
+<function_prototype> -> <data_type> <ID>(<argument_list>)
+
+<argument_list> -> <argument>, <argument_list>
+<argument_list> -> <argument>
+<argument> -> <data_type> <ID>
+
+<instruction_list> -> <instruction> <instruction_list>
+<instruction_list> -> <instruction>
+
+<instruction> -> <variable_declaration>;
+<instruction> -> <variable_assignment>;
+<instruction> -> <function_call>;
+<instruction> -> <return>;
+<instruction> -> <break>;
+
+<instruction> -> <scoped_instruction>;
+<instruction> -> <scoped_instruction>
+
+<scoped_instruction> -> <if_else>
+<scoped_instruction> -> <if>
+<scoped_instruction> -> <for>
+<scoped_instruction> -> <while>
+
+<variable_declaration> -> <data_type> <variable_assignment_list>
+<variable_assignment_list> -> <variable_assignment_opt>, <variable_assignment_list>
+<variable_assignment_list> -> <variable_assignment_opt>
+<variable_assignment_opt> -> <variable_assignment>
+<variable_assignment_opt> -> <ID>
+<variable_assignment> -> <ID> = <expression>
+
+<function_call> -> <ID>(<function_argument_list>)
+<function_argument_list> -> <expression>, <function_argument_list>
+<function_argument_list> -> <expression>
+
+<return> -> return <expression>
+<if_else> -> <if> else <scope>
+<if> -> if (<expression>) <scope>
+<for> -> for (<variable_assignment>; <expression>; <expression>) <scope>
+<while> -> while (<expression>) <scope>
+<break> -> break
+
+<expression> -> <expression> <operator> <expression>
+<expression> -> <FLOAT_CONST>
+<expression> -> <STR_CONST>
+<expression> -> <INT_CONST>
+<expression> -> &<ID>
+<expression> -> <ID>
+<operator> -> *
+<operator> -> /
+<operator> -> %
+<operator> -> \<
+<operator> -> \>
+<operator> -> \<=
+<operator> -> ==
+<operator> -> !=
+<operator> -> -
+<operator> -> +
+
+<data_type> -> int
+<data_type> -> double
+
+<scope> -> <scope_start> <instruction_list> <scope_end>
+<scope_start> -> {
+<scope_end> -> }
