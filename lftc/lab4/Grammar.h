@@ -40,12 +40,21 @@ public:
         return symbols;
     }
 
+    template <typename F>
+    [[nodiscard]] std::vector<Symbol> getUniqueFilteredSymbols(F fn) const {
+        std::vector<Symbol> symbols =  getFilteredSymbols(fn);
+        std::sort(symbols.begin(), symbols.end());
+        auto last = std::unique(symbols.begin(), symbols.end());
+        symbols.erase(last, symbols.end());
+        return symbols;
+    }
+
     [[nodiscard]] std::vector<Symbol> getTerminalSymbols() const {
-        return getFilteredSymbols(Symbol::isTerminal);
+        return getUniqueFilteredSymbols(Symbol::isTerminal);
     }
 
     [[nodiscard]] std::vector<Symbol> getNonTerminalSymbols() const {
-        return getFilteredSymbols(Symbol::isNonTerminal);
+        return getUniqueFilteredSymbols(Symbol::isNonTerminal);
     }
 
     [[nodiscard]] std::vector<ProductionRule> getProductionRules() const {
@@ -59,9 +68,9 @@ public:
         return filteredRules;
     }
 
-    std::vector<ProductionRule> getProductionRulesForSymbol(std::string const& name) const {
+    [[nodiscard]] std::vector<ProductionRule> getProductionRulesForTerminalSymbol(std::string const& name) const {
         return getFilteredProductionRules([&](ProductionRule const& rule) {
-            return rule.isSymbolNameInLhs(name);
+            return rule.isTerminalSymbolInRhs(name);
         });
     }
 

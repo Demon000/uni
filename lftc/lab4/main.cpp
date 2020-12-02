@@ -21,8 +21,8 @@ bool takeUserInput(Grammar const& grammar) {
               "2. Print terminals\n"
               "3. Print production rules\n"
               "4. Print production rules with details\n"
-              "5. Print production rules for symbol\n"
-              "6. Print production rules for symbol with details\n"
+              "5. Print production rules for terminal symbol\n"
+              "6. Print production rules for terminal symbol with details\n"
               "0. Exit\n";
 
     int option;
@@ -50,14 +50,14 @@ bool takeUserInput(Grammar const& grammar) {
             std::cout << "Symbol name: ";
             std::string name;
             std::cin >> name;
-            auto productionRules = grammar.getProductionRulesForSymbol(name);
+            auto productionRules = grammar.getProductionRulesForTerminalSymbol(name);
             printProductionRules(productionRules, false);
         } break;
         case 6: {
             std::cout << "Symbol name: ";
             std::string name;
             std::cin >> name;
-            auto productionRules = grammar.getProductionRulesForSymbol(name);
+            auto productionRules = grammar.getProductionRulesForTerminalSymbol(name);
             printProductionRules(productionRules, true);
         } break;
         case 0:

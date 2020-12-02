@@ -63,6 +63,14 @@ public:
         return ss.str();
     }
 
+    friend int operator<=>(const Symbol &lhs, const Symbol &rhs) {
+        return rhs.type - lhs.type + lhs.buffer.compare(rhs.buffer);
+    }
+
+    friend bool operator==(const Symbol &lhs, const Symbol &rhs) {
+        return (lhs <=> rhs) == 0;
+    }
+
     SymbolType type;
     std::string buffer;
 };
@@ -86,9 +94,9 @@ public:
         symbols.emplace_back(type, c);
     }
 
-    [[nodiscard]] static bool isSymbolNameInSymbols(std::vector<Symbol> const& symbols, std::string const& name) {
+    [[nodiscard]] static bool isTerminalSymbolInSymbols(std::vector<Symbol> const& symbols, std::string const& name) {
         return std::any_of(symbols.begin(), symbols.end(), [&](Symbol const& symbol) {
-            return symbol.type == NON_TERMINAL && symbol.buffer == name;
+            return symbol.type == TERMINAL && symbol.buffer == name;
         });
     }
 
@@ -98,8 +106,8 @@ public:
         });
     }
 
-    [[nodiscard]] bool isSymbolNameInLhs(std::string const& name) const {
-        return isSymbolNameInSymbols(lhsSymbols, name);
+    [[nodiscard]] bool isTerminalSymbolInRhs(std::string const& name) const {
+        return isTerminalSymbolInSymbols(rhsSymbols, name);
     }
 
     static bool readSymbols(std::istream & in, std::vector<Symbol> & symbols, bool isLhs) {
@@ -149,7 +157,7 @@ public:
                 continue;
             }
 
-            addToSameSymbol(symbols, c, TERMINAL);
+            addNewSymbol(symbols, c, TERMINAL);
         }
     }
 
