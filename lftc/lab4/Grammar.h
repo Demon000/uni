@@ -8,20 +8,20 @@
 
 class Grammar {
 public:
-    explicit Grammar(std::istream & in) {
-        read(in);
+    explicit Grammar(std::istream & in, bool upperCaseNonTerminals) {
+        read(in, upperCaseNonTerminals);
     }
 
     Grammar() = default;
 
-    void read(std::istream & in) {
+    void read(std::istream & in, bool upperCaseNonTerminals) {
         while (true) {
             if (!in) {
                 break;
             }
 
             ProductionRule rule;
-            auto success = rule.read(in);
+            auto success = rule.read(in, upperCaseNonTerminals);
             if (!success) {
                 continue;
             }
@@ -42,7 +42,7 @@ public:
 
     template <typename F>
     [[nodiscard]] std::vector<Symbol> getUniqueFilteredSymbols(F fn) const {
-        std::vector<Symbol> symbols =  getFilteredSymbols(fn);
+        std::vector<Symbol> symbols = getFilteredSymbols(fn);
         std::sort(symbols.begin(), symbols.end());
         auto last = std::unique(symbols.begin(), symbols.end());
         symbols.erase(last, symbols.end());

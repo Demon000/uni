@@ -57,7 +57,7 @@ public:
         }
 
         if (withDetails) {
-            ss << '`';
+            ss << "'";
         }
 
         return ss.str();
@@ -110,10 +110,18 @@ public:
         return isTerminalSymbolInSymbols(rhsSymbols, name);
     }
 
-    static bool readSymbols(std::istream & in, std::vector<Symbol> & symbols, bool isLhs) {
-        bool isEscaped = false;
-        bool wasArrowBegin = false;
-        bool isNonTerminalSymbol = false;
+    enum ParseState {
+        NONE,
+        ARROW,
+        NON_TERMINAL_SYMBOL,
+        NON_TERMINAL_SYMBOL_FIRST_CHAR,
+        TERMINAL_SYMBOL,
+        TERMINAL_SYMBOL_FIRST_CHAR,
+    };
+
+    static bool readSymbols(std::istream & in, std::vector<Symbol> & symbols, bool isLhs,
+                            bool upperCaseNonTerminals) {
+        enum ParseState state = NONE;
         char c;
 
         while (true) {
@@ -128,46 +136,52 @@ public:
                 continue;
             }
 
-            if (c == '\\') {
-                isEscaped = true;
-                continue;
-            }
+            auto isNonTerminalState = [](ParseState state) { return state == NON_TERMINAL_SYMBOL
+                                                                    || state == NON_TERMINAL_SYMBOL_FIRST_CHAR; };
 
-            if (c == '-' && !wasArrowBegin && isLhs && !isEscaped) {
-                wasArrowBegin = true;
-                continue;
-            }
+            auto isTerminalState = [](ParseState state) { return state == TERMINAL_SYMBOL
+                                                                 || state == TERMINAL_SYMBOL_FIRST_CHAR; };
 
-            if (c == '>' && wasArrowBegin) {
+            if (c == '-' && state == NONE && isLhs) {
+                state = ARROW;
+            } else if (c == '>' && state == ARROW) {
                 break;
+            } else if (c == '<' && state == NONE) {
+                state = NON_TERMINAL_SYMBOL_FIRST_CHAR;
+            } else if (c == '[' && state == NONE) {
+                state = TERMINAL_SYMBOL_FIRST_CHAR;
+            } else if ((c == '>' && isNonTerminalState(state))
+                    || (c == ']' && isTerminalState(state))) {
+                state = NONE;
+            } else if (isNonTerminalState(state)) {
+                if (state == NON_TERMINAL_SYMBOL_FIRST_CHAR) {
+                    state = NON_TERMINAL_SYMBOL;
+                    addNewSymbol(symbols, c, NON_TERMINAL);
+                } else {
+                    addToSameSymbol(symbols, c, NON_TERMINAL);
+                }
+            } else if (isTerminalState(state)) {
+                if (state == TERMINAL_SYMBOL_FIRST_CHAR) {
+                    state = TERMINAL_SYMBOL;
+                    addNewSymbol(symbols, c, TERMINAL);
+                } else {
+                    addToSameSymbol(symbols, c, TERMINAL);
+                }
+            } else if (upperCaseNonTerminals && c >= 'A' && c <= 'Z') {
+                addNewSymbol(symbols, c, NON_TERMINAL);
+            } else {
+                addNewSymbol(symbols, c, TERMINAL);
             }
-
-            if (c == '<' && !isNonTerminalSymbol && !isEscaped) {
-                isNonTerminalSymbol = true;
-                continue;
-            }
-
-            if (c == '>' && isNonTerminalSymbol && !isEscaped) {
-                isNonTerminalSymbol = false;
-                continue;
-            }
-
-            if (isNonTerminalSymbol) {
-                addToSameSymbol(symbols, c, NON_TERMINAL);
-                continue;
-            }
-
-            addNewSymbol(symbols, c, TERMINAL);
         }
     }
 
-    bool read(std::istream & in) {
-        readSymbols(in, lhsSymbols, true);
+    bool read(std::istream & in, bool upperCaseNonTerminals) {
+        readSymbols(in, lhsSymbols, true, upperCaseNonTerminals);
         if (isSymbolsEmpty(lhsSymbols)) {
             return false;
         }
 
-        readSymbols(in, rhsSymbols, false);
+        readSymbols(in, rhsSymbols, false, upperCaseNonTerminals);
         if (isSymbolsEmpty(rhsSymbols)) {
             throw std::runtime_error("Failed to read production rule rhs");
         }
@@ -178,6 +192,7 @@ public:
     template <typename F>
     std::vector<Symbol> getFilteredSymbols(F fn) const {
         std::vector<Symbol> symbols;
+        std::copy_if(lhsSymbols.begin(), lhsSymbols.end(), std::back_inserter(symbols), fn);
         std::copy_if(rhsSymbols.begin(), rhsSymbols.end(), std::back_inserter(symbols), fn);
         return symbols;
     }

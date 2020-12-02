@@ -68,9 +68,10 @@ bool takeUserInput(Grammar const& grammar) {
 }
 
 int main() {
-    std::ifstream in("input.txt");
-    Grammar grammar{in};
-
+//    std::ifstream in("input.txt");
+//    Grammar grammar{in, false};
+    std::ifstream in("input_simple.txt");
+    Grammar grammar{in, true};
     while (takeUserInput(grammar)) {}
 
     return 0;

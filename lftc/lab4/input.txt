@@ -38,12 +38,12 @@
 <function_argument_list> -> <expression>, <function_argument_list>
 <function_argument_list> -> <expression>
 
-<return> -> return <expression>
-<if_else> -> <if> else <scope>
-<if> -> if (<expression>) <scope>
-<for> -> for (<variable_assignment>; <expression>; <expression>) <scope>
-<while> -> while (<expression>) <scope>
-<break> -> break
+<return> -> [return] <expression>
+<if_else> -> <if> [else] <scope>
+<if> -> [if] (<expression>) <scope>
+<for> -> [for] (<variable_assignment>; <expression>; <expression>) <scope>
+<while> -> [while] (<expression>) <scope>
+<break> -> [break]
 
 <expression> -> <expression> <operator> <expression>
 <expression> -> <FLOAT_CONST>
@@ -54,16 +54,16 @@
 <operator> -> *
 <operator> -> /
 <operator> -> %
-<operator> -> \<
-<operator> -> \>
-<operator> -> \<=
-<operator> -> ==
-<operator> -> !=
+<operator> -> [<]
+<operator> -> [>]
+<operator> -> [<=]
+<operator> -> [==]
+<operator> -> [!=]
 <operator> -> -
 <operator> -> +
 
-<data_type> -> int
-<data_type> -> double
+<data_type> -> [int]
+<data_type> -> [double]
 
 <scope> -> <scope_start> <instruction_list> <scope_end>
 <scope_start> -> {
