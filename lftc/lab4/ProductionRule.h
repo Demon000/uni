@@ -27,6 +27,10 @@ public:
         return symbol.type == NON_TERMINAL;
     }
 
+    static bool isWhitespace(Symbol const& symbol) {
+        return symbol.type == WHITESPACE;
+    }
+
     [[nodiscard]] std::string toString(bool withDetails=false) const {
         std::stringstream ss;
 
@@ -53,6 +57,7 @@ public:
         ss << buffer;
 
         if (type == NON_TERMINAL) {
+            ss << index;
             ss << '>';
         }
 
@@ -71,6 +76,7 @@ public:
         return (lhs <=> rhs) == 0;
     }
 
+    int index = 0;
     SymbolType type;
     std::string buffer;
 };
@@ -94,20 +100,10 @@ public:
         symbols.emplace_back(type, c);
     }
 
-    [[nodiscard]] static bool isTerminalSymbolInSymbols(std::vector<Symbol> const& symbols, std::string const& name) {
-        return std::any_of(symbols.begin(), symbols.end(), [&](Symbol const& symbol) {
-            return symbol.type == TERMINAL && symbol.buffer == name;
-        });
-    }
-
     [[nodiscard]] static bool isSymbolsEmpty(std::vector<Symbol> const& symbols) {
         return std::all_of(symbols.begin(), symbols.end(), [&](Symbol const& symbol) {
             return symbol.type == WHITESPACE;
         });
-    }
-
-    [[nodiscard]] bool isTerminalSymbolInRhs(std::string const& name) const {
-        return isTerminalSymbolInSymbols(rhsSymbols, name);
     }
 
     enum ParseState {
@@ -189,14 +185,6 @@ public:
         return true;
     }
 
-    template <typename F>
-    std::vector<Symbol> getFilteredSymbols(F fn) const {
-        std::vector<Symbol> symbols;
-        std::copy_if(lhsSymbols.begin(), lhsSymbols.end(), std::back_inserter(symbols), fn);
-        std::copy_if(rhsSymbols.begin(), rhsSymbols.end(), std::back_inserter(symbols), fn);
-        return symbols;
-    }
-
     [[nodiscard]] static std::string symbolsToString(std::vector<Symbol> const& symbols, bool withDetails=false) {
         std::stringstream ss;
 
@@ -209,14 +197,57 @@ public:
 
     [[nodiscard]] std::string toString(bool withDetails=false) const {
         std::stringstream ss;
+        Symbol const& lhsSymbol = getLhsSymbol();
 
-        ss << symbolsToString(lhsSymbols, withDetails);
+        ss << lhsSymbol.toString() << " ";
         ss << "->";
         ss << symbolsToString(rhsSymbols, withDetails);
 
         return ss.str();
     }
 
+    [[nodiscard]] Symbol const & getLhsSymbol() const {
+        for (auto const& symbol : lhsSymbols) {
+            if (Symbol::isNonTerminal(symbol)) {
+                return symbol;
+            }
+        }
+
+        throw std::runtime_error("Failed to find non terminal symbol in lhs");
+    }
+
+    [[nodiscard]] Symbol & getLhsSymbol() {
+        for (auto & symbol : lhsSymbols) {
+            if (Symbol::isNonTerminal(symbol)) {
+                return symbol;
+            }
+        }
+
+        throw std::runtime_error("Failed to find non terminal symbol in lhs");
+    }
+
+    template <typename F>
+    [[nodiscard]] std::vector<Symbol> getFilteredRhsSymbols(F fn) const {
+        std::vector<Symbol> symbols;
+        std::copy_if(rhsSymbols.begin(), rhsSymbols.end(), std::back_inserter(symbols), fn);
+        return symbols;
+    }
+
+    [[nodiscard]] std::vector<Symbol> getRhsSymbols() const {
+        return getFilteredRhsSymbols([](auto const &symbol) {
+            return !Symbol::isWhitespace(symbol);
+        });
+    }
+
+    int getIndex() {
+        return getLhsSymbol().index;
+    }
+
+    int setIndex(int index) {
+        getLhsSymbol().index = index;
+    }
+
+private:
     std::vector<Symbol> lhsSymbols;
     std::vector<Symbol> rhsSymbols;
 };

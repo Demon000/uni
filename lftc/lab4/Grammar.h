@@ -26,52 +26,39 @@ public:
                 continue;
             }
 
+            auto & lhsSymbol = rule.getLhsSymbol();
+
+            lhsSymbol.index = 0;
+            for (auto const& r : rules) {
+                if (lhsSymbol == r.getLhsSymbol()) {
+                    lhsSymbol.index++;
+                }
+            }
+
             rules.push_back(rule);
         }
-    }
-
-    template <typename F>
-    std::vector<Symbol> getFilteredSymbols(F fn) const {
-        std::vector<Symbol> symbols;
-        for (auto const& rule : rules) {
-            std::vector<Symbol> filteredSymbols = rule.getFilteredSymbols(fn);
-            symbols.insert(symbols.end(), filteredSymbols.begin(), filteredSymbols.end());
-        }
-        return symbols;
-    }
-
-    template <typename F>
-    [[nodiscard]] std::vector<Symbol> getUniqueFilteredSymbols(F fn) const {
-        std::vector<Symbol> symbols = getFilteredSymbols(fn);
-        std::sort(symbols.begin(), symbols.end());
-        auto last = std::unique(symbols.begin(), symbols.end());
-        symbols.erase(last, symbols.end());
-        return symbols;
-    }
-
-    [[nodiscard]] std::vector<Symbol> getTerminalSymbols() const {
-        return getUniqueFilteredSymbols(Symbol::isTerminal);
-    }
-
-    [[nodiscard]] std::vector<Symbol> getNonTerminalSymbols() const {
-        return getUniqueFilteredSymbols(Symbol::isNonTerminal);
     }
 
     [[nodiscard]] std::vector<ProductionRule> getProductionRules() const {
         return rules;
     }
 
-    template <typename F>
-    [[nodiscard]] std::vector<ProductionRule> getFilteredProductionRules(F fn) const {
-        std::vector<ProductionRule> filteredRules;
-        std::copy_if(rules.begin(), rules.end(), std::back_inserter(filteredRules), fn);
-        return filteredRules;
+    [[nodiscard]] ProductionRule getStartProductionRule() const {
+        return rules[0];
     }
 
-    [[nodiscard]] std::vector<ProductionRule> getProductionRulesForTerminalSymbol(std::string const& name) const {
-        return getFilteredProductionRules([&](ProductionRule const& rule) {
-            return rule.isTerminalSymbolInRhs(name);
-        });
+    ProductionRule getProductionRuleWithLhsIndex(Symbol const& lhsSymbol, int index) const {
+        for (auto const& rule : rules) {
+            auto const& s = rule.getLhsSymbol();
+            if (s == lhsSymbol && s.index == index) {
+                return rule;
+            }
+        }
+
+        std::stringstream ss;
+        ss << "Failed to find production rule with lhs symbol with index ";
+        ss << index;
+        throw std::runtime_error(ss.str());
     }
 
 private:
