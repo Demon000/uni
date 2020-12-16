@@ -132,3 +132,8 @@ c_subset
 c_subset.lex.c
 c_subset.tab.c
 c_subset.tab.h
+
+c_asm_subset
+c_asm_subset.lex.c
+c_asm_subset.tab.c
+c_asm_subset.tab.h
