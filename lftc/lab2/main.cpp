@@ -117,6 +117,7 @@ void runLexer() {
         std::cout << "Failed to parse input file\n";
         std::cout << "Buffer remaining:\n";
         std::cout << in.rdbuf();
+        return;
     }
 
     auto tokens = lexer.getTokens();
@@ -138,11 +139,13 @@ void runLexer() {
 
     RecursiveDescentParser parser{grammar};
     std::vector<Symbol> symbols = parser.parseTokens(tokenLabels);
+    if (symbols.empty()) {
+        std::cout << "Failed to syntactically parse tokens\n";
+        return;
+    }
 
     for (auto const& symbol : symbols) {
-        if (Symbol::isTerminal(symbol)) {
-            std::cout << symbol.toString() << std::endl;
-        }
+        std::cout << symbol.toString() << std::endl;
     }
 }
 

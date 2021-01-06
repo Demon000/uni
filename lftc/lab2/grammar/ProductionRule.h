@@ -57,6 +57,7 @@ public:
         ss << buffer;
 
         if (type == NON_TERMINAL) {
+            ss << '#';
             ss << index;
             ss << '>';
         }
