@@ -3,9 +3,25 @@ project(lab2)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(lab2 main.cpp Lexer.cpp Lexer.h BinarySearchTree.h FiniteStateMachine.h FiniteStateMachine.cpp StreamUtils.cpp StreamUtils.h LexerTokens.h LexerTokenIds.h LexerStatus.h)
+add_executable(lab2
+        main.cpp
+        LexerTokenIds.h
+        lexer/Lexer.cpp
+        lexer/Lexer.h
+        binary_search_tree/BinarySearchTree.h
+        finite_state_machine/FiniteStateMachine.h
+        finite_state_machine/FiniteStateMachine.cpp
+        stream_utils/StreamUtils.cpp
+        stream_utils/StreamUtils.h
+        lexer/LexerTokens.h
+        lexer/LexerStatus.h
+        grammar/Grammar.h
+        grammar/ProductionRule.h
+        grammar/RecursiveDescentParser.h
+)
 configure_file(test.c.txt test.c.txt COPYONLY)
-configure_file(fsm_catch_all.txt fsm_catch_all.txt COPYONLY)
-configure_file(fsm_integer.txt fsm_integer.txt COPYONLY)
-configure_file(fsm_real.txt fsm_real.txt COPYONLY)
-configure_file(fsm_id.txt fsm_id.txt COPYONLY)
+configure_file(c_grammar.txt c_grammar.txt COPYONLY)
+configure_file(lexer/fsm_catch_all.txt lexer/fsm_catch_all.txt COPYONLY)
+configure_file(lexer/fsm_integer.txt lexer/fsm_integer.txt COPYONLY)
+configure_file(lexer/fsm_real.txt lexer/fsm_real.txt COPYONLY)
+configure_file(lexer/fsm_id.txt lexer/fsm_id.txt COPYONLY)

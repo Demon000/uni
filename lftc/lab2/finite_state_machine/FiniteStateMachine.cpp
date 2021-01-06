@@ -1,5 +1,5 @@
 #include "FiniteStateMachine.h"
-#include "StreamUtils.h"
+#include "../stream_utils/StreamUtils.h"
 
 std::shared_ptr<FiniteStateMachine::State> FiniteStateMachine::readState(std::istream &in) {
     auto state = std::make_shared<State>();

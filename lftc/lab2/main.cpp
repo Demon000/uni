@@ -1,8 +1,11 @@
 #include <iostream>
-#include "Lexer.h"
+#include "lexer/Lexer.h"
+#include "lexer/LexerTokens.h"
+#include "finite_state_machine/FiniteStateMachine.h"
+
 #include "LexerTokenIds.h"
-#include "LexerTokens.h"
-#include "FiniteStateMachine.h"
+#include "grammar/Grammar.h"
+#include "grammar/RecursiveDescentParser.h"
 
 void runUserInput() {
     FiniteStateMachine fsm;
@@ -99,8 +102,15 @@ std::vector<std::shared_ptr<Token>> tokenDefinitions = {
     token_map_simple(TK_ID, IdToken),
 };
 
+void printProductionRules(std::vector<ProductionRule> const& rules, bool withDetails) {
+    for (auto const& rule : rules) {
+        std::cout << rule.toString(withDetails) << std::endl;
+    }
+}
+
 void runLexer() {
     std::ifstream in("test.c.txt");
+    std::ofstream out("test.c.tokens.txt");
     Lexer lexer(tokenDefinitions);
 
     auto status = lexer.tokenize(in);
@@ -110,8 +120,27 @@ void runLexer() {
         std::cout << in.rdbuf();
     }
 
-    lexer.describe(std::cout);
+    lexer.describe(out);
     auto tokens = lexer.getTokens();
+
+    std::ifstream cGrammarIn("c_grammar.txt");
+    Grammar grammar{cGrammarIn};
+
+    auto productionRules = grammar.getProductionRules();
+    printProductionRules(productionRules, false);
+
+    std::vector<std::string> tokenLabels;
+    tokenLabels.reserve(tokens.size());
+    for (auto const& token : tokens) {
+        tokenLabels.push_back(token.label);
+    }
+
+    RecursiveDescentParser parser{grammar};
+    std::vector<Symbol> symbols = parser.parseTokens(tokenLabels);
+
+    for (auto const& symbol : symbols) {
+        std::cout << symbol.toString();
+    }
 }
 
 void testFSM() {

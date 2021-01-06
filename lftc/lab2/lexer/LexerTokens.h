@@ -1,13 +1,13 @@
-#include "LexerTokenIds.h"
+#include "../LexerTokenIds.h"
 #include "LexerStatus.h"
-#include "FiniteStateMachine.h"
+#include "../finite_state_machine/FiniteStateMachine.h"
 
 #ifndef LEXERTOKENS_H
 #define LEXERTOKENS_H
 
 class Token {
 public:
-    Token(enum TokenId id, std::string label, bool isIndexed=false)
+    Token(int id, std::string label, bool isIndexed=false)
             : id(id), label(std::move(label)), isIndexed_(isIndexed) {}
     Token() : Token(TK_DEFAULT, "") {}
 
@@ -15,7 +15,7 @@ public:
     bool isIndexed() const { return isIndexed_; };
 
     bool isIndexed_;
-    enum TokenId id;
+    int id;
     int index = 0;
     std::string buffer;
     std::string label;
@@ -23,7 +23,7 @@ public:
 
 class TextToken : public Token {
 public:
-    TextToken(enum TokenId id, std::string label, std::string textMatch)
+    TextToken(int id, std::string label, std::string textMatch)
             : Token(id, std::move(label)), textMatch(std::move(textMatch)) {
     }
 protected:
@@ -65,7 +65,7 @@ public:
 
 class DelimitedTextToken : public Token {
 public:
-    DelimitedTextToken(enum TokenId id, std::string label, std::string start, std::string end)
+    DelimitedTextToken(int id, std::string label, std::string start, std::string end)
             : Token(id, std::move(label), true), start(std::move(start)), end(std::move(end)) {
     }
 
@@ -78,7 +78,7 @@ private:
 
 class IntToken : public Token {
 public:
-    IntToken(enum TokenId id, std::string label)
+    IntToken(int id, std::string label)
             : Token(id, std::move(label), true) {}
     LexerStatus tryFind(std::istream& in) override;
 
@@ -88,7 +88,7 @@ public:
 
 class DoubleToken : public Token {
 public:
-    DoubleToken(enum TokenId id, std::string label)
+    DoubleToken(int id, std::string label)
             : Token(id, std::move(label), true) {}
     LexerStatus tryFind(std::istream& in) override;
 
@@ -99,7 +99,7 @@ public:
 constexpr int ID_TOKEN_MAX_LENGTH =  8;
 class IdToken : public Token {
 public:
-    IdToken(enum TokenId id, std::string label)
+    IdToken(int id, std::string label)
             : Token(id, std::move(label), true) {}
     LexerStatus tryFind(std::istream& in) override;
 

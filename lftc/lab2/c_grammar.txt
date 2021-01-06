@@ -1,0 +1,72 @@
+<program> -> <function_list>
+
+<function_list> -> <function> <function_list>
+<function_list> -> <function>
+
+<function> -> <function_prototype> <scope>
+<function_prototype> -> <data_type> [TK_ID][TK_LEFT_PAREN]<function_prototype_argument_list>[TK_RIGHT_PAREN]
+<function_prototype> -> <data_type> [TK_ID][TK_LEFT_PAREN][TK_RIGHT_PAREN]
+
+<function_prototype_argument_list> -> <argument>[TK_COMMA] <function_prototype_argument_list>
+<function_prototype_argument_list> -> <argument>
+<argument> -> <data_type> [TK_ID]
+
+<instruction_list> -> <instruction> <instruction_list>
+<instruction_list> -> <instruction>
+
+<instruction> -> <variable_declaration>[TK_SEMICOLON]
+<instruction> -> <variable_assignment>[TK_SEMICOLON]
+<instruction> -> <function_call>[TK_SEMICOLON]
+<instruction> -> <return>[TK_SEMICOLON]
+<instruction> -> <break>[TK_SEMICOLON]
+
+<instruction> -> <scoped_instruction>[TK_SEMICOLON]
+<instruction> -> <scoped_instruction>
+
+<scoped_instruction> -> <if_else>
+<scoped_instruction> -> <if>
+<scoped_instruction> -> <for>
+<scoped_instruction> -> <while>
+
+<variable_declaration> -> <data_type> <variable_assignment_list>
+<variable_assignment_list> -> <variable_assignment_opt>[TK_COMMA] <variable_assignment_list>
+<variable_assignment_list> -> <variable_assignment_opt>
+<variable_assignment_opt> -> <variable_assignment>
+<variable_assignment_opt> -> [TK_ID]
+<variable_assignment> -> [TK_ID] [TK_OP_ASSIGN] <expression>
+
+<function_call> -> [TK_ID][TK_LEFT_PAREN]<function_call_argument_list>[TK_RIGHT_PAREN]
+<function_call_argument_list> -> <expression>[TK_COMMA] <function_call_argument_list>
+<function_call_argument_list> -> <expression>
+
+<return> -> [TK_KEYWORD_RETURN] <expression>
+<if_else> -> <if> [TK_KEYWORD_ELSE] <scope>
+<if> -> [TK_KEYWORD_IF] [TK_LEFT_PAREN]<expression>[TK_RIGHT_PAREN] <scope>
+<for> -> [for] [TK_LEFT_PAREN]<variable_assignment>[TK_SEMICOLON] <expression>[TK_SEMICOLON] <expression>[TK_RIGHT_PAREN] <scope>
+<while> -> [TK_KEYWORD_WHILE] [TK_LEFT_PAREN]<expression>[TK_RIGHT_PAREN] <scope>
+<break> -> [TK_KEYWORD_BREAK]
+
+<expression> -> <expression_l> <operator> <expression>
+<expression> -> <expression_l>
+<expression_l> -> [TK_CONST_DOUBLE]
+<expression_l> -> [TK_CONST_STRING]
+<expression_l> -> [TK_CONST_INT]
+<expression_l> -> [TK_OP_BW_AND][TK_ID]
+<expression_l> -> [TK_ID]
+<operator> -> [TK_OP_MULTIPLY]
+<operator> -> [TK_OP_DIVIDE]
+<operator> -> [TK_OP_MOD]
+<operator> -> [TK_OP_LESS]
+<operator> -> [TK_OP_GREATER]
+<operator> -> [TK_OP_LESS_EQUAL]
+<operator> -> [TK_OP_EQUAL]
+<operator> -> [TK_OP_NOT_EQUAL]
+<operator> -> [TK_OP_MINUS]
+<operator> -> [TK_OP_PLUS]
+
+<data_type> -> [TK_KEYWORD_INT]
+<data_type> -> [TK_KEYWORD_DOUBLE]
+
+<scope> -> <scope_start> <instruction_list> <scope_end>
+<scope_start> -> [TK_LEFT_BRACE]
+<scope_end> -> [TK_RIGHT_BRACE]

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Lexer.h"
-#include "StreamUtils.h"
+#include "../stream_utils/StreamUtils.h"
 
 void Lexer::insertSimpleToken(const std::shared_ptr<Token>& token) {
     tokens.push_back(std::make_shared<Token>(*token));

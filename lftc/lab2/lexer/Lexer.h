@@ -8,10 +8,10 @@
 #include <map>
 #include <memory>
 #include "LexerTokens.h"
-#include "LexerTokenIds.h"
+#include "../LexerTokenIds.h"
 #include "LexerStatus.h"
-#include "BinarySearchTree.h"
-#include "FiniteStateMachine.h"
+#include "../binary_search_tree/BinarySearchTree.h"
+#include "../finite_state_machine/FiniteStateMachine.h"
 
 class Lexer {
 public:
