@@ -14,6 +14,12 @@ public:
     virtual LexerStatus tryFind(std::istream& in);
     bool isIndexed() const { return isIndexed_; };
 
+    std::string toString() const {
+        std::stringstream ss;
+        ss << id << " " << label << " " << buffer;
+        return ss.str();
+    }
+
     bool isIndexed_;
     int id;
     int index = 0;

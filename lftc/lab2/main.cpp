@@ -122,6 +122,9 @@ void runLexer() {
 
     lexer.describe(out);
     auto tokens = lexer.getTokens();
+    for (auto const& token : tokens) {
+        std::cout << token.toString() << std::endl;
+    }
 
     std::ifstream cGrammarIn("c_grammar.txt");
     Grammar grammar{cGrammarIn};
@@ -139,7 +142,9 @@ void runLexer() {
     std::vector<Symbol> symbols = parser.parseTokens(tokenLabels);
 
     for (auto const& symbol : symbols) {
-        std::cout << symbol.toString();
+        if (Symbol::isTerminal(symbol)) {
+            std::cout << symbol.toString() << std::endl;
+        }
     }
 }
 

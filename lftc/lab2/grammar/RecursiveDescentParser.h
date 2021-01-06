@@ -15,7 +15,7 @@ enum ParserState {
     E,
 };
 
-#define DEBUG 1
+#define DEBUG 0
 
 class RecursiveDescentParser {
 public:
