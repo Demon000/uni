@@ -58,8 +58,17 @@ LexerStatus Lexer::tokenize(std::istream& in) {
     return PARSE_SUCCESS;
 }
 
-void Lexer::describeTokens(const std::vector<std::shared_ptr<Token>>& tokens,
-                           std::ostream& out) {
+std::vector<Token> Lexer::getTokens() {
+    std::vector<Token> result;
+
+    for (const auto& token : tokens) {
+        result.push_back(*token);
+    }
+
+    return result;
+}
+
+void Lexer::describeTokens(std::ostream& out) {
     out << "Id\tBuffer\tLabel\tValue index" << std::endl;
     for (const auto& token : tokens) {
         if (token->isIndexed()) {
@@ -80,7 +89,7 @@ void Lexer::describeIndexedTokenValues(const std::vector<IndexedTokenValue>& val
 
 void Lexer::describe(std::ostream& out) {
     out << "Tokens" << std::endl;
-    describeTokens(tokens, out);
+    describeTokens(out);
     out << std::endl;
 
     out << "Identifiers" << std::endl;

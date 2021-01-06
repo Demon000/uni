@@ -1,0 +1,10 @@
+#ifndef LEXERSTATUS_H
+#define LEXERSTATUS_H
+
+enum LexerStatus {
+    FIND_TOKEN_SUCCESS,
+    FIND_TOKEN_FAILED,
+    PARSE_SUCCESS,
+};
+
+#endif //LEXERSTATUS_H

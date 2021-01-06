@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Lexer.h"
+#include "LexerTokenIds.h"
+#include "LexerTokens.h"
 #include "FiniteStateMachine.h"
 
 void runUserInput() {
@@ -55,10 +57,51 @@ void runUserInput() {
     }
 }
 
+std::vector<std::shared_ptr<Token>> tokenDefinitions = {
+    token_map_exact_text(TK_OP_EQUAL, "=="),
+    token_map_exact_text(TK_OP_NOT_EQUAL, "!="),
+    token_map_exact_text(TK_OP_LESS_EQUAL, "<="),
+    token_map_exact_text(TK_OP_GREATER_EQUAL, ">="),
+    token_map_exact_text(TK_OP_LESS, "<"),
+    token_map_exact_text(TK_OP_GREATER, ">"),
+    token_map_exact_text(TK_OP_BW_AND, "&"),
+
+    token_map_exact_text(TK_OP_ASSIGN, "="),
+    token_map_exact_text(TK_OP_PLUS, "+"),
+    token_map_exact_text(TK_OP_MINUS, "-"),
+    token_map_exact_text(TK_OP_MULTIPLY, "*"),
+    token_map_exact_text(TK_OP_DIVIDE, "/"),
+    token_map_exact_text(TK_OP_MOD, "%"),
+
+    token_map_exact_text(TK_LEFT_BRACE, "{"),
+    token_map_exact_text(TK_LEFT_PAREN, "("),
+    token_map_exact_text(TK_RIGHT_BRACE, "}"),
+    token_map_exact_text(TK_RIGHT_PAREN, ")"),
+    token_map_exact_text(TK_SEMICOLON, ";"),
+    token_map_exact_text(TK_COMMA, ","),
+
+    token_map_exact_keyword(TK_KEYWORD_DOUBLE, "double"),
+    token_map_exact_keyword(TK_KEYWORD_INT, "int"),
+
+    token_map_exact_keyword(TK_KEYWORD_IF, "if"),
+    token_map_exact_keyword(TK_KEYWORD_ELSE, "else"),
+    token_map_exact_keyword(TK_KEYWORD_FOR, "for"),
+    token_map_exact_keyword(TK_KEYWORD_WHILE, "while"),
+
+    token_map_exact_keyword(TK_KEYWORD_RETURN, "return"),
+    token_map_exact_keyword(TK_KEYWORD_BREAK, "break"),
+
+    token_map_generic(TK_CONST_STRING, DelimitedTextToken, "\"", "\""),
+
+    token_map_simple(TK_CONST_DOUBLE, DoubleToken),
+    token_map_simple(TK_CONST_INT, IntToken),
+
+    token_map_simple(TK_ID, IdToken),
+};
+
 void runLexer() {
     std::ifstream in("test.c.txt");
-    std::ofstream out("lexer.csv");
-    Lexer lexer;
+    Lexer lexer(tokenDefinitions);
 
     auto status = lexer.tokenize(in);
     if (status != PARSE_SUCCESS) {
@@ -67,7 +110,8 @@ void runLexer() {
         std::cout << in.rdbuf();
     }
 
-    lexer.describe(out);
+    lexer.describe(std::cout);
+    auto tokens = lexer.getTokens();
 }
 
 void testFSM() {
