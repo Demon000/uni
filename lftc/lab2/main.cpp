@@ -110,7 +110,6 @@ void printProductionRules(std::vector<ProductionRule> const& rules, bool withDet
 
 void runLexer() {
     std::ifstream in("test.c.txt");
-    std::ofstream out("test.c.tokens.txt");
     Lexer lexer(tokenDefinitions);
 
     auto status = lexer.tokenize(in);
@@ -120,7 +119,6 @@ void runLexer() {
         std::cout << in.rdbuf();
     }
 
-    lexer.describe(out);
     auto tokens = lexer.getTokens();
     for (auto const& token : tokens) {
         std::cout << token.toString() << std::endl;
