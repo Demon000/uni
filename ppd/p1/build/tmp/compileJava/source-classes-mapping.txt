@@ -1,7 +1,7 @@
 common/SaleError.java
  common.SaleError
-server/Service.java
- server.Service
+common/SaleResponse.java
+ common.SaleResponse
 client/MainClient.java
  client.Client
  client.MainClient
@@ -19,8 +19,8 @@ common/CheckError.java
  common.CheckError
 common/Show.java
  common.Show
-common/SaleResponse.java
- common.SaleResponse
+server/Service.java
+ server.Service
 server/MainServer.java
  server.MainServer
  server.Server

@@ -5,12 +5,22 @@ import common.Sale;
 import common.SaleError;
 import common.Show;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Service {
     private static final AtomicInteger showIdCounter = new AtomicInteger(0);
     ArrayList<Show> shows = new ArrayList<>();
+    private FileWriter writer;
+
+    public Service(FileWriter writer) {
+        this.writer = writer;
+    }
 
     synchronized public Show createShow(String title, int price, int noSeats) {
         int id = showIdCounter.incrementAndGet();
@@ -93,26 +103,50 @@ public class Service {
             }
         }
 
+        int sum = show.price * seatIds.size();
 
         int id = saleIdCounter.incrementAndGet();
-        int sum = show.price * soldSeatIds.size();
         Sale sale = new Sale(id, showId, sum, seatIds);
         sales.add(sale);
 
-        show.sum += sum;
         show.soldSeatIds.addAll(seatIds);
+        show.sum += sum;
 
         return sale;
     }
 
-    synchronized public void checkConsistency() throws CheckError {
+    synchronized public void checkConsistency() throws IOException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yy HH-mm-ss");
+        Date date = new Date();
+        boolean correct = true;
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(dateFormat.format(date));
+        sb.append("\n");
+
         ArrayList<Show> shows = getShows();
 
         for (Show show : shows) {
-            int salesSum = getSoldSeatsSumForShowId(show.id);
+            sb.append(show.title);
+            sb.append(" ");
 
+            sb.append(show.id);
+            sb.append(" ");
+
+            sb.append(show.sum);
+            sb.append(" ");
+
+            String soldSeatIdsStr = show.soldSeatIds
+                    .stream()
+                    .map(Object::toString)
+                    .collect(Collectors.joining(", "));
+
+            sb.append(soldSeatIdsStr);
+
+            int salesSum = getSoldSeatsSumForShowId(show.id);
             if (salesSum != show.sum) {
-                throw new CheckError("Show sum doesn't match sum of sales");
+                correct = false;
             }
 
             ArrayList<Integer> showSoldSeatIds = new ArrayList<>(show.soldSeatIds);
@@ -122,8 +156,16 @@ public class Service {
             showSoldSeatIds.sort(Integer::compareTo);
 
             if (!showSoldSeatIds.equals(salesSoldSeatIds)) {
-                throw new CheckError("Show sold seat ids doesn't match sales sold seat ids");
+                correct = false;
             }
+
+            sb.append("\n");
         }
+
+        sb.append(correct ? "corect" : "incorect");
+
+        sb.append("\n");
+        writer.write(sb.toString());
+        writer.flush();
     }
 }

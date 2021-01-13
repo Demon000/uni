@@ -66,7 +66,7 @@ class Client {
         return true;
     }
 
-    public static final int maxNumberOfSeatsToSell = 5;
+    public static final int MAX_NUMBER_OF_SEATS_TO_SELL = 5;
 
     public void run(String host, int port) throws IOException, ClassNotFoundException, InterruptedException {
         this.host = host;
@@ -79,9 +79,8 @@ class Client {
 
         while (true) {
             Random randomizer = new Random();
-            System.out.println(shows.size());
             Show show = shows.get(randomizer.nextInt(shows.size()));
-            int noSeatsToSell = randomizer.nextInt(maxNumberOfSeatsToSell);
+            int noSeatsToSell = randomizer.nextInt(MAX_NUMBER_OF_SEATS_TO_SELL);
 
             ArrayList<Integer> seatsIds = new ArrayList<>();
             for (int i = 0; i < noSeatsToSell; i++) {
@@ -93,7 +92,6 @@ class Client {
             if (!success) {
                 return;
             }
-
 
             Thread.sleep(2000);
         }

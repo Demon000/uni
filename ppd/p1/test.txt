@@ -1,0 +1,30 @@
+13-01-21 18-24-11
+First show 1 0 
+Second show 2 0 
+Third show 3 0 
+
+13-01-21 18-24-16
+First show 1 0 
+Second show 2 0 
+Third show 3 150 87
+
+13-01-21 18-24-21
+First show 1 900 87, 25, 66, 84, 74, 77, 50, 69, 62
+Second show 2 0 
+Third show 3 150 87
+
+13-01-21 18-24-26
+First show 1 1000 87, 25, 66, 84, 74, 77, 50, 69, 62, 52
+Second show 2 0 
+Third show 3 150 87
+
+13-01-21 18-24-31
+First show 1 1200 87, 25, 66, 84, 74, 77, 50, 69, 62, 52, 60, 26
+Second show 2 0 
+Third show 3 150 87
+
+13-01-21 18-24-36
+First show 1 1200 87, 25, 66, 84, 74, 77, 50, 69, 62, 52, 60, 26
+Second show 2 1200 58, 56, 12, 79, 52, 88
+Third show 3 750 87, 61, 14, 67, 61
+

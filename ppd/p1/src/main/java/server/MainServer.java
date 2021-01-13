@@ -2,6 +2,7 @@ package server;
 
 import common.*;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,7 +16,7 @@ class Server {
     private final int NO_TASK_THREADS = 2;
     private final int NO_CHECKER_THREADS = 1;
     private final int NO_CHECK_INTERVAL_SECONDS = 5;
-    private final int NO_RUNNING_TIME_SECONDS = 15;
+    private final int NO_RUNNING_TIME_SECONDS = 120;
 
     private Service service;
 
@@ -141,13 +142,13 @@ class Server {
 
         serverSocket = new ServerSocket(port);
 
-        System.out.printf("Server is running on port %d%n", port);
+        System.out.printf("Server is running on port %s\n", port);
 
         checker.scheduleAtFixedRate(() -> {
             System.out.println("Checking consistency");
             try {
                 service.checkConsistency();
-            } catch (CheckError checkError) {
+            } catch (IOException checkError) {
                 checkError.printStackTrace();
             }
         }, NO_CHECK_INTERVAL_SECONDS, NO_CHECK_INTERVAL_SECONDS, TimeUnit.SECONDS);
@@ -169,7 +170,15 @@ public class MainServer {
     public static void main(String[] args) {
         System.out.println("Hello world from server");
 
-        Service service = new Service();
+        FileWriter writer;
+        try {
+            writer = new FileWriter("test.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        Service service = new Service(writer);
 
         service.createShow("First show", 100, 100);
         service.createShow("Second show", 200, 100);
