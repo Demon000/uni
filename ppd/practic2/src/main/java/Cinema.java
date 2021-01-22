@@ -1,11 +1,13 @@
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Cinema {
     private final AtomicInteger numberOfConnections;
 
     public Map<Integer, Hall> halls = Collections.synchronizedMap(new HashMap<>());
-    public final Reservation failedReservation = new Reservation();
+    public final BlockingQueue<Reservation> failedReservations = new LinkedBlockingQueue<>();
 
     public Cinema(int numberOfConnections) {
         this.numberOfConnections = new AtomicInteger(numberOfConnections);
@@ -27,20 +29,27 @@ public class Cinema {
     }
 
     public void notifyFailedReservation(Reservation reservation) {
-        synchronized (failedReservation) {
+        synchronized (failedReservations) {
             if (reservation != null) {
-                failedReservation.setAll(reservation);
+                failedReservations.add(reservation);
             }
 
-            failedReservation.notifyAll();
+            failedReservations.notifyAll();
         }
     }
 
-    public Reservation waitForFailedReservation() throws InterruptedException {
-        synchronized (failedReservation) {
-            failedReservation.wait();
-            return failedReservation;
+    public boolean hasFailedReservations() {
+        return !failedReservations.isEmpty();
+    }
+
+    public void waitForFailedReservation() throws InterruptedException {
+        synchronized (failedReservations) {
+            failedReservations.wait();
         }
+    }
+
+    public Reservation getFailedReservation() throws InterruptedException {
+        return failedReservations.take();
     }
 
     public void reserve(Reservation reservation) {

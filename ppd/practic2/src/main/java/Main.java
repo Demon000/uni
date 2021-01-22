@@ -25,12 +25,15 @@ public class Main {
         public void run() {
             while (true) {
                 try {
-                    Reservation reservation = cinema.waitForFailedReservation();
+                    cinema.waitForFailedReservation();
                     if (cinema.allConnectionsClosed()) {
                         break;
                     }
 
-                    System.out.printf("Failed %s\n", reservation);
+                    while (cinema.hasFailedReservations()) {
+                        Reservation reservation = cinema.getFailedReservation();
+                        System.out.printf("Failed %s\n", reservation);
+                    }
                 } catch (InterruptedException e) {
                     break;
                 }
