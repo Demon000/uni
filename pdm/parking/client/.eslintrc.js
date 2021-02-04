@@ -42,6 +42,10 @@ module.exports = {
             'error',
             4,
         ],
+        'eol-last': [
+            'error',
+            'always',
+        ],
     },
     overrides: [
         {
