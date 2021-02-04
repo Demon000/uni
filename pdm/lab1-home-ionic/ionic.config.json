@@ -1,7 +1,0 @@
-{
-  "name": "lab1-home-ionic",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "vue"
-}
