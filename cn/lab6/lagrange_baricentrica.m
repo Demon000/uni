@@ -1,0 +1,1 @@
+function L = lagrange_baricentrica(x, f, X, type = 'none')    L = X;    w = CoeffBary(x, type);    for i = 1:length(X)        poz = find(X(i) == x);        if isempty(poz)            L(i) = sum(w ./ (X(i) - x) .* f) / sum(w ./ (X(i) - x));        else            L(i) = f(poz);        endif    endforendfunction

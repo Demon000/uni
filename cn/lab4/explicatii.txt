@@ -1,0 +1,27 @@
+Legat de tema obligatorie data in laboratorul 4 legata de descompunerea Cholesky:
+aveti mai jos un cod care poate fi completat urmand pseudocodul dat in curs
+(pentru descompunerea L,U,P aveti in curs codul complet, cu complemente Schur).
+Trebuie sa folositi aceasta functie pentru a rezolva un sistem
+care are o matrice a coeficientilor simetrica si pozitiv definita
+(la fel cum am explicat in notitele pentru lab 4 pentru L,U,P).
+Cum putem genera simplu o astfel de matrice (simetrica si pozitiv definita)?
+De exemplu asa:
+-> se genereaza o matrice inversabila B (e.g. B=magic(5), det(B) nu e 0)
+-> se obtine o matricea simetrica si pozitiv definita astfel: A=B'*B
+
+ 
+
+
+function R=Cholesky(A)
+m=length(A);
+R=...;
+for k=1:m
+   for j=k+1:m
+    R(...,...)=... - ...;
+   endfor
+   R(...,...)=...;
+endfor
+R=triu(R);
+endfunction
+ 
+Daca aveti nelamuriri, va rog sa imi scrieti in chat-ul privat.
